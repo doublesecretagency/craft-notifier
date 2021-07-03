@@ -1,0 +1,43 @@
+{
+    "name": "doublesecretagency/craft-notifier",
+    "description": "Get notified when things happen.",
+    "type": "craft-plugin",
+    "version": "0.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "notify",
+        "notifications",
+        "notifier",
+        "message",
+        "email",
+        "text",
+        "sms"
+    ],
+    "support": {
+        "docs": "https://plugins.doublesecretagency.com/notifier",
+        "issues": "https://github.com/doublesecretagency/craft-notifier/issues"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Double Secret Agency",
+            "homepage": "https://plugins.doublesecretagency.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.6.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "doublesecretagency\\notifier\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Notifier",
+        "handle": "notifier",
+        "class": "doublesecretagency\\notifier\\NotifierPlugin"
+    }
+}
