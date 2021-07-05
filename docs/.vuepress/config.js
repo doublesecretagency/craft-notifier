@@ -3,7 +3,7 @@ module.exports = {
     markdown: {
         anchor: { level: [2, 3] },
         extendMarkdown(md) {
-            let markup = require("vuepress-theme-craftdocs/markup");
+            let markup = require('vuepress-theme-craftdocs/markup');
             md.use(markup);
         },
     },
@@ -20,13 +20,13 @@ module.exports = {
             },
         ],
     ],
-    theme: "craftdocs",
+    theme: 'craftdocs',
     themeConfig: {
         codeLanguages: {
-            php: "PHP",
-            twig: "Twig",
-            html: "HTML",
-            js: "JavaScript",
+            php: 'PHP',
+            twig: 'Twig',
+            html: 'HTML',
+            js: 'JavaScript',
         },
         logo: '/images/icon.svg',
         searchMaxSuggestions: 10,
@@ -35,7 +35,12 @@ module.exports = {
             {
                 text: 'How It Works',
                 items: [
-                    {text: 'TBD', link: '/tbd/'},
+                    {text: 'Overview', link: '/how-it-works/'},
+                    {text: 'Create a Message Trigger', link: '/how-it-works/create-message-trigger/'},
+                    {text: 'Select a Message Type', link: '/how-it-works/select-message-type/'},
+                    {text: 'Specify Message Recipients', link: '/how-it-works/specify-message-recipients/'},
+                    {text: 'Specify Twig Template', link: '/how-it-works/specify-twig-template/'},
+                    {text: 'Managing Existing Notifications', link: '/how-it-works/managing-existing-notifications/'},
                 ]
             },
             {
@@ -49,6 +54,15 @@ module.exports = {
             // Getting Started
             '/getting-started/': [
                 '',
+            ],
+            // How it Works
+            '/how-it-works/': [
+                '',
+                'create-message-trigger',
+                'select-message-type',
+                'specify-message-recipients',
+                'specify-twig-template',
+                'managing-existing-notifications',
             ],
 
         }
