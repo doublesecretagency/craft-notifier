@@ -6,3 +6,4 @@ Once you've established a message trigger, you will be able to add as many notif
 
 <img class="dropshadow" :src="$withBase('/images/05-configure-trigger.png')" alt="" style="max-width:400px; margin-top:10px">
 
+<img class="dropshadow" :src="$withBase('/images/00-fields-changed.png')" alt="" style="max-width:400px; margin-top:10px">

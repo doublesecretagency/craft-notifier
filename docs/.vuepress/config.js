@@ -40,6 +40,7 @@ module.exports = {
                     {text: 'Select a Message Type', link: '/how-it-works/select-message-type/'},
                     {text: 'Specify Message Recipients', link: '/how-it-works/specify-message-recipients/'},
                     {text: 'Specify Twig Template', link: '/how-it-works/specify-twig-template/'},
+                    {text: 'Editing a Twig Template', link: '/how-it-works/editing-twig-template/'},
                     {text: 'Managing Existing Notifications', link: '/how-it-works/managing-existing-notifications/'},
                 ]
             },
@@ -62,6 +63,7 @@ module.exports = {
                 'select-message-type',
                 'specify-message-recipients',
                 'specify-twig-template',
+                'editing-twig-template',
                 'managing-existing-notifications',
             ],
 
