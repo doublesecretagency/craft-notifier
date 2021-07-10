@@ -1,4 +1,4 @@
-# Create a Message Trigger
+# Add an Event Trigger
 
 Before you can add any notification messages, you must first create a **message trigger**. Each trigger is tied directly to a specific [event](https://craftcms.com/knowledge-base/custom-module-events) within Craft.
 

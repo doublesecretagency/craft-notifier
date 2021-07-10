@@ -1,4 +1,4 @@
-# Specify a Twig Template
+# Set Message Template
 
 
 <img class="dropshadow" :src="$withBase('/images/00-set-template.png')" alt="" style="max-width:400px; margin-top:10px">

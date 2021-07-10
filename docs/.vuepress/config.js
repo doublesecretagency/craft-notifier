@@ -36,12 +36,12 @@ module.exports = {
                 text: 'How It Works',
                 items: [
                     {text: 'Overview', link: '/how-it-works/'},
-                    {text: 'Create a Message Trigger', link: '/how-it-works/create-message-trigger/'},
-                    {text: 'Select a Message Type', link: '/how-it-works/select-message-type/'},
-                    {text: 'Specify Message Recipients', link: '/how-it-works/specify-message-recipients/'},
-                    {text: 'Specify Twig Template', link: '/how-it-works/specify-twig-template/'},
-                    {text: 'Editing a Twig Template', link: '/how-it-works/editing-twig-template/'},
+                    {text: 'Add an Event Trigger', link: '/how-it-works/add-an-event-trigger/'},
+                    {text: 'Set Message Type', link: '/how-it-works/set-message-type/'},
+                    {text: 'Set Message Template', link: '/how-it-works/set-message-template/'},
+                    {text: 'Set Message Recipients', link: '/how-it-works/set-message-recipients/'},
                     {text: 'Managing Existing Notifications', link: '/how-it-works/managing-existing-notifications/'},
+                    {text: 'Editing a Twig Template', link: '/how-it-works/editing-twig-template/'},
                 ]
             },
             {
@@ -59,12 +59,12 @@ module.exports = {
             // How it Works
             '/how-it-works/': [
                 '',
-                'create-message-trigger',
-                'select-message-type',
-                'specify-message-recipients',
-                'specify-twig-template',
-                'editing-twig-template',
+                'add-an-event-trigger',
+                'set-message-type',
+                'set-message-template',
+                'set-message-recipients',
                 'managing-existing-notifications',
+                'editing-twig-template',
             ],
 
         }

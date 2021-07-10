@@ -1,0 +1,81 @@
+{% extends '_layouts/cp' %}
+{% set title = 'Manage Notifications'|t('notifier') %}
+
+{% set crumbs = [
+    {'label': 'Notifier'|t('notifier'), 'url': url('notifier')},
+] %}
+
+{% block actionButton %}
+    <a class="btn submit add icon" href="{{ cpUrl('notifier/trigger') }}" role="button" tabindex="0">
+        {{ 'Add a notification trigger'|t('notifier') }}
+    </a>
+{% endblock %}
+
+{% set content %}
+    <div class="grid-container">
+
+        <div class="collapse">
+            <div class="chevron"></div>
+        </div>
+
+        <a class="trigger" href="{{ cpUrl('notifier/trigger') }}" tabindex="0">
+            When an Entry is saved...
+        </a>
+
+        <div>
+            <a class="message" href="{{ cpUrl('notifier/message') }}" tabindex="0">
+                Send email to them
+            </a>
+            <a class="message" href="{{ cpUrl('notifier/message') }}" tabindex="0">
+                Send SMS to them
+            </a>
+            <a class="message" href="{{ cpUrl('notifier/message') }}" tabindex="0">
+                Send email to me
+            </a>
+            <a class="btn submit add icon" href="{{ cpUrl('notifier/message') }}" role="button" tabindex="0">
+                Add a message
+            </a>
+        </div>
+
+    </div>
+{% endset %}
+
+{% css %}
+.grid-container {
+    display: grid;
+    grid-template-columns: 16px 40% auto;
+    grid-gap: 6px;
+}
+.chevron {
+    margin-top: 5px;
+    display: block;
+    content: '';
+    font-size: 0;
+    width: 8px;
+    height: 8px;
+    border: solid #596673;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: relative;
+}
+.trigger {
+    display: block;
+    color: white;
+    font-weight: bold;
+    padding: 10px 16px;
+    background-color: red;
+    cursor: pointer;
+}
+.message {
+    display: block;
+    color: white;
+    font-weight: bold;
+    padding: 10px 16px;
+    border: 1px solid #999999;
+    margin-bottom: 6px;
+    background-color: green;
+    cursor: pointer;
+}
+{% endcss %}

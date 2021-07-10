@@ -31,6 +31,11 @@ class NotifierPlugin extends Plugin
     public static $plugin;
 
     /**
+     * @var bool The plugin has a section with subpages.
+     */
+    public $hasCpSection = true;
+
+    /**
      * @inheritdoc
      */
     public function init()

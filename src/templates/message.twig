@@ -1,0 +1,49 @@
+{% extends '_layouts/cp' %}
+{% import '_includes/forms' as forms %}
+{% set title = 'Add New Message'|t('notifier') %}
+
+{% set crumbs = [
+    {'label': 'Notifier'|t('notifier'), 'url': url('notifier')},
+    {'label': 'Edit Message'|t('notifier'), 'url': url('notifier/message')},
+] %}
+
+{% block actionButton %}
+    <a class="btn submit" href="{{ cpUrl('notifier') }}" role="button" tabindex="0">
+        {{ 'Save Message'|t('notifier') }}
+    </a>
+{% endblock %}
+
+{% set content %}
+
+    <h2>Message Body Configuration</h2>
+    <p>Configure your notification message as desired.</p>
+
+    {{ forms.selectField({
+        label: "Message Type"|t('notifier'),
+        instructions: "While in beta, only **email** messages are available."|t('notifier'),
+        id: 'message-type',
+        name: 'message-type',
+        options: {'email': 'Email'},
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Message Template"|t('notifier'),
+        instructions: "Which Twig template will be used to generate the message body?"|t('notifier'),
+        id: 'message-template',
+        name: 'message-template',
+        suggestions: craft.cp.getTemplateSuggestions(),
+    }) }}
+
+    {{ forms.textField({
+        label: "Message Subject"|t('notifier'),
+        instructions: "For email messages only. Will parse Twig tags."|t('notifier'),
+        id: 'message-subject',
+        class: 'message-subject',
+    }) }}
+
+    <hr>
+
+    <h2>Message Recipients</h2>
+    <p>This part is very complicated.</p>
+
+{% endset %}
