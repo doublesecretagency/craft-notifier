@@ -1,5 +1,6 @@
 {% extends '_layouts/cp' %}
 {% import '_includes/forms' as forms %}
+{% set fullPageForm = true %}
 {% set title = 'Add New Message'|t('notifier') %}
 
 {% set crumbs = [
@@ -8,12 +9,11 @@
 ] %}
 
 {% block actionButton %}
-    <a class="btn submit" href="{{ cpUrl('notifier') }}" role="button" tabindex="0">
-        {{ 'Save Message'|t('notifier') }}
-    </a>
+    <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
 {% endblock %}
 
 {% set content %}
+    {{ actionInput('notifier/message/save-message') }}
 
     <h2>Message Body Configuration</h2>
     <p>Configure your notification message as desired.</p>

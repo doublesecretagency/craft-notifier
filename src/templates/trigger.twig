@@ -1,5 +1,6 @@
 {% extends '_layouts/cp' %}
 {% import '_includes/forms' as forms %}
+{% set fullPageForm = true %}
 {% set title = 'Add New Notification'|t('notifier') %}
 
 {% set crumbs = [
@@ -8,52 +9,46 @@
 ] %}
 
 {% block actionButton %}
-    <a class="btn submit" href="{{ cpUrl('notifier') }}" role="button" tabindex="0">
-        {{ 'Save Trigger'|t('notifier') }}
-    </a>
+    <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
 {% endblock %}
 
 {% set content %}
+    {{ actionInput('notifier/trigger/save-trigger') }}
 
     <h2>Event Trigger Configuration</h2>
     <p>Configure when the notification(s) should be triggered.</p>
 
     {{ forms.selectField({
-        label: "Element Type"|t('notifier'),
-        instructions: "While in beta, only **Entry** events are available."|t('notifier'),
-        id: 'element-type',
-        name: 'element-type',
-        options: {'entry': 'Entry'},
-    }) }}
-
-    {{ forms.selectField({
-        label: "Event"|t('notifier'),
-        instructions: "While in beta, only **on save** events are available."|t('notifier'),
+        label: "Event Trigger"|t('notifier'),
+        instructions: "While in beta, _this is the only available event trigger_."|t('notifier'),
         id: 'event',
         name: 'event',
-        options: {'onSave': 'On save'},
-    }) }}
-
-    {{ forms.checkboxSelectField({
-        label: "Sections"|t('app'),
-        instructions: "Which sections should be included?"|t('notifier'),
-        id: 'sections',
-        name: 'sections',
-        options: {'news': 'News'},
-        values: '*',
-        showAllOption: true,
+        options: {
+            'Entry::EVENT_AFTER_SAVE': 'When an Entry is saved',
+            'fake': 'A fake event'
+        },
     }) }}
 
     {{ forms.selectField({
         label: "Freshness"|t('notifier'),
         instructions: "Should this event be triggered by **new** entries, **existing** entries, or **both**?"|t('notifier'),
-        id: 'freshness',
-        name: 'freshness',
+        id: 'config-freshness',
+        name: 'config[freshness]',
         options: {
-            'both': 'Both new & existing',
+            'both': 'Both new & existing entries',
             'new': 'New entries only',
             'existing': 'Existing entries only',
         },
+    }) }}
+
+    {{ forms.checkboxSelectField({
+        label: "Sections"|t('app'),
+        instructions: "Which sections should be included?"|t('notifier'),
+        id: 'config-sections',
+        name: 'config[sections]',
+        options: {'news': 'News'},
+        values: '*',
+        showAllOption: true,
     }) }}
 
 {% endset %}

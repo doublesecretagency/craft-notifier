@@ -26,6 +26,8 @@ class Install extends Migration
     public function safeUp()
     {
         $this->createTables();
+        $this->createIndexes();
+        $this->addForeignKeys();
     }
 
     /**
@@ -33,8 +35,8 @@ class Install extends Migration
      */
     public function safeDown()
     {
-        $this->dropTableIfExists('{{%notifier_triggers}}');
         $this->dropTableIfExists('{{%notifier_messages}}');
+        $this->dropTableIfExists('{{%notifier_triggers}}');
     }
 
     /**
@@ -44,16 +46,39 @@ class Install extends Migration
     {
         $this->createTable('{{%notifier_triggers}}', [
             'id'          => $this->primaryKey(),
+            'event'       => $this->string()->notNull(),
+            'config'      => $this->text(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid'         => $this->uid(),
         ]);
         $this->createTable('{{%notifier_messages}}', [
             'id'          => $this->primaryKey(),
+            'triggerId'   => $this->integer()->notNull(),
+            'type'        => $this->string(),
+            'template'    => $this->string(),
+            'subject'     => $this->string(),
+            'recipients'  => $this->string(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid'         => $this->uid(),
         ]);
+    }
+
+    /**
+     * Creates the indexes.
+     */
+    protected function createIndexes()
+    {
+        $this->createIndex(null, '{{%notifier_messages}}', ['triggerId']);
+    }
+
+    /**
+     * Adds the foreign keys.
+     */
+    protected function addForeignKeys()
+    {
+        $this->addForeignKey(null, '{{%notifier_messages}}', ['triggerId'], '{{%notifier_triggers}}', ['id'], 'CASCADE');
     }
 
 }

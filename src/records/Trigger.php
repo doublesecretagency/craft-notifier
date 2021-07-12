@@ -12,6 +12,7 @@
 namespace doublesecretagency\notifier\records;
 
 use craft\db\ActiveRecord;
+use yii\db\ActiveQueryInterface;
 
 /**
  * Class Trigger
@@ -26,6 +27,16 @@ class Trigger extends ActiveRecord
     public static function tableName(): string
     {
         return '{{%notifier_triggers}}';
+    }
+
+    /**
+     * Returns the trigger’s messages.
+     *
+     * @return ActiveQueryInterface The relational query object.
+     */
+    public function getMessages(): ActiveQueryInterface
+    {
+        return $this->hasMany(Message::class, ['triggerId' => 'id']);
     }
 
 }
