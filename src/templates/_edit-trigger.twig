@@ -1,11 +1,17 @@
 {% extends '_layouts/cp' %}
 {% import '_includes/forms' as forms %}
 {% set fullPageForm = true %}
-{% set title = 'Add New Notification'|t('notifier') %}
+
+{% set existing = (triggerId ?? false) %}
+{% set trigger  = (existing ? notifier.getTriggerById(triggerId)) %}
+{% set title    = (existing ? 'Edit Notification Trigger' : 'Add a Notification Trigger')|t('notifier') %}
+
+{# JSON decode the trigger configuration #}
+{% set config = (trigger.config ?? '{}')|json_decode %}
 
 {% set crumbs = [
     {'label': 'Notifier'|t('notifier'), 'url': url('notifier')},
-    {'label': 'Edit Trigger'|t('notifier'), 'url': url('notifier/trigger')},
+    {'label': title, 'url': false},
 ] %}
 
 {% block actionButton %}
@@ -14,6 +20,7 @@
 
 {% set content %}
     {{ actionInput('notifier/trigger/save-trigger') }}
+    {{ existing ? hiddenInput('id', triggerId) }}
 
     <h2>Event Trigger Configuration</h2>
     <p>Configure when the notification(s) should be triggered.</p>
@@ -25,9 +32,10 @@
         name: 'event',
         options: {
             'Entry::EVENT_AFTER_SAVE': 'When an Entry is saved',
-            'fake': 'A fake event'
         },
+        value: (trigger.event ?? false)
     }) }}
+    {# 'another': 'Another test event' #}
 
     {{ forms.selectField({
         label: "Freshness"|t('notifier'),
@@ -39,6 +47,7 @@
             'new': 'New entries only',
             'existing': 'Existing entries only',
         },
+        value: (config.freshness ?? false)
     }) }}
 
     {{ forms.checkboxSelectField({
@@ -47,8 +56,8 @@
         id: 'config-sections',
         name: 'config[sections]',
         options: {'news': 'News'},
-        values: '*',
         showAllOption: true,
+        values: (config.sections ?? '*')
     }) }}
 
 {% endset %}

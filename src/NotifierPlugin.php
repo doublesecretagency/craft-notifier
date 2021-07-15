@@ -19,6 +19,7 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\Json;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\records\Trigger;
+use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
 
 /**
@@ -51,6 +52,9 @@ class NotifierPlugin extends Plugin
         parent::init();
         self::$plugin = $this;
 
+        // Load Twig extension
+        Craft::$app->getView()->registerTwigExtension(new Extension());
+
         // Register all CP site routes
         $this->_registerCpRoutes();
 
@@ -69,20 +73,15 @@ class NotifierPlugin extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             static function(RegisterUrlRulesEvent $event) {
-//                // Field Layouts
-//                $event->rules['notifier/fieldlayouts']                     = 'notifier/field-layouts';
-//                $event->rules['notifier/fieldlayouts/new']                 = 'notifier/field-layouts/edit-field-layout';
-//                $event->rules['notifier/fieldlayouts/<fieldLayoutId:\d+>'] = 'notifier/field-layouts/edit-field-layout';
-//                // Groups
-//                $event->rules['notifier/trigger']               = 'notifier/trigger';
-//                $event->rules['notifier/trigger/new']           = 'notifier/trigger/edit-group';
-//                $event->rules['notifier/trigger/<groupId:\d+>'] = 'notifier/trigger/edit-group';
-//                // Ads
-//                $event->rules['notifier/ads']                                   = 'notifier/ads';
-//                $event->rules['notifier/ads/new']                               = 'notifier/ads/edit-ad';
-//                $event->rules['notifier/ads/<groupHandle:{handle}>']            = 'notifier/ads';
-//                $event->rules['notifier/ads/<groupHandle:{handle}>/new']        = 'notifier/ads/edit-ad';
-//                $event->rules['notifier/ads/<groupHandle:{handle}>/<adId:\d+>'] = 'notifier/ads/edit-ad';
+                // Set template paths
+                $triggerTemplate = ['template' => 'notifier/_edit-trigger'];
+                $messageTemplate = ['template' => 'notifier/_edit-message'];
+                // Routes for editing Triggers
+                $event->rules['notifier/trigger/new']             = $triggerTemplate;
+                $event->rules['notifier/trigger/<triggerId:\d+>'] = $triggerTemplate;
+                // Routes for editing Messages
+                $event->rules['notifier/trigger/<triggerId:\d+>/message/new']             = $messageTemplate;
+                $event->rules['notifier/trigger/<triggerId:\d+>/message/<messageId:\d+>'] = $messageTemplate;
             }
         );
     }

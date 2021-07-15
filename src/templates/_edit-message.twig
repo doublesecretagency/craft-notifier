@@ -1,11 +1,14 @@
 {% extends '_layouts/cp' %}
 {% import '_includes/forms' as forms %}
 {% set fullPageForm = true %}
-{% set title = 'Add New Message'|t('notifier') %}
+
+{% set existing = (messageId ?? false) %}
+{% set message  = (existing ? notifier.getMessageById(messageId)) %}
+{% set title    = (existing ? 'Edit Message' : 'Add a New Message')|t('notifier') %}
 
 {% set crumbs = [
     {'label': 'Notifier'|t('notifier'), 'url': url('notifier')},
-    {'label': 'Edit Message'|t('notifier'), 'url': url('notifier/message')},
+    {'label': title, 'url': false},
 ] %}
 
 {% block actionButton %}
@@ -14,6 +17,8 @@
 
 {% set content %}
     {{ actionInput('notifier/message/save-message') }}
+    {{ hiddenInput('triggerId', triggerId) }}
+    {{ existing ? hiddenInput('id', messageId) }}
 
     <h2>Message Body Configuration</h2>
     <p>Configure your notification message as desired.</p>
@@ -21,24 +26,30 @@
     {{ forms.selectField({
         label: "Message Type"|t('notifier'),
         instructions: "While in beta, only **email** messages are available."|t('notifier'),
-        id: 'message-type',
-        name: 'message-type',
-        options: {'email': 'Email'},
+        id: 'type',
+        name: 'type',
+        options: {
+            'email': 'Email',
+        },
+        value: (message ? message.type)
     }) }}
+    {# 'sms': 'SMS (Text Message)' #}
 
     {{ forms.autosuggestField({
         label: "Message Template"|t('notifier'),
         instructions: "Which Twig template will be used to generate the message body?"|t('notifier'),
-        id: 'message-template',
-        name: 'message-template',
+        id: 'template',
+        name: 'template',
         suggestions: craft.cp.getTemplateSuggestions(),
+        value: (message ? message.template)
     }) }}
 
     {{ forms.textField({
         label: "Message Subject"|t('notifier'),
         instructions: "For email messages only. Will parse Twig tags."|t('notifier'),
-        id: 'message-subject',
-        class: 'message-subject',
+        id: 'subject',
+        name: 'subject',
+        value: (message ? message.subject)
     }) }}
 
     <hr>

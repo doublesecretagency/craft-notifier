@@ -6,38 +6,55 @@
 ] %}
 
 {% block actionButton %}
-    <a class="btn submit add icon" href="{{ cpUrl('notifier/trigger') }}" role="button" tabindex="0">
+    <a class="btn submit add icon" href="{{ cpUrl('notifier/trigger/new') }}" role="button" tabindex="0">
         {{ 'Add a notification trigger'|t('notifier') }}
     </a>
 {% endblock %}
 
 {% set content %}
-    <div class="grid-container">
 
-        <div class="collapse">
-            <div class="chevron"></div>
-        </div>
+    <div>
 
-        <a class="trigger" href="{{ cpUrl('notifier/trigger') }}" tabindex="0">
-            When an Entry is saved...
-        </a>
+        {% for trigger in notifier.getTriggers() %}
 
-        <div>
-            <a class="message" href="{{ cpUrl('notifier/message') }}" tabindex="0">
-                Send email to them
-            </a>
-            <a class="message" href="{{ cpUrl('notifier/message') }}" tabindex="0">
-                Send SMS to them
-            </a>
-            <a class="message" href="{{ cpUrl('notifier/message') }}" tabindex="0">
-                Send email to me
-            </a>
-            <a class="btn submit add icon" href="{{ cpUrl('notifier/message') }}" role="button" tabindex="0">
-                Add a message
-            </a>
-        </div>
+            <div class="grid-container">
+
+                <div class="collapse">
+                    <div class="chevron"></div>
+                </div>
+
+                <a class="trigger" href="{{ cpUrl("notifier/trigger/#{trigger.id}") }}" tabindex="0">
+                    {# When an Entry is saved...#}
+{#                    {{ trigger.event }}#}
+                    <pre><code>{{ trigger.config }}</code></pre>
+                </a>
+
+                <div>
+
+                    {% for message in notifier.getMessages(trigger.id) %}
+
+                        <a class="message" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}") }}" tabindex="0">
+                            {{ message.type }} - "{{ message.subject }}"
+                        </a>
+
+                    {% endfor %}
+
+                    <a class="btn submit add icon" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/new") }}" role="button" tabindex="0">
+                        Add a message
+                    </a>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <p><strong>No existing notifications.</strong> To get started, click the "Add a notification trigger" button.</p>
+
+        {% endfor %}
 
     </div>
+
 {% endset %}
 
 {% css %}
@@ -45,6 +62,7 @@
     display: grid;
     grid-template-columns: 16px 40% auto;
     grid-gap: 6px;
+    margin-bottom: 16px;
 }
 .chevron {
     margin-top: 5px;
@@ -63,7 +81,6 @@
 .trigger {
     display: block;
     color: white;
-    font-weight: bold;
     padding: 10px 16px;
     background-color: red;
     cursor: pointer;
