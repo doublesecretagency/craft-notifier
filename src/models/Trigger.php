@@ -12,7 +12,8 @@
 namespace doublesecretagency\notifier\models;
 
 use craft\base\Model;
-use DateTime;
+use craft\helpers\Json;
+use doublesecretagency\notifier\records\Message as MessageRecord;
 
 /**
  * Class Trigger
@@ -27,18 +28,62 @@ class Trigger extends Model
     public $id;
 
     /**
-     * @var DateTime Date/time link was created.
+     * @var string Corresponding Craft Event.
      */
-    public $dateCreated;
+    public $event;
 
     /**
-     * @var DateTime Date/time link was updated.
+     * @var string Configuration of Event details.
      */
-    public $dateUpdated;
+    public $config;
+
+    // ========================================================================= //
 
     /**
-     * @var string Unique row ID.
+     * Get messages related to this trigger.
+     *
+     * @return array
      */
-    public $uid;
+    public function getMessages(): array
+    {
+        // Get all Message Records for this trigger
+        $messages = MessageRecord::findAll([
+            'triggerId' => $this->id
+        ]);
+
+        // Convert each Record into a Model
+        array_walk($messages, function (&$value) {
+
+            // Get the Message Record attributes
+            $omitColumns = ['dateCreated','dateUpdated','uid'];
+            $attr = $value->getAttributes(null, $omitColumns);
+
+            // Convert to a Message Model
+            $value = new Message($attr);
+        });
+
+        // Return all Message Models
+        return $messages;
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Get trigger configuration.
+     *
+     * @return array
+     */
+    public function getConfiguration(): array
+    {
+        // Get config
+        $config = ($this->config ?? '[]');
+
+        // Check if JSON is valid
+        // Must use this function to validate (I know it's redundant)
+        $valid = json_decode($config);
+
+        // Convert config data to an array
+        return ($valid ? Json::decode($config) : []);
+    }
 
 }

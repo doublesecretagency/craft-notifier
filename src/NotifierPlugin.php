@@ -16,9 +16,8 @@ use craft\base\Plugin;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
-use craft\helpers\Json;
 use craft\web\UrlManager;
-use doublesecretagency\notifier\records\Trigger;
+use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
 
@@ -58,8 +57,73 @@ class NotifierPlugin extends Plugin
         // Register all CP site routes
         $this->_registerCpRoutes();
 
-        // Configure all notification triggers
-        $this->_configureTriggers();
+//        // If plugin isn't installed yet, bail before triggering events
+//        if (!$this->isInstalled) {
+//            return;
+//        }
+
+        // Trigger notifications when an Entry is saved
+        $this->_onEntrySave();
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Triggered when an Entry is saved.
+     */
+    private function _onEntrySave()
+    {
+        Event::on(
+            Entry::class,
+            Entry::EVENT_AFTER_SAVE,
+            static function (ModelEvent $event) {
+
+                // Get entry
+                /** @var Entry $entry */
+                $entry = $event->sender;
+
+                // If entry is just a draft, bail
+                if ($entry->isDraft) {
+                    return;
+                }
+
+
+                $data = $entry->getAttributes();
+
+
+                // Get all relevant triggers
+                $triggers = Notifier::getTriggersByType('Entry::EVENT_AFTER_SAVE');
+
+
+                foreach ($triggers as $trigger) {
+
+
+                    $config = $trigger->getConfiguration();
+
+//                    Craft::dd($config);
+                    // Check for freshness
+                    // Check for correct section(s)
+
+
+                    $messages = $trigger->getMessages();
+
+                    // Send each message
+                    foreach ($messages as $message) {
+                        $message->send($data);
+                    }
+                }
+
+
+
+                // $isNew = $event->isNew;
+                // $section = $entry->getSection()->handle;
+
+//                Craft::dd($entry);
+//                Craft::dd($config);
+
+            }
+        );
+
     }
 
     // ========================================================================= //
@@ -82,79 +146,6 @@ class NotifierPlugin extends Plugin
                 // Routes for editing Messages
                 $event->rules['notifier/trigger/<triggerId:\d+>/message/new']             = $messageTemplate;
                 $event->rules['notifier/trigger/<triggerId:\d+>/message/<messageId:\d+>'] = $messageTemplate;
-            }
-        );
-    }
-
-    // ========================================================================= //
-
-    /**
-     * Configure all notification triggers.
-     */
-    private function _configureTriggers()
-    {
-        // If plugin isn't installed yet, bail
-        if (!$this->isInstalled) {
-            return;
-        }
-
-        // Get all notification triggers
-        $triggers = Trigger::find()->all();
-
-        // Loop through all triggers
-        foreach ($triggers as $trigger) {
-
-            // Get config
-            $config = $trigger->config;
-
-            // Check if JSON is valid
-            // Must use this function to validate (I know it's redundant)
-            $valid = json_decode($config);
-
-            // Convert config data to an array
-            $config = ($valid ? Json::decode($config) : null);
-
-            // Switch according to trigger event type
-            switch ($trigger->event) {
-
-                // When an Entry is saved
-                case 'Entry::EVENT_AFTER_SAVE':
-                    $this->_onEntrySave($config);
-                    break;
-
-            }
-
-        }
-    }
-
-    // ========================================================================= //
-
-    /**
-     * Triggers when an Entry is saved.
-     */
-    private function _onEntrySave($config)
-    {
-        Event::on(
-            Entry::class,
-            Entry::EVENT_AFTER_SAVE,
-            static function (ModelEvent $event) use ($config) {
-
-                // Get entry
-                /** @var Entry $entry */
-                $entry = $event->sender;
-
-                // If entry is just a draft, bail
-                if ($entry->isDraft) {
-                    return;
-                }
-
-
-                // $isNew = $event->isNew;
-                // $section = $entry->getSection()->handle;
-
-//                Craft::dd($entry);
-//                Craft::dd($config);
-
             }
         );
     }

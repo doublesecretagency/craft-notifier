@@ -24,25 +24,32 @@
                 </div>
 
                 <a class="trigger" href="{{ cpUrl("notifier/trigger/#{trigger.id}") }}" tabindex="0">
-                    {# When an Entry is saved...#}
-{#                    {{ trigger.event }}#}
+                    {% switch trigger.event %}
+                        {% case 'Entry::EVENT_AFTER_SAVE' %}
+                            When an Entry is saved...
+                        {% default %}
+                            {{ trigger.event }}
+                    {% endswitch %}
                     <pre><code>{{ trigger.config }}</code></pre>
                 </a>
 
                 <div>
-
-                    {% for message in notifier.getMessages(trigger.id) %}
-
+                    {% for message in trigger.getMessages() %}
                         <a class="message" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}") }}" tabindex="0">
-                            {{ message.type }} - "{{ message.subject }}"
+                            {% switch message.type %}
+                                {% case 'email' %}
+                                    Send an email ("{{ message.subject }}")
+                                {% case 'sms' %}
+                                    Send an SMS (Text Message)
+                                {% default %}
+                                    {{ message.type }}
+                            {% endswitch %}
+                            <pre><code>{{ message.template }}</code></pre>
                         </a>
-
                     {% endfor %}
-
                     <a class="btn submit add icon" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/new") }}" role="button" tabindex="0">
                         Add a message
                     </a>
-
                 </div>
 
             </div>

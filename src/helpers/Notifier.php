@@ -32,21 +32,6 @@ class Notifier
     }
 
     /**
-     * Get all messages related to specified trigger.
-     *
-     * @param int $triggerId
-     * @return array
-     */
-    public static function getMessages(int $triggerId): array
-    {
-        return Message::findAll([
-            'triggerId' => $triggerId
-        ]);
-    }
-
-    // ========================================================================= //
-
-    /**
      * Get specified trigger.
      *
      * @param int $triggerId
@@ -58,6 +43,36 @@ class Notifier
             'id' => $triggerId
         ]);
     }
+
+    /**
+     * Get specified trigger.
+     *
+     * @param string $type
+     * @return array
+     */
+    public static function getTriggersByType(string $type): array
+    {
+        $records = Trigger::findAll([
+            'event' => $type
+        ]);
+
+        $models = [];
+
+        foreach ($records as $record) {
+
+            // Get the record attributes
+            $omitColumns = ['dateCreated','dateUpdated','uid'];
+            $attr = $record->getAttributes(null, $omitColumns);
+
+            // Return a Message model
+            $models[] = new \doublesecretagency\notifier\models\Trigger($attr);
+
+        }
+
+        return $models;
+    }
+
+    // ========================================================================= //
 
     /**
      * Get specified message.
