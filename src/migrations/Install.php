@@ -48,9 +48,6 @@ class Install extends Migration
             'id'          => $this->primaryKey(),
             'event'       => $this->string()->notNull(),
             'config'      => $this->text(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid'         => $this->uid(),
         ]);
         $this->createTable('{{%notifier_messages}}', [
             'id'          => $this->primaryKey(),
@@ -59,9 +56,6 @@ class Install extends Migration
             'template'    => $this->string(),
             'subject'     => $this->string(),
             'recipients'  => $this->string(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid'         => $this->uid(),
         ]);
     }
 

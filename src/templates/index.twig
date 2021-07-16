@@ -56,7 +56,7 @@
 
         {% else %}
 
-            <p><strong>No existing notifications.</strong> To get started, click the "Add a notification trigger" button.</p>
+            <p><strong>No existing notifications.</strong> To get started, <a href="{{ cpUrl('notifier/trigger/new') }}">add a notification trigger...</a></p>
 
         {% endfor %}
 

@@ -72,9 +72,45 @@ class Message extends Model
     // ========================================================================= //
 
     /**
-     * Parse the message body.
+     * Send the message via email.
      */
-    private function _getBody($data): string
+    private function _sendEmail($data)
+    {
+        // Parse the message body and subject
+        $body = $this->_getBody($data);
+        $subject = $this->_getSubject($data);
+
+        // If an error occurred while parsing the body, bail
+        if (false === $body) {
+            return;
+        }
+
+        // Compile email
+        $email = new Email();
+        $email->setTo('lindsey@doublesecretagency.com');
+        $email->setSubject($subject);
+        $email->setHtmlBody($body);
+        $email->setTextBody($body);
+
+        // Send email
+        $success = Craft::$app->getMailer()->send($email);
+
+        // If unsuccessful, log it
+        if (!$success) {
+
+            // Log failure to send
+
+        }
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Parse the message body.
+     *
+     * @return string|false Returns false if an error occurred.
+     */
+    private function _getBody($data)
     {
         // Get view services
         $view = Craft::$app->getView();
@@ -93,39 +129,34 @@ class Message extends Model
             // Log an error
 
             // Return an empty string
-            return '';
+            return false;
         }
     }
 
-    // ========================================================================= //
-
     /**
-     * Send the message via email.
+     * Parse the message subject.
      */
-    private function _sendEmail($data)
+    private function _getSubject($data): string
     {
-        $body = $this->_getBody($data);
+        // Get view services
+        $view = Craft::$app->getView();
 
-        Craft::dd([
-            $this->subject,
-            $body,
-        ]);
+        // Attempt to render the Twig template
+        try {
 
+            // Render message subject
+            $subject = $view->renderString($this->subject, $data, View::TEMPLATE_MODE_SITE);
 
+            // Return parsed subject
+            return trim($subject);
 
-        // Compile email
-        $email = new Email();
-        $email->setTo('lindsey@doublesecretagency.com');
-        $email->setSubject($this->subject);
-        $email->setHtmlBody($body);
-        $email->setTextBody($body);
+        } catch (Exception $e) {
 
-        // Send email
-        $success = Craft::$app->getMailer()->send($email);
+            // Log an error
 
-
-        Craft::dd($success);
-
+            // Return unparsed subject
+            return trim($this->subject);
+        }
     }
 
 }

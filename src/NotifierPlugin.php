@@ -88,7 +88,7 @@ class NotifierPlugin extends Plugin
                 }
 
 
-                $data = $entry->getAttributes();
+                $entry = $entry->getAttributes();
 
 
                 // Get all relevant triggers
@@ -103,6 +103,21 @@ class NotifierPlugin extends Plugin
 //                    Craft::dd($config);
                     // Check for freshness
                     // Check for correct section(s)
+
+
+
+                    // TEMP
+                    // Use current user
+                    $user = Craft::$app->getUser()->getIdentity();
+                    // ENDTEMP
+
+
+                    $data = [
+                        'entry' => $entry,
+                        'user' => $user,
+                    ];
+
+//                    Craft::dd($data);
 
 
                     $messages = $trigger->getMessages();

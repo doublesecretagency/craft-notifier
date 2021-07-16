@@ -11,8 +11,10 @@
 
 namespace doublesecretagency\notifier\helpers;
 
-use doublesecretagency\notifier\records\Message;
-use doublesecretagency\notifier\records\Trigger;
+use doublesecretagency\notifier\models\Message as MessageModel;
+use doublesecretagency\notifier\models\Trigger as TriggerModel;
+use doublesecretagency\notifier\records\Message as MessageRecord;
+use doublesecretagency\notifier\records\Trigger as TriggerRecord;
 
 /**
  * Class Notifier
@@ -24,67 +26,87 @@ class Notifier
     /**
      * Get all triggers.
      *
-     * @return array
+     * @return TriggerModel[]
      */
     public static function getTriggers(): array
     {
-        return Trigger::find()->all();
+        // Get all Trigger Records
+        $triggers = TriggerRecord::find()->all();
+
+        // Return results as Models
+        return static::_toTriggerModels($triggers);
     }
 
     /**
-     * Get specified trigger.
-     *
-     * @param int $triggerId
-     * @return Trigger|null
-     */
-    public static function getTriggerById(int $triggerId)
-    {
-        return Trigger::findOne([
-            'id' => $triggerId
-        ]);
-    }
-
-    /**
-     * Get specified trigger.
+     * Get all triggers of a specified type.
      *
      * @param string $type
-     * @return array
+     * @return TriggerModel[]
      */
     public static function getTriggersByType(string $type): array
     {
-        $records = Trigger::findAll([
+        // Get all Trigger Records of specified type
+        $records = TriggerRecord::findAll([
             'event' => $type
         ]);
 
-        $models = [];
+        // Return results as Models
+        return static::_toTriggerModels($records);
+    }
 
-        foreach ($records as $record) {
+    /**
+     * Get trigger with specified ID.
+     *
+     * @param int $triggerId
+     * @return TriggerModel|null
+     */
+    public static function getTriggerById(int $triggerId)
+    {
+        // Get matching Trigger Record
+        $record = TriggerRecord::findOne([
+            'id' => $triggerId
+        ]);
 
-            // Get the record attributes
-            $omitColumns = ['dateCreated','dateUpdated','uid'];
-            $attr = $record->getAttributes(null, $omitColumns);
-
-            // Return a Message model
-            $models[] = new \doublesecretagency\notifier\models\Trigger($attr);
-
-        }
-
-        return $models;
+        // Return as a Model (if a match is found)
+        return ($record ? new TriggerModel($record->getAttributes()) : null);
     }
 
     // ========================================================================= //
 
     /**
-     * Get specified message.
+     * Get message with specified ID.
      *
      * @param int $messageId
-     * @return Message|null
+     * @return MessageModel|null
      */
     public static function getMessageById(int $messageId)
     {
-        return Message::findOne([
+        // Get matching Message Record
+        $record = MessageRecord::findOne([
             'id' => $messageId
         ]);
+
+        // Return as a Model (if a match is found)
+        return ($record ? new MessageModel($record->getAttributes()) : null);
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Convert an array of Trigger Records into Trigger Models
+     *
+     * @param array $collection
+     * @return TriggerModel[]
+     */
+    private static function _toTriggerModels(array $collection): array
+    {
+        // Convert each Record into a Model
+        array_walk($collection, static function (&$value) {
+            $value = new TriggerModel($value->getAttributes());
+        });
+
+        // Return collection as Models
+        return $collection;
     }
 
 }

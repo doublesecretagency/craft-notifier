@@ -53,13 +53,7 @@ class Trigger extends Model
 
         // Convert each Record into a Model
         array_walk($messages, function (&$value) {
-
-            // Get the Message Record attributes
-            $omitColumns = ['dateCreated','dateUpdated','uid'];
-            $attr = $value->getAttributes(null, $omitColumns);
-
-            // Convert to a Message Model
-            $value = new Message($attr);
+            $value = new Message($value->getAttributes());
         });
 
         // Return all Message Models

@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% set content %}
-    {{ actionInput('notifier/message/save-message') }}
+    {{ actionInput('notifier/message/save') }}
     {{ hiddenInput('triggerId', triggerId) }}
     {{ existing ? hiddenInput('id', messageId) }}
 

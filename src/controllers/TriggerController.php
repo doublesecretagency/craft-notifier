@@ -12,12 +12,10 @@
 namespace doublesecretagency\notifier\controllers;
 
 use Craft;
+use craft\helpers\Db;
+use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
-use doublesecretagency\notifier\records\Trigger;
-use Throwable;
-use yii\base\Exception;
-use yii\db\Transaction;
 
 /**
  * Class TriggerController
@@ -29,7 +27,7 @@ class TriggerController extends Controller
     /**
      * Save a notification trigger.
      */
-    public function actionSaveTrigger()
+    public function actionSave()
     {
         $this->requirePostRequest();
         $this->requireLogin();
@@ -42,49 +40,16 @@ class TriggerController extends Controller
         $event  = $request->getBodyParam('event');
         $config = $request->getBodyParam('config');
 
+        // JSON encode config
+        $config = Json::encode($config);
 
-//        Craft::dd($config);
-
-
-
-
-        // If an ID exists
-        if ($id) {
-
-            // Get existing record
-            $trigger = Trigger::findOne($id);
-
-            // If bad ID, throw an error
-            if (!$trigger) {
-                throw new Exception("No trigger exists with the ID '{$id}'");
-            }
-
-        } else {
-
-            // Create new trigger
-            $trigger = new Trigger();
-            $trigger->id = $id;
-
-        }
-
-        $trigger->event  = $event;
-        $trigger->config = $config;
-
-        /** @var Transaction $transaction */
-        $transaction = Craft::$app->getDb()->beginTransaction();
-
-        try {
-            // Save it!
-            $trigger->save(false);
-
-            $transaction->commit();
-        } catch (Throwable $e) {
-            $transaction->rollBack();
-
-            throw $e;
-        }
-
-
+        // Insert or update the Trigger Record
+        Db::upsert('{{%notifier_triggers}}', [
+            'id' => $id,
+        ], [
+            'event'  => $event,
+            'config' => $config,
+        ], [], false);
 
         // Redirect to index of notifications
         return $this->redirect(UrlHelper::cpUrl('notifier'));

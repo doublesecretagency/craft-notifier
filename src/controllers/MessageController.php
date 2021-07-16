@@ -12,12 +12,9 @@
 namespace doublesecretagency\notifier\controllers;
 
 use Craft;
+use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
-use doublesecretagency\notifier\records\Message;
-use Throwable;
-use yii\base\Exception;
-use yii\db\Transaction;
 
 /**
  * Class MessageController
@@ -29,7 +26,7 @@ class MessageController extends Controller
     /**
      * Save a notification message.
      */
-    public function actionSaveMessage()
+    public function actionSave()
     {
         $this->requirePostRequest();
         $this->requireLogin();
@@ -44,51 +41,15 @@ class MessageController extends Controller
         $template  = $request->getBodyParam('template');
         $subject   = $request->getBodyParam('subject');
 
-
-//        Craft::dd($config);
-
-
-
-
-        // If an ID exists
-        if ($id) {
-
-            // Get existing record
-            $message = Message::findOne($id);
-
-            // If bad ID, throw an error
-            if (!$message) {
-                throw new Exception("No message exists with the ID '{$id}'");
-            }
-
-        } else {
-
-            // Create new message
-            $message = new Message();
-            $message->id = $id;
-            $message->triggerId = $triggerId;
-
-        }
-
-        $message->type     = $type;
-        $message->template = $template;
-        $message->subject  = $subject;
-
-        /** @var Transaction $transaction */
-        $transaction = Craft::$app->getDb()->beginTransaction();
-
-        try {
-            // Save it!
-            $message->save(false);
-
-            $transaction->commit();
-        } catch (Throwable $e) {
-            $transaction->rollBack();
-
-            throw $e;
-        }
-
-
+        // Insert or update the Message Record
+        Db::upsert('{{%notifier_messages}}', [
+            'id' => $id,
+        ], [
+            'triggerId' => $triggerId,
+            'type'      => $type,
+            'template'  => $template,
+            'subject'   => $subject,
+        ], [], false);
 
         // Redirect to index of notifications
         return $this->redirect(UrlHelper::cpUrl('notifier'));
