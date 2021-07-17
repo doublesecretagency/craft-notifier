@@ -18,6 +18,7 @@ use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\helpers\Notifier;
+use doublesecretagency\notifier\models\Message as MessageModel;
 use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
 
@@ -82,28 +83,27 @@ class NotifierPlugin extends Plugin
                 /** @var Entry $entry */
                 $entry = $event->sender;
 
-                // If entry is just a draft, bail
-                if ($entry->isDraft) {
+                // If entry is a revision, bail
+                if ($entry->getIsRevision()) {
                     return;
                 }
-
-
-                $entry = $entry->getAttributes();
-
 
                 // Get all relevant triggers
                 $triggers = Notifier::getTriggersByType('Entry::EVENT_AFTER_SAVE');
 
-
+                // Loop through all triggers
                 foreach ($triggers as $trigger) {
 
-
+                    // Get trigger configuration
                     $config = $trigger->getConfiguration();
 
-//                    Craft::dd($config);
-                    // Check for freshness
-                    // Check for correct section(s)
+                    // Valid the conditions of an Entry event
+                    $valid = $trigger->validateEntry($config, $event);
 
+                    // If the Entry event is not valid, skip it
+                    if (!$valid) {
+                        continue;
+                    }
 
 
                     // TEMP
@@ -112,29 +112,22 @@ class NotifierPlugin extends Plugin
                     // ENDTEMP
 
 
+                    // Set data for message templates
                     $data = [
                         'entry' => $entry,
                         'user' => $user,
                     ];
 
-//                    Craft::dd($data);
-
-
+                    // Get messages related to this trigger
                     $messages = $trigger->getMessages();
 
                     // Send each message
                     foreach ($messages as $message) {
+                        /** @var MessageModel $message */
                         $message->send($data);
                     }
+
                 }
-
-
-
-                // $isNew = $event->isNew;
-                // $section = $entry->getSection()->handle;
-
-//                Craft::dd($entry);
-//                Craft::dd($config);
 
             }
         );

@@ -23,7 +23,26 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     public function getGlobals(): array
     {
-        return ['notifier' => new Notifier()];
+        return [
+            'notifier' => new Notifier(),
+            'notifierOptions' => [
+                'triggers' => [
+                    'event' => [
+                        'Entry::EVENT_AFTER_SAVE' => 'When an Entry is saved',
+                    ],
+                    'freshness' => [
+                        'new' => 'New entries only',
+                        'existing' => 'Existing entries only',
+                        'both' => 'Both new & existing entries',
+                    ],
+                    'drafts' => [
+                        'published' => 'Published entries only',
+                        'drafts' => 'Draft entries only',
+                        'both' => 'Both draft & published entries',
+                    ],
+                ]
+            ]
+        ];
     }
 
 }

@@ -18,40 +18,18 @@
         {% for trigger in notifier.getTriggers() %}
 
             <div class="grid-container">
-
                 <div class="collapse">
                     <div class="chevron"></div>
                 </div>
-
-                <a class="trigger" href="{{ cpUrl("notifier/trigger/#{trigger.id}") }}" tabindex="0">
-                    {% switch trigger.event %}
-                        {% case 'Entry::EVENT_AFTER_SAVE' %}
-                            When an Entry is saved...
-                        {% default %}
-                            {{ trigger.event }}
-                    {% endswitch %}
-                    <pre><code>{{ trigger.config }}</code></pre>
-                </a>
-
+                {% include 'notifier/_block/trigger' %}
                 <div>
                     {% for message in trigger.getMessages() %}
-                        <a class="message" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}") }}" tabindex="0">
-                            {% switch message.type %}
-                                {% case 'email' %}
-                                    Send an email ("{{ message.subject }}")
-                                {% case 'sms' %}
-                                    Send an SMS (Text Message)
-                                {% default %}
-                                    {{ message.type }}
-                            {% endswitch %}
-                            <pre><code>{{ message.template }}</code></pre>
-                        </a>
+                        {% include 'notifier/_block/message' %}
                     {% endfor %}
                     <a class="btn submit add icon" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/new") }}" role="button" tabindex="0">
                         Add a message
                     </a>
                 </div>
-
             </div>
 
         {% else %}
@@ -71,6 +49,21 @@
     grid-gap: 6px;
     margin-bottom: 16px;
 }
+.grid-container .block-label {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 6px;
+}
+.grid-container table {
+    margin-left: 4px;
+}
+.grid-container table td {
+    padding: 4px !important;
+}
+.grid-container table td:nth-child(1) {
+    font-weight: bold;
+    text-align: right;
+}
 .chevron {
     margin-top: 5px;
     display: block;
@@ -86,20 +79,28 @@
     position: relative;
 }
 .trigger {
+    color: #ffffff;
+    background-color: #8b1b31;
     display: block;
-    color: white;
-    padding: 10px 16px;
-    background-color: red;
     cursor: pointer;
+    padding: 10px 16px;
+}
+.trigger:hover {
+    color: #000000;
+    background-color: #e3534c;
+    text-decoration: none;
 }
 .message {
+    color: #ffffff;
+    background-color: #7b9033;
     display: block;
-    color: white;
-    font-weight: bold;
-    padding: 10px 16px;
-    border: 1px solid #999999;
-    margin-bottom: 6px;
-    background-color: green;
     cursor: pointer;
+    padding: 10px 16px;
+    margin-bottom: 6px;
+}
+.message:hover {
+    color: #000000;
+    background-color: #91ae5f;
+    text-decoration: none;
 }
 {% endcss %}

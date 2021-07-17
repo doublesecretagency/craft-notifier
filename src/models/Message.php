@@ -16,7 +16,6 @@ use craft\base\Model;
 use craft\mail\Message as Email;
 use craft\web\View;
 use Exception;
-use yii\base\BaseObject;
 
 /**
  * Class Message

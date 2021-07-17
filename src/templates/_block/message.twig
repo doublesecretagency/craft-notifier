@@ -1,0 +1,25 @@
+<a class="message" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}") }}" tabindex="0">
+
+    {% switch message.type %}
+        {% case 'email' %}
+            <div class="block-label">Send an email</div>
+        {% case 'sms' %}
+            <div class="block-label">Send an SMS (Text Message)</div>
+        {% default %}
+            <div class="block-label">{{ message.type }}</div>
+    {% endswitch %}
+
+    <table>
+        {% if 'email' == message.type %}
+            <tr>
+                <td>Subject</td>
+                <td>{{ message.subject }}</td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td>Template</td>
+            <td>{{ message.template }}</td>
+        </tr>
+    </table>
+
+</a>

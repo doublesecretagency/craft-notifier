@@ -1,0 +1,43 @@
+<a class="trigger" href="{{ cpUrl("notifier/trigger/#{trigger.id}") }}" tabindex="0">
+
+    {% switch trigger.event %}
+        {% case 'Entry::EVENT_AFTER_SAVE' %}
+            <div class="block-label">When an Entry is saved</div>
+        {% default %}
+            <div class="block-label">{{ trigger.event }}</div>
+    {% endswitch %}
+
+    <table>
+        {% for key,val in trigger.config|json_decode %}
+            {% switch key %}
+                {% case 'freshness' %}
+                    <tr>
+                        <td>Freshness</td>
+                        <td>{{ notifierOptions.triggers.freshness[val] ?? false }}</td>
+                    </tr>
+                {% case 'drafts' %}
+                    <tr>
+                        <td>Drafts</td>
+                        <td>{{ notifierOptions.triggers.drafts[val] ?? false }}</td>
+                    </tr>
+                {% case 'sections' %}
+                    {% set sections = val %}
+                    <tr>
+                        <td>Sections</td>
+                        <td>
+                            {% if '*' == sections %}
+                                All sections
+                            {% elseif '' == sections %}
+                                None selected
+                            {% elseif sections is iterable %}
+                                {% for s in sections %}
+                                    <div>- {{ craft.app.sections.getSectionByHandle(s).name ?? false }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                    </tr>
+            {% endswitch %}
+        {% endfor %}
+    </table>
+
+</a>

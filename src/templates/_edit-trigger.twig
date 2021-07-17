@@ -30,9 +30,7 @@
         instructions: "While in beta, _this is the only available event trigger_."|t('notifier'),
         id: 'event',
         name: 'event',
-        options: {
-            'Entry::EVENT_AFTER_SAVE': 'When an Entry is saved',
-        },
+        options: notifierOptions.triggers.event,
         value: (trigger.event ?? false)
     }) }}
     {# 'another': 'Another test event' #}
@@ -42,12 +40,17 @@
         instructions: "Should this event be triggered by **new** entries, **existing** entries, or **both**?"|t('notifier'),
         id: 'config-freshness',
         name: 'config[freshness]',
-        options: {
-            'both': 'Both new & existing entries',
-            'new': 'New entries only',
-            'existing': 'Existing entries only',
-        },
+        options: notifierOptions.triggers.freshness,
         value: (config.freshness ?? false)
+    }) }}
+
+    {{ forms.selectField({
+        label: "Drafts"|t('notifier'),
+        instructions: "Should this event be triggered by **published** entries, **draft** entries, or **both**?"|t('notifier'),
+        id: 'config-drafts',
+        name: 'config[drafts]',
+        options: notifierOptions.triggers.drafts,
+        value: (config.drafts ?? false)
     }) }}
 
     {{ forms.checkboxSelectField({
