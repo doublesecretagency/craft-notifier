@@ -1,0 +1,93 @@
+{% import '_includes/forms' as forms %}
+
+{% set customUsersInstructions %}
+These Users will be the recipients of your message. Read more about working with <a href="https://craftcms.com/docs/3.x/users.html#querying-users" target="_blank">User Queries</a>.
+
+Use this snippet to generate a custom array of Users. You **must** use the snippet to explicitly **`set users`**.
+{% endset %}
+
+{% set customEmailsInstructions %}
+These email addresses will be the recipients of your message.
+
+Use this snippet to generate a custom array of email addresses. You **must** use the snippet to explicitly **`set emails`**.
+{% endset %}
+
+{% set customUsersSnippet %}
+    {%- verbatim -%}
+{% set users = craft.users
+    .admin()
+    .all() %}
+    {%- endverbatim -%}
+{% endset %}
+
+{% set customEmailsSnippet %}
+    {%- verbatim -%}
+{% set emails = [
+    'john@example.com',
+    'jane@example.com'
+] %}
+    {%- endverbatim -%}
+{% endset %}
+
+{{ forms.selectField({
+    label: "Get Recipients"|t('notifier'),
+    instructions: "How should the list of recipients be collected?"|t('notifier'),
+    id: 'customType',
+    name: 'customType',
+    value: (message ? message.recipients),
+    options: {
+        '': '',
+        'users': 'Get a collection of Users',
+        'emails': 'Get a collection of email addresses',
+    },
+    inputAttributes: {
+        'v-model': 'customType',
+    }
+}) }}
+
+<div v-cloak v-if="'users' === customType">
+    {{ forms.textareaField({
+        label: "Snippet to Identify Users"|t('notifier'),
+        instructions: customUsersInstructions|t('notifier'),
+        id: 'customUsers',
+        class: 'code',
+        name: 'customUsers',
+        rows: 6,
+        value: customUsersSnippet
+    }) }}
+    {# value: (message ? message.custom), #}
+</div>
+
+<div v-cloak v-if="'emails' === customType">
+    {{ forms.textareaField({
+        label: "Snippet to Identify Email Addresses"|t('notifier'),
+        instructions: customEmailsInstructions|t('notifier'),
+        id: 'customEmails',
+        class: 'code',
+        name: 'customEmails',
+        rows: 6,
+        value: customEmailsSnippet
+    }) }}
+    {# value: (message ? message.custom), #}
+</div>
+
+<div class="available-variables" v-cloak v-if="['users','emails'].indexOf(customType) !== -1">
+    <p>One or more Twig variables may be automatically available in this context. Which variables are available depends entirely on how the notification will be triggered.</p>
+
+    <h4>Potentially Available Variables</h4>
+    <table class="data">
+        <tr>
+            <td class="code">entry</td>
+            <td>The Entry which triggered this message.</td>
+        </tr>
+    </table>
+</div>
+
+{% css %}
+.available-variables {
+    margin-top: 20px;
+}
+.available-variables table {
+    border: 1px solid #999999
+}
+{% endcss %}

@@ -1,27 +1,9 @@
-{% extends '_layouts/cp' %}
 {% import '_includes/forms' as forms %}
-{% set fullPageForm = true %}
 
-{% set existing = (messageId ?? false) %}
-{% set message  = (existing ? notifier.getMessageById(messageId)) %}
-{% set title    = (existing ? 'Edit Message' : 'Add a New Message')|t('notifier') %}
+<h2>Message Body Configuration</h2>
+<p>Configure your notification message as desired.</p>
 
-{% set crumbs = [
-    {'label': 'Notifier'|t('notifier'), 'url': url('notifier')},
-    {'label': title, 'url': false},
-] %}
-
-{% block actionButton %}
-    <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
-{% endblock %}
-
-{% set content %}
-    {{ actionInput('notifier/message/save') }}
-    {{ hiddenInput('triggerId', triggerId) }}
-    {{ existing ? hiddenInput('id', messageId) }}
-
-    <h2>Message Body Configuration</h2>
-    <p>Configure your notification message as desired.</p>
+<div id="message-body">
 
     {{ forms.selectField({
         label: "Message Type"|t('notifier'),
@@ -52,9 +34,4 @@
         value: (message ? message.subject)
     }) }}
 
-    <hr>
-
-    <h2>Message Recipients</h2>
-    <p>This part is very complicated.</p>
-
-{% endset %}
+</div>

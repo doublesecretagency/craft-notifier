@@ -1,0 +1,20 @@
+{% import '_includes/forms' as forms %}
+
+{{ forms.editableTableField({
+    label: "Recipient Email Addresses"|t('app'),
+    instructions: "Enter the email address of each recipient."|t('notifier'),
+    id: 'recipientEmails',
+    name: 'recipientEmails',
+    cols: {
+        email: {
+            type: 'singleline',
+            heading: "Email Address"|t('app'),
+            placeholder: "recipient@example.com"|t('notifier'),
+        }
+    }|filter,
+    rows: {
+        init: {
+            email: '',
+        }
+    },
+}) }}

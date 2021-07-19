@@ -22,6 +22,8 @@
     {{ actionInput('notifier/trigger/save') }}
     {{ existing ? hiddenInput('id', triggerId) }}
 
+    {% include 'notifier/_form/trigger/related-messages' %}
+
     <h2>Event Trigger Configuration</h2>
     <p>Configure when the notification(s) should be triggered.</p>
 

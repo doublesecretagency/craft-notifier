@@ -146,8 +146,8 @@ class NotifierPlugin extends Plugin
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             static function(RegisterUrlRulesEvent $event) {
                 // Set template paths
-                $triggerTemplate = ['template' => 'notifier/_edit-trigger'];
-                $messageTemplate = ['template' => 'notifier/_edit-message'];
+                $triggerTemplate = ['template' => 'notifier/_form/trigger'];
+                $messageTemplate = ['template' => 'notifier/_form/message'];
                 // Routes for editing Triggers
                 $event->rules['notifier/trigger/new']             = $triggerTemplate;
                 $event->rules['notifier/trigger/<triggerId:\d+>'] = $triggerTemplate;

@@ -1,0 +1,13 @@
+{% import '_includes/forms' as forms %}
+
+{# status: entry.getAttributeStatus('authorId'), #}
+{{ forms.elementSelectField({
+    label: "Specify Message Recipients"|t('notifier'),
+    instructions: "Select all users who will recieve this message."|t('notifier'),
+    id: 'recipientUsers',
+    name: 'recipientUsers',
+    elementType: notifierUserElementType,
+    selectionLabel: "Select a recipient"|t('notifier'),
+}) }}
+{# criteria: authorOptionCriteria, #}
+{# elements: (author is defined and author ? [author]) #}

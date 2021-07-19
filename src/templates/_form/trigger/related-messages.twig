@@ -1,0 +1,25 @@
+{% set messages = (trigger.getMessages() ?? []) %}
+
+<div class="flex">
+    {% for message in messages %}
+        <a class="message" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}") }}" tabindex="0">
+            <div class="block-label">{{ message.subject }}</div>
+        </a>
+    {% endfor %}
+</div>
+
+{% css %}
+.message {
+    color: #ffffff;
+    background-color: #7b9033;
+    display: block;
+    cursor: pointer;
+    padding: 10px 16px;
+    margin-bottom: 6px;
+}
+.message:hover {
+    color: #000000;
+    background-color: #91ae5f;
+    text-decoration: none;
+}
+{% endcss %}

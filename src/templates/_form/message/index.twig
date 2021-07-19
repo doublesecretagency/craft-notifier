@@ -1,0 +1,34 @@
+{% extends '_layouts/cp' %}
+{% set fullPageForm = true %}
+
+{# Load Vue assets #}
+{% do view.registerAssetBundle('craft\\web\\assets\\vue\\VueAsset') %}
+
+{# Cloak elements until ready #}
+{% css '[v-cloak] {display:none}' %}
+
+{% set existing = (messageId ?? false) %}
+{% set message  = (existing ? notifier.getMessageById(messageId)) %}
+{% set title    = (existing ? 'Edit Message' : 'Add a New Message')|t('notifier') %}
+
+{% set crumbs = [
+    {'label': 'Notifier'|t('notifier'), 'url': url('notifier')},
+    {'label': title, 'url': false},
+] %}
+
+{% block actionButton %}
+    <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
+{% endblock %}
+
+{% set content %}
+    {{ actionInput('notifier/message/save') }}
+    {{ hiddenInput('triggerId', triggerId) }}
+    {{ existing ? hiddenInput('id', messageId) }}
+
+    {% include 'notifier/_form/message/related-trigger' %}
+
+    {% include 'notifier/_form/message/body' %}
+    <hr>
+    {% include 'notifier/_form/message/recipients' %}
+
+{% endset %}

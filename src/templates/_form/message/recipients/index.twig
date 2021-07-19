@@ -1,0 +1,63 @@
+{% import '_includes/forms' as forms %}
+
+<h2>Message Recipients</h2>
+<p>Determine who will receive this message.</p>
+
+<div id="message-recipients">
+
+    {{ forms.selectField({
+        label: "Send Message To"|t('notifier'),
+        instructions: "Who should recieve this message?"|t('notifier'),
+        id: 'recipients',
+        name: 'recipients',
+        value: (message ? message.recipients),
+        options: {
+            '': '',
+            'all-users': 'All users',
+            'all-admins': 'All admins',
+            'all-users-in-group': 'All users in selected group(s)',
+            'specific-users': 'Specific users',
+            'specific-emails': 'Specific email addresses',
+            'custom': 'Custom selection',
+        },
+        inputAttributes: {
+            'v-model': 'selectedRecipients',
+        }
+    }) }}
+
+    <div v-cloak v-if="'all-users' === selectedRecipients">
+        {% include 'notifier/_form/message/recipients/all-users' %}
+    </div>
+
+    <div v-cloak v-if="'all-admins' === selectedRecipients">
+        {% include 'notifier/_form/message/recipients/all-admins' %}
+    </div>
+
+    <div v-cloak v-if="'all-users-in-group' === selectedRecipients">
+        {% include 'notifier/_form/message/recipients/all-users-in-group' %}
+    </div>
+
+    <div v-cloak v-if="'specific-users' === selectedRecipients">
+        {% include 'notifier/_form/message/recipients/specific-users' %}
+    </div>
+
+    <div v-cloak v-if="'specific-emails' === selectedRecipients">
+        {% include 'notifier/_form/message/recipients/specific-emails' %}
+    </div>
+
+    <div v-cloak v-if="'custom' === selectedRecipients">
+        {% include 'notifier/_form/message/recipients/custom' %}
+    </div>
+
+</div>
+
+
+{% js %}
+new Vue({
+    el: '#message-recipients',
+    data: {
+        selectedRecipients: null,
+        customType: null
+    }
+})
+{% endjs %}

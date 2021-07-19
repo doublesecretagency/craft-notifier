@@ -11,6 +11,7 @@
 
 namespace doublesecretagency\notifier\web\twig;
 
+use craft\elements\User;
 use doublesecretagency\notifier\helpers\Notifier;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -25,6 +26,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
     {
         return [
             'notifier' => new Notifier(),
+            'notifierUserElementType' => User::class,
             'notifierOptions' => [
                 'triggers' => [
                     'event' => [
