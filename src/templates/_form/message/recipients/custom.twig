@@ -32,46 +32,46 @@ Use this snippet to generate a custom array of email addresses. You **must** use
 {{ forms.selectField({
     label: "Get Recipients"|t('notifier'),
     instructions: "How should the list of recipients be collected?"|t('notifier'),
-    id: 'customType',
-    name: 'customType',
-    value: (message ? message.recipients),
+    id: 'recipientsCustomType',
+    name: 'recipientsCustomType',
+    value: (message.recipientsCustomType ?? null),
     options: {
         '': '',
         'users': 'Get a collection of Users',
         'emails': 'Get a collection of email addresses',
     },
     inputAttributes: {
-        'v-model': 'customType',
+        'v-model': 'recipientsCustomType',
     }
 }) }}
 
-<div v-cloak v-if="'users' === customType">
+<div v-cloak v-if="'users' === recipientsCustomType">
     {{ forms.textareaField({
         label: "Snippet to Identify Users"|t('notifier'),
         instructions: customUsersInstructions|t('notifier'),
-        id: 'customUsers',
+        id: 'recipientsCustomUsers',
+        name: 'recipientsCustomUsers',
         class: 'code',
-        name: 'customUsers',
         rows: 6,
         value: customUsersSnippet
     }) }}
-    {# value: (message ? message.custom), #}
+    {# value: (message.recipientsCustomUsers ?? null), #}
 </div>
 
-<div v-cloak v-if="'emails' === customType">
+<div v-cloak v-if="'emails' === recipientsCustomType">
     {{ forms.textareaField({
         label: "Snippet to Identify Email Addresses"|t('notifier'),
         instructions: customEmailsInstructions|t('notifier'),
-        id: 'customEmails',
+        id: 'recipientsCustomEmails',
+        name: 'recipientsCustomEmails',
         class: 'code',
-        name: 'customEmails',
         rows: 6,
         value: customEmailsSnippet
     }) }}
-    {# value: (message ? message.custom), #}
+    {# value: (message.recipientsCustomEmails ?? null), #}
 </div>
 
-<div class="available-variables" v-cloak v-if="['users','emails'].indexOf(customType) !== -1">
+<div class="available-variables" v-cloak v-if="['users','emails'].indexOf(recipientsCustomType) !== -1">
     <hr>
 
     <p>One or more Twig variables may be automatically available in this context. Which variables are available depends entirely on how the notification will be triggered.</p>

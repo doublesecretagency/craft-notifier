@@ -50,9 +50,47 @@ class Message extends Model
     public $subject;
 
     /**
-     * @var mixed Collection of message recipients.
+     * @var string Type of recipients specification.
      */
-    public $recipients;
+    public $recipientsType;
+
+    /**
+     * @var string Type of custom recipients snippet.
+     */
+    public $recipientsCustomType;
+
+    /**
+     * @var string Snippet to retrieve custom Users.
+     */
+    public $recipientsCustomUsers;
+
+    /**
+     * @var string Snippet to retrieve custom email addresses.
+     */
+    public $recipientsCustomEmails;
+
+    // ========================================================================= //
+
+    /**
+     * Get an array of email addresses, based on the internal configuration.
+     */
+    public function getRecipients()
+    {
+        switch ($this->recipientsType) {
+            case 'all-users':
+//                return $this->_getRecipientsAllUsers();
+            case 'all-admins':
+//                return $this->_getRecipientsAllAdmins();
+            case 'all-users-in-group':
+//                return $this->_getRecipientsAllUsersInGroup();
+            case 'specific-users':
+//                return $this->_getRecipientsSpecificUsers();
+            case 'specific-emails':
+//                return $this->_getRecipientsSpecificEmails();
+            case 'custom':
+//                return $this->_getRecipientsCustom();
+        }
+    }
 
     // ========================================================================= //
 

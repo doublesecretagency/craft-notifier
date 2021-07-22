@@ -40,6 +40,10 @@ class MessageController extends Controller
         $type      = $request->getBodyParam('type');
         $template  = $request->getBodyParam('template');
         $subject   = $request->getBodyParam('subject');
+        $recipientsType         = $request->getBodyParam('recipientsType');
+        $recipientsCustomType   = $request->getBodyParam('recipientsCustomType');
+        $recipientsCustomUsers  = $request->getBodyParam('recipientsCustomUsers');
+        $recipientsCustomEmails = $request->getBodyParam('recipientsCustomEmails');
 
         // Insert or update the Message Record
         Db::upsert('{{%notifier_messages}}', [
@@ -49,6 +53,10 @@ class MessageController extends Controller
             'type'      => $type,
             'template'  => $template,
             'subject'   => $subject,
+            'recipientsType'         => $recipientsType,
+            'recipientsCustomType'   => $recipientsCustomType,
+            'recipientsCustomUsers'  => $recipientsCustomUsers,
+            'recipientsCustomEmails' => $recipientsCustomEmails,
         ], [], false);
 
         // Redirect to index of notifications

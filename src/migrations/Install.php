@@ -55,7 +55,10 @@ class Install extends Migration
             'type'        => $this->string(),
             'template'    => $this->string(),
             'subject'     => $this->string(),
-            'recipients'  => $this->string(),
+            'recipientsType'         => $this->string(),
+            'recipientsCustomType'   => $this->string(),
+            'recipientsCustomUsers'  => $this->text(),
+            'recipientsCustomEmails' => $this->text(),
         ]);
     }
 

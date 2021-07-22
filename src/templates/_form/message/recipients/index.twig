@@ -8,9 +8,9 @@
     {{ forms.selectField({
         label: "Send Message To"|t('notifier'),
         instructions: "Who should receive this message?"|t('notifier'),
-        id: 'recipients',
-        name: 'recipients',
-        value: (message ? message.recipients),
+        id: 'recipientsType',
+        name: 'recipientsType',
+        value: (message.recipientsType ?? null),
         options: {
             '': '',
             'all-users': 'All users',
@@ -21,26 +21,26 @@
             'custom': 'Custom selection',
         },
         inputAttributes: {
-            'v-model': 'selectedRecipients',
+            'v-model': 'recipientsType',
         }
     }) }}
 
-    <div v-cloak v-if="'all-users' === selectedRecipients">
+    <div v-cloak v-if="'all-users' === recipientsType">
         {% include 'notifier/_form/message/recipients/all-users' %}
     </div>
-    <div v-cloak v-if="'all-admins' === selectedRecipients">
+    <div v-cloak v-if="'all-admins' === recipientsType">
         {% include 'notifier/_form/message/recipients/all-admins' %}
     </div>
-    <div v-cloak v-if="'all-users-in-group' === selectedRecipients">
+    <div v-cloak v-if="'all-users-in-group' === recipientsType">
         {% include 'notifier/_form/message/recipients/all-users-in-group' %}
     </div>
-    <div v-cloak v-if="'specific-users' === selectedRecipients">
+    <div v-cloak v-if="'specific-users' === recipientsType">
         {% include 'notifier/_form/message/recipients/specific-users' %}
     </div>
-    <div v-cloak v-if="'specific-emails' === selectedRecipients">
+    <div v-cloak v-if="'specific-emails' === recipientsType">
         {% include 'notifier/_form/message/recipients/specific-emails' %}
     </div>
-    <div v-cloak v-if="'custom' === selectedRecipients">
+    <div v-cloak v-if="'custom' === recipientsType">
         {% include 'notifier/_form/message/recipients/custom' %}
     </div>
 
@@ -50,8 +50,8 @@
 new Vue({
     el: '#message-recipients',
     data: {
-        selectedRecipients: null,
-        customType: null
+        recipientsType: null,
+        recipientsCustomType: null
     }
 })
 {% endjs %}
