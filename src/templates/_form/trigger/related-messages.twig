@@ -1,25 +1,20 @@
+{# Load shared resources #}
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NotifierAsset') %}
+
 {% set messages = (trigger.getMessages() ?? []) %}
 
-<div class="flex">
-    {% for message in messages %}
-        <a class="message" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}") }}" tabindex="0">
-            <div class="block-label">{{ message.subject }}</div>
-        </a>
-    {% endfor %}
-</div>
+{% if messages %}
 
-{% css %}
-.message {
-    color: #ffffff;
-    background-color: #7b9033;
-    display: block;
-    cursor: pointer;
-    padding: 10px 16px;
-    margin-bottom: 6px;
-}
-.message:hover {
-    color: #000000;
-    background-color: #91ae5f;
-    text-decoration: none;
-}
-{% endcss %}
+    <h2>Related Notification Messages</h2>
+    <p>These messages will be sent when the trigger is activated.</p>
+
+    <div class="flex">
+        {% for message in messages %}
+            {% include 'notifier/_block/message' with {
+                'trigger': trigger,
+                'message': message,
+            } only %}
+        {% endfor %}
+    </div>
+
+{% endif %}

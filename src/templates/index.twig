@@ -1,6 +1,9 @@
 {% extends '_layouts/cp' %}
 {% set title = 'Manage Notifications'|t('notifier') %}
 
+{# Load shared resources #}
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NotifierAsset') %}
+
 {% set crumbs = [
     {'label': 'Notifier'|t('notifier'), 'url': url('notifier')},
 ] %}
@@ -21,10 +24,15 @@
                 <div class="collapse">
                     <div class="chevron"></div>
                 </div>
-                {% include 'notifier/_block/trigger' %}
+                {% include 'notifier/_block/trigger' with {
+                    'trigger': trigger,
+                } only %}
                 <div>
                     {% for message in trigger.getMessages() %}
-                        {% include 'notifier/_block/message' %}
+                        {% include 'notifier/_block/message' with {
+                            'trigger': trigger,
+                            'message': message,
+                        } only %}
                     {% endfor %}
                     <a class="btn submit add icon" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/new") }}" role="button" tabindex="0">
                         Add a message
@@ -46,23 +54,8 @@
 .grid-container {
     display: grid;
     grid-template-columns: 16px 40% auto;
-    grid-gap: 6px;
+    grid-gap: 12px;
     margin-bottom: 16px;
-}
-.grid-container .block-label {
-    font-weight: bold;
-    text-decoration: underline;
-    margin-bottom: 6px;
-}
-.grid-container table {
-    margin-left: 4px;
-}
-.grid-container table td {
-    padding: 4px !important;
-}
-.grid-container table td:nth-child(1) {
-    font-weight: bold;
-    text-align: right;
 }
 .chevron {
     margin-top: 5px;
@@ -78,29 +71,8 @@
     transform: rotate(45deg);
     position: relative;
 }
-.trigger {
-    color: #ffffff;
-    background-color: #8b1b31;
-    display: block;
-    cursor: pointer;
-    padding: 10px 16px;
-}
-.trigger:hover {
-    color: #000000;
-    background-color: #e3534c;
-    text-decoration: none;
-}
-.message {
-    color: #ffffff;
-    background-color: #7b9033;
-    display: block;
-    cursor: pointer;
-    padding: 10px 16px;
-    margin-bottom: 6px;
-}
-.message:hover {
-    color: #000000;
-    background-color: #91ae5f;
-    text-decoration: none;
+
+.notifier-message {
+    margin-bottom: 14px;
 }
 {% endcss %}

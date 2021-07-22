@@ -1,4 +1,4 @@
-<a class="trigger" href="{{ cpUrl("notifier/trigger/#{trigger.id}") }}" tabindex="0">
+<a class="notifier-block notifier-trigger" href="{{ cpUrl("notifier/trigger/#{trigger.id}") }}" tabindex="0">
 
     {% switch trigger.event %}
         {% case 'Entry::EVENT_AFTER_SAVE' %}

@@ -4,7 +4,7 @@
 
 {% set existing = (triggerId ?? false) %}
 {% set trigger  = (existing ? notifier.getTriggerById(triggerId)) %}
-{% set title    = (existing ? 'Edit Notification Trigger' : 'Add a Notification Trigger')|t('notifier') %}
+{% set title    = (existing ? 'Edit Trigger' : 'Add a Trigger')|t('notifier') %}
 
 {# JSON decode the trigger configuration #}
 {% set config = (trigger.config ?? '{}')|json_decode %}
@@ -22,14 +22,11 @@
     {{ actionInput('notifier/trigger/save') }}
     {{ existing ? hiddenInput('id', triggerId) }}
 
-    {% include 'notifier/_form/trigger/related-messages' %}
-
-    <h2>Event Trigger Configuration</h2>
-    <p>Configure when the notification(s) should be triggered.</p>
+    <h2>Configure the Trigger</h2>
 
     {{ forms.selectField({
         label: "Event Trigger"|t('notifier'),
-        instructions: "While in beta, _this is the only available event trigger_."|t('notifier'),
+        instructions: "**BETA:** While in beta, this is the only available event trigger."|t('notifier'),
         id: 'event',
         name: 'event',
         options: notifierOptions.triggers.event,
@@ -64,5 +61,9 @@
         showAllOption: true,
         values: (config.sections ?? '*')
     }) }}
+
+    <hr>
+
+    {% include 'notifier/_form/trigger/related-messages' %}
 
 {% endset %}

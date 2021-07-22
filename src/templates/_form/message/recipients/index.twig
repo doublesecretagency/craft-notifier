@@ -7,7 +7,7 @@
 
     {{ forms.selectField({
         label: "Send Message To"|t('notifier'),
-        instructions: "Who should recieve this message?"|t('notifier'),
+        instructions: "Who should receive this message?"|t('notifier'),
         id: 'recipients',
         name: 'recipients',
         value: (message ? message.recipients),
@@ -28,29 +28,23 @@
     <div v-cloak v-if="'all-users' === selectedRecipients">
         {% include 'notifier/_form/message/recipients/all-users' %}
     </div>
-
     <div v-cloak v-if="'all-admins' === selectedRecipients">
         {% include 'notifier/_form/message/recipients/all-admins' %}
     </div>
-
     <div v-cloak v-if="'all-users-in-group' === selectedRecipients">
         {% include 'notifier/_form/message/recipients/all-users-in-group' %}
     </div>
-
     <div v-cloak v-if="'specific-users' === selectedRecipients">
         {% include 'notifier/_form/message/recipients/specific-users' %}
     </div>
-
     <div v-cloak v-if="'specific-emails' === selectedRecipients">
         {% include 'notifier/_form/message/recipients/specific-emails' %}
     </div>
-
     <div v-cloak v-if="'custom' === selectedRecipients">
         {% include 'notifier/_form/message/recipients/custom' %}
     </div>
 
 </div>
-
 
 {% js %}
 new Vue({

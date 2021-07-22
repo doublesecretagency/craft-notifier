@@ -1,0 +1,50 @@
+.notifier-trigger {
+    border-color: #dbbeae;
+    background-color: #ffede3;
+}
+.notifier-trigger:hover {
+    background-color: #fff9e3;
+}
+.notifier-message {
+    border-color: #a2d5c6;
+    background-color: #f2fcf9;
+}
+.notifier-message:hover {
+    background-color: #fff9e3;
+}
+
+/* ========================================================================= */
+
+.notifier-block {
+    color: #3f4d5a;
+    display: block;
+    cursor: pointer;
+    padding: 14px 20px 12px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px rgba(205, 216, 228, 0.25), 0 2px 12px rgba(205, 216, 228, 0.5);
+}
+.notifier-block:hover {
+    text-decoration: none;
+}
+
+/* ========================================================================= */
+
+.notifier-block .block-label {
+    color: #596673;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.notifier-block table {
+    margin-left: 4px;
+}
+.notifier-block table td {
+    padding: 4px !important;
+}
+.notifier-block table td:nth-child(1) {
+    font-weight: bold;
+    text-align: right;
+}

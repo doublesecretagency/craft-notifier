@@ -1,19 +1,18 @@
 {% import '_includes/forms' as forms %}
 
-<h2>Message Body Configuration</h2>
-<p>Configure your notification message as desired.</p>
+<h2>Configure the Message</h2>
 
-<div id="message-body">
+<div id="message-body" style="margin-top:24px">
 
     {{ forms.selectField({
         label: "Message Type"|t('notifier'),
-        instructions: "While in beta, only **email** messages are available."|t('notifier'),
+        instructions: "**BETA:** While in beta, only email messages are available."|t('notifier'),
         id: 'type',
         name: 'type',
         options: {
             'email': 'Email',
         },
-        value: (message ? message.type)
+        value: (message.type ?? null)
     }) }}
     {# 'sms': 'SMS (Text Message)' #}
 
@@ -23,7 +22,7 @@
         id: 'template',
         name: 'template',
         suggestions: craft.cp.getTemplateSuggestions(),
-        value: (message ? message.template)
+        value: (message.template ?? null)
     }) }}
 
     {{ forms.textField({
@@ -31,7 +30,7 @@
         instructions: "For email messages only. Will parse Twig tags."|t('notifier'),
         id: 'subject',
         name: 'subject',
-        value: (message ? message.subject)
+        value: (message.subject ?? null)
     }) }}
 
 </div>

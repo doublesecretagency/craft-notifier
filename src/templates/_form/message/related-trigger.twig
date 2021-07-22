@@ -1,25 +1,15 @@
+{# Load shared resources #}
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NotifierAsset') %}
+
 {% set trigger = notifier.getTriggerById(triggerId) %}
 
-<a class="trigger" href="{{ cpUrl("notifier/trigger/#{trigger.id}") }}" tabindex="0">
-    {% switch trigger.event %}
-        {% case 'Entry::EVENT_AFTER_SAVE' %}
-            <div class="block-label">When an Entry is saved</div>
-        {% default %}
-            <div class="block-label">{{ trigger.event }}</div>
-    {% endswitch %}
-</a>
+{% if trigger %}
 
-{% css %}
-.trigger {
-    color: #ffffff;
-    background-color: #8b1b31;
-    display: block;
-    cursor: pointer;
-    padding: 10px 16px;
-}
-.trigger:hover {
-    color: #000000;
-    background-color: #e3534c;
-    text-decoration: none;
-}
-{% endcss %}
+    <h2>Related Notification Trigger</h2>
+    <p>This event is responsible for triggering the message.</p>
+
+    {% include 'notifier/_block/trigger' with {
+        'trigger': trigger,
+    } only %}
+
+{% endif %}

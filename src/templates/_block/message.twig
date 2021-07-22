@@ -1,4 +1,4 @@
-<a class="message" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}") }}" tabindex="0">
+<a class="notifier-block notifier-message" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}") }}" tabindex="0">
 
     {% switch message.type %}
         {% case 'email' %}
