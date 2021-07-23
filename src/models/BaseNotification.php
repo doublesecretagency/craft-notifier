@@ -40,16 +40,24 @@ class BaseNotification extends Model
      */
     public function getConfig(): array
     {
-        // Get config
-        $configRaw = ($this->configRaw ?? '[]');
+        return $this->_jsonDecode($this->configRaw ?? '[]');
+    }
 
+    /**
+     * JSON decode results, providing a valid fallback.
+     *
+     * @param $results
+     * @return array
+     */
+    protected function _jsonDecode($results): array
+    {
         // Check if JSON is valid
         // Must use this function to validate (I know it's redundant)
         /** @noinspection PhpComposerExtensionStubsInspection */
-        $valid = json_decode($configRaw);
+        $valid = json_decode($results);
 
         // Convert config data to an array
-        return ($valid ? Json::decode($configRaw) : []);
+        return ($valid ? Json::decode($results) : []);
     }
 
 }

@@ -102,17 +102,10 @@ class NotifierPlugin extends Plugin
                         continue;
                     }
 
-
-                    // TEMP
-                    // Use current user
-                    $user = Craft::$app->getUser()->getIdentity();
-                    // ENDTEMP
-
-
                     // Set data for message templates
                     $data = [
                         'entry' => $entry,
-                        'user' => $user,
+                        'currentUser' => Craft::$app->getUser()->getIdentity(),
                     ];
 
                     // Get messages related to this trigger
