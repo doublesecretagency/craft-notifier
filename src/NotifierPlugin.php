@@ -94,11 +94,8 @@ class NotifierPlugin extends Plugin
                 // Loop through all triggers
                 foreach ($triggers as $trigger) {
 
-                    // Get trigger configuration
-                    $config = $trigger->getConfiguration();
-
                     // Valid the conditions of an Entry event
-                    $valid = $trigger->validateEntry($config, $event);
+                    $valid = $trigger->validateEntry($event);
 
                     // If the Entry event is not valid, skip it
                     if (!$valid) {

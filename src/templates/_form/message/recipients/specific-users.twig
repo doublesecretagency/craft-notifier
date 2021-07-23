@@ -4,8 +4,8 @@
 {{ forms.elementSelectField({
     label: "Specify Message Recipients"|t('notifier'),
     instructions: "Select all users who will receive this message."|t('notifier'),
-    id: 'recipientUsers',
-    name: 'recipientUsers',
+    id: 'config-recipients-specific-users',
+    name: 'config[recipients][specific][users]',
     elementType: notifierUserElementType,
     selectionLabel: "Select a recipient"|t('notifier'),
 }) }}

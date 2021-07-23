@@ -42,6 +42,19 @@ class Extension extends AbstractExtension implements GlobalsInterface
                         'drafts' => 'Draft entries only',
                         'both' => 'Both draft & published entries',
                     ],
+                ],
+                'messages' => [
+                    'recipients' => [
+                        'type' => [
+                            '' => '',
+                            'all-users' => 'All users',
+                            'all-admins' => 'All admins',
+                            'all-users-in-group' => 'All users in selected group(s)',
+                            'specific-users' => 'Specific users',
+                            'specific-emails' => 'Specific email addresses',
+                            'custom' => 'Custom selection',
+                        ]
+                    ]
                 ]
             ]
         ];

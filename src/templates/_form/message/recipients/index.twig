@@ -1,5 +1,15 @@
 {% import '_includes/forms' as forms %}
 
+{# Get selected types #}
+{% set recipientsType       = (message.config.recipients.type        ?? null) %}
+{% set recipientsCustomType = (message.config.recipients.custom.type ?? null) %}
+
+{# Pass data to Vue instance #}
+{% set data = {
+    'recipientsType': recipientsType,
+    'recipientsCustomType': recipientsCustomType
+} %}
+
 <h2>Message Recipients</h2>
 <p>Determine who will receive this message.</p>
 
@@ -8,18 +18,9 @@
     {{ forms.selectField({
         label: "Send Message To"|t('notifier'),
         instructions: "Who should receive this message?"|t('notifier'),
-        id: 'recipientsType',
-        name: 'recipientsType',
-        value: (message.recipientsType ?? null),
-        options: {
-            '': '',
-            'all-users': 'All users',
-            'all-admins': 'All admins',
-            'all-users-in-group': 'All users in selected group(s)',
-            'specific-users': 'Specific users',
-            'specific-emails': 'Specific email addresses',
-            'custom': 'Custom selection',
-        },
+        id: 'config-recipients-type',
+        name: 'config[recipients][type]',
+        options: notifierOptions.messages.recipients.type,
         inputAttributes: {
             'v-model': 'recipientsType',
         }
@@ -46,12 +47,10 @@
 
 </div>
 
+{% js "window.data = #{data|json_encode|raw}" %}
 {% js %}
 new Vue({
     el: '#message-recipients',
-    data: {
-        recipientsType: null,
-        recipientsCustomType: null
-    }
+    data: window.data
 })
 {% endjs %}

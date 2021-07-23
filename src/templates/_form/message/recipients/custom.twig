@@ -32,9 +32,9 @@ Use this snippet to generate a custom array of email addresses. You **must** use
 {{ forms.selectField({
     label: "Get Recipients"|t('notifier'),
     instructions: "How should the list of recipients be collected?"|t('notifier'),
-    id: 'recipientsCustomType',
-    name: 'recipientsCustomType',
-    value: (message.recipientsCustomType ?? null),
+    id: 'config-recipients-custom-type',
+    name: 'config[recipients][custom][type]',
+    value: (message.config.recipients.custom.type ?? null),
     options: {
         '': '',
         'users': 'Get a collection of Users',
@@ -49,26 +49,24 @@ Use this snippet to generate a custom array of email addresses. You **must** use
     {{ forms.textareaField({
         label: "Snippet to Identify Users"|t('notifier'),
         instructions: customUsersInstructions|t('notifier'),
-        id: 'recipientsCustomUsers',
-        name: 'recipientsCustomUsers',
+        id: 'config-recipients-custom-users',
+        name: 'config[recipients][custom][users]',
+        value: (message.config.recipients.custom.users ?? customUsersSnippet),
         class: 'code',
         rows: 6,
-        value: customUsersSnippet
     }) }}
-    {# value: (message.recipientsCustomUsers ?? null), #}
 </div>
 
 <div v-cloak v-if="'emails' === recipientsCustomType">
     {{ forms.textareaField({
         label: "Snippet to Identify Email Addresses"|t('notifier'),
         instructions: customEmailsInstructions|t('notifier'),
-        id: 'recipientsCustomEmails',
-        name: 'recipientsCustomEmails',
+        id: 'config-recipients-custom-emails',
+        name: 'config[recipients][custom][emails]',
+        value: (message.config.recipients.custom.emails ?? customEmailsSnippet),
         class: 'code',
         rows: 6,
-        value: customEmailsSnippet
     }) }}
-    {# value: (message.recipientsCustomEmails ?? null), #}
 </div>
 
 <div class="available-variables" v-cloak v-if="['users','emails'].indexOf(recipientsCustomType) !== -1">

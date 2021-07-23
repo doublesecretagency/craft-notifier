@@ -13,6 +13,7 @@ namespace doublesecretagency\notifier\controllers;
 
 use Craft;
 use craft\helpers\Db;
+use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 
@@ -39,11 +40,10 @@ class MessageController extends Controller
         $triggerId = $request->getBodyParam('triggerId');
         $type      = $request->getBodyParam('type');
         $template  = $request->getBodyParam('template');
-        $subject   = $request->getBodyParam('subject');
-        $recipientsType         = $request->getBodyParam('recipientsType');
-        $recipientsCustomType   = $request->getBodyParam('recipientsCustomType');
-        $recipientsCustomUsers  = $request->getBodyParam('recipientsCustomUsers');
-        $recipientsCustomEmails = $request->getBodyParam('recipientsCustomEmails');
+        $config    = $request->getBodyParam('config');
+
+        // JSON encode config
+        $config = Json::encode($config);
 
         // Insert or update the Message Record
         Db::upsert('{{%notifier_messages}}', [
@@ -52,11 +52,7 @@ class MessageController extends Controller
             'triggerId' => $triggerId,
             'type'      => $type,
             'template'  => $template,
-            'subject'   => $subject,
-            'recipientsType'         => $recipientsType,
-            'recipientsCustomType'   => $recipientsCustomType,
-            'recipientsCustomUsers'  => $recipientsCustomUsers,
-            'recipientsCustomEmails' => $recipientsCustomEmails,
+            'config'    => $config,
         ], [], false);
 
         // Redirect to index of notifications

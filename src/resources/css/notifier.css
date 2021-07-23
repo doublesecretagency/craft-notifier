@@ -19,10 +19,9 @@
     color: #3f4d5a;
     display: block;
     cursor: pointer;
-    padding: 14px 20px 12px;
+    padding: 18px 25px 15px;
     border-width: 1px;
     border-style: solid;
-    border-radius: 5px;
     box-shadow: 0 0 0 1px rgba(205, 216, 228, 0.25), 0 2px 12px rgba(205, 216, 228, 0.5);
 }
 .notifier-block:hover {

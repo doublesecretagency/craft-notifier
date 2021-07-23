@@ -1,14 +1,14 @@
 {% import '_includes/forms' as forms %}
 
 {{ forms.editableTableField({
-    label: "Recipient Email Addresses"|t('app'),
+    label: "Recipient Email Addresses"|t('notifier'),
     instructions: "Enter the email address of each recipient."|t('notifier'),
-    id: 'recipientEmails',
-    name: 'recipientEmails',
+    id: 'config-recipients-specific-emails',
+    name: 'config[recipients][specific][emails]',
     cols: {
         email: {
             type: 'singleline',
-            heading: "Email Address"|t('app'),
+            heading: "Email Address"|t('notifier'),
             placeholder: "recipient@example.com"|t('notifier'),
         }
     }|filter,

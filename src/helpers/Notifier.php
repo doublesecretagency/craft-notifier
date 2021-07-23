@@ -34,7 +34,7 @@ class Notifier
         $triggers = TriggerRecord::find()->all();
 
         // Return results as Models
-        return static::_toTriggerModels($triggers);
+        return static::_toModels($triggers, TriggerModel::class);
     }
 
     /**
@@ -51,7 +51,7 @@ class Notifier
         ]);
 
         // Return results as Models
-        return static::_toTriggerModels($records);
+        return static::_toModels($records, TriggerModel::class);
     }
 
     /**
@@ -67,11 +67,28 @@ class Notifier
             'id' => $triggerId
         ]);
 
-        // Return as a Model (if a match is found)
-        return ($record ? new TriggerModel($record->getAttributes()) : null);
+        // Return a Trigger Model
+        return static::_toModel($record, TriggerModel::class);
     }
 
     // ========================================================================= //
+
+    /**
+     * Get messages related to this trigger.
+     *
+     * @param TriggerModel
+     * @return array
+     */
+    public static function getTriggerMessages(TriggerModel $trigger): array
+    {
+        // Get all Message Records for this trigger
+        $records = MessageRecord::findAll([
+            'triggerId' => $trigger->id
+        ]);
+
+        // Return all Message Models
+        return static::_toModels($records, MessageModel::class);
+    }
 
     /**
      * Get message with specified ID.
@@ -86,8 +103,8 @@ class Notifier
             'id' => $messageId
         ]);
 
-        // Return as a Model (if a match is found)
-        return ($record ? new MessageModel($record->getAttributes()) : null);
+        // Return a Message Model
+        return static::_toModel($record, MessageModel::class);
     }
 
     // ========================================================================= //
@@ -95,18 +112,44 @@ class Notifier
     /**
      * Convert an array of Trigger Records into Trigger Models
      *
-     * @param array $collection
-     * @return TriggerModel[]
+     * @param TriggerRecord[]|MessageRecord[] $collection
+     * @param string $modelType
+     * @return TriggerModel[]|MessageModel[]
      */
-    private static function _toTriggerModels(array $collection): array
+    private static function _toModels(array $collection, string $modelType): array
     {
         // Convert each Record into a Model
-        array_walk($collection, static function (&$value) {
-            $value = new TriggerModel($value->getAttributes());
+        array_walk($collection, static function (&$value) use ($modelType) {
+            $value = static::_toModel($value, $modelType);
         });
 
         // Return collection as Models
         return $collection;
+    }
+
+    /**
+     * Convert a Record into its corresponding Model.
+     *
+     * @param TriggerRecord|MessageRecord $record
+     * @param string $modelType
+     * @return TriggerModel|MessageModel|null
+     */
+    private static function _toModel($record, string $modelType)
+    {
+        // If no matching trigger, bail
+        if (!$record) {
+            return null;
+        }
+
+        // Get all attributes of the Record
+        $attr = $record->getAttributes();
+
+        // Move config data to raw position
+        $attr['configRaw'] = ($attr['config'] ?? '[]');
+        unset($attr['config']);
+
+        // Return as a Model (if a match is found)
+        return ($record ? new $modelType($attr) : null);
     }
 
 }

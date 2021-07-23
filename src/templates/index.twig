@@ -18,33 +18,43 @@
 
     <div>
 
-        {% for trigger in notifier.getTriggers() %}
+        {% set triggers = notifier.getTriggers() %}
+
+        {% if triggers %}
 
             <div class="grid-container">
-                <div class="collapse">
-                    <div class="chevron"></div>
-                </div>
-                {% include 'notifier/_block/trigger' with {
-                    'trigger': trigger,
-                } only %}
-                <div>
-                    {% for message in trigger.getMessages() %}
-                        {% include 'notifier/_block/message' with {
-                            'trigger': trigger,
-                            'message': message,
-                        } only %}
-                    {% endfor %}
-                    <a class="btn submit add icon" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/new") }}" role="button" tabindex="0">
-                        Add a message
-                    </a>
-                </div>
+
+                <div></div>
+                <div><h2>Triggers</h2></div>
+                <div><h2>Messages</h2></div>
+
+                {% for trigger in triggers %}
+                    <div class="collapse">
+                        <div class="chevron"></div>
+                    </div>
+                    {% include 'notifier/_block/trigger' with {
+                        'trigger': trigger,
+                    } only %}
+                    <div>
+                        {% for message in trigger.getMessages() %}
+                            {% include 'notifier/_block/message' with {
+                                'trigger': trigger,
+                                'message': message,
+                            } only %}
+                        {% endfor %}
+                        <a class="btn submit add icon" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/new") }}" role="button" tabindex="0">
+                            Add a notification message
+                        </a>
+                    </div>
+                {% endfor %}
+
             </div>
 
         {% else %}
 
             <p><strong>No existing notifications.</strong> To get started, <a href="{{ cpUrl('notifier/trigger/new') }}">add a notification trigger...</a></p>
 
-        {% endfor %}
+        {% endif %}
 
     </div>
 
@@ -53,12 +63,23 @@
 {% css %}
 .grid-container {
     display: grid;
-    grid-template-columns: 16px 40% auto;
-    grid-gap: 12px;
+    grid-template-columns: 26px 39% auto;
+    /*grid-gap: 12px;*/
     margin-bottom: 16px;
 }
+.grid-container h2 {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    padding-left: 10px;
+}
+.grid-container .btn {
+    margin-top: 10px;
+    margin-bottom: 14px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
 .chevron {
-    margin-top: 5px;
+    margin-top: 19px;
     display: block;
     content: '';
     font-size: 0;
@@ -72,7 +93,15 @@
     position: relative;
 }
 
+.notifier-trigger {
+    margin-top: 8px;
+    margin-bottom: 4px;
+    border-top-left-radius: 5px;
+}
 .notifier-message {
-    margin-bottom: 14px;
+    margin-top: 8px;
+    border-left: none;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
 {% endcss %}

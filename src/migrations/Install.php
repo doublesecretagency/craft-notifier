@@ -45,20 +45,16 @@ class Install extends Migration
     protected function createTables()
     {
         $this->createTable('{{%notifier_triggers}}', [
-            'id'          => $this->primaryKey(),
-            'event'       => $this->string()->notNull(),
-            'config'      => $this->text(),
+            'id'        => $this->primaryKey(),
+            'event'     => $this->string()->notNull(),
+            'config'    => $this->text(),
         ]);
         $this->createTable('{{%notifier_messages}}', [
-            'id'          => $this->primaryKey(),
-            'triggerId'   => $this->integer()->notNull(),
-            'type'        => $this->string(),
-            'template'    => $this->string(),
-            'subject'     => $this->string(),
-            'recipientsType'         => $this->string(),
-            'recipientsCustomType'   => $this->string(),
-            'recipientsCustomUsers'  => $this->text(),
-            'recipientsCustomEmails' => $this->text(),
+            'id'        => $this->primaryKey(),
+            'triggerId' => $this->integer()->notNull(),
+            'type'      => $this->string(),
+            'template'  => $this->string(),
+            'config'    => $this->text(),
         ]);
     }
 

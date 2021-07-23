@@ -28,9 +28,9 @@
     {{ forms.textField({
         label: "Message Subject"|t('notifier'),
         instructions: "For email messages only. Will parse Twig tags."|t('notifier'),
-        id: 'subject',
-        name: 'subject',
-        value: (message.subject ?? null)
+        id: 'config[subject]',
+        name: 'config[subject]',
+        value: (message.config.subject ?? null)
     }) }}
 
 </div>

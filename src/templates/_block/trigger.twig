@@ -8,22 +8,22 @@
     {% endswitch %}
 
     <table>
-        {% for key,val in trigger.config|json_decode %}
+        {% for key,val in trigger.config %}
             {% switch key %}
-                {% case 'freshness' %}
-                    <tr>
-                        <td>Freshness</td>
-                        <td>{{ notifierOptions.triggers.freshness[val] ?? false }}</td>
-                    </tr>
                 {% case 'drafts' %}
                     <tr>
-                        <td>Drafts</td>
+                        <td>Drafts:</td>
                         <td>{{ notifierOptions.triggers.drafts[val] ?? false }}</td>
+                    </tr>
+                {% case 'freshness' %}
+                    <tr>
+                        <td>Freshness:</td>
+                        <td>{{ notifierOptions.triggers.freshness[val] ?? false }}</td>
                     </tr>
                 {% case 'sections' %}
                     {% set sections = val %}
                     <tr>
-                        <td>Sections</td>
+                        <td>Sections:</td>
                         <td>
                             {% if '*' == sections %}
                                 All sections
@@ -31,7 +31,8 @@
                                 None selected
                             {% elseif sections is iterable %}
                                 {% for s in sections %}
-                                    <div>- {{ craft.app.sections.getSectionByHandle(s).name ?? false }}</div>
+                                    {{ not loop.first ? ', ' }}
+                                    {{ craft.app.sections.getSectionByHandle(s).name ?? false }}
                                 {% endfor %}
                             {% endif %}
                         </td>

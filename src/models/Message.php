@@ -12,7 +12,6 @@
 namespace doublesecretagency\notifier\models;
 
 use Craft;
-use craft\base\Model;
 use craft\mail\Message as Email;
 use craft\web\View;
 use Exception;
@@ -21,13 +20,8 @@ use Exception;
  * Class Message
  * @since 1.0.0
  */
-class Message extends Model
+class Message extends BaseNotification
 {
-
-    /**
-     * @var int ID of message.
-     */
-    public $id;
 
     /**
      * @var int ID of related Trigger.
@@ -44,31 +38,6 @@ class Message extends Model
      */
     public $template;
 
-    /**
-     * @var string Message subject line (email only).
-     */
-    public $subject;
-
-    /**
-     * @var string Type of recipients specification.
-     */
-    public $recipientsType;
-
-    /**
-     * @var string Type of custom recipients snippet.
-     */
-    public $recipientsCustomType;
-
-    /**
-     * @var string Snippet to retrieve custom Users.
-     */
-    public $recipientsCustomUsers;
-
-    /**
-     * @var string Snippet to retrieve custom email addresses.
-     */
-    public $recipientsCustomEmails;
-
     // ========================================================================= //
 
     /**
@@ -76,7 +45,11 @@ class Message extends Model
      */
     public function getRecipients()
     {
-        switch ($this->recipientsType) {
+        // Get recipients
+        $recipients = ($this->config['recipients'] ?? []);
+
+        // Switch according to recipient type
+        switch ($recipients['type'] ?? false) {
             case 'all-users':
 //                return $this->_getRecipientsAllUsers();
             case 'all-admins':
@@ -88,7 +61,7 @@ class Message extends Model
             case 'specific-emails':
 //                return $this->_getRecipientsSpecificEmails();
             case 'custom':
-//                return $this->_getRecipientsCustom();
+//                return $this->_getRecipientsCustom($recipients);
         }
     }
 

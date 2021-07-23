@@ -9,9 +9,9 @@
 {{ forms.checkboxSelectField({
     label: "Select User Groups"|t('app'),
     instructions: "Which user groups should be included?"|t('notifier'),
-    id: 'user-groups',
-    name: 'user-groups',
+    id: 'config-recipients-groups',
+    name: 'config[recipients][groups]',
     options: groups,
     showAllOption: true,
 }) }}
-{# values: (userGroups ?? '*'), #}
+{# values: (config.recipients.groups ?? '*'), #}
