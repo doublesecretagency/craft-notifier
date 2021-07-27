@@ -36,20 +36,17 @@ module.exports = {
                 text: 'How It Works',
                 items: [
                     {text: 'Overview', link: '/how-it-works/'},
-                    {text: 'Add an Event Trigger', link: '/how-it-works/add-an-event-trigger/'},
-                    {text: 'Set Message Type', link: '/how-it-works/set-message-type/'},
-                    {text: 'Set Message Template', link: '/how-it-works/set-message-template/'},
-                    {text: 'Set Message Recipients', link: '/how-it-works/set-message-recipients/'},
-                    {text: 'Managing Existing Notifications', link: '/how-it-works/managing-existing-notifications/'},
-                    {text: 'Editing a Twig Template', link: '/how-it-works/editing-twig-template/'},
+                    {text: 'Triggers', link: '/triggers/'},
+                    {text: 'Messages', link: '/messages/'},
+                    {text: 'Recipients', link: '/recipients/'},
                 ]
             },
-            {
-                text: 'Guides',
-                items: [
-                    {text: 'TBD', link: '/tbd/'},
-                ]
-            },
+            // {
+            //     text: 'Guides',
+            //     items: [
+            //         {text: 'TBD', link: '/tbd/'},
+            //     ]
+            // },
         ],
         sidebar: {
             // Getting Started
@@ -59,14 +56,27 @@ module.exports = {
             // How it Works
             '/how-it-works/': [
                 '',
-                'add-an-event-trigger',
-                'set-message-type',
-                'set-message-template',
-                'set-message-recipients',
-                'managing-existing-notifications',
-                'editing-twig-template',
+                'managing-notifications',
             ],
-
+            // Triggers
+            '/triggers/': [
+                '',
+                'on-entry-save',
+            ],
+            // Messages
+            '/messages/': [
+                '',
+                'set-type',
+                'set-template',
+                'edit-template',
+                'variables',
+            ],
+            // Recipients
+            '/recipients/': [
+                '',
+                'custom-users',
+                'custom-emails',
+            ],
         }
     }
 };

@@ -23,16 +23,26 @@
 
     {{ forms.selectField({
         label: "Event Trigger"|t('notifier'),
-        instructions: "**BETA:** While in beta, this is the only available event trigger."|t('notifier'),
+        instructions: "**BETA:** Only a single trigger is available in beta."|t('notifier'),
         id: 'event',
         name: 'event',
         options: notifierOptions.triggers.event,
         value: (trigger.event ?? false)
     }) }}
 
+    {{ forms.checkboxSelectField({
+        label: "Sections"|t('app'),
+        instructions: "Which section(s) will activate this trigger?"|t('notifier'),
+        id: 'config-sections',
+        name: 'config[sections]',
+        options: {'news': 'News'},
+        showAllOption: true,
+        values: (trigger.config.sections ?? '*')
+    }) }}
+
     {{ forms.selectField({
         label: "Freshness"|t('notifier'),
-        instructions: "Should this event be triggered by **new** entries, **existing** entries, or **both**?"|t('notifier'),
+        instructions: "Should this trigger be activated by **new** entries, **existing** entries, or **both**?"|t('notifier'),
         id: 'config-freshness',
         name: 'config[freshness]',
         options: notifierOptions.triggers.freshness,
@@ -41,21 +51,11 @@
 
     {{ forms.selectField({
         label: "Drafts"|t('notifier'),
-        instructions: "Should this event be triggered by **published** entries, **draft** entries, or **both**?"|t('notifier'),
+        instructions: "Should this trigger be activated by **published** entries, **draft** entries, or **both**?"|t('notifier'),
         id: 'config-drafts',
         name: 'config[drafts]',
         options: notifierOptions.triggers.drafts,
         value: (trigger.config.drafts ?? false)
-    }) }}
-
-    {{ forms.checkboxSelectField({
-        label: "Sections"|t('app'),
-        instructions: "Which sections should be included?"|t('notifier'),
-        id: 'config-sections',
-        name: 'config[sections]',
-        options: {'news': 'News'},
-        showAllOption: true,
-        values: (trigger.config.sections ?? '*')
     }) }}
 
     {% include 'notifier/_related/messages' %}

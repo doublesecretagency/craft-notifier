@@ -7,5 +7,10 @@ actionText: Get Started →
 actionLink: /getting-started/
 ---
 
+ - Anything can trigger any type of notification.
 
-<img class="dropshadow" :src="$withBase('/images/01-homepage.png')" alt="" style="max-width:500px; margin-top:10px">
+ - Tap into all existing events.
+
+ - Submit to email, SMS (Twilio)
+
+ - Point to custom templates.
