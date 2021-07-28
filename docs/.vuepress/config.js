@@ -70,6 +70,7 @@ module.exports = {
                 'set-template',
                 'edit-template',
                 'variables',
+                'skip',
             ],
             // Recipients
             '/recipients/': [

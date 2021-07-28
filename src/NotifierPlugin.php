@@ -104,17 +104,18 @@ class NotifierPlugin extends Plugin
 
                     // Set data for message templates
                     $data = [
+                        'event' => $event,
                         'entry' => $entry,
-                        'currentUser' => Craft::$app->getUser()->getIdentity(),
+                        'activeUser' => Craft::$app->getUser()->getIdentity(),
                     ];
 
                     // Get messages related to this trigger
                     $messages = $trigger->getMessages();
 
-                    // Send each message
+                    // Send each message to all recipients
                     foreach ($messages as $message) {
                         /** @var MessageModel $message */
-                        $message->send($data);
+                        $message->sendAll($data);
                     }
 
                 }

@@ -11,6 +11,7 @@
 
 namespace doublesecretagency\notifier\helpers;
 
+use doublesecretagency\notifier\models\EmailMessage as EmailMessageModel;
 use doublesecretagency\notifier\models\Message as MessageModel;
 use doublesecretagency\notifier\models\Trigger as TriggerModel;
 use doublesecretagency\notifier\records\Message as MessageRecord;
@@ -139,6 +140,15 @@ class Notifier
         // If no matching trigger, bail
         if (!$record) {
             return null;
+        }
+
+        // If model is a message, clarify which type
+        if (MessageModel::class === $modelType) {
+            switch ($record->type) {
+                case 'email':
+                    $modelType = EmailMessageModel::class;
+                    break;
+            }
         }
 
         // Get all attributes of the Record
