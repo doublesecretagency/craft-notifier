@@ -15,3 +15,4 @@ Additionally, `entry` will be an alias of `$event->sender` when triggered by an 
 |:----------------|-------------
 | `entry`         | The newly affected Entry.
 | `originalEntry` | The original state of the same Entry.
+| `recipient`     | Unique recipient of this message. Can be either a [User Model]() or basic email address, depending upon how the Recipients were determined.

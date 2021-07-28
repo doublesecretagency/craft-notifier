@@ -1,5 +1,7 @@
 # Editing the Template
 
+Your message template can be configured however you see fit. The template is a normal Twig environment, so it's possible to use `extends` and `include` tags just as you typically would.
+
 ## Variables
 
 A certain set of variables will be **automatically available** within the context of your template.
@@ -12,15 +14,21 @@ These variables can be used to deeply customize the notification message. You ca
 
 If necessary, you can use Twig to prevent a message from being sent.
 
-## How to abort without sending a message
+## Skip sending a single message to an individual recipient
 
 If your Twig logic determines that the message should not be sent for whatever reason, you can easily abort the message like this...
 
 ```twig
-{% exit %}
+{% skipMessage %}
 ```
 
-The `exit` tag is native to Craft, and can be used here to stop a message from being sent.
+The `skipMessage` tag will prevent a message from being sent out.
+
+:::warning Skips only one recipient
+Please note that this will only skip **a single recipient**, and will continue trying to send the message to all other valid recipients.
+
+If `skipMessage` is encountered for all recipients, no messages will be sent out.
+:::
 
 ## Example
 
@@ -31,7 +39,7 @@ Compare the old & new version of a field value. If the value hasn't changed, bai
 {% if originalEntry.myField == entry.myField %}
 
     {# Prevent the message from being sent #}
-    {% exit %}
+    {% skipMessage %}
 
 {% endif %}
 ```

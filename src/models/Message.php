@@ -62,6 +62,11 @@ class Message extends BaseNotification
      */
     private function _deliverViaEmail(array $data)
     {
+        // @TODO: Logging
+        // Log message implying the start of delivery
+        // 'Sending message to $recipient'
+
+
         // Parse the message body and subject
         $body = $this->_getBody($data);
         $subject = $this->_getSubject($data);
@@ -126,10 +131,16 @@ class Message extends BaseNotification
 
         // Parse the message body
         try {
+
             // Render message body template
             $body = $view->renderTemplate($template, $data, View::TEMPLATE_MODE_SITE);
+
         } catch (Exception $e) {
-            // Log an error
+
+            // @TODO: Logging
+            // Log the error message
+//            Craft::dd($e->getMessage());
+
             // Return false
             return false;
         }
