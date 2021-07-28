@@ -35,7 +35,7 @@
         instructions: "Which section(s) will activate this trigger?"|t('notifier'),
         id: 'config-sections',
         name: 'config[sections]',
-        options: {'news': 'News'},
+        options: notifierOptions.triggers.sections,
         showAllOption: true,
         values: (trigger.config.sections ?? '*')
     }) }}

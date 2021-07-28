@@ -86,9 +86,9 @@ class Trigger extends BaseNotification
 
         // If an array of sections was provided
         if (is_array($sections)) {
-            // If the Entry's handle isn't selected, mark invalid
-            $handle = $entry->getSection()->handle;
-            if (!in_array($handle, $sections)) {
+            // If the Entry's section ID isn't selected, mark invalid
+            $id = $entry->getSection()->id;
+            if (!in_array($id, $sections)) {
                 return false;
             }
         } else {

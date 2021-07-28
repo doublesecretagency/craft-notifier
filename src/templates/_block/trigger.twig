@@ -32,7 +32,7 @@
                             {% elseif sections is iterable %}
                                 {% for s in sections %}
                                     {{ not loop.first ? ', ' }}
-                                    {{ craft.app.sections.getSectionByHandle(s).name ?? false }}
+                                    {{ craft.app.sections.getSectionById(s).name ?? false }}
                                 {% endfor %}
                             {% endif %}
                         </td>

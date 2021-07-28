@@ -11,6 +11,7 @@
 
 namespace doublesecretagency\notifier\web\twig;
 
+use Craft;
 use craft\elements\User;
 use doublesecretagency\notifier\helpers\Notifier;
 use Twig\Extension\AbstractExtension;
@@ -24,6 +25,16 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     public function getGlobals(): array
     {
+        // Initialize section info
+        $sectionOptions = [];
+        $sections = Craft::$app->getSections()->getAllSections();
+
+        // Loop through sections to compile section options
+        foreach ($sections as $section) {
+            $sectionOptions[$section->id] = $section->name;
+        }
+
+        // Return globally accessible variables
         return [
             'notifier' => new Notifier(),
             'notifierUserElementType' => User::class,
@@ -32,6 +43,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                     'event' => [
                         'Entry::EVENT_AFTER_SAVE' => 'When an Entry is saved',
                     ],
+                    'sections' => $sectionOptions,
                     'freshness' => [
                         'new' => 'New entries only',
                         'existing' => 'Existing entries only',
