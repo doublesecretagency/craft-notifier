@@ -8,7 +8,7 @@ Each recipient will receive their own unique copy of the message. The [automatic
 
 A collection of recipients can be generated in many ways...
 
-<img class="dropshadow" :src="$withBase('/images/recipients/select-type.png')" alt="" style="max-width:400px; margin-top:10px">
+<img class="dropshadow" :src="$withBase('/images/recipients/select-type.png')" alt="" style="max-width:360px; margin-top:10px">
 
 ## All users
 
@@ -38,9 +38,9 @@ Enter specific email addresses to receive the message.
 
 ## Custom selection
 
-Using Twig, generate a custom collection of Users or email addresses.
+If all else fails, you can generate a custom list of recipients via Twig. Use the Twig snippet to build an array of either **Users** or **email addresses**.
 
-[EXPAND DOCS, INCLUDE SCREENSHOT]
+- [Get a collection of Users](/recipients/custom-users/)
+- [Get a collection of email addresses](/recipients/custom-emails/)
 
- - [Get a collection of Users](/recipients/custom-users/)
- - [Get a collection of email addresses](/recipients/custom-emails/)
+<img class="dropshadow" :src="$withBase('/images/recipients/custom-recipients.png')" alt="" style="max-width:420px; margin-top:8px">

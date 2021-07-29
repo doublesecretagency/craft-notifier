@@ -18,7 +18,7 @@
 
     {{ forms.autosuggestField({
         label: "Message Template"|t('notifier'),
-        instructions: "Which Twig template will be used to generate the message body?"|t('notifier'),
+        instructions: "Select a Twig template to generate the message body. Learn more about [automatic variables](https://plugins.doublesecretagency.com/notifier/messages/variables/)."|t('notifier'),
         id: 'template',
         name: 'template',
         suggestions: craft.cp.getTemplateSuggestions(),
@@ -26,8 +26,8 @@
     }) }}
 
     {{ forms.textField({
-        label: "Message Subject"|t('notifier'),
-        instructions: "For email messages only. Will parse Twig tags."|t('notifier'),
+        label: "Email Subject"|t('notifier'),
+        instructions: "Can parse complete Twig tags (including [automatic variables](https://plugins.doublesecretagency.com/notifier/messages/variables/)), or short `{object}` syntax for trigger element."|t('notifier'),
         id: 'config[subject]',
         name: 'config[subject]',
         value: (message.config.subject ?? null)

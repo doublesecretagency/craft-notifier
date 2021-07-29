@@ -26,7 +26,7 @@
 
 <div v-cloak v-if="'users' === recipientsCustomType">
     {{ forms.textareaField({
-        label: "Snippet to Identify Users"|t('notifier'),
+        label: "Snippet to Determine Users"|t('notifier'),
         instructions: usersInstructions,
         id: 'config-recipients-custom-users',
         name: 'config[recipients][custom][users]',
@@ -38,7 +38,7 @@
 
 <div v-cloak v-if="'emails' === recipientsCustomType">
     {{ forms.textareaField({
-        label: "Snippet to Identify Email Addresses"|t('notifier'),
+        label: "Snippet to Determine Email Addresses"|t('notifier'),
         instructions: emailsInstructions,
         id: 'config-recipients-custom-emails',
         name: 'config[recipients][custom][emails]',
@@ -47,17 +47,3 @@
         rows: 12,
     }) }}
 </div>
-
-<div class="available-variables" v-cloak v-if="['users','emails'].indexOf(recipientsCustomType) !== -1">
-    <hr>
-    {% include 'notifier/_form/message/recipients/custom/variables' %}
-</div>
-
-{% css %}
-.available-variables {
-    margin-top: 20px;
-}
-.available-variables table {
-    border: 1px solid #999999
-}
-{% endcss %}

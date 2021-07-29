@@ -159,12 +159,29 @@ class EmailMessage extends Message
 
         // Parse the message subject
         try {
-            // Render message subject
-            $subject = $view->renderString($template, $data, View::TEMPLATE_MODE_SITE);
+
+            // Get element (if one exists)
+            $element =
+                $data['entry'] ??
+                $data['user'] ??
+                $data['asset'] ??
+                false;
+
+            // If element exists
+            if ($element) {
+                // Render subject with object syntax
+                $subject = $view->renderObjectTemplate($template, $element, $data, View::TEMPLATE_MODE_SITE);
+            } else {
+                // Render subject normally
+                $subject = $view->renderString($template, $data, View::TEMPLATE_MODE_SITE);
+            }
+
         } catch (Exception $e) {
+
             // Log an error
             // Set subject to unparsed template
             $subject = $template;
+
         }
 
         // Return subject

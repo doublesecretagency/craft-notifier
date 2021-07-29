@@ -12,6 +12,7 @@
 namespace doublesecretagency\notifier;
 
 use Craft;
+use craft\base\Element;
 use craft\base\Plugin;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
@@ -45,6 +46,11 @@ class NotifierPlugin extends Plugin
     public $hasCpSection = true;
 
     /**
+     * @var Element The original version of a saved Element.
+     */
+    private $_original;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -70,14 +76,59 @@ class NotifierPlugin extends Plugin
     // ========================================================================= //
 
     /**
+     * Register CP site routes.
+     */
+    private function _registerCpRoutes()
+    {
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            static function(RegisterUrlRulesEvent $event) {
+                // Set template paths
+                $triggerTemplate = ['template' => 'notifier/_form/trigger'];
+                $messageTemplate = ['template' => 'notifier/_form/message'];
+                // Routes for editing Triggers
+                $event->rules['notifier/trigger/new']             = $triggerTemplate;
+                $event->rules['notifier/trigger/<triggerId:\d+>'] = $triggerTemplate;
+                // Routes for editing Messages
+                $event->rules['notifier/trigger/<triggerId:\d+>/message/new']             = $messageTemplate;
+                $event->rules['notifier/trigger/<triggerId:\d+>/message/<messageId:\d+>'] = $messageTemplate;
+            }
+        );
+    }
+
+    // ========================================================================= //
+
+    /**
      * Triggered when an Entry is saved.
      */
     private function _onEntrySave()
     {
+        // Get the original element
+        Event::on(
+            Entry::class,
+            Entry::EVENT_BEFORE_SAVE,
+            function (ModelEvent $event) {
+
+                // Get entry
+                /** @var Entry $entry */
+                $entry = $event->sender;
+
+                // If no existing ID, bail
+                if (!$entry->id) {
+                    return;
+                }
+
+                // Get the original element
+                $this->_original = Entry::find()->id($entry->id)->one();
+            }
+        );
+
+        // Run trigger
         Event::on(
             Entry::class,
             Entry::EVENT_AFTER_SAVE,
-            static function (ModelEvent $event) {
+            function (ModelEvent $event) {
 
                 // Get entry
                 /** @var Entry $entry */
@@ -104,9 +155,12 @@ class NotifierPlugin extends Plugin
 
                     // Set data for message templates
                     $data = [
-                        'event' => $event,
+                        // Content variables
+                        'original' => $this->_original,
                         'entry' => $entry,
+                        // Config variables
                         'activeUser' => Craft::$app->getUser()->getIdentity(),
+                        'event' => $event,
                     ];
 
                     // Get messages related to this trigger
@@ -123,30 +177,6 @@ class NotifierPlugin extends Plugin
             }
         );
 
-    }
-
-    // ========================================================================= //
-
-    /**
-     * Register CP site routes.
-     */
-    private function _registerCpRoutes()
-    {
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            static function(RegisterUrlRulesEvent $event) {
-                // Set template paths
-                $triggerTemplate = ['template' => 'notifier/_form/trigger'];
-                $messageTemplate = ['template' => 'notifier/_form/message'];
-                // Routes for editing Triggers
-                $event->rules['notifier/trigger/new']             = $triggerTemplate;
-                $event->rules['notifier/trigger/<triggerId:\d+>'] = $triggerTemplate;
-                // Routes for editing Messages
-                $event->rules['notifier/trigger/<triggerId:\d+>/message/new']             = $messageTemplate;
-                $event->rules['notifier/trigger/<triggerId:\d+>/message/<messageId:\d+>'] = $messageTemplate;
-            }
-        );
     }
 
 }
