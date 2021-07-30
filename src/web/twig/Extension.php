@@ -30,15 +30,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     public function getGlobals(): array
     {
-        // Initialize section info
-        $sectionOptions = [];
-        $sections = Craft::$app->getSections()->getAllSections();
-
-        // Loop through sections to compile section options
-        foreach ($sections as $section) {
-            $sectionOptions[$section->id] = $section->name;
-        }
-
         // Return globally accessible variables
         return [
             'notifier' => new Notifier(),
@@ -48,7 +39,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                     'event' => [
                         'Entry::EVENT_AFTER_SAVE' => 'When an Entry is saved',
                     ],
-                    'sections' => $sectionOptions,
+                    'sections' => $this->_getSections(),
                     'freshness' => [
                         'new' => 'New entries only',
                         'existing' => 'Existing entries only',
@@ -60,18 +51,18 @@ class Extension extends AbstractExtension implements GlobalsInterface
                         'both' => 'Both draft & published entries',
                     ],
                 ],
-                'messages' => [
-                    'recipients' => [
-                        'type' => [
-                            '' => '',
-                            'all-users' => 'All users',
-                            'all-admins' => 'All admins',
-                            'all-users-in-group' => 'All users in selected group(s)',
-                            'specific-users' => 'Specific users',
-                            'specific-emails' => 'Specific email addresses',
-                            'custom' => 'Custom selection',
-                        ]
-                    ]
+                'messages' => [],
+                'recipients' => [
+                    'type' => [
+                        '' => '',
+                        'all-users' => 'All users',
+                        'all-admins' => 'All admins',
+                        'all-users-in-group' => 'All users in selected group(s)',
+                        'specific-users' => 'Specific users',
+                        'specific-emails' => 'Specific email addresses',
+                        'custom' => 'Custom selection',
+                    ],
+                    'userGroups' => $this->_getUserGroups(),
                 ]
             ]
         ];
@@ -85,6 +76,48 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return [
             new SkipMessageTokenParser(),
         ];
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Get sections as dropdown field options.
+     *
+     * @return array
+     */
+    private function _getSections(): array
+    {
+        // Initialize section info
+        $options = [];
+        $sections = Craft::$app->getSections()->getAllSections();
+
+        // Loop through sections to compile options
+        foreach ($sections as $section) {
+            $options[$section->id] = $section->name;
+        }
+
+        // Return compiled options
+        return $options;
+    }
+
+    /**
+     * Get user groups as dropdown field options.
+     *
+     * @return array
+     */
+    private function _getUserGroups(): array
+    {
+        // Initialize user group info
+        $options = [];
+        $userGroups = Craft::$app->getUserGroups()->getAllGroups();
+
+        // Loop through groups to compile options
+        foreach ($userGroups as $group) {
+            $options[$group->id] = $group->name;
+        }
+
+        // Return compiled options
+        return $options;
     }
 
 }

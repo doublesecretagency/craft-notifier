@@ -1,17 +1,11 @@
 {% import '_includes/forms' as forms %}
 
-{# Get available user groups #}
-{% set groups = {} %}
-{% for group in craft.app.getUserGroups().getAllGroups() %}
-    {% set groups = groups|merge({(group.handle): group.name}) %}
-{% endfor %}
-
 {{ forms.checkboxSelectField({
     label: "Select User Groups"|t('app'),
     instructions: "Which user groups should be included?"|t('notifier'),
     id: 'config-recipients-groups',
     name: 'config[recipients][groups]',
-    options: groups,
+    values: (message.config.recipients.groups ?? '*'),
+    options: notifierOptions.recipients.userGroups,
     showAllOption: true,
 }) }}
-{# values: (config.recipients.groups ?? '*'), #}

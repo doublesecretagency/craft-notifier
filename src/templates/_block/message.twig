@@ -25,7 +25,7 @@
             <td>
                 {# Get recipients type and show label #}
                 {% set type = (message.config.recipients.type ?? '') %}
-                {% set recipients = (notifierOptions.messages.recipients.type[type] ?? null) %}
+                {% set recipients = (notifierOptions.recipients.type[type] ?? null) %}
                 {# If custom, append custom type #}
                 {% if 'custom' == type %}
                     {% set recipientsCustomType = (message.config.recipients.custom.type ?? null) %}

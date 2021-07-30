@@ -20,7 +20,7 @@
         instructions: "Who should receive this message?"|t('notifier'),
         id: 'config-recipients-type',
         name: 'config[recipients][type]',
-        options: notifierOptions.messages.recipients.type,
+        options: notifierOptions.recipients.type,
         inputAttributes: {
             'v-model': 'recipientsType',
         }
@@ -52,6 +52,12 @@
 new Vue({
     el: '#message-recipients',
     delimiters: ['[[', ']]'],
-    data: window.data
-})
+    data: window.data,
+    updated() {
+        if ('all-users-in-group' === this.recipientsType) {
+            // Re-initialize all Craft UI elements
+            Craft.initUiElements();
+        }
+    }
+});
 {% endjs %}

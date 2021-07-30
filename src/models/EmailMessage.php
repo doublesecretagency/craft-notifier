@@ -203,7 +203,7 @@ class EmailMessage extends Message
             case 'all-admins':
                 return $this->_getRecipientsAllAdmins();
             case 'all-users-in-group':
-//                return $this->_getRecipientsAllUsersInGroup();
+                return $this->_getRecipientsAllUsersInGroup();
             case 'specific-users':
 //                return $this->_getRecipientsSpecificUsers();
             case 'specific-emails':
@@ -240,7 +240,7 @@ class EmailMessage extends Message
     // ========================================================================= //
 
     /**
-     * Get an array of User email addresses.
+     * Get an array of all Users.
      *
      * @return array
      */
@@ -251,7 +251,7 @@ class EmailMessage extends Message
     }
 
     /**
-     * Get an array of Admin email addresses.
+     * Get an array of all Admin Users.
      *
      * @return array
      */
@@ -259,6 +259,40 @@ class EmailMessage extends Message
     {
         // Return all active admin Users
         return User::find()->admin()->all();
+    }
+
+    /**
+     * Get an array of Users in selected group(s).
+     *
+     * @return array
+     */
+    private function _getRecipientsAllUsersInGroup(): array
+    {
+        // Get selected user groups
+        $groups = ($this->config['recipients']['groups'] ?? false);
+
+        // If no groups, return empty array
+        if (!$groups) {
+            return [];
+        }
+
+        // If all groups selected
+        if ('*' === $groups) {
+            // Re-initialize as empty array
+            $groups = [];
+            // Collect ID of every existing user group
+            foreach (Craft::$app->getUserGroups()->getAllGroups() as $group) {
+                $groups[] = $group->id;
+            }
+        }
+
+        // If not a valid array of IDs, return empty array
+        if (!is_array($groups)) {
+            return [];
+        }
+
+        // Return all Users in specified group(s)
+        return User::find()->groupId($groups)->all();
     }
 
     // ========================================================================= //
