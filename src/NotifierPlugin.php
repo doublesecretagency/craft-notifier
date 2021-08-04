@@ -16,10 +16,13 @@ use craft\base\Element;
 use craft\base\Plugin;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
+use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\services\Utilities;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\models\Message as MessageModel;
+use doublesecretagency\notifier\utilities\LogUtility;
 use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
 
@@ -61,13 +64,16 @@ class NotifierPlugin extends Plugin
         // Load Twig extension
         Craft::$app->getView()->registerTwigExtension(new Extension());
 
-        // Register all CP site routes
-        $this->_registerCpRoutes();
-
 //        // If plugin isn't installed yet, bail before triggering events
 //        if (!$this->isInstalled) {
 //            return;
 //        }
+
+        // Register enhancements for the control panel
+        if (Craft::$app->getRequest()->getIsCpRequest()) {
+            $this->_registerCpRoutes();
+            $this->_registerUtilities();
+        }
 
         // Trigger notifications when an Entry is saved
         $this->_onEntrySave();
@@ -93,6 +99,23 @@ class NotifierPlugin extends Plugin
                 // Routes for editing Messages
                 $event->rules['notifier/trigger/<triggerId:\d+>/message/new']             = $messageTemplate;
                 $event->rules['notifier/trigger/<triggerId:\d+>/message/<messageId:\d+>'] = $messageTemplate;
+            }
+        );
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Register logging utility.
+     */
+    private function _registerUtilities()
+    {
+        Event::on(
+            Utilities::class,
+            Utilities::EVENT_REGISTER_UTILITY_TYPES,
+            static function(RegisterComponentTypesEvent $event) {
+                // Add logging utility
+                $event->types[] = LogUtility::class;
             }
         );
     }

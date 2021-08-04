@@ -25,6 +25,18 @@ class Notifier
 {
 
     /**
+     * Get all notification logs.
+     *
+     * @return array
+     */
+    public static function logs(): array
+    {
+        return Log::getAllMessages();
+    }
+
+    // ========================================================================= //
+
+    /**
      * Get all triggers.
      *
      * @return TriggerModel[]

@@ -41,12 +41,12 @@ module.exports = {
                     {text: 'Recipients', link: '/recipients/'},
                 ]
             },
-            // {
-            //     text: 'Guides',
-            //     items: [
-            //         {text: 'TBD', link: '/tbd/'},
-            //     ]
-            // },
+            {
+                text: 'Guides',
+                items: [
+                    {text: 'Notification Logs', link: '/guides/logs/'},
+                ]
+            },
         ],
         sidebar: {
             // Getting Started
@@ -77,6 +77,10 @@ module.exports = {
                 '',
                 'custom-users',
                 'custom-emails',
+            ],
+            // Guides
+            '/guides/': [
+                'logs',
             ],
         }
     }
