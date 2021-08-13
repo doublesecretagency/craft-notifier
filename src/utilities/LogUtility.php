@@ -34,19 +34,22 @@ class LogUtility extends Utility
         return 'notification-logs';
     }
 
-//    /**
-//     * @inheritdoc
-//     */
-//    public static function iconPath()
-//    {
-//        $iconPath = Craft::getAlias('@vendor/doublesecretagency/craft-notifier/src/icon-mask.svg');
-//
-//        if (!is_string($iconPath)) {
-//            return null;
-//        }
-//
-//        return $iconPath;
-//    }
+    /**
+     * @inheritdoc
+     */
+    public static function iconPath()
+    {
+        // Set the icon mask path
+        $iconPath = Craft::getAlias('@vendor/doublesecretagency/craft-notifier/src/icon-mask.svg');
+
+        // If not a string, bail
+        if (!is_string($iconPath)) {
+            return null;
+        }
+
+        // Return the icon mask path
+        return $iconPath;
+    }
 
     /**
      * @inheritdoc
