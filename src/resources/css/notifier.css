@@ -1,28 +1,27 @@
 .notifier-trigger {
-    border-color: #dbbeae;
-    background-color: #ffede3;
+    border-color: #bcd0e3;
+    background-color: #e3edf6;
 }
-.notifier-trigger:hover {
-    background-color: #fff9e3;
+.notifier-trigger .block-label {
+    background-color: #bcd0e3;
 }
+
 .notifier-message {
-    border-color: #a2d5c6;
-    background-color: #f2fcf9;
+    border-color: #d4e0ef;
+    background-color: #f3f7fc;
 }
-.notifier-message:hover {
-    background-color: #fff9e3;
+.notifier-message .block-label {
+    background-color: #d4e0ef;
 }
 
 /* ========================================================================= */
 
 .notifier-block {
     color: #3f4d5a;
-    display: block;
-    cursor: pointer;
-    padding: 18px 25px 15px;
     border-width: 1px;
     border-style: solid;
     box-shadow: 0 0 0 1px rgba(205, 216, 228, 0.25), 0 2px 12px rgba(205, 216, 228, 0.5);
+    overflow: hidden;
 }
 .notifier-block:hover {
     text-decoration: none;
@@ -32,9 +31,9 @@
 
 .notifier-block .block-label {
     color: #596673;
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: bold;
-    margin-bottom: 6px;
+    padding: 12px 24px 12px;
 }
 
 .notifier-block table {

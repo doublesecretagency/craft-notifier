@@ -10,7 +10,7 @@
 
 {% block actionButton %}
     <a class="btn submit add icon" href="{{ cpUrl('notifier/trigger/new') }}" role="button" tabindex="0">
-        {{ 'Add a notification trigger'|t('notifier') }}
+        {{ 'Add a trigger'|t('notifier') }}
     </a>
 {% endblock %}
 
@@ -23,31 +23,24 @@
         {% if triggers %}
 
             <div class="grid-container">
-
-                <div></div>
-                <div><h2>Triggers</h2></div>
-                <div><h2>Messages</h2></div>
-
                 {% for trigger in triggers %}
-                    <div class="collapse">
-                        <div class="chevron"></div>
-                    </div>
                     {% include 'notifier/_block/trigger' with {
+                        'controls': true,
                         'trigger': trigger,
                     } only %}
                     <div>
                         {% for message in trigger.getMessages() %}
                             {% include 'notifier/_block/message' with {
+                                'controls': true,
                                 'trigger': trigger,
                                 'message': message,
                             } only %}
                         {% endfor %}
                         <a class="btn submit add icon" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/new") }}" role="button" tabindex="0">
-                            Add a notification message
+                            Add a message
                         </a>
                     </div>
                 {% endfor %}
-
             </div>
 
         {% else %}
@@ -63,7 +56,7 @@
 {% css %}
 .grid-container {
     display: grid;
-    grid-template-columns: 26px 39% auto;
+    grid-template-columns: 39% auto;
     /*grid-gap: 12px;*/
     margin-bottom: 16px;
 }
@@ -73,30 +66,26 @@
     padding-left: 10px;
 }
 .grid-container .btn {
-    margin-top: 10px;
+    margin-top: 14px;
     margin-bottom: 14px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
-.chevron {
-    margin-top: 19px;
-    display: block;
-    content: '';
-    font-size: 0;
-    width: 8px;
-    height: 8px;
-    border: solid #596673;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    transform: rotate(45deg);
-    position: relative;
+
+.notifier-trigger-container {
+    display: grid;
+    grid-template-columns: 34px auto;
+}
+.notifier-message-container {
+    display: grid;
+    grid-template-columns: auto 34px;
 }
 
 .notifier-trigger {
     margin-top: 8px;
     margin-bottom: 4px;
     border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 .notifier-message {
     margin-top: 8px;

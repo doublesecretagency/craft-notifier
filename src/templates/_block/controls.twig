@@ -1,0 +1,42 @@
+<div class="block-controls block-controls-{{ type }}">
+    <a title="Collapse" href="javascript:console.log('Expand/Collapse')">
+        <img alt="Collapse icon" src="{{ notifierBlockIcons['collapse'] }}">
+    </a>
+    <a title="Edit" href="{{ editUrl }}">
+        <img alt="Edit icon" src="{{ notifierBlockIcons['edit'] }}">
+    </a>
+    <a title="Delete" href="javascript:console.log('Delete')">
+        <img alt="Delete icon" src="{{ notifierBlockIcons['delete'] }}">
+    </a>
+</div>
+
+{% css %}
+.block-controls {
+    margin-top: 22px;
+}
+.block-controls-trigger {
+    text-align: left;
+}
+.block-controls-message {
+    text-align: right;
+}
+
+.block-controls a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 1px;
+}
+.block-controls a:hover {
+    background-color: #fff0d2;
+}
+.block-controls a img {
+    width: 15px;
+    height: 15px;
+    /* #596673 */
+    filter: invert(41%) sepia(6%) saturate(1143%) hue-rotate(169deg) brightness(92%) contrast(90%);
+}
+{% endcss %}

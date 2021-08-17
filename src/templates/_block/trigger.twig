@@ -1,15 +1,22 @@
-<a class="notifier-block notifier-trigger" href="{{ cpUrl("notifier/trigger/#{trigger.id}") }}" tabindex="0">
+<div class="notifier-trigger-container">
+    {% if controls %}
+        {% include 'notifier/_block/controls' with {
+            'type': 'trigger',
+            'editUrl': cpUrl("notifier/trigger/#{trigger.id}"),
+        } only %}
+    {% endif %}
+    <div class="notifier-block notifier-trigger">
 
-    {% switch trigger.event %}
+        {% switch trigger.event %}
         {% case 'Entry::EVENT_AFTER_SAVE' %}
-            <div class="block-label">When an Entry is saved</div>
+            <div class="block-label">When an Entry is saved...</div>
         {% default %}
-            <div class="block-label">{{ trigger.event }}</div>
-    {% endswitch %}
+            <div class="block-label">{{ trigger.event }}...</div>
+        {% endswitch %}
 
-    <table>
-        {% for key,val in trigger.config %}
-            {% switch key %}
+        <table>
+            {% for key,val in trigger.config %}
+                {% switch key %}
                 {% case 'drafts' %}
                     <tr>
                         <td>Drafts:</td>
@@ -37,8 +44,9 @@
                             {% endif %}
                         </td>
                     </tr>
-            {% endswitch %}
-        {% endfor %}
-    </table>
+                {% endswitch %}
+            {% endfor %}
+        </table>
 
-</a>
+    </div>
+</div>

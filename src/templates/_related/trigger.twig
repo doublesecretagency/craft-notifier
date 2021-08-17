@@ -5,10 +5,9 @@
 
 {% if trigger %}
 
-    <h2>Related Notification Trigger</h2>
-    <p>This event is responsible for triggering the message.</p>
-
+    <h2>Related Trigger</h2>
     {% include 'notifier/_block/trigger' with {
+        'controls': false,
         'trigger': trigger,
     } only %}
 

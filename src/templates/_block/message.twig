@@ -1,42 +1,50 @@
-<a class="notifier-block notifier-message" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}") }}" tabindex="0">
+<div class="notifier-message-container">
+    <div class="notifier-block notifier-message">
 
-    {% switch message.type %}
+        {% switch message.type %}
         {% case 'email' %}
-            <div class="block-label">Send an email</div>
+            <div class="block-label">... send an email</div>
         {% case 'sms' %}
-            <div class="block-label">Send an SMS (Text Message)</div>
+            <div class="block-label">... send an SMS (Text Message)</div>
         {% default %}
-            <div class="block-label">{{ message.type }}</div>
-    {% endswitch %}
+            <div class="block-label">... {{ message.type }}</div>
+        {% endswitch %}
 
-    <table>
-        <tr>
-            <td>Template:</td>
-            <td>{{ message.template }}</td>
-        </tr>
-        {% if 'email' == message.type %}
+        <table>
             <tr>
-                <td>Subject:</td>
-                <td>{{ message.config.subject ?? '' }}</td>
+                <td>Template:</td>
+                <td>{{ message.template }}</td>
             </tr>
-        {% endif %}
-        <tr>
-            <td>Recipients:</td>
-            <td>
-                {# Get recipients type and show label #}
-                {% set type = (message.config.recipients.type ?? '') %}
-                {% set recipients = (notifierOptions.recipients.type[type] ?? null) %}
-                {# If custom, append custom type #}
-                {% if 'custom' == type %}
-                    {% set recipientsCustomType = (message.config.recipients.custom.type ?? null) %}
-                    {% if recipientsCustomType %}
-                        {% set recipients = "#{recipients} (#{recipientsCustomType})" %}
+            {% if 'email' == message.type %}
+                <tr>
+                    <td>Subject:</td>
+                    <td>{{ message.config.subject ?? '' }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>Recipients:</td>
+                <td>
+                    {# Get recipients type and show label #}
+                    {% set type = (message.config.recipients.type ?? '') %}
+                    {% set recipients = (notifierOptions.recipients.type[type] ?? null) %}
+                    {# If custom, append custom type #}
+                    {% if 'custom' == type %}
+                        {% set recipientsCustomType = (message.config.recipients.custom.type ?? null) %}
+                        {% if recipientsCustomType %}
+                            {% set recipients = "#{recipients} (#{recipientsCustomType})" %}
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                {# Display recipients #}
-                {{ recipients }}
-            </td>
-        </tr>
-    </table>
+                    {# Display recipients #}
+                    {{ recipients }}
+                </td>
+            </tr>
+        </table>
 
-</a>
+    </div>
+    {% if controls %}
+        {% include 'notifier/_block/controls' with {
+            'type': 'message',
+            'editUrl': cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}"),
+        } only %}
+    {% endif %}
+</div>

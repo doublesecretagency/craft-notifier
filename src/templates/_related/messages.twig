@@ -7,12 +7,11 @@
 
     <hr>
 
-    <h2>Related Notification Messages</h2>
-    <p>These messages will be sent when the trigger is activated.</p>
-
+    <h2>Related Messages</h2>
     <div class="flex">
         {% for message in messages %}
             {% include 'notifier/_block/message' with {
+                'controls': false,
                 'trigger': trigger,
                 'message': message,
             } only %}

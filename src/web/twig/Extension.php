@@ -30,6 +30,10 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     public function getGlobals(): array
     {
+        // Get block control icons
+        $manager = Craft::$app->getAssetManager();
+        $iconPath = '@doublesecretagency/notifier/resources/images';
+
         // Return globally accessible variables
         return [
             'notifier' => new Notifier(),
@@ -64,7 +68,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
                     ],
                     'userGroups' => $this->_getUserGroups(),
                 ]
-            ]
+            ],
+            'notifierBlockIcons' => [
+                'collapse' => $manager->getPublishedUrl("{$iconPath}/fa-chevron-down-solid.svg", true),
+                'edit'     => $manager->getPublishedUrl("{$iconPath}/fa-pencil-alt-solid.svg", true),
+                'delete'   => $manager->getPublishedUrl("{$iconPath}/fa-trash-solid.svg", true),
+            ],
         ];
     }
 
