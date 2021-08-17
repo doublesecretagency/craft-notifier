@@ -59,4 +59,28 @@ class MessageController extends Controller
         return $this->redirect(UrlHelper::cpUrl('notifier'));
     }
 
+    /**
+     * Delete a notification message.
+     */
+    public function actionDelete()
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Get the message ID
+        $request = Craft::$app->getRequest();
+        $id = $request->getBodyParam('id');
+
+        // Delete the Message Record
+        $success = (bool) Db::delete('{{%notifier_messages}}', [
+            'id' => $id,
+        ]);
+
+        // Return JSON response
+        return $this->asJson([
+            'id' => $id,
+            'success' => $success,
+        ]);
+    }
+
 }

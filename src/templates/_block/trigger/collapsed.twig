@@ -1,0 +1,35 @@
+{% set data = [] %}
+{% set t = notifierOptions.triggers %}
+
+{% for key,val in trigger.config %}
+    {% switch key %}
+    {% case 'drafts' %}
+        {% if (t.drafts[val] ?? false) %}
+            {% set data = data|merge([t.drafts[val]]) %}
+        {% endif %}
+    {% case 'freshness' %}
+        {% if (t.freshness[val] ?? false) %}
+            {% set data = data|merge([t.freshness[val]]) %}
+        {% endif %}
+    {% case 'sections' %}
+        {% set sections = val %}
+        {% if '*' == sections %}
+            {% set data = data|merge(['All sections']) %}
+        {% elseif '' == sections %}
+            {% set data = data|merge(['None selected']) %}
+        {% elseif sections is iterable %}
+            {% set allSections %}
+                {%- for s in sections -%}
+                    {{- not loop.first ? ', ' -}}
+                    {{- craft.app.sections.getSectionById(s).name ?? false -}}
+                {%- endfor -%}
+            {% endset %}
+            {% set data = data|merge([allSections|trim]) %}
+        {% endif %}
+
+    {% endswitch %}
+{% endfor %}
+
+<div class="collapsed">
+    {{ data|join(' &nbsp;&bull;&nbsp; ')|raw }}
+</div>

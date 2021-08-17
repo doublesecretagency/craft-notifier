@@ -1,0 +1,30 @@
+<div id="message-{{ message.id }}" class="notifier-message-container">
+    <div class="notifier-block notifier-message">
+
+        {% switch message.type %}
+        {% case 'email' %}
+            <div class="block-label">... send an email</div>
+        {% case 'sms' %}
+            <div class="block-label">... send an SMS (Text Message)</div>
+        {% default %}
+            <div class="block-label">... {{ message.type }}</div>
+        {% endswitch %}
+
+        <template v-cloak v-if="expanded">
+            {% include 'notifier/_block/message/expanded' %}
+        </template>
+        <template v-cloak v-if="!expanded">
+            {% include 'notifier/_block/message/collapsed' %}
+        </template>
+
+    </div>
+    {% include 'notifier/_block/controls' with {
+        'type': 'message',
+        'deleteAction': "deleteMessage(#{message.id})",
+        'editUrl': cpUrl("notifier/trigger/#{trigger.id}/message/#{message.id}"),
+    } %}
+</div>
+
+{% if controls %}
+    {% js "messageBlock(#{message.id});" %}
+{% endif %}

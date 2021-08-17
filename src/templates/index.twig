@@ -1,6 +1,9 @@
 {% extends '_layouts/cp' %}
 {% set title = 'Manage Notifications'|t('notifier') %}
 
+{# Load Vue assets #}
+{% do view.registerAssetBundle('craft\\web\\assets\\vue\\VueAsset') %}
+
 {# Load shared resources #}
 {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NotifierAsset') %}
 
@@ -24,22 +27,22 @@
 
             <div class="grid-container">
                 {% for trigger in triggers %}
-                    {% include 'notifier/_block/trigger' with {
-                        'controls': true,
-                        'trigger': trigger,
-                    } only %}
-                    <div>
-                        {% for message in trigger.getMessages() %}
-                            {% include 'notifier/_block/message' with {
-                                'controls': true,
-                                'trigger': trigger,
-                                'message': message,
-                            } only %}
-                        {% endfor %}
-                        <a class="btn submit add icon" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/new") }}" role="button" tabindex="0">
-                            Add a message
-                        </a>
-                    </div>
+                        {% include 'notifier/_block/trigger' with {
+                            'controls': true,
+                            'trigger': trigger,
+                        } only %}
+                        <div class="trigger-messages">
+                            {% for message in trigger.getMessages() %}
+                                {% include 'notifier/_block/message' with {
+                                    'controls': true,
+                                    'trigger': trigger,
+                                    'message': message,
+                                } only %}
+                            {% endfor %}
+                            <a class="btn submit add icon" href="{{ cpUrl("notifier/trigger/#{trigger.id}/message/new") }}" role="button" tabindex="0">
+                                Add a message
+                            </a>
+                        </div>
                 {% endfor %}
             </div>
 
@@ -72,6 +75,8 @@
     border-bottom-left-radius: 0;
 }
 
+/* ========================================================================= */
+
 .notifier-trigger-container {
     display: grid;
     grid-template-columns: 34px auto;
@@ -80,6 +85,8 @@
     display: grid;
     grid-template-columns: auto 34px;
 }
+
+/* ========================================================================= */
 
 .notifier-trigger {
     margin-top: 8px;
@@ -92,5 +99,11 @@
     border-left: none;
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
+}
+
+/* ========================================================================= */
+
+.notifier-trigger table.expanded {
+    border-bottom: 1px solid #d4e0ef;
 }
 {% endcss %}

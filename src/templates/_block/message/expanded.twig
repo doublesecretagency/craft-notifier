@@ -1,0 +1,33 @@
+<table class="expanded">
+    <colgroup>
+        <col style="width:100px">
+        <col>
+    </colgroup>
+    <tr>
+        <td>Template:</td>
+        <td>{{ message.template }}</td>
+    </tr>
+    {% if 'email' == message.type %}
+        <tr>
+            <td>Subject:</td>
+            <td>{{ message.config.subject ?? '' }}</td>
+        </tr>
+    {% endif %}
+    <tr>
+        <td>Recipients:</td>
+        <td>
+            {# Get recipients type and show label #}
+            {% set type = (message.config.recipients.type ?? '') %}
+            {% set recipients = (notifierOptions.recipients.type[type] ?? null) %}
+            {# If custom, append custom type #}
+            {% if 'custom' == type %}
+                {% set recipientsCustomType = (message.config.recipients.custom.type ?? null) %}
+                {% if recipientsCustomType %}
+                    {% set recipients = "#{recipients} (#{recipientsCustomType})" %}
+                {% endif %}
+            {% endif %}
+            {# Display recipients #}
+            {{ recipients }}
+        </td>
+    </tr>
+</table>

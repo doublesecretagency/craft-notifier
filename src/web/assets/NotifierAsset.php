@@ -32,6 +32,10 @@ class NotifierAsset extends AssetBundle
         $this->css = [
             'css/notifier.css',
         ];
+
+        $this->js = [
+            'js/notifier.js',
+        ];
     }
 
 }

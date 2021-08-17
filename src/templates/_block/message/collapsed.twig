@@ -1,0 +1,26 @@
+{% set data = [] %}
+
+{% if message.template %}
+    {% set data = data|merge([message.template]) %}
+{% endif %}
+
+{% if ('email' == message.type) and (message.config.subject ?? false) %}
+    {% set data = data|merge([message.config.subject]) %}
+{% endif %}
+
+{# Get recipients type and show label #}
+{% set type = (message.config.recipients.type ?? '') %}
+{% set recipients = (notifierOptions.recipients.type[type] ?? null) %}
+{# If custom, append custom type #}
+{% if 'custom' == type %}
+    {% set recipientsCustomType = (message.config.recipients.custom.type ?? null) %}
+    {% if recipientsCustomType %}
+        {% set recipients = "#{recipients} (#{recipientsCustomType})" %}
+    {% endif %}
+{% endif %}
+{# Display recipients #}
+{% set data = data|merge([recipients]) %}
+
+<div class="collapsed">
+    {{ data|join(' &nbsp;&bull;&nbsp; ')|raw }}
+</div>

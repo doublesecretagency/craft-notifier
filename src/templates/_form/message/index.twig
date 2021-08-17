@@ -4,9 +4,6 @@
 {# Load Vue assets #}
 {% do view.registerAssetBundle('craft\\web\\assets\\vue\\VueAsset') %}
 
-{# Cloak elements until ready #}
-{% css '[v-cloak] {display:none}' %}
-
 {% set existing = (messageId ?? false) %}
 {% set message  = (existing ? notifier.getMessageById(messageId)) %}
 {% set title    = (existing ? 'Edit Message' : 'Add a New Message')|t('notifier') %}

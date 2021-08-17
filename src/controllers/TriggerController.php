@@ -55,4 +55,28 @@ class TriggerController extends Controller
         return $this->redirect(UrlHelper::cpUrl('notifier'));
     }
 
+    /**
+     * Delete a notification trigger.
+     */
+    public function actionDelete()
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Get the trigger ID
+        $request = Craft::$app->getRequest();
+        $id = $request->getBodyParam('id');
+
+        // Delete the Trigger Record
+        $success = (bool) Db::delete('{{%notifier_triggers}}', [
+            'id' => $id,
+        ]);
+
+        // Return JSON response
+        return $this->asJson([
+            'id' => $id,
+            'success' => $success,
+        ]);
+    }
+
 }

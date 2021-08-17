@@ -1,3 +1,11 @@
+/* ========================================================================= */
+
+[v-cloak] {
+    display: none;
+}
+
+/* ========================================================================= */
+
 .notifier-trigger {
     border-color: #bcd0e3;
     background-color: #e3edf6;
@@ -17,7 +25,7 @@
 /* ========================================================================= */
 
 .notifier-block {
-    color: #3f4d5a;
+    color: #596673;
     border-width: 1px;
     border-style: solid;
     box-shadow: 0 0 0 1px rgba(205, 216, 228, 0.25), 0 2px 12px rgba(205, 216, 228, 0.5);
@@ -30,19 +38,75 @@
 /* ========================================================================= */
 
 .notifier-block .block-label {
-    color: #596673;
     font-size: 1.1em;
     font-weight: bold;
     padding: 12px 24px 12px;
 }
 
-.notifier-block table {
-    margin-left: 4px;
+/* ========================================================================= */
+
+.notifier-block div.collapsed {
+    padding: 4px 10px 3px;
 }
-.notifier-block table td {
-    padding: 4px !important;
+
+/* ========================================================================= */
+
+.notifier-block table.expanded {
+    width: 100%;
 }
-.notifier-block table td:nth-child(1) {
+.notifier-block table.expanded td:nth-child(1) {
     font-weight: bold;
     text-align: right;
+    padding: 5px 6px 4px 8px;
 }
+.notifier-block table.expanded td:nth-child(2) {
+    background-color: #ffffff;
+    padding: 5px 8px 4px 6px;
+}
+
+/* ========================================================================= */
+
+.block-controls {
+    margin-top: 17px;
+}
+.block-controls-trigger {
+    text-align: left;
+}
+.block-controls-message {
+    text-align: right;
+}
+
+.block-controls button {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 1px;
+}
+.block-controls button:hover,
+.block-controls button:active,
+.block-controls button:focus {
+    background-color: #fff0d2;
+}
+.block-controls button img {
+    width: 15px;
+    height: 15px;
+    /* #596673 */
+    filter: invert(41%) sepia(6%) saturate(1143%) hue-rotate(169deg) brightness(92%) contrast(90%);
+}
+
+.block-controls button.chevron {
+    transform: rotate(0);
+    transition-duration: 0.2s;
+}
+.block-controls button.chevron.turn-left {
+    transform: rotate(90deg);
+}
+.block-controls button.chevron.turn-right {
+    transform: rotate(-90deg);
+}
+
+/* ========================================================================= */
