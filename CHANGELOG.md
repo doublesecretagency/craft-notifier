@@ -1,3 +1,5 @@
 # Changelog
 
-## 0.0.0 - Unreleased
+## 0.9.0 - 2021-08-18
+
+**Initial beta release.**
