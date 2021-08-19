@@ -1,6 +1,6 @@
 # Triggers
 
-To begin the lifecycle of a notification, a **trigger** must be activated. Each trigger refers back to an individual [Craft Event](https://craftcms.com/knowledge-base/custom-module-events).
+To begin the lifecycle of a notification, a **trigger** must be activated. Each trigger directly correlates with an underlying **event** in Craft (for example, "on Entry save").
 
 ## What is being triggered?
 

@@ -1,18 +1,18 @@
 # Setting the Template
 
-:::warning Automatic Variables
-A select set of variables will be [automatically available](/messages/variables/) within the context of your template.
-:::
+Depending on which [message type](/messages/set-type/) has been selected, additional options may be available.
 
-## All Messages
+:::tip All Types
+All message types require a **message template**.
+:::
 
 ### Message Template
 
-Select which Twig template to use for the outgoing message.
+Specify the Twig template which powers your message.
 
 <img class="dropshadow" :src="$withBase('/images/messages/message-template.png')" alt="" style="max-width:800px; margin-top:2px; margin-bottom:4px;">
 
-Your template is a standard Twig template, you can use any normal Twig you'd like. Additionally, a set of [automatic variables](/messages/variables/) will be available within the context of your template.
+Your template is a standard Twig template, you can use any normal Twig you'd like. Additionally, your template can take advantage of the [automatic variables](/messages/variables/) available within that context.
 
 ## Email Messages
 
@@ -20,7 +20,7 @@ In addition to the template, email messages also include a dynamic **email subje
 
 ### Email Subject
 
-For email messages, you will also be able to specify a dynamic **subject** line. The exact same [automatic variables](/messages/variables/) are available within the context of your subject line.
+For email messages, you will be able to specify a dynamic subject line. Within the context of your subject, the same [automatic variables](/messages/variables/) are available.
 
 <img class="dropshadow" :src="$withBase('/images/messages/email-subject.png')" alt="" style="max-width:800px; margin-top:2px; margin-bottom:4px;">
 

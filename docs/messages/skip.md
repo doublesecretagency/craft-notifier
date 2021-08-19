@@ -1,6 +1,8 @@
 # Skip Sending a Message
 
-Within the context of the Twig template, you can skip sending a **single message** to an **individual recipient**.
+Within the context of the Twig template, you can skip sending a **single message** to an **individual recipient**. Each recipient is processed individually, so a message can be stopped completely by skipping all recipients.
+
+## How it works
 
 During the parsing of your Twig template, the message will be aborted if the `skipMessage` tag is encountered. You can use this tag to define complex custom logic, and stop messages from being sent if some internal criteria is not met.
 
@@ -16,10 +18,7 @@ Please note that this will only skip **a single recipient**, and will continue t
 If `skipMessage` is encountered for all recipients, no messages will be sent out.
 :::
 
----
----
-
-### Examples
+## Examples
 
 #### Comparing Changes
 

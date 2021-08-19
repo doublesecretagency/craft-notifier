@@ -1,5 +1,11 @@
 <div>
 
+    <div class="readable" style="margin-bottom: 20px">
+        <blockquote class="note tip">
+            <p><strong>Beta Notice:</strong> The underlying logging system may change prior to the 1.0 release.</p>
+        </blockquote>
+    </div>
+
     {% for row in logs %}
 
         {% set type = (row.type ?? '') %}

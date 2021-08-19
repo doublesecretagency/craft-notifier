@@ -1,5 +1,7 @@
 # Messages
 
-Each **message** can be configured individually, and have its own unique set of recipients. Whatever messages are associated with a [trigger](/triggers/) will be sent out whenever that trigger is activated.
+Every message is directly related to a parent [trigger](/triggers/). When the trigger is activated, all corresponding messages will be sent out. 
 
-<img class="dropshadow" :src="$withBase('/images/messages/config.png')" alt="" style="max-width:600px; margin-top:10px">
+Each message can be configured individually, and have its own unique set of [recipients](/recipients/).
+
+<img class="dropshadow" :src="$withBase('/images/messages/configure-message.png')" alt="" style="margin-top:10px">

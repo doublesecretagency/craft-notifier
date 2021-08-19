@@ -1,5 +1,9 @@
 # Custom Email Addresses
 
+:::warning Beta Warning
+The mechanism for setting custom recipients may change prior to the 1.0 release.
+:::
+
 Compiling a set of custom email addresses is fairly straightforward. First, you will organize the recipient email addresses into a single array. Second, you'll output it as a JSON-encoded string. 
 
 ## Example

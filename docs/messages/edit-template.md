@@ -2,14 +2,11 @@
 
 Message templates can be configured however you see fit. Each template is a normal Twig environment, so you can use `extends`, `include`, or any other tags just as you typically would.
 
-## Variables
 
-A certain set of variables will be **automatically available** within the context of your template.
+## Customizing the message body
 
-:::warning Which variables are available?
-To see an organized breakdown of which variables will be available, check out the docs regarding [Automatic Variables](/messages/variables/).
-:::
+A special collection of [automatic variables](/messages/variables/) will be available to you within the context of your message template. These variables can be used to deeply customize the notification message.
 
-These variables can be used to deeply customize the notification message. You can implement complex Twig logic to create branching paths and variations within individual emails.
+## Stop a message from being sent
 
-If necessary, you can even use Twig to [prevent a message from being sent](/messages/skip/).
+If necessary, you can even use Twig to [prevent a message from being sent](/messages/skip/). The template can perform Twig-based logic while it is being parsed, and gracefully skip a message if certain criteria are not met.

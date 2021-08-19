@@ -1,5 +1,11 @@
 {% import '_includes/forms' as forms %}
 
+<div class="readable" style="margin-bottom: 20px">
+    <blockquote class="note">
+        <p><strong>Beta Warning:</strong> The "Custom selection" behavior may change prior to the 1.0 release.</p>
+    </blockquote>
+</div>
+
 {{ forms.selectField({
     label: "Get Recipients"|t('notifier'),
     instructions: "How should the list of recipients be collected?"|t('notifier'),

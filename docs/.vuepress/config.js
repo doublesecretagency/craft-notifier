@@ -45,6 +45,7 @@ module.exports = {
                 text: 'Guides',
                 items: [
                     {text: 'Notification Logs', link: '/guides/logs/'},
+                    // {text: 'Queue Jobs', link: '/guides/queue/'},
                 ]
             },
         ],
@@ -80,6 +81,7 @@ module.exports = {
             // Guides
             '/guides/': [
                 'logs',
+                // 'queue',
             ],
         }
     }
