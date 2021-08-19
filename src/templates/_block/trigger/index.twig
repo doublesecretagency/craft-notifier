@@ -23,6 +23,6 @@
     </div>
 </div>
 
-{% if controls %}
-    {% js "triggerBlock(#{trigger.id});" %}
-{% endif %}
+{% set expanded = (controls ? 'false' :  'true') %}
+{% js "triggerBlock(#{trigger.id}, #{expanded});" %}
+

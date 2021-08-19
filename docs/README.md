@@ -2,7 +2,7 @@
 home: true
 heroImage: /images/icon.svg
 heroText: Notifier plugin for Craft CMS
-tagline: Get notified when things happen.
+tagline: Send custom Twig messages when Craft events are triggered.
 actionText: Get Started →
 actionLink: /getting-started/
 ---

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * Get notified when things happen.
+ * Send custom Twig messages when Craft events are triggered.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -36,7 +36,7 @@ class NotifierPlugin extends Plugin
     /**
      * @var string Current schema version of the plugin.
      */
-    public $schemaVersion = '0.0.0';
+    public $schemaVersion = '1.0.0';
 
     /**
      * @var Plugin Self-referential plugin property.

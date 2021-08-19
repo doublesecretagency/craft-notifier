@@ -25,6 +25,5 @@
     } %}
 </div>
 
-{% if controls %}
-    {% js "messageBlock(#{message.id});" %}
-{% endif %}
+{% set expanded = (controls ? 'false' :  'true') %}
+{% js "messageBlock(#{message.id}, #{expanded});" %}

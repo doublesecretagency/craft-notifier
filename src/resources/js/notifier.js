@@ -2,13 +2,14 @@
  * Initialize Vue-based trigger block.
  *
  * @param id
+ * @param expanded
  */
-function triggerBlock(id) {
+function triggerBlock(id, expanded) {
     new Vue({
         el: '#trigger-'+id,
         delimiters: ['[[', ']]'],
         data: {
-            'expanded': false
+            'expanded': expanded
         },
         methods: {
             deleteTrigger(id) {
@@ -47,13 +48,14 @@ function triggerBlock(id) {
  * Initialize Vue-based message block.
  *
  * @param id
+ * @param expanded
  */
-function messageBlock(id) {
+function messageBlock(id, expanded) {
     new Vue({
         el: '#message-'+id,
         delimiters: ['[[', ']]'],
         data: {
-            'expanded': false
+            'expanded': expanded
         },
         methods: {
             deleteMessage(id) {

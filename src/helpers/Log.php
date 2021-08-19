@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * Get notified when things happen.
+ * Send custom Twig messages when Craft events are triggered.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -29,7 +29,7 @@ class Log
      * Message levels.
      */
     const SUCCESS = 'success'; // Green
-    const INFO    = 'info';    // Blue
+    const INFO    = 'info';    // White
     const WARNING = 'warning'; // Yellow
     const ERROR   = 'error';   // Red
 

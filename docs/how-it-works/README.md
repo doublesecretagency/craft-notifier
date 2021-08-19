@@ -1,10 +1,17 @@
 # How it Works
 
+<img class="dropshadow" :src="$withBase('/images/manage-notifications.png')" alt="">
+
 ## 1. Configure an event trigger
 
 Before you can configure any individual messages, you must first determine what will trigger them. [Add an event trigger](/how-it-works/add-an-event-trigger/) to determine when your message(s) will be sent.
 
-<img class="dropshadow" :src="$withBase('/images/notification-architecture.png')" alt="" style="max-width:500px; margin-top:10px">
+:::warning Beta
+While the plugin is still in beta, only a single trigger is available:
+- **When an Entry is saved**
+
+More triggers will become available by the official 1.0 release.
+:::
 
 ## 2. Configure each message
 

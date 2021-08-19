@@ -1,8 +1,8 @@
 {% extends '_layouts/cp' %}
 {% set fullPageForm = true %}
 
-{# Load Vue assets #}
-{% do view.registerAssetBundle('craft\\web\\assets\\vue\\VueAsset') %}
+{# Load assets #}
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NotifierAsset') %}
 
 {% set existing = (messageId ?? false) %}
 {% set message  = (existing ? notifier.getMessageById(messageId)) %}

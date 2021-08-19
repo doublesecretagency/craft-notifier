@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * Get notified when things happen.
+ * Send custom Twig messages when Craft events are triggered.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -12,6 +12,7 @@
 namespace doublesecretagency\notifier\web\assets;
 
 use craft\web\AssetBundle;
+use craft\web\assets\vue\VueAsset;
 
 /**
  * Class NotifierAsset
@@ -28,6 +29,10 @@ class NotifierAsset extends AssetBundle
         parent::init();
 
         $this->sourcePath = '@doublesecretagency/notifier/resources';
+
+        $this->depends = [
+            VueAsset::class,
+        ];
 
         $this->css = [
             'css/notifier.css',

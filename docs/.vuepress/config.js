@@ -56,7 +56,6 @@ module.exports = {
             // How it Works
             '/how-it-works/': [
                 '',
-                'managing-notifications',
             ],
             // Triggers
             '/triggers/': [

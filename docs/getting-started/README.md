@@ -30,7 +30,7 @@ To install the Notifier plugin via the plugin store, follow these steps:
     </div>
     <div>
         <strong style="font-size:17px">Notifier</strong>
-        <div style="font-size:15px; margin-top:9px;">Get notified when things happen.</div>
+        <div style="font-size:15px; margin-top:9px;">Send custom Twig messages when Craft events are triggered.</div>
         <p style="color:#8f98a3 !important; font-weight:normal;">$49</p>
     </div>
 </div>
