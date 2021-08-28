@@ -2,15 +2,26 @@
 {% set fullPageForm = true %}
 
 {# Load assets #}
-{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NotifierAsset') %}
+{% do view.registerAssetBundle(notifierAssets) %}
 
 {% set existing = (messageId ?? false) %}
-{% set message  = (existing ? notifier.getMessageById(messageId)) %}
-{% set title    = (existing ? 'Edit Message' : 'Add a New Message')|t('notifier') %}
+
+{% if existing %}
+    {% set message     = notifier.getMessageById(messageId) %}
+    {% set messageType = 'Send an Email' %} {# TEMP #}
+    {% set title       = messageType %}
+{% else %}
+    {% set message     = null %}
+    {% set messageType = null %}
+    {% set title       = 'Add a New Message'|t('notifier') %}
+{% endif %}
+
+{% set trigger = notifier.getTriggerById(triggerId) %}
+{% set triggerType = notifierOptions.triggers.event[trigger.event] %}
 
 {% set crumbs = [
     {'label': 'Notifier'|t('notifier'), 'url': url('notifier')},
-    {'label': title, 'url': false},
+    {'label': triggerType, 'url': url("notifier/trigger/#{triggerId}")},
 ] %}
 
 {% block actionButton %}
@@ -22,10 +33,10 @@
     {{ hiddenInput('triggerId', triggerId) }}
     {{ existing ? hiddenInput('id', messageId) }}
 
-{#    {% include 'notifier/_related/trigger' %}#}
-{#    <hr>#}
-    {% include 'notifier/_form/message/body' %}
-    <hr>
-    {% include 'notifier/_form/message/recipients' %}
+    <div class="flex-fields">
+        {% include 'notifier/_form/message/body' %}
+        <hr>
+        {% include 'notifier/_form/message/recipients' %}
+    </div>
 
 {% endset %}

@@ -1,12 +1,8 @@
 {% extends '_layouts/cp' %}
-{% set title = 'Manage Notifications'|t('notifier') %}
+{% set title = 'All Notifications'|t('notifier') %}
 
 {# Load assets #}
-{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NotifierAsset') %}
-
-{% set crumbs = [
-    {'label': 'Notifier'|t('notifier'), 'url': url('notifier')},
-] %}
+{% do view.registerAssetBundle(notifierAssets) %}
 
 {% block actionButton %}
     <a class="btn submit add icon" href="{{ cpUrl('notifier/trigger/new') }}" role="button" tabindex="0">

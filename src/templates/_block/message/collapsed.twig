@@ -1,11 +1,11 @@
 {% set data = [] %}
 
-{% if message.template %}
-    {% set data = data|merge([message.template]) %}
-{% endif %}
-
 {% if ('email' == message.type) and (message.config.subject ?? false) %}
     {% set data = data|merge([message.config.subject]) %}
+{% endif %}
+
+{% if message.template %}
+    {% set data = data|merge([message.template]) %}
 {% endif %}
 
 {# Get recipients type and show label #}

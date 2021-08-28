@@ -14,6 +14,7 @@ namespace doublesecretagency\notifier\web\twig;
 use Craft;
 use craft\elements\User;
 use doublesecretagency\notifier\helpers\Notifier;
+use doublesecretagency\notifier\web\assets\NotifierAsset;
 use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -37,6 +38,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         // Return globally accessible variables
         return [
             'notifier' => new Notifier(),
+            'notifierAssets' => NotifierAsset::class,
             'notifierUserElementType' => User::class,
             'notifierOptions' => [
                 'triggers' => [

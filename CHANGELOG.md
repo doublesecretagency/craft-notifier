@@ -6,6 +6,7 @@
 - Added link to request new trigger events.
 
 ### Changed
+- Various minor UX improvements.
 - Ensure events are not triggered while plugin is being installed.
 
 ### Fixed
