@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.9.2 - Unreleased
+## 0.9.2 - 2021-08-28
 
 ### Added
 - Added link to request new trigger events.
