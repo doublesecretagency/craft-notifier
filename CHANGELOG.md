@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.3 - Unreleased
+
+### Changed
+- Requires a minimum of Craft 3.7.10.
+
 ## 0.9.2 - 2021-08-28
 
 ### Added
