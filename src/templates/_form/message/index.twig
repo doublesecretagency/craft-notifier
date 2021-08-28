@@ -22,8 +22,8 @@
     {{ hiddenInput('triggerId', triggerId) }}
     {{ existing ? hiddenInput('id', messageId) }}
 
-    {% include 'notifier/_related/trigger' %}
-    <hr>
+{#    {% include 'notifier/_related/trigger' %}#}
+{#    <hr>#}
     {% include 'notifier/_form/message/body' %}
     <hr>
     {% include 'notifier/_form/message/recipients' %}
