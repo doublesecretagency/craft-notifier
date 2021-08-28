@@ -64,15 +64,16 @@ class NotifierPlugin extends Plugin
         // Load Twig extension
         Craft::$app->getView()->registerTwigExtension(new Extension());
 
-//        // If plugin isn't installed yet, bail before triggering events
-//        if (!$this->isInstalled) {
-//            return;
-//        }
-
         // Register enhancements for the control panel
         if (Craft::$app->getRequest()->getIsCpRequest()) {
             $this->_registerCpRoutes();
             $this->_registerUtilities();
+        }
+
+        // If plugin isn't installed yet
+        if (!$this->isInstalled) {
+            // Bail before triggering events
+            return;
         }
 
         // Trigger notifications when an Entry is saved
