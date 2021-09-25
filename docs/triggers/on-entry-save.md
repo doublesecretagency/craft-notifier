@@ -2,7 +2,7 @@
 
 Each time an Entry is saved, this trigger will be activated. You can configure the trigger to meet more specific criteria by adjusting the various settings.
 
-<img class="dropshadow" :src="$withBase('/images/triggers/on-entry-save.png')" alt="" style="max-width:600px; margin-top:10px">
+<img class="dropshadow" :src="$withBase('/images/triggers/on-entry-save.png')" alt="" style="max-width:680px; margin-top:10px">
 
 <!--
 ## If data has changed

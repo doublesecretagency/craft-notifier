@@ -5,15 +5,15 @@
     </colgroup>
     {% for key,val in trigger.config %}
         {% switch key %}
-        {% case 'drafts' %}
+        {% case 'newExisting' %}
             <tr>
-                <td>Drafts:</td>
-                <td>{{ notifierOptions.triggers.drafts[val] ?? false }}</td>
+                <td>New/Existing:</td>
+                <td>{{ notifierOptions.triggers.newExisting[val] ?? false }}</td>
             </tr>
-        {% case 'freshness' %}
+        {% case 'includeDraftsAndRevisions' %}
             <tr>
-                <td>Freshness:</td>
-                <td>{{ notifierOptions.triggers.freshness[val] ?? false }}</td>
+                <td>+Drafts/Revisions:</td>
+                <td>{{ val ? 'Yes' : 'No' }}</td>
             </tr>
         {% case 'sections' %}
             {% set sections = val %}

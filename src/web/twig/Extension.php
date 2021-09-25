@@ -35,6 +35,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $manager = Craft::$app->getAssetManager();
         $iconPath = '@doublesecretagency/notifier/resources/images';
 
+        // Get all sections and entry types
+        list($sections, $entryTypes) = $this->_getSectionsAndEntryTypes();
+
         // Return globally accessible variables
         return [
             'notifier' => new Notifier(),
@@ -45,17 +48,13 @@ class Extension extends AbstractExtension implements GlobalsInterface
                     'event' => [
                         'Entry::EVENT_AFTER_SAVE' => 'When an Entry is saved',
                     ],
-                    'sections' => $this->_getSections(),
-                    'freshness' => [
-                        'new' => 'New entries only',
-                        'existing' => 'Existing entries only',
-                        'both' => 'Both new & existing entries',
+                    'newExisting' => [
+                        'both' => 'Both',
+                        'new' => 'Newly published entries only',
+                        'existing' => 'Updated entries only',
                     ],
-                    'drafts' => [
-                        'published' => 'Published entries only',
-                        'drafts' => 'Draft entries only',
-                        'both' => 'Both draft & published entries',
-                    ],
+                    'sections' => $sections,
+                    'entryTypes' => $entryTypes,
                 ],
                 'messages' => [],
                 'recipients' => [
@@ -92,23 +91,37 @@ class Extension extends AbstractExtension implements GlobalsInterface
     // ========================================================================= //
 
     /**
-     * Get sections as dropdown field options.
+     * Get sections and entry types for dropdown field options.
      *
      * @return array
      */
-    private function _getSections(): array
+    private function _getSectionsAndEntryTypes(): array
     {
         // Initialize section info
-        $options = [];
-        $sections = Craft::$app->getSections()->getAllSections();
+        $sections = [];
+        $entryTypes = [];
 
-        // Loop through sections to compile options
-        foreach ($sections as $section) {
-            $options[$section->id] = $section->name;
+        // Get sections services
+        $s = Craft::$app->getSections();
+
+        // Loop through all sections
+        foreach ($s->getAllSections() as $section) {
+
+            // Add each section
+            $sections[$section->id] = $section->name;
+
+            // Loop through all entry types in this section
+            foreach ($s->getEntryTypesBySectionId($section->id) as $type) {
+
+                // Add each entry type
+                $entryTypes[$type->id] = "[{$section->name}] {$type->name}";
+
+            }
+
         }
 
         // Return compiled options
-        return $options;
+        return [$sections, $entryTypes];
     }
 
     /**

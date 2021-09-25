@@ -12,6 +12,7 @@
 namespace doublesecretagency\notifier\models;
 
 use craft\elements\Entry;
+use craft\helpers\ElementHelper;
 use doublesecretagency\notifier\helpers\Notifier;
 use yii\base\InvalidConfigException;
 
@@ -55,34 +56,42 @@ class Trigger extends BaseNotification
         /** @var Entry $entry */
         $entry = $event->sender;
 
-        // Get individual config values
-        $freshness = ($this->config['freshness'] ?? false);
-        $drafts    = ($this->config['drafts']    ?? false);
-        $sections  = ($this->config['sections']  ?? false);
+        // Whether the Entry is a Draft or Revision
+        $isDraftRevision = ElementHelper::isDraftOrRevision($entry);
 
-        // If the Entry is new
-        // but only existing entries are allowed, mark invalid
-        if ($event->isNew && ($freshness === 'existing')) {
+        // Whether to include Drafts and Revisions
+        $includeDraftRevision = (bool) ($this->config['includeDraftsAndRevisions'] ?? false);
+
+        // If excluding Drafts & Revisions, and it is a Draft or Revision, mark invalid
+        if (!$includeDraftRevision && $isDraftRevision) {
             return false;
         }
 
-        // If the Entry is not new
-        // but only new entries are allowed, mark invalid
-        if (!$event->isNew && ($freshness === 'new')) {
-            return false;
+        // TODO: Remove legacy `freshness` by v1.0
+        // Whether to activate trigger for new entries, existing entries, or both
+        $newExisting = ($this->config['freshness'] ?? $this->config['newExisting'] ?? false);
+//        $newExisting = ($this->config['newExisting'] ?? false);
+
+        // Simplify logic
+        $new          = $entry->firstSave;
+        $onlyNew      = ($newExisting === 'new');
+        $onlyExisting = ($newExisting === 'existing');
+
+        // Filter by newness
+        if ($new) {
+            // If new, and only existing are allowed, mark invalid
+            if ($onlyExisting) {
+                return false;
+            }
+        } else {
+            // If existing, and only new are allowed, mark invalid
+            if ($onlyNew) {
+                return false;
+            }
         }
 
-        // If the Entry is a draft
-        // but only published are allowed, mark invalid
-        if ($entry->isDraft && ($drafts === 'published')) {
-            return false;
-        }
-
-        // If the Entry is not a draft
-        // but only drafts are allowed, mark invalid
-        if (!$entry->isDraft && ($drafts === 'drafts')) {
-            return false;
-        }
+        // Get selected sections
+        $sections = ($this->config['sections'] ?? false);
 
         // If an array of sections was provided
         if (is_array($sections)) {

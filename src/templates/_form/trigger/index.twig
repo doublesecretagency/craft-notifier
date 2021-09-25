@@ -29,7 +29,7 @@
     <div class="flex-fields">
 
         {{ forms.selectField({
-            label: "Event"|t('notifier'),
+            label: "Trigger Event"|t('notifier'),
             instructions: "**BETA:** Only a single event type is available in beta. [Request more trigger events...](https://github.com/doublesecretagency/craft-notifier/issues/2)"|t('notifier'),
             id: 'event',
             name: 'event',
@@ -37,9 +37,32 @@
             value: (trigger.event ?? false)
         }) }}
 
+        <hr>
+
+        {{ forms.selectField({
+            label: "Activate when saving new or existing entries?"|t('notifier'),
+            id: 'config-newExisting',
+            name: 'config[newExisting]',
+            options: notifierOptions.triggers.newExisting,
+            value: (trigger.config.newExisting ?? false)
+        }) }}
+
+        {{ forms.lightswitchField({
+            id: 'config-includeDraftsAndRevisions',
+            name: 'config[includeDraftsAndRevisions]',
+            label: "Include Drafts & Revisions?"|t('notifier'),
+            instructions: "It's highly recommended to leave this disabled, unless you explicitly need Drafts and/or Revisions."|t('notifier'),
+            offLabel: "Published Entries Only"|t('notifier'),
+            onLabel: "Published Entries + Drafts/Revisions"|t('notifier'),
+            on: false,
+        }) }}
+{#        warning: "Enabling Drafts and Revisions may lead to unpredictable behavior."|t('notifier'),#}
+
+        <hr>
+
         {{ forms.checkboxSelectField({
             label: "Sections"|t('app'),
-            instructions: "Which section(s) will activate this trigger?"|t('notifier'),
+            instructions: "Which sections will activate this trigger?"|t('notifier'),
             id: 'config-sections',
             name: 'config[sections]',
             options: notifierOptions.triggers.sections,
@@ -47,23 +70,15 @@
             values: (trigger.config.sections ?? '*')
         }) }}
 
-        {{ forms.selectField({
-            label: "Freshness"|t('notifier'),
-            instructions: "Should this trigger be activated by **new** entries, **existing** entries, or **both**?"|t('notifier'),
-            id: 'config-freshness',
-            name: 'config[freshness]',
-            options: notifierOptions.triggers.freshness,
-            value: (trigger.config.freshness ?? false)
-        }) }}
-
-        {{ forms.selectField({
-            label: "Drafts"|t('notifier'),
-            instructions: "Should this trigger be activated by **published** entries, **draft** entries, or **both**?"|t('notifier'),
-            id: 'config-drafts',
-            name: 'config[drafts]',
-            options: notifierOptions.triggers.drafts,
-            value: (trigger.config.drafts ?? false)
-        }) }}
+{#        {{ forms.checkboxSelectField({#}
+{#            label: "Entry Types"|t('app'),#}
+{#            instructions: "Which entry types will activate this trigger?"|t('notifier'),#}
+{#            id: 'config-entryTypes',#}
+{#            name: 'config[entryTypes]',#}
+{#            options: notifierOptions.triggers.entryTypes,#}
+{#            showAllOption: true,#}
+{#            values: (trigger.config.entryTypes ?? '*')#}
+{#        }) }}#}
 
     </div>
 

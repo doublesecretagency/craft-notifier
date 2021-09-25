@@ -3,14 +3,15 @@
 
 {% for key,val in trigger.config %}
     {% switch key %}
-    {% case 'drafts' %}
-        {% if (t.drafts[val] ?? false) %}
-            {% set data = data|merge([t.drafts[val]]) %}
+    {% case 'newExisting' %}
+        {% if 'both' == val %}
+            {% set data = data|merge(['Both New & Existing']) %}
+        {% elseif (t.newExisting[val] ?? false) %}
+            {% set data = data|merge([t.newExisting[val]]) %}
         {% endif %}
-    {% case 'freshness' %}
-        {% if (t.freshness[val] ?? false) %}
-            {% set data = data|merge([t.freshness[val]]) %}
-        {% endif %}
+    {% case 'includeDraftsAndRevisions' %}
+        {% set draftsRevisions = (val ? 'Include Drafts/Revisions' : 'Exclude Drafts/Revisions') %}
+        {% set data = data|merge([draftsRevisions]) %}
     {% case 'sections' %}
         {% set sections = val %}
         {% if '*' == sections %}
@@ -26,7 +27,6 @@
             {% endset %}
             {% set data = data|merge([allSections|trim]) %}
         {% endif %}
-
     {% endswitch %}
 {% endfor %}
 
