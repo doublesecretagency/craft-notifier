@@ -3,6 +3,7 @@
         <col style="width:100px">
         <col>
     </colgroup>
+
     {% for key,val in trigger.config %}
         {% switch key %}
         {% case 'newExisting' %}
@@ -15,23 +16,20 @@
                 <td>+Drafts/Revisions:</td>
                 <td>{{ val ? 'Yes' : 'No' }}</td>
             </tr>
-        {% case 'sections' %}
-            {% set sections = val %}
-            <tr>
-                <td>Sections:</td>
-                <td>
-                    {% if '*' == sections %}
-                        All sections
-                    {% elseif '' == sections %}
-                        None selected
-                    {% elseif sections is iterable %}
-                        {% for s in sections %}
-                            {{ not loop.first ? ', ' }}
-                            {{ craft.app.sections.getSectionById(s).name ?? false }}
-                        {% endfor %}
-                    {% endif %}
-                </td>
-            </tr>
         {% endswitch %}
     {% endfor %}
+
+    {% for sectionId,section in notifierOptions.triggers.sectionsEntryTypes if sectionId in trigger.config.sections %}
+        <tr>
+            <td style="vertical-align:top">{{ section.name }} &rarr;</td>
+            <td style="vertical-align:top">
+                <ul>
+                    {% for typeId,type in section.entryTypes if typeId in trigger.config.entryTypes %}
+                        <li>{{ type }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    {% endfor %}
+
 </table>

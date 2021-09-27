@@ -2,6 +2,8 @@
 {% import '_includes/forms' as forms %}
 {% set fullPageForm = true %}
 
+{% do view.registerAssetBundle('craft\\web\\assets\\userpermissions\\UserPermissionsAsset') %}
+
 {% set existing = (triggerId ?? false) %}
 
 {% if existing %}
@@ -60,25 +62,52 @@
 
         <hr>
 
-        {{ forms.checkboxSelectField({
-            label: "Sections"|t('app'),
-            instructions: "Which sections will activate this trigger?"|t('notifier'),
-            id: 'config-sections',
-            name: 'config[sections]',
-            options: notifierOptions.triggers.sections,
-            showAllOption: true,
-            values: (trigger.config.sections ?? '*')
-        }) }}
+        {# Get selected Sections & Entry Types #}
+        {% set sections   = (trigger.config.sections ?? []) %}
+        {% set entryTypes = (trigger.config.entryTypes ?? []) %}
 
-{#        {{ forms.checkboxSelectField({#}
-{#            label: "Entry Types"|t('app'),#}
-{#            instructions: "Which entry types will activate this trigger?"|t('notifier'),#}
-{#            id: 'config-entryTypes',#}
-{#            name: 'config[entryTypes]',#}
-{#            options: notifierOptions.triggers.entryTypes,#}
-{#            showAllOption: true,#}
-{#            values: (trigger.config.entryTypes ?? '*')#}
-{#        }) }}#}
+        <div>
+            <div class="user-permissions">
+                <h3>Sections & Entry Types</h3>
+                <div class="select-all">Select All</div>
+                <ul>
+
+                    {% for sectionId,section in notifierOptions.triggers.sectionsEntryTypes %}
+                        <li>
+                            <input type="checkbox"
+                                   class="checkbox"
+                                   id="section-{{ sectionId }}"
+                                   name="config[sections][]"
+                                   value="{{ sectionId }}"
+                                   {{ sectionId in sections ? 'checked=""'|raw }}
+                            >
+                            <label for="section-{{ sectionId }}">
+                                {{ section.name }}
+                            </label>
+                            <ul id="section-{{ sectionId }}-nested">
+                                {% set enableChildren = (sectionId in sections) %}
+                                {% for typeId,type in section.entryTypes %}
+                                    <li>
+                                        <input type="checkbox"
+                                               class="checkbox"
+                                               id="type-{{ typeId }}"
+                                               name="config[entryTypes][]"
+                                               value="{{ typeId }}"
+                                               {{ typeId in entryTypes ? 'checked=""'|raw }}
+                                               {{ enableChildren ?: 'disabled=""'|raw }}
+                                        >
+                                        <label for="type-{{ typeId }}">
+                                            {{ type }}
+                                        </label>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </div>
 
     </div>
 

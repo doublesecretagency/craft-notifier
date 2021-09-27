@@ -35,9 +35,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $manager = Craft::$app->getAssetManager();
         $iconPath = '@doublesecretagency/notifier/resources/images';
 
-        // Get all sections and entry types
-        list($sections, $entryTypes) = $this->_getSectionsAndEntryTypes();
-
         // Return globally accessible variables
         return [
             'notifier' => new Notifier(),
@@ -53,8 +50,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                         'new' => 'Newly published entries only',
                         'existing' => 'Updated entries only',
                     ],
-                    'sections' => $sections,
-                    'entryTypes' => $entryTypes,
+                    'sectionsEntryTypes' => $this->_getSectionsAndEntryTypes(),
                 ],
                 'messages' => [],
                 'recipients' => [
@@ -91,37 +87,42 @@ class Extension extends AbstractExtension implements GlobalsInterface
     // ========================================================================= //
 
     /**
-     * Get sections and entry types for dropdown field options.
+     * Get all sections and entry types.
      *
      * @return array
      */
     private function _getSectionsAndEntryTypes(): array
     {
-        // Initialize section info
-        $sections = [];
-        $entryTypes = [];
-
         // Get sections services
         $s = Craft::$app->getSections();
+
+        // Initialize sections
+        $sections = [];
 
         // Loop through all sections
         foreach ($s->getAllSections() as $section) {
 
-            // Add each section
-            $sections[$section->id] = $section->name;
+            // Initialize entry types
+            $entryTypes = [];
 
             // Loop through all entry types in this section
             foreach ($s->getEntryTypesBySectionId($section->id) as $type) {
 
                 // Add each entry type
-                $entryTypes[$type->id] = "[{$section->name}] {$type->name}";
+                $entryTypes[$type->id] = $type->name;
 
             }
+
+            // Add each section (with its respective entry types)
+            $sections[$section->id] = [
+                'name' => $section->name,
+                'entryTypes' => $entryTypes,
+            ];
 
         }
 
         // Return compiled options
-        return [$sections, $entryTypes];
+        return $sections;
     }
 
     /**

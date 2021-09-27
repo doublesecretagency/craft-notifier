@@ -90,21 +90,18 @@ class Trigger extends BaseNotification
             }
         }
 
-        // Get selected sections
-        $sections = ($this->config['sections'] ?? false);
+        // Get selected sections and entry types
+        $sections   = ($this->config['sections']   ?? []);
+        $entryTypes = ($this->config['entryTypes'] ?? []);
 
-        // If an array of sections was provided
-        if (is_array($sections)) {
-            // If the Entry's section ID isn't selected, mark invalid
-            $id = $entry->getSection()->id;
-            if (!in_array($id, $sections)) {
-                return false;
-            }
-        } else {
-            // If not allowing all sections, mark invalid
-            if ($sections !== '*') {
-                return false;
-            }
+        // If section isn't selected, mark invalid
+        if (!in_array($entry->getSection()->id, $sections)) {
+            return false;
+        }
+
+        // If entry type isn't selected, mark invalid
+        if (!in_array($entry->getType()->id, $entryTypes)) {
+            return false;
         }
 
         // Entry event is valid!
