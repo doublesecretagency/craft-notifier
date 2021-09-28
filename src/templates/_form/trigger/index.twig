@@ -54,11 +54,12 @@
             name: 'config[includeDraftsAndRevisions]',
             label: "Include Drafts & Revisions?"|t('notifier'),
             instructions: "It's highly recommended to leave this disabled, unless you explicitly need Drafts and/or Revisions."|t('notifier'),
+            warning: "Enabling Drafts/Revisions may lead to unpredictable behavior."|t('notifier'),
             offLabel: "Published Entries Only"|t('notifier'),
             onLabel: "Published Entries + Drafts/Revisions"|t('notifier'),
-            on: false,
+            on: (trigger.config.includeDraftsAndRevisions ?? false),
+            toggle: '.warning',
         }) }}
-{#        warning: "Enabling Drafts and Revisions may lead to unpredictable behavior."|t('notifier'),#}
 
         <hr>
 
