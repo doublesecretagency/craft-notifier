@@ -56,6 +56,11 @@ class Trigger extends BaseNotification
         /** @var Entry $entry */
         $entry = $event->sender;
 
+        // If part of a bulk re-save, mark invalid
+        if ($entry->resaving) {
+            return false;
+        }
+
         // Whether the Entry is a Draft or Revision
         $isDraftRevision = ElementHelper::isDraftOrRevision($entry);
 
