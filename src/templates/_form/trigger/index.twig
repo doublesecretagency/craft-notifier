@@ -24,20 +24,6 @@
     <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
 {% endblock %}
 
-{# ========================================================================= #}
-
-{% css %}
-#config-includeDraftsAndRevisions-field {
-    margin-bottom: 0;
-}
-#draft-warning {
-    margin-top: 5px;
-}
-{% endcss %}
-
-{# Whether to include Drafts/Revisions #}
-{% set includeDraftsAndRevisions = (trigger.config.includeDraftsAndRevisions ?? false) %}
-
 {% set content %}
     {{ actionInput('notifier/trigger/save') }}
     {{ existing ? hiddenInput('id', triggerId) }}
@@ -45,90 +31,17 @@
     <div class="flex-fields">
 
         {{ forms.selectField({
-            label: "Trigger Event"|t('notifier'),
-            instructions: "**BETA:** Only a single event type is available in beta. [Request more trigger events...](https://github.com/doublesecretagency/craft-notifier/issues/2)"|t('notifier'),
             id: 'event',
             name: 'event',
+            label: "Trigger Event"|t('notifier'),
+            instructions: "**BETA:** Only a single event type is available in beta. [Request more trigger events...](https://github.com/doublesecretagency/craft-notifier/issues/2)"|t('notifier'),
             options: notifierOptions.triggers.event,
             value: (trigger.event ?? false)
         }) }}
 
         <hr>
 
-        {{ forms.selectField({
-            label: "Activate when saving new or existing entries?"|t('notifier'),
-            id: 'config-newExisting',
-            name: 'config[newExisting]',
-            options: notifierOptions.triggers.newExisting,
-            value: (trigger.config.newExisting ?? false)
-        }) }}
-
-        {{ forms.lightswitchField({
-            id: 'config-includeDraftsAndRevisions',
-            name: 'config[includeDraftsAndRevisions]',
-            label: "Include Drafts & Revisions?"|t('notifier'),
-            instructions: "It's highly recommended to leave this disabled, unless you explicitly need Drafts and/or Revisions."|t('notifier'),
-            offLabel: "Published Entries Only"|t('notifier'),
-            onLabel: "Published Entries + Drafts/Revisions"|t('notifier'),
-            on: includeDraftsAndRevisions,
-            toggle: '#draft-warning',
-        }) }}
-
-        <p id="draft-warning"
-           class="warning with-icon {{ not includeDraftsAndRevisions ? 'hidden' }}"
-           style="{{ not includeDraftsAndRevisions ? 'overflow:hidden; height:0px;' }}"
-        >
-            Enabling Drafts/Revisions may lead to unpredictable behavior.
-        </p>
-
-        <hr>
-
-        {# Get selected Sections & Entry Types #}
-        {% set sections   = (trigger.config.sections ?? []) %}
-        {% set entryTypes = (trigger.config.entryTypes ?? []) %}
-
-        <div>
-            <div class="user-permissions">
-                <h3>Sections & Entry Types</h3>
-                <div class="select-all">Select All</div>
-                <ul>
-
-                    {% for sectionId,section in notifierOptions.triggers.sectionsEntryTypes %}
-                        <li>
-                            <input type="checkbox"
-                                   class="checkbox"
-                                   id="section-{{ sectionId }}"
-                                   name="config[sections][]"
-                                   value="{{ sectionId }}"
-                                   {{ sectionId in sections ? 'checked=""'|raw }}
-                            >
-                            <label for="section-{{ sectionId }}">
-                                {{ section.name }}
-                            </label>
-                            <ul id="section-{{ sectionId }}-nested">
-                                {% set enableChildren = (sectionId in sections) %}
-                                {% for typeId,type in section.entryTypes %}
-                                    <li>
-                                        <input type="checkbox"
-                                               class="checkbox"
-                                               id="type-{{ typeId }}"
-                                               name="config[entryTypes][]"
-                                               value="{{ typeId }}"
-                                               {{ typeId in entryTypes ? 'checked=""'|raw }}
-                                               {{ enableChildren ?: 'disabled=""'|raw }}
-                                        >
-                                        <label for="type-{{ typeId }}">
-                                            {{ type }}
-                                        </label>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                    {% endfor %}
-
-                </ul>
-            </div>
-        </div>
+        {% include 'notifier/_form/trigger/on-entry-save' %}
 
     </div>
 
