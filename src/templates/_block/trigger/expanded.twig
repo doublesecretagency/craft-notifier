@@ -26,7 +26,7 @@
             <td style="vertical-align:top">{{ section.name }} &rarr;</td>
             <td style="vertical-align:top">
                 <ul>
-                    {% for typeId,type in section.entryTypes if typeId in config.entryTypes %}
+                    {% for typeId,type in section.entryTypes if typeId in (config.entryTypes ?? []) %}
                         <li>{{ type }}</li>
                     {% endfor %}
                 </ul>

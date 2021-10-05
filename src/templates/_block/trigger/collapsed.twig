@@ -18,7 +18,7 @@
 
 {% for sectionId,section in notifierOptions.triggers.sectionsEntryTypes if sectionId in config.sections %}
     {% set types = [] %}
-    {% for typeId,type in section.entryTypes if typeId in config.entryTypes %}
+    {% for typeId,type in section.entryTypes if typeId in (config.entryTypes ?? []) %}
         {% set types = types|merge([type]) %}
     {% endfor %}
     {% set sectionWithTypes = "<strong>#{section.name}</strong> &rarr; #{types|join(', ')}" %}
