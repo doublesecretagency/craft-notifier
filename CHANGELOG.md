@@ -2,8 +2,6 @@
 
 ## 0.9.3 - 2021-09-28
 
-> {warning} The underlying configuration of the "On Save Entry" trigger has changed. After updating, please re-save the settings of each existing trigger.
-
 ### Added
 - Added ability to filter by Entry Types. ([#4](https://github.com/doublesecretagency/craft-notifier/issues/4))
 
