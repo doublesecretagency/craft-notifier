@@ -23,7 +23,7 @@
 - Ensure events are not triggered while plugin is being installed.
 
 ### Fixed
-- Corrected the schema version. _Uninstall & reinstall to fix project config conflict._
+- Corrected the schema version.
 
 ## 0.9.1 - 2021-08-24
 
