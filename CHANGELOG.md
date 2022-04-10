@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.4 - 2022-04-09
+
+### Changed
+- Various minor UX improvements.
+
 ## 0.9.3 - 2021-09-28
 
 ### Added
