@@ -12,10 +12,12 @@
 namespace doublesecretagency\notifier\models;
 
 use Craft;
+use craft\base\Field;
 use craft\elements\User;
 use craft\mail\Message as Email;
 use craft\web\View;
 use doublesecretagency\notifier\helpers\Log;
+use doublesecretagency\notifier\NotifierPlugin;
 use Exception;
 
 /**
@@ -57,12 +59,50 @@ class EmailMessage extends Message
      */
     public function send($recipient, array $data = [])
     {
+        // Alias for array of sent messages
+        $sent =& NotifierPlugin::$plugin->sent;
+
         // Whether recipient is a valid User or email address
         $validUser  = (is_object($recipient) && is_a($recipient, User::class));
         $validEmail = (is_string($recipient) && filter_var($recipient, FILTER_VALIDATE_EMAIL));
 
         // Get the recipient's email address
         $to = ($validUser ? $recipient->email: $recipient);
+
+        // Combined data to uniquely label this message
+        $unique = [
+            $this->id,          // Message ID
+            $data['entry']->id, // Entry ID
+            $to,                // Recipient
+        ];
+
+        // Set unique message key
+        $key = implode(':', $unique);
+
+        // If message was already sent, bail with a warning
+        if (in_array($key, $sent)) {
+            // Set message about suppressed duplicate
+            $message = "Message was already sent to {$to}, duplicate suppressed.";
+            // Get element fields
+            $fields = $data['entry']->getFieldLayout()->getFields();
+            // Loop through fields
+            /** @var Field $field */
+            foreach ($fields as $field) {
+                // If it's a Preparse field
+                /** @noinspection InstanceofCanBeUsedInspection */
+                if ('besteadfast\\preparsefield\\fields\\PreparseFieldType' === get_class($field)) {
+                    // Append note about Preparse fields
+                    $message .= " This is normal and expected behavior, the element was re-saved by a Preparse field.";
+                    // End the loop
+                    break;
+                }
+            }
+            Log::warning($message, $this->_logParent);
+            return;
+        }
+
+        // Add to collection of sent messages
+        $sent[] = $key;
 
         // Log info message
         $this->_logParent = Log::info("Preparing to send email message to {$to}...");

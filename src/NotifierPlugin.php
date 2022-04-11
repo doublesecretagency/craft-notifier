@@ -39,7 +39,7 @@ class NotifierPlugin extends Plugin
     public $schemaVersion = '0.9.0';
 
     /**
-     * @var Plugin Self-referential plugin property.
+     * @var NotifierPlugin Self-referential plugin property.
      */
     public static $plugin;
 
@@ -52,6 +52,11 @@ class NotifierPlugin extends Plugin
      * @var Element The original version of a saved Element.
      */
     private $_original;
+
+    /**
+     * @var array A list of recently sent messages.
+     */
+    public $sent = [];
 
     /**
      * @inheritdoc
