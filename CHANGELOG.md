@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.5 - 2022-04-10
+
+### Added
+- Prevent duplicate email messages from being sent unintentionally. ([#11](https://github.com/doublesecretagency/craft-notifier/issues/11))
+
 ## 0.9.4 - 2022-04-09
 
 ### Changed
