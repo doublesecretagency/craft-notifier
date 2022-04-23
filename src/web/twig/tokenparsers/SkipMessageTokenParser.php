@@ -12,7 +12,7 @@
 namespace doublesecretagency\notifier\web\twig\tokenparsers;
 
 use doublesecretagency\notifier\web\twig\nodes\SkipMessageNode;
-use Twig\Parser;
+use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
@@ -26,9 +26,9 @@ class SkipMessageTokenParser extends AbstractTokenParser
     /**
      * @inheritdoc
      */
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
-        /* @var Parser $parser */
+        // Get Twig parser
         $parser = $this->parser;
         $stream = $parser->getStream();
 
@@ -46,7 +46,7 @@ class SkipMessageTokenParser extends AbstractTokenParser
     /**
      * @inheritdoc
      */
-    public function getTag()
+    public function getTag(): string
     {
         return 'skipMessage';
     }

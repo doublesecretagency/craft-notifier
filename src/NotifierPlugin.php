@@ -36,32 +36,32 @@ class NotifierPlugin extends Plugin
     /**
      * @var string Current schema version of the plugin.
      */
-    public $schemaVersion = '0.9.0';
+    public string $schemaVersion = '0.9.0';
 
     /**
      * @var NotifierPlugin Self-referential plugin property.
      */
-    public static $plugin;
+    public static NotifierPlugin $plugin;
 
     /**
      * @var bool The plugin has a section with subpages.
      */
-    public $hasCpSection = true;
-
-    /**
-     * @var Element The original version of a saved Element.
-     */
-    private $_original;
+    public bool $hasCpSection = true;
 
     /**
      * @var array A list of recently sent messages.
      */
-    public $sent = [];
+    public array $sent = [];
+
+    /**
+     * @var Element|null The original version of a saved Element.
+     */
+    private ?Element $_original = null;
 
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
@@ -90,7 +90,7 @@ class NotifierPlugin extends Plugin
     /**
      * Register CP site routes.
      */
-    private function _registerCpRoutes()
+    private function _registerCpRoutes(): void
     {
         Event::on(
             UrlManager::class,
@@ -114,7 +114,7 @@ class NotifierPlugin extends Plugin
     /**
      * Register logging utility.
      */
-    private function _registerUtilities()
+    private function _registerUtilities(): void
     {
         Event::on(
             Utilities::class,
@@ -131,12 +131,12 @@ class NotifierPlugin extends Plugin
     /**
      * Triggered when an Entry is saved.
      */
-    private function _onEntrySave()
+    private function _onEntrySave(): void
     {
         // Get the original element
         Event::on(
             Entry::class,
-            Entry::EVENT_BEFORE_SAVE,
+            Element::EVENT_BEFORE_SAVE,
             function (ModelEvent $event) {
 
                 // Get entry
@@ -156,7 +156,7 @@ class NotifierPlugin extends Plugin
         // Run trigger
         Event::on(
             Entry::class,
-            Entry::EVENT_AFTER_SAVE,
+            Element::EVENT_AFTER_SAVE,
             function (ModelEvent $event) {
 
                 // Get entry

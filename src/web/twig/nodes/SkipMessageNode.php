@@ -25,7 +25,7 @@ class SkipMessageNode extends Node
     /**
      * @inheritdoc
      */
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $runtimeError = RuntimeError::class;
         $message = "Message not sent because `skipMessage` was encountered while rendering the template.";

@@ -17,19 +17,21 @@ use craft\helpers\Json;
 /**
  * Class BaseNotification
  * @since 1.0.0
+ *
+ * @property-read array $config
  */
 class BaseNotification extends Model
 {
 
     /**
-     * @var int ID of notification component.
+     * @var int|null ID of notification component.
      */
-    public $id;
+    public ?int $id = null;
 
     /**
-     * @var string Raw configuration of notification component.
+     * @var string|null Raw configuration of notification component.
      */
-    public $configRaw;
+    public ?string $configRaw = null;
 
     // ========================================================================= //
 
@@ -46,14 +48,13 @@ class BaseNotification extends Model
     /**
      * JSON decode results, providing a valid fallback.
      *
-     * @param $results
+     * @param string $results
      * @return array
      */
-    protected function _jsonDecode($results): array
+    protected function _jsonDecode(string $results): array
     {
         // Check if JSON is valid
         // Must use this function to validate (I know it's redundant)
-        /** @noinspection PhpComposerExtensionStubsInspection */
         $valid = json_decode($results);
 
         // Convert config data to an array

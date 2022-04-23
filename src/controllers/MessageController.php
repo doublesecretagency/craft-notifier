@@ -16,6 +16,9 @@ use craft\helpers\Db;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
+use yii\db\Exception;
+use yii\web\BadRequestHttpException;
+use yii\web\Response;
 
 /**
  * Class MessageController
@@ -26,8 +29,12 @@ class MessageController extends Controller
 
     /**
      * Save a notification message.
+     *
+     * @return Response
+     * @throws Exception
+     * @throws BadRequestHttpException
      */
-    public function actionSave()
+    public function actionSave(): Response
     {
         $this->requirePostRequest();
         $this->requireLogin();
@@ -45,15 +52,22 @@ class MessageController extends Controller
         // JSON encode config
         $config = Json::encode($config);
 
-        // Insert or update the Message Record
-        Db::upsert('{{%notifier_messages}}', [
-            'id' => $id,
-        ], [
+        // Set data for Message Record
+        $data = [
             'triggerId' => $triggerId,
             'type'      => $type,
             'template'  => $template,
             'config'    => $config,
-        ], [], false);
+        ];
+
+        // If an ID exists
+        if ($id) {
+            // Update the Message Record
+            Db::update('{{%notifier_messages}}', $data, ['id' => $id]);
+        } else {
+            // Insert the Message Record
+            Db::insert('{{%notifier_messages}}', $data);
+        }
 
         // Redirect to index of notifications
         return $this->redirect(UrlHelper::cpUrl('notifier'));
@@ -61,8 +75,12 @@ class MessageController extends Controller
 
     /**
      * Delete a notification message.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws Exception
      */
-    public function actionDelete()
+    public function actionDelete(): Response
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();

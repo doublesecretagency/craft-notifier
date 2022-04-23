@@ -28,10 +28,10 @@ class Log
     /**
      * Message levels.
      */
-    const SUCCESS = 'success'; // Green
-    const INFO    = 'info';    // White
-    const WARNING = 'warning'; // Yellow
-    const ERROR   = 'error';   // Red
+    public const SUCCESS = 'success'; // Green
+    public const INFO    = 'info';    // White
+    public const WARNING = 'warning'; // Yellow
+    public const ERROR   = 'error';   // Red
 
     // ========================================================================= //
 
@@ -42,9 +42,8 @@ class Log
      * @param string|null $parentKey
      * @return string
      * @throws ErrorException
-     * @throws Exception
      */
-    public static function success(string $message, string $parentKey = null): string
+    public static function success(string $message, ?string $parentKey = null): string
     {
         return static::_newMessage($message, static::SUCCESS, $parentKey);
     }
@@ -56,9 +55,8 @@ class Log
      * @param string|null $parentKey
      * @return string
      * @throws ErrorException
-     * @throws Exception
      */
-    public static function info(string $message, string $parentKey = null): string
+    public static function info(string $message, ?string $parentKey = null): string
     {
         return static::_newMessage($message, static::INFO, $parentKey);
     }
@@ -70,9 +68,8 @@ class Log
      * @param string|null $parentKey
      * @return string
      * @throws ErrorException
-     * @throws Exception
      */
-    public static function warning(string $message, string $parentKey = null): string
+    public static function warning(string $message, ?string $parentKey = null): string
     {
         return static::_newMessage($message, static::WARNING, $parentKey);
     }
@@ -84,9 +81,8 @@ class Log
      * @param string|null $parentKey
      * @return string
      * @throws ErrorException
-     * @throws Exception
      */
-    public static function error(string $message, string $parentKey = null): string
+    public static function error(string $message, ?string $parentKey = null): string
     {
         return static::_newMessage($message, static::ERROR, $parentKey);
     }
@@ -98,15 +94,12 @@ class Log
      *
      * @param string $message
      * @param string $type
+     * @param string|null $parentKey
      * @return string
      * @throws ErrorException
-     * @throws Exception
      */
-    private static function _newMessage(string $message, string $type, string $parentKey = null): string
+    private static function _newMessage(string $message, string $type, ?string $parentKey = null): string
     {
-        // Get log file
-        $file = Craft::getAlias('@storage/logs/notifier.log');
-
         // Generate unique key
         $key = StringHelper::randomString(16);
 
@@ -134,11 +127,17 @@ class Log
             'parentKey' => $parentKey,
         ];
 
-        // JSON encode with trailing line break
-        $log = Json::encode($data)."\n";
-
-        // Write message to specified file
-        FileHelper::writeToFile($file, $log, ['append' => true]);
+        // Attempt to log message
+        try {
+            // JSON encode with trailing line break
+            $log = Json::encode($data)."\n";
+            // Get log file
+            $file = Craft::getAlias('@storage/logs/notifier.log');
+            // Write message to specified file
+            FileHelper::writeToFile($file, $log, ['append' => true]);
+        } catch (Exception $e) {
+            // Do nothing
+        }
 
         // Return unique message key
         return $key;

@@ -12,6 +12,7 @@
 namespace doublesecretagency\notifier\models;
 
 use craft\elements\Entry;
+use craft\events\ModelEvent;
 use craft\helpers\ElementHelper;
 use doublesecretagency\notifier\helpers\Notifier;
 use yii\base\InvalidConfigException;
@@ -19,14 +20,16 @@ use yii\base\InvalidConfigException;
 /**
  * Class Trigger
  * @since 1.0.0
+ *
+ * @property-read array $messages
  */
 class Trigger extends BaseNotification
 {
 
     /**
-     * @var string Corresponding Craft Event.
+     * @var string|null Corresponding Craft Event.
      */
-    public $event;
+    public ?string $event = null;
 
     // ========================================================================= //
 
@@ -46,11 +49,11 @@ class Trigger extends BaseNotification
     /**
      * Check whether an Entry trigger is valid.
      *
-     * @param $event
+     * @param ModelEvent $event
      * @return bool
      * @throws InvalidConfigException
      */
-    public function validateEntry($event): bool
+    public function validateEntry(ModelEvent $event): bool
     {
         // Get entry
         /** @var Entry $entry */
@@ -100,12 +103,12 @@ class Trigger extends BaseNotification
         $entryTypes = ($this->config['entryTypes'] ?? []);
 
         // If section isn't selected, mark invalid
-        if (!in_array($entry->getSection()->id, $sections)) {
+        if (!in_array($entry->getSection()->id, $sections, false)) {
             return false;
         }
 
         // If entry type isn't selected, mark invalid
-        if (!in_array($entry->getType()->id, $entryTypes)) {
+        if (!in_array($entry->getType()->id, $entryTypes, false)) {
             return false;
         }
 

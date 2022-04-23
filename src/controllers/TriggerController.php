@@ -16,6 +16,9 @@ use craft\helpers\Db;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
+use yii\db\Exception;
+use yii\web\BadRequestHttpException;
+use yii\web\Response;
 
 /**
  * Class TriggerController
@@ -26,8 +29,12 @@ class TriggerController extends Controller
 
     /**
      * Save a notification trigger.
+     *
+     * @return Response
+     * @throws Exception
+     * @throws BadRequestHttpException
      */
-    public function actionSave()
+    public function actionSave(): Response
     {
         $this->requirePostRequest();
         $this->requireLogin();
@@ -43,13 +50,20 @@ class TriggerController extends Controller
         // JSON encode config
         $config = Json::encode($config);
 
-        // Insert or update the Trigger Record
-        Db::upsert('{{%notifier_triggers}}', [
-            'id' => $id,
-        ], [
+        // Set data for Trigger Record
+        $data = [
             'event'  => $event,
             'config' => $config,
-        ], [], false);
+        ];
+
+        // If an ID exists
+        if ($id) {
+            // Update the Trigger Record
+            Db::update('{{%notifier_triggers}}', $data, ['id' => $id]);
+        } else {
+            // Insert the Trigger Record
+            Db::insert('{{%notifier_triggers}}', $data);
+        }
 
         // Redirect to index of notifications
         return $this->redirect(UrlHelper::cpUrl('notifier'));
@@ -57,8 +71,12 @@ class TriggerController extends Controller
 
     /**
      * Delete a notification trigger.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws Exception
      */
-    public function actionDelete()
+    public function actionDelete(): Response
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();

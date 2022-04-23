@@ -19,6 +19,9 @@ use craft\web\View;
 use doublesecretagency\notifier\helpers\Log;
 use doublesecretagency\notifier\NotifierPlugin;
 use Exception;
+use Throwable;
+use yii\base\ErrorException;
+use yii\base\Exception as BaseException;
 
 /**
  * Class EmailMessage
@@ -28,14 +31,19 @@ class EmailMessage extends Message
 {
 
     /**
-     * @var string Parent log message ID.
+     * @var string|null Parent log message ID.
      */
-    private $_logParent;
+    private ?string $_logParent = null;
 
     /**
      * Send message to all recipients.
+     *
+     * @param array $data
+     * @throws BaseException
+     * @throws ErrorException
+     * @throws Throwable
      */
-    public function sendAll(array $data = [])
+    public function sendAll(array $data = []): void
     {
         // Get all message recipients
         $recipients = $this->_getRecipients($data);
@@ -54,10 +62,13 @@ class EmailMessage extends Message
     /**
      * Send message to individual recipient.
      *
-     * @param User|string $recipient
+     * @param string|User $recipient
      * @param array $data
+     * @throws BaseException
+     * @throws ErrorException
+     * @throws Throwable
      */
-    public function send($recipient, array $data = [])
+    public function send(string|User $recipient, array $data = []): void
     {
         // Alias for array of sent messages
         $sent =& NotifierPlugin::$plugin->sent;
@@ -80,7 +91,7 @@ class EmailMessage extends Message
         $key = implode(':', $unique);
 
         // If message was already sent, bail with a warning
-        if (in_array($key, $sent)) {
+        if (in_array($key, $sent, true)) {
             // Set message about suppressed duplicate
             $message = "Message was already sent to {$to}, duplicate suppressed.";
             // Get element fields
@@ -89,7 +100,6 @@ class EmailMessage extends Message
             /** @var Field $field */
             foreach ($fields as $field) {
                 // If it's a Preparse field
-                /** @noinspection InstanceofCanBeUsedInspection */
                 if ('besteadfast\\preparsefield\\fields\\PreparseFieldType' === get_class($field)) {
                     // Append note about Preparse fields
                     $message .= " This is normal and expected behavior, the element was re-saved by a Preparse field.";
@@ -130,8 +140,8 @@ class EmailMessage extends Message
         $body = $this->_getBody($data);
 
         // If the message body was rejected, log error and bail
-        if (false === $body) {
-            Log::error("An error occurred while parsing the message body, and the email was not sent.", $this->_logParent);
+        if (!$body) {
+            Log::error("An error occurred while parsing the message body, the email was not sent.", $this->_logParent);
             return;
         }
 
@@ -144,11 +154,12 @@ class EmailMessage extends Message
     /**
      * Send the actual email.
      *
-     * @param $to
-     * @param $subject
-     * @param $body
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @throws ErrorException
      */
-    private function _dispatch($to, $subject, $body)
+    private function _dispatch(string $to, string $subject, string $body): void
     {
         // Compile email
         $email = new Email();
@@ -177,9 +188,10 @@ class EmailMessage extends Message
      * Parse the message body.
      *
      * @param array $data
-     * @return string|false Returns false if an error occurred.
+     * @return string|null Returns null if error occurred.
+     * @throws ErrorException
      */
-    private function _getBody(array $data)
+    private function _getBody(array $data): ?string
     {
         // Get view services
         $view = Craft::$app->getView();
@@ -189,17 +201,13 @@ class EmailMessage extends Message
 
         // Parse the message body
         try {
-
             // Render message body template
             $body = $view->renderTemplate($template, $data, View::TEMPLATE_MODE_SITE);
-
         } catch (Exception $e) {
-
             // Log warning message
             Log::warning("Cannot compile message body from template. {$e->getMessage()}", $this->_logParent);
-
-            // Return false
-            return false;
+            // Return null
+            return null;
         }
 
         // Return body
@@ -208,6 +216,12 @@ class EmailMessage extends Message
 
     /**
      * Parse the message subject.
+     *
+     * @param array $data
+     * @return string
+     * @throws Throwable
+     * @throws ErrorException
+     * @throws BaseException
      */
     private function _getSubject(array $data): string
     {
@@ -252,6 +266,10 @@ class EmailMessage extends Message
 
     /**
      * Get an array of Users or email addresses.
+     *
+     * @param array $data
+     * @return array
+     * @throws ErrorException
      */
     private function _getRecipients(array $data): array
     {
@@ -281,9 +299,12 @@ class EmailMessage extends Message
     /**
      * Get an array of email addresses based on a custom snippet.
      *
+     * @param array $recipients
+     * @param array $data
      * @return array
+     * @throws ErrorException
      */
-    private function _getRecipientsCustom($recipients, array $data): array
+    private function _getRecipientsCustom(array $recipients, array $data): array
     {
         // Switch according to recipient type
         switch ($recipients['custom']['type'] ?? false) {
@@ -305,6 +326,7 @@ class EmailMessage extends Message
      * Get an array of all Users.
      *
      * @return array
+     * @throws ErrorException
      */
     private function _getRecipientsAllUsers(): array
     {
@@ -319,6 +341,7 @@ class EmailMessage extends Message
      * Get an array of all Admin Users.
      *
      * @return array
+     * @throws ErrorException
      */
     private function _getRecipientsAllAdmins(): array
     {
@@ -333,6 +356,7 @@ class EmailMessage extends Message
      * Get an array of Users in selected group(s).
      *
      * @return array
+     * @throws ErrorException
      */
     private function _getRecipientsAllUsersInGroup(): array
     {
@@ -376,7 +400,9 @@ class EmailMessage extends Message
      * Use a custom snippet to get a collection of Users' email addresses.
      *
      * @param string $snippet
+     * @param array $data
      * @return array
+     * @throws ErrorException
      */
     private function _parseUsersSnippet(string $snippet, array $data): array
     {
@@ -420,7 +446,9 @@ class EmailMessage extends Message
      * Use a custom snippet to get a collection of email addresses.
      *
      * @param string $snippet
+     * @param array $data
      * @return array
+     * @throws ErrorException
      */
     private function _parseEmailsSnippet(string $snippet, array $data): array
     {

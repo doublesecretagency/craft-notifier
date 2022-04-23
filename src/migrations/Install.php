@@ -23,7 +23,7 @@ class Install extends Migration
     /**
      * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         $this->createTables();
         $this->createIndexes();
@@ -33,7 +33,7 @@ class Install extends Migration
     /**
      * @inheritdoc
      */
-    public function safeDown()
+    public function safeDown(): void
     {
         $this->dropTableIfExists('{{%notifier_messages}}');
         $this->dropTableIfExists('{{%notifier_triggers}}');
@@ -42,7 +42,7 @@ class Install extends Migration
     /**
      * Creates the tables.
      */
-    protected function createTables()
+    protected function createTables(): void
     {
         $this->createTable('{{%notifier_triggers}}', [
             'id'        => $this->primaryKey(),
@@ -61,7 +61,7 @@ class Install extends Migration
     /**
      * Creates the indexes.
      */
-    protected function createIndexes()
+    protected function createIndexes(): void
     {
         $this->createIndex(null, '{{%notifier_messages}}', ['triggerId']);
     }
@@ -69,7 +69,7 @@ class Install extends Migration
     /**
      * Adds the foreign keys.
      */
-    protected function addForeignKeys()
+    protected function addForeignKeys(): void
     {
         $this->addForeignKey(null, '{{%notifier_messages}}', ['triggerId'], '{{%notifier_triggers}}', ['id'], 'CASCADE');
     }

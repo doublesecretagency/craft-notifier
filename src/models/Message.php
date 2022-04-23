@@ -19,18 +19,18 @@ class Message extends BaseNotification
 {
 
     /**
-     * @var int ID of related Trigger.
+     * @var int|null ID of related Trigger.
      */
-    public $triggerId;
+    public ?int $triggerId = null;
 
     /**
-     * @var string Type of message (Email, SMS, etc).
+     * @var string|null Type of message (Email, SMS, etc).
      */
-    public $type;
+    public ?string $type = null;
 
     /**
-     * @var string Template for rendering the message body.
+     * @var string|null Template for rendering the message body.
      */
-    public $template;
+    public ?string $template = null;
 
 }

@@ -73,7 +73,7 @@ class Notifier
      * @param int $triggerId
      * @return TriggerModel|null
      */
-    public static function getTriggerById(int $triggerId)
+    public static function getTriggerById(int $triggerId): ?TriggerModel
     {
         // Get matching Trigger Record
         $record = TriggerRecord::findOne([
@@ -89,7 +89,7 @@ class Notifier
     /**
      * Get messages related to this trigger.
      *
-     * @param TriggerModel
+     * @param TriggerModel $trigger
      * @return array
      */
     public static function getTriggerMessages(TriggerModel $trigger): array
@@ -109,7 +109,7 @@ class Notifier
      * @param int $messageId
      * @return MessageModel|null
      */
-    public static function getMessageById(int $messageId)
+    public static function getMessageById(int $messageId): ?MessageModel
     {
         // Get matching Message Record
         $record = MessageRecord::findOne([
@@ -143,13 +143,13 @@ class Notifier
     /**
      * Convert a Record into its corresponding Model.
      *
-     * @param TriggerRecord|MessageRecord $record
+     * @param TriggerRecord|MessageRecord|null $record
      * @param string $modelType
      * @return TriggerModel|MessageModel|null
      */
-    private static function _toModel($record, string $modelType)
+    private static function _toModel(TriggerRecord|MessageRecord|null $record, string $modelType): TriggerModel|MessageModel|null
     {
-        // If no matching trigger, bail
+        // If no matching record, bail
         if (!$record) {
             return null;
         }
@@ -171,7 +171,7 @@ class Notifier
         unset($attr['config']);
 
         // Return as a Model (if a match is found)
-        return ($record ? new $modelType($attr) : null);
+        return new $modelType($attr);
     }
 
 }

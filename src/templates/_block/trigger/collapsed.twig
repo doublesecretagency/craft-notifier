@@ -16,13 +16,17 @@
 {% set draftsRevisions = (includeDraftsAndRevisions ? 'Include Drafts/Revisions' : 'Exclude Drafts/Revisions') %}
 {% set data = data|merge([draftsRevisions]) %}
 
-{% for sectionId,section in notifierOptions.triggers.sectionsEntryTypes if sectionId in config.sections %}
-    {% set types = [] %}
-    {% for typeId,type in section.entryTypes if typeId in (config.entryTypes ?? []) %}
-        {% set types = types|merge([type]) %}
-    {% endfor %}
-    {% set sectionWithTypes = "<strong>#{section.name}</strong> &rarr; #{types|join(', ')}" %}
-    {% set data = data|merge([sectionWithTypes]) %}
+{% for sectionId,section in notifierOptions.triggers.sectionsEntryTypes %}
+    {% if sectionId in config.sections %}
+        {% set types = [] %}
+        {% for typeId,type in section.entryTypes %}
+            {% if typeId in (config.entryTypes ?? []) %}
+                {% set types = types|merge([type]) %}
+            {% endif %}
+        {% endfor %}
+        {% set sectionWithTypes = "<strong>#{section.name}</strong> &rarr; #{types|join(', ')}" %}
+        {% set data = data|merge([sectionWithTypes]) %}
+    {% endif %}
 {% endfor %}
 
 <div class="collapsed">
