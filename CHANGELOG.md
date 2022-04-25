@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.0 - 2022-04-25
+
+### Added
+- Craft 4 compatibility.
+
 ## 0.9.5 - 2022-04-10
 
 ### Added
