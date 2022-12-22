@@ -95,7 +95,7 @@ class EmailMessage extends Message
             // Set message about suppressed duplicate
             $message = "Message was already sent to {$to}, duplicate suppressed.";
             // Get element fields
-            $fields = $data['entry']->getFieldLayout()->getFields();
+            $fields = $data['entry']->getFieldLayout()->getCustomFields();
             // Loop through fields
             /** @var Field $field */
             foreach ($fields as $field) {
