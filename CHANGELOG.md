@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.1 - 2022-12-22
+
+### Fixed
+- Fixed reference to core method which was renamed in Craft 4. ([#16](https://github.com/doublesecretagency/craft-notifier/issues/16))
+
 ## 0.10.0 - 2022-04-25
 
 ### Added
