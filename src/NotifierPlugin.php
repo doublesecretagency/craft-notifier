@@ -18,8 +18,10 @@ use craft\elements\Entry;
 use craft\events\ModelEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\services\Elements;
 use craft\services\Utilities;
 use craft\web\UrlManager;
+use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\models\Message as MessageModel;
 use doublesecretagency\notifier\utilities\LogUtility;
@@ -83,6 +85,39 @@ class NotifierPlugin extends Plugin
 
         // Trigger notifications when an Entry is saved
         $this->_onEntrySave();
+
+        // Register the Notification element type
+        Event::on(
+            Elements::class,
+            Elements::EVENT_REGISTER_ELEMENT_TYPES,
+                static function (RegisterComponentTypesEvent $event) {
+                $event->types[] = Notification::class;
+            }
+        );
+
+        // Register CP routes for Notification elements
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            static function (RegisterUrlRulesEvent $event) {
+                $event->rules['notifications'] = ['template' => 'notifier/notifications/_index.twig'];
+                $event->rules['notifications/<elementId:\\d+>'] = 'elements/edit';
+            }
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCpNavItem(): ?array
+    {
+        $item = parent::getCpNavItem();
+
+        // Change label and URL of nav item
+        $item['label'] = 'Notifications';
+        $item['url'] = 'notifications';
+
+        return $item;
     }
 
     // ========================================================================= //

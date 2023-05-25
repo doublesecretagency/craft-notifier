@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Added a new "Notification" element type.
+
 ## 0.10.1 - 2022-12-22
 
 ### Fixed
