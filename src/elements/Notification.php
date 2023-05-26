@@ -15,11 +15,12 @@ use Craft;
 use craft\base\Element;
 use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
-use craft\elements\db\ElementQueryInterface;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use doublesecretagency\notifier\elements\conditions\NotificationCondition;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
+use doublesecretagency\notifier\records\Notification as NotificationRecord;
+use yii\base\Exception as BaseException;
 use yii\web\Response;
 
 /**
@@ -28,6 +29,31 @@ use yii\web\Response;
  */
 class Notification extends Element
 {
+
+    /**
+     * @var string|null Which event will activate the notification.
+     */
+    public ?string $event = null;
+
+    /**
+     * @var array Event configuration details.
+     */
+    public array $eventConfig = [];
+
+    /**
+     * @var string|null Type of message to send. (ie: email, text)
+     */
+    public ?string $messageType = null;
+
+    /**
+     * @var string|null Twig template for rendering the message.
+     */
+    public ?string $messageTemplate = null;
+
+    /**
+     * @var array Message configuration details.
+     */
+    public array $messageConfig = [];
 
     public static function displayName(): string
     {
@@ -59,7 +85,7 @@ class Notification extends Element
         return true;
     }
 
-    public static function find(): ElementQueryInterface
+    public static function find(): NotificationQuery
     {
         return Craft::createObject(NotificationQuery::class, [static::class]);
     }
@@ -242,10 +268,35 @@ class Notification extends Element
         ]);
     }
 
+    /**
+     * @inheritdoc
+     * @throws BaseException
+     */
     public function afterSave(bool $isNew): void
     {
+        // If not propagating
         if (!$this->propagating) {
-            // todo: update the `notifications` table
+
+            // Get the notification record
+            if (!$isNew) {
+                $record = NotificationRecord::findOne($this->id);
+
+                if (!$record) {
+                    throw new BaseException('Invalid notification ID: '.$this->id);
+                }
+            } else {
+                $record = new NotificationRecord();
+                $record->id = $this->id;
+            }
+
+            // Save to the `notifier_notifications` table
+            $record->event           = $this->event;
+            $record->eventConfig     = $this->eventConfig;
+            $record->messageType     = $this->messageType;
+            $record->messageTemplate = $this->messageTemplate;
+            $record->messageConfig   = $this->messageConfig;
+
+            $record->save(false);
         }
 
         parent::afterSave($isNew);

@@ -34,8 +34,6 @@
     {{ existing ? hiddenInput('id', messageId) }}
 
     <div class="flex-fields">
-        {% include 'notifier/_form/message/body' %}
-        <hr>
         {% include 'notifier/_form/message/recipients' %}
     </div>
 

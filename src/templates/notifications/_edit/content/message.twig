@@ -1,0 +1,42 @@
+{% import '_includes/forms' as forms %}
+
+<h2>Describe the outgoing message</h2>
+
+{{ forms.selectField({
+    label: "Notification Type"|t('notifier'),
+    id: 'messageType',
+    name: 'messageType',
+    options: {
+        'email': 'Email',
+        'sms': 'SMS (Text Message)',
+    },
+    value: notification.messageType,
+}) }}
+
+{{ forms.autosuggestField({
+    label: "Message Template"|t('notifier'),
+    instructions: "Select a Twig template to generate the message body. Learn more about [automatic variables](https://plugins.doublesecretagency.com/notifier/messages/variables/)."|t('notifier'),
+    id: 'messageTemplate',
+    name: 'messageTemplate',
+    suggestions: craft.cp.getTemplateSuggestions(),
+    value: notification.messageTemplate,
+    errors: notification.getErrors('messageTemplate'),
+}) }}
+
+<div class="vue-box">
+    Message configuration fields will go here.
+{#    {{ forms.textField({#}
+{#        label: "Message Configuration"|t('notifier'),#}
+{#        id: 'messageConfig[testing]',#}
+{#        name: 'messageConfig[testing]',#}
+{#        value: notification.messageConfig,#}
+{#        errors: notification.getErrors('messageConfig'),#}
+{#    }) }}#}
+</div>
+
+
+{#<div class="readable">#}
+{#    <blockquote class="note tip">#}
+{#        <p>For a complete guide on creating a message template, see <a href="#">the docs...</a></p>#}
+{#    </blockquote>#}
+{#</div>#}

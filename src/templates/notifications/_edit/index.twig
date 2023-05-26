@@ -1,0 +1,44 @@
+{% extends '_layouts/cp' %}
+{% import '_includes/forms' as forms %}
+{% set fullPageForm = true %}
+
+{# Breadcrumbs #}
+{% set crumbs = [
+    {'label': 'Notifications'|t('notifier'), 'url': cpUrl('notifications')},
+] %}
+
+{# Fallback to null ID #}
+{% set id = (id ?? null) %}
+
+{# Get the existing notification if an ID was specified #}
+{% set notification = (id ? craft.notifier.notifications.id(id).one()) %}
+
+{# If notification doesn't exist #}
+{% if not notification %}
+    {# Create a blank notification #}
+    {% set notification = create('doublesecretagency\\notifier\\elements\\Notification') %}
+{% endif %}
+
+{# Set page title #}
+{% set title = notification.title ?? 'Add a New Notification'|t('notifier') %}
+
+{# Button above content #}
+{% block actionButton %}
+    <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
+{% endblock %}
+
+{# Main content #}
+{% block content %}
+    {{ actionInput('notifier/notifications/save') }}
+    {{ notification ? hiddenInput('id', id) }}
+    <div class="flex-fields">
+        {% include 'notifier/notifications/_edit/content' with {'notification': notification} only %}
+    </div>
+{% endblock %}
+
+{# Sidebar #}
+{% block details %}
+    <div class="meta">
+        {% include 'notifier/notifications/_edit/details' %}
+    </div>
+{% endblock %}

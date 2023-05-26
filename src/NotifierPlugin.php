@@ -20,16 +20,18 @@ use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\services\Elements;
 use craft\services\Utilities;
+use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\models\Message as MessageModel;
 use doublesecretagency\notifier\utilities\LogUtility;
+use doublesecretagency\notifier\variables\Notifier as NotifierVariable;
 use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
 
 /**
- * Class NotifierPlugin
+ * Notifier plugin
  * @since 1.0.0
  */
 class NotifierPlugin extends Plugin
@@ -95,13 +97,13 @@ class NotifierPlugin extends Plugin
             }
         );
 
-        // Register CP routes for Notification elements
+        // Register variables
         Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            static function (RegisterUrlRulesEvent $event) {
-                $event->rules['notifications'] = ['template' => 'notifier/notifications/_index.twig'];
-                $event->rules['notifications/<elementId:\\d+>'] = 'elements/edit';
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            static function (Event $event) {
+                $variable = $event->sender;
+                $variable->set('notifier', NotifierVariable::class);
             }
         );
     }
@@ -127,19 +129,15 @@ class NotifierPlugin extends Plugin
      */
     private function _registerCpRoutes(): void
     {
+        // Register CP routes for Notification elements
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            static function(RegisterUrlRulesEvent $event) {
-                // Set template paths
-                $triggerTemplate = ['template' => 'notifier/_form/trigger'];
-                $messageTemplate = ['template' => 'notifier/_form/message'];
-                // Routes for editing Triggers
-                $event->rules['notifier/trigger/new']             = $triggerTemplate;
-                $event->rules['notifier/trigger/<triggerId:\d+>'] = $triggerTemplate;
-                // Routes for editing Messages
-                $event->rules['notifier/trigger/<triggerId:\d+>/message/new']             = $messageTemplate;
-                $event->rules['notifier/trigger/<triggerId:\d+>/message/<messageId:\d+>'] = $messageTemplate;
+            static function (RegisterUrlRulesEvent $event) {
+                // Notifications
+                $event->rules['notifications']          = ['template' => 'notifier/notifications/_index'];
+                $event->rules['notifications/new']      = ['template' => 'notifier/notifications/_edit'];
+                $event->rules['notifications/<id:\d+>'] = ['template' => 'notifier/notifications/_edit'];
             }
         );
     }

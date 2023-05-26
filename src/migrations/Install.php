@@ -49,6 +49,11 @@ class Install extends Migration
             'messageType'     => $this->string(),
             'messageTemplate' => $this->string(),
             'messageConfig'   => $this->text(),
+            'dateCreated'     => $this->dateTime()->notNull(),
+            'dateUpdated'     => $this->dateTime()->notNull(),
+            'dateDeleted'     => $this->dateTime()->null(),
+            'uid'             => $this->uid(),
+            'PRIMARY KEY([[id]])',
         ]);
     }
 

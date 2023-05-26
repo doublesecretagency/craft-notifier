@@ -1,4 +1,10 @@
 {% extends '_layouts/elementindex' %}
-{% set title = 'Notifications'|t('app') %}
+{% set title = 'Notifications'|t('notifier') %}
 {% set elementType = 'doublesecretagency\\notifier\\elements\\Notification' %}
 {% set canHaveDrafts = true %}
+
+{% block actionButton %}
+    <div class="btngroup">
+        <a href="{{ cpUrl('notifications/new') }}" class="btn submit add icon">{{ 'New Notification'|t('notifier') }}</a>
+    </div>
+{% endblock %}

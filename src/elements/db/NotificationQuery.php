@@ -11,7 +11,6 @@
 
 namespace doublesecretagency\notifier\elements\db;
 
-use Craft;
 use craft\elements\db\ElementQuery;
 
 /**
@@ -20,14 +19,21 @@ use craft\elements\db\ElementQuery;
  */
 class NotificationQuery extends ElementQuery
 {
+
     protected function beforePrepare(): bool
     {
-        // todo: join the `notifications` table
-        // $this->joinElementTable('notifications');
+        $this->joinElementTable('{{%notifier_notifications}}');
 
-        // todo: apply any custom query params
-        // ...
+        $this->query->select([
+            'notifier_notifications.id',
+            'notifier_notifications.event',
+            'notifier_notifications.eventConfig',
+            'notifier_notifications.messageType',
+            'notifier_notifications.messageTemplate',
+            'notifier_notifications.messageConfig',
+        ]);
 
         return parent::beforePrepare();
     }
+
 }

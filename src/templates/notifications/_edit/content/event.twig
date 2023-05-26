@@ -1,0 +1,41 @@
+{% import '_includes/forms' as forms %}
+
+<h2>How will the notification be activated?</h2>
+
+<div class="readable">
+    <blockquote class="note tip">
+        <p>Not sure what to choose? Most of the time, you'll want to use <code>EVENT_AFTER_SAVE_ELEMENT</code></p>
+    </blockquote>
+</div>
+
+{{ forms.textField({
+    label: "Event Trigger"|t('notifier'),
+    id: 'event',
+    name: 'event',
+    instructions: "Which Craft (or plugin) event will activate the notification?",
+    value: notification.event,
+    errors: notification.getErrors('event'),
+}) }}
+
+<div class="vue-box">
+    Event configuration fields will go here.
+
+
+{#    {{ forms.textField({#}
+{#        label: "Event Configuration"|t('notifier'),#}
+{#        id: 'eventConfig',#}
+{#        name: 'eventConfig',#}
+{#        value: notification.eventConfig,#}
+{#        errors: notification.getErrors('eventConfig'),#}
+{#    }) }}#}
+
+
+
+{#    {{ forms.textField({#}
+{#        label: "Email Subject"|t('notifier'),#}
+{#        instructions: "Can parse complete Twig tags (including [automatic variables](https://plugins.doublesecretagency.com/notifier/messages/variables/)), or short `{object}` syntax for trigger element."|t('notifier'),#}
+{#        id: 'config[subject]',#}
+{#        name: 'config[subject]',#}
+{#        value: (message.config.subject ?? null)#}
+{#    }) }}#}
+</div>

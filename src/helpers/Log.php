@@ -19,7 +19,7 @@ use yii\base\ErrorException;
 use yii\base\Exception;
 
 /**
- * Class Log
+ * Log helper
  * @since 1.0.0
  */
 class Log
