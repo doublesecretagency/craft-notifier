@@ -38,7 +38,7 @@ class NotifierPlugin extends Plugin
     /**
      * @var string Current schema version of the plugin.
      */
-    public string $schemaVersion = '0.9.0';
+    public string $schemaVersion = '1.0.0';
 
     /**
      * @var NotifierPlugin Self-referential plugin property.

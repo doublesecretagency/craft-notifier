@@ -26,7 +26,6 @@ class Install extends Migration
     public function safeUp(): void
     {
         $this->createTables();
-        $this->createIndexes();
         $this->addForeignKeys();
     }
 
@@ -35,8 +34,7 @@ class Install extends Migration
      */
     public function safeDown(): void
     {
-        $this->dropTableIfExists('{{%notifier_messages}}');
-        $this->dropTableIfExists('{{%notifier_triggers}}');
+        $this->dropTableIfExists('{{%notifier_notifications}}');
     }
 
     /**
@@ -44,26 +42,14 @@ class Install extends Migration
      */
     protected function createTables(): void
     {
-        $this->createTable('{{%notifier_triggers}}', [
-            'id'        => $this->primaryKey(),
-            'event'     => $this->string()->notNull(),
-            'config'    => $this->text(),
+        $this->createTable('{{%notifier_notifications}}', [
+            'id'              => $this->integer()->notNull(),
+            'event'           => $this->string(),
+            'eventConfig'     => $this->text(),
+            'messageType'     => $this->string(),
+            'messageTemplate' => $this->string(),
+            'messageConfig'   => $this->text(),
         ]);
-        $this->createTable('{{%notifier_messages}}', [
-            'id'        => $this->primaryKey(),
-            'triggerId' => $this->integer()->notNull(),
-            'type'      => $this->string(),
-            'template'  => $this->string(),
-            'config'    => $this->text(),
-        ]);
-    }
-
-    /**
-     * Creates the indexes.
-     */
-    protected function createIndexes(): void
-    {
-        $this->createIndex(null, '{{%notifier_messages}}', ['triggerId']);
     }
 
     /**
@@ -71,7 +57,7 @@ class Install extends Migration
      */
     protected function addForeignKeys(): void
     {
-        $this->addForeignKey(null, '{{%notifier_messages}}', ['triggerId'], '{{%notifier_triggers}}', ['id'], 'CASCADE');
+        $this->addForeignKey(null, '{{%notifier_notifications}}', ['id'], '{{%elements}}', ['id'], 'CASCADE');
     }
 
 }

@@ -11,13 +11,19 @@
 
 namespace doublesecretagency\notifier\records;
 
-use Craft;
 use craft\db\ActiveRecord;
 use craft\db\SoftDeleteTrait;
 
 /**
  * Notification record
  * @since 1.0.0
+ *
+ * @property int $id
+ * @property string $event
+ * @property array $eventConfig
+ * @property string $messageType
+ * @property string $messageTemplate
+ * @property array $messageConfig
  */
 class Notification extends ActiveRecord
 {
