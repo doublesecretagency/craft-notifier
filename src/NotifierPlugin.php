@@ -23,6 +23,7 @@ use craft\services\Utilities;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\helpers\Events;
 use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\models\Message as MessageModel;
 use doublesecretagency\notifier\utilities\LogUtility;
@@ -70,8 +71,10 @@ class NotifierPlugin extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        // Load Twig extension
-        Craft::$app->getView()->registerTwigExtension(new Extension());
+        // If plugin isn't installed yet, bail
+        if (!$this->isInstalled) {
+            return;
+        }
 
         // Register enhancements for the control panel
         if (Craft::$app->getRequest()->getIsCpRequest()) {
@@ -79,16 +82,10 @@ class NotifierPlugin extends Plugin
             $this->_registerUtilities();
         }
 
-        // If plugin isn't installed yet
-        if (!$this->isInstalled) {
-            // Bail before triggering events
-            return;
-        }
+        // Load Twig extension
+        Craft::$app->getView()->registerTwigExtension(new Extension());
 
-        // Trigger notifications when an Entry is saved
-        $this->_onEntrySave();
-
-        // Register the Notification element type
+        // Register element type
         Event::on(
             Elements::class,
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
@@ -106,6 +103,9 @@ class NotifierPlugin extends Plugin
                 $variable->set('notifier', NotifierVariable::class);
             }
         );
+
+        // Register all notification events
+        Events::registerAll();
     }
 
     /**
@@ -166,31 +166,33 @@ class NotifierPlugin extends Plugin
      */
     private function _onEntrySave(): void
     {
-        // Get the original element
-        Event::on(
-            Entry::class,
-            Element::EVENT_BEFORE_SAVE,
-            function (ModelEvent $event) {
-
-                // Get entry
-                /** @var Entry $entry */
-                $entry = $event->sender;
-
-                // If no existing ID, bail
-                if (!$entry->id) {
-                    return;
-                }
-
-                // Get the original element
-                $this->_original = Entry::find()->id($entry->id)->one();
-            }
-        );
+//        // Get the original element
+//        Event::on(
+//            Entry::class,
+//            Element::EVENT_BEFORE_SAVE,
+//            function (ModelEvent $event) {
+//
+//                // Get entry
+//                /** @var Entry $entry */
+//                $entry = $event->sender;
+//
+//                // If no existing ID, bail
+//                if (!$entry->id) {
+//                    return;
+//                }
+//
+//                // Get the original element
+//                $this->_original = Entry::find()->id($entry->id)->one();
+//            }
+//        );
 
         // Run trigger
         Event::on(
             Entry::class,
             Element::EVENT_AFTER_SAVE,
             function (ModelEvent $event) {
+
+                return; // NULLIFY TRIGGER FOR TESTING
 
                 // Get entry
                 /** @var Entry $entry */

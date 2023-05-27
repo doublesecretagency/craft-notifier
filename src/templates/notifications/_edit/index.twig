@@ -11,7 +11,7 @@
 {% set id = (id ?? null) %}
 
 {# Get the existing notification if an ID was specified #}
-{% set notification = (id ? craft.notifier.notifications.id(id).one()) %}
+{% set notification = (id ? craft.notifier.notifications.id(id).status(null).one()) %}
 
 {# If notification doesn't exist #}
 {% if not notification %}

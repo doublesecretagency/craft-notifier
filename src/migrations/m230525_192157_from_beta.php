@@ -131,7 +131,7 @@ class m230525_192157_from_beta extends Migration
         // Create the notification
         $notification = new Notification([
             'title'           => "Notification #{$this->_currentNotification}",
-            'event'           => $trigger['event'],
+            'event'           => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE',
             'eventConfig'     => $trigger['config'],
             'messageType'     => $message['type'],
             'messageTemplate' => $message['template'],

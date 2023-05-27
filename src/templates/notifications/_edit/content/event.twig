@@ -2,20 +2,18 @@
 
 <h2>How will the notification be activated?</h2>
 
-<div class="readable">
-    <blockquote class="note tip">
-        <p>Not sure what to choose? Most of the time, you'll want to use <code>EVENT_AFTER_SAVE_ELEMENT</code></p>
-    </blockquote>
-</div>
-
-{{ forms.textField({
+{{ forms.selectField({
     label: "Event Trigger"|t('notifier'),
+    instructions: "Which Craft (or plugin) event will activate the notification?",
     id: 'event',
     name: 'event',
-    instructions: "Which Craft (or plugin) event will activate the notification?",
+    options: craft.notifier.eventsOptions,
     value: notification.event,
-    errors: notification.getErrors('event'),
 }) }}
+
+
+
+
 
 <div class="vue-box">
     Event configuration fields will go here.
