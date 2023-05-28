@@ -23,20 +23,12 @@
     errors: notification.getErrors('messageTemplate'),
 }) }}
 
-<div class="vue-box">
-    Message configuration fields will go here.
-{#    {{ forms.textField({#}
-{#        label: "Message Configuration"|t('notifier'),#}
-{#        id: 'messageConfig[testing]',#}
-{#        name: 'messageConfig[testing]',#}
-{#        value: notification.messageConfig,#}
-{#        errors: notification.getErrors('messageConfig'),#}
-{#    }) }}#}
-</div>
-
+{#<div class="vue-box">#}
+{#    {% include 'notifier/notifications/_edit/notification-types/email' %}#}
+{#</div>#}
 
 {#<div class="readable">#}
 {#    <blockquote class="note tip">#}
-{#        <p>For a complete guide on creating a message template, see <a href="#">the docs...</a></p>#}
+{#        <p>For a complete guide on creating a message template, see <a href="https://plugins.doublesecretagency.com/notifier/messages/variables/" target="_blank">the docs...</a></p>#}
 {#    </blockquote>#}
 {#</div>#}

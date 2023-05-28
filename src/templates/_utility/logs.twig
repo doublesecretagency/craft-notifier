@@ -18,14 +18,13 @@
                 {% endif %}
             </div>
             <div class="log-message">
-                {{ (row.parentKey ?? false) ? '&#8627;&nbsp;'|raw }}
                 {{ row.message ?? null }}
             </div>
         </div>
 
     {% else %}
 
-        <p>No messages have been sent yet. <a href="{{ cpUrl('notifier') }}">Configure a notification...</a></p>
+        <p>No messages have been sent yet. <a href="{{ cpUrl('notifications') }}">Configure a notification...</a></p>
 
     {% endfor %}
 

@@ -11,29 +11,6 @@
     value: notification.event,
 }) }}
 
-
-
-
-
-<div class="vue-box">
-    Event configuration fields will go here.
-
-
-{#    {{ forms.textField({#}
-{#        label: "Event Configuration"|t('notifier'),#}
-{#        id: 'eventConfig',#}
-{#        name: 'eventConfig',#}
-{#        value: notification.eventConfig,#}
-{#        errors: notification.getErrors('eventConfig'),#}
-{#    }) }}#}
-
-
-
-{#    {{ forms.textField({#}
-{#        label: "Email Subject"|t('notifier'),#}
-{#        instructions: "Can parse complete Twig tags (including [automatic variables](https://plugins.doublesecretagency.com/notifier/messages/variables/)), or short `{object}` syntax for trigger element."|t('notifier'),#}
-{#        id: 'config[subject]',#}
-{#        name: 'config[subject]',#}
-{#        value: (message.config.subject ?? null)#}
-{#    }) }}#}
-</div>
+{#<div class="vue-box">#}
+{#    {% include 'notifier/notifications/_edit/triggers/entry-after-propagate' %}#}
+{#</div>#}

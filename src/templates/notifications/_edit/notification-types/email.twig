@@ -1,0 +1,11 @@
+{% import '_includes/forms' as forms %}
+
+<div>
+    {{ forms.textField({
+        label: "Message Configuration"|t('notifier'),
+        id: 'messageConfig[testing]',
+        name: 'messageConfig[testing]',
+        value: notification.messageConfig,
+        errors: notification.getErrors('messageConfig'),
+    }) }}
+</div>

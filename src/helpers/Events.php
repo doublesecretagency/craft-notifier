@@ -15,12 +15,12 @@ namespace doublesecretagency\notifier\helpers;
 use Craft;
 use craft\base\Element;
 use craft\base\ElementInterface;
+use craft\elements\Entry;
 use craft\events\ModelEvent;
 use craft\helpers\ElementHelper;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Events as EventsEnum;
-use doublesecretagency\notifier\models\Message as MessageModel;
-use Throwable;
+use doublesecretagency\notifier\models\EmailMessage;
 use yii\base\Event;
 
 /**
@@ -54,16 +54,109 @@ class Events
 
                 // Loop through matching notifications
                 foreach ($notifications["{$class}::{$event}"] as $notification) {
-                    // Get event configuration
-                    $config = ($notification->eventConfig ?? []);
-                    // Register each event with corresponding configuration
-                    static::_register($class, $event, $config);
+
+                    // Register each notification event
+                    static::_register($notification, $class, $event);
+
                 }
 
             }
 
         }
     }
+
+    /**
+     * Send a message.
+     */
+    public static function sendMessage(Notification $notification, array $data): void
+    {
+        // Initialize the message
+        $message = null;
+
+        // Send based on message type
+        switch ($notification->messageType) {
+
+            case 'email':
+                // Send an email
+                $message = new EmailMessage($notification, $data);
+                break;
+
+        }
+
+        // If no message, bail
+        if (!$message) {
+            return;
+        }
+
+        // Send the message
+        $message->send();
+    }
+
+    /**
+     * Register a single event, fully configured.
+     *
+     * @param Notification $notification
+     * @param string $class
+     * @param string $event
+     */
+    private static function _register(Notification $notification, string $class, string $event): void
+    {
+        // Retrieve the original element (if needed)
+        static::_loadOriginal($class, $event);
+
+        // Dynamically register the event
+        Event::on(
+            $class,
+            constant("{$class}::{$event}"),
+            static function (Event $e) use ($class, $notification) {
+
+                // Compile the data for message templates
+                $data = [
+                    'event' => $e,
+                    'notification' => $notification,
+                    'activeUser' => Craft::$app->getUser()->getIdentity(),
+                ];
+
+                // If not activated by an element
+                if (!is_a($e->sender, ElementInterface::class)) {
+                    // Send the non-element message
+                    static::sendMessage($notification, $data);
+                    // Our work here is done
+                    return;
+                }
+
+                // Get the element which triggered the notification
+                /** @var ElementInterface $element */
+                $element = $e->sender;
+
+                // Validate based on class
+                switch ($class) {
+
+                    case 'craft\elements\Entry':
+                        // If entry is not valid per event configuration, bail
+                        if (!static::_validateEntry($element, $notification->eventConfig)) {
+                            return;
+                        }
+                        break;
+
+                }
+
+                // Dynamically named element variable
+                // (ie: `entry`, `user`, `asset`, etc)
+                $elementType = $element::refHandle();
+
+                // Append content variables
+                $data['original'] = static::$_original;
+                $data['element'] = $element;
+                $data[$elementType] = $element; // see above
+
+                // Send the message
+                static::sendMessage($notification, $data);
+            }
+        );
+    }
+
+    // ========================================================================= //
 
     /**
      * Load the original element before it gets modified.
@@ -92,46 +185,6 @@ class Events
     }
 
     // ========================================================================= //
-
-    /**
-     * Register a single event, fully configured.
-     *
-     * @param string $class
-     * @param string $event
-     * @param array $config
-     */
-    private static function _register(string $class, string $event, array $config): void
-    {
-        // Retrieve the original element (if needed)
-        static::_loadOriginal($class, $event);
-
-        // Dynamically register the event
-        Event::on(
-            $class,
-            constant("{$class}::{$event}"),
-            static function (Event $e) use ($class, $event, $config) {
-
-                // Get element
-                /** @var ElementInterface $element */
-                $element = $e->sender;
-
-                // Validate based on class
-                switch ($class) {
-
-                    case 'craft\elements\Entry':
-                        // If entry is not valid per configuration, bail
-                        if (!static::_validateEntry($element, $config)) {
-                            return;
-                        }
-                        break;
-
-                }
-
-                // Send the message
-                static::_sendMessage($element, $e);
-            }
-        );
-    }
 
     /**
      * If needed, retrieve the original element.
@@ -175,45 +228,61 @@ class Events
 
         // Other validation with $config
 
-        // Mark valid
-        return true;
-    }
+        // Get entry
+        /** @var Entry $entry */
+//        $entry = $event->sender;
 
-    // ========================================================================= //
-
-    /**
-     * Send the corresponding message.
-     * @throws Throwable
-     */
-    private static function _sendMessage($element, $event): void
-    {
-        // Set data for message templates
-        $data = [
-            // Content variables
-            'original' => static::$_original,
-            'element' => $element,
-            // Config variables
-            'activeUser' => Craft::$app->getUser()->getIdentity(),
-            'event' => $event,
-        ];
-
-
-        // todo: Dynamically add the $data['entry'] value
-
-
-        return; // TEMP
-
-
-        // Get messages related to this trigger
-        $messages = $trigger->getMessages();
-
-        // Send each message to all recipients
-        foreach ($messages as $message) {
-            /** @var MessageModel $message */
-            $message->sendAll($data);
+        /*
+        // If part of a bulk re-save, mark invalid
+        if ($entry->resaving) {
+            return false;
         }
 
+        // TODO: Remove legacy `freshness` by v1.0
+        // Whether to activate trigger for new entries, existing entries, or both
+        $newExisting = ($this->config['freshness'] ?? $this->config['newExisting'] ?? false);
+//        $newExisting = ($this->config['newExisting'] ?? false);
 
+        // Simplify logic
+        $new          = $entry->firstSave;
+        $onlyNew      = ($newExisting === 'new');
+        $onlyExisting = ($newExisting === 'existing');
+
+        // Filter by newness
+        if ($new) {
+            // If new, and only existing are allowed, mark invalid
+            if ($onlyExisting) {
+                return false;
+            }
+        } else {
+            // If existing, and only new are allowed, mark invalid
+            if ($onlyNew) {
+                return false;
+            }
+        }
+
+        // Get selected sections and entry types
+        $sections   = ($this->config['sections']   ?? []);
+        $entryTypes = ($this->config['entryTypes'] ?? []);
+
+        // If section isn't selected, mark invalid
+        if (!in_array($entry->getSection()->id, $sections, false)) {
+            return false;
+        }
+
+        // If entry type isn't selected, mark invalid
+        if (!in_array($entry->getType()->id, $entryTypes, false)) {
+            return false;
+        }
+
+        // Entry event is valid!
+        return true;
+         */
+
+
+
+        // Mark valid
+        return true;
     }
 
 }

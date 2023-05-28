@@ -39,52 +39,44 @@ class Log
      * Log a new success message.
      *
      * @param string $message
-     * @param string|null $parentKey
-     * @return string
      * @throws ErrorException
      */
-    public static function success(string $message, ?string $parentKey = null): string
+    public static function success(string $message): void
     {
-        return static::_newMessage($message, static::SUCCESS, $parentKey);
+        static::_newMessage($message, static::SUCCESS);
     }
 
     /**
      * Log a new info message.
      *
      * @param string $message
-     * @param string|null $parentKey
-     * @return string
      * @throws ErrorException
      */
-    public static function info(string $message, ?string $parentKey = null): string
+    public static function info(string $message): void
     {
-        return static::_newMessage($message, static::INFO, $parentKey);
+        static::_newMessage($message, static::INFO);
     }
 
     /**
      * Log a new warning message.
      *
      * @param string $message
-     * @param string|null $parentKey
-     * @return string
      * @throws ErrorException
      */
-    public static function warning(string $message, ?string $parentKey = null): string
+    public static function warning(string $message): void
     {
-        return static::_newMessage($message, static::WARNING, $parentKey);
+        static::_newMessage($message, static::WARNING);
     }
 
     /**
      * Log a new error message.
      *
      * @param string $message
-     * @param string|null $parentKey
-     * @return string
      * @throws ErrorException
      */
-    public static function error(string $message, ?string $parentKey = null): string
+    public static function error(string $message): void
     {
-        return static::_newMessage($message, static::ERROR, $parentKey);
+        static::_newMessage($message, static::ERROR);
     }
 
     // ========================================================================= //
@@ -94,11 +86,9 @@ class Log
      *
      * @param string $message
      * @param string $type
-     * @param string|null $parentKey
-     * @return string
      * @throws ErrorException
      */
-    private static function _newMessage(string $message, string $type, ?string $parentKey = null): string
+    private static function _newMessage(string $message, string $type): void
     {
         // Generate unique key
         $key = StringHelper::randomString(16);
@@ -111,11 +101,6 @@ class Log
         // Compile a message summary
         $summary = "{$datestamp} [{$type}] {$message}";
 
-        // If child message, prepend arrow
-        if ($parentKey) {
-            $summary = "--> {$summary}";
-        }
-
         // Compile data to be logged
         $data = [
             '*'         => $summary,
@@ -124,7 +109,6 @@ class Log
             'type'      => $type,
             'message'   => $message,
             'key'       => $key,
-            'parentKey' => $parentKey,
         ];
 
         // Attempt to log message
@@ -138,9 +122,6 @@ class Log
         } catch (Exception $e) {
             // Do nothing
         }
-
-        // Return unique message key
-        return $key;
     }
 
     // ========================================================================= //
