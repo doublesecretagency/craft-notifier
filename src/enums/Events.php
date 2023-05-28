@@ -31,4 +31,13 @@ abstract class Events
         ]
     ];
 
+    /**
+     * List of events which require the original to be fetched.
+     */
+    public const REQUIRE_ORIGINAL = [
+        'craft\elements\Entry' => [
+            'EVENT_AFTER_PROPAGATE'
+        ]
+    ];
+
 }

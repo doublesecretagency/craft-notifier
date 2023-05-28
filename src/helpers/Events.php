@@ -12,11 +12,15 @@
 
 namespace doublesecretagency\notifier\helpers;
 
+use Craft;
+use craft\base\Element;
 use craft\base\ElementInterface;
-use craft\elements\Entry;
+use craft\events\ModelEvent;
 use craft\helpers\ElementHelper;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Events as EventsEnum;
+use doublesecretagency\notifier\models\Message as MessageModel;
+use Throwable;
 use yii\base\Event;
 
 /**
@@ -50,19 +54,41 @@ class Events
 
                 // Loop through matching notifications
                 foreach ($notifications["{$class}::{$event}"] as $notification) {
-
                     // Get event configuration
                     $config = ($notification->eventConfig ?? []);
-
                     // Register each event with corresponding configuration
                     static::_register($class, $event, $config);
-
                 }
 
             }
 
         }
+    }
 
+    /**
+     * Load the original element before it gets modified.
+     *
+     * @param ModelEvent $event
+     */
+    public static function loadOriginalElement(ModelEvent $event): void
+    {
+        // Get element
+        /** @var ElementInterface $element */
+        $element = $event->sender;
+
+        // If no existing ID, bail
+        if (!$element->id) {
+            return;
+        }
+
+        // Get element class
+        $elementClass = $element::class;
+
+        // Load the original element
+        static::$_original = (new $elementClass)::find()
+            ->id($element->id)
+            ->status(null)
+            ->one();
     }
 
     // ========================================================================= //
@@ -76,6 +102,9 @@ class Events
      */
     private static function _register(string $class, string $event, array $config): void
     {
+        // Retrieve the original element (if needed)
+        static::_loadOriginal($class, $event);
+
         // Dynamically register the event
         Event::on(
             $class,
@@ -98,58 +127,34 @@ class Events
 
                 }
 
-                // Get and set the original element (if needed)
-                static::_loadOriginal($element->id, $class, $event);
-
-
-
-
-                \Craft::dd($config);
-
-
-
-
-
+                // Send the message
+                static::_sendMessage($element, $e);
             }
         );
     }
 
     /**
-     * If needed, load the original element.
+     * If needed, retrieve the original element.
      *
-     * @param int|null $id
      * @param string $class
      * @param string $event
      */
-    private static function _loadOriginal(?int $id, string $class, string $event): void
+    private static function _loadOriginal(string $class, string $event): void
     {
-        // If no ID provided, bail
-        if (!$id) {
-            return;
-        }
-
-        // Whitelist of events which
-        // require the original to be fetched
-        $whitelist = [
-            'craft\elements\Entry' => [
-                'EVENT_AFTER_PROPAGATE'
-            ]
-        ];
-
-        // Get array of whitelisted events
-        $requireOriginal = $whitelist[$class] ?? [];
+        // Get array of events which require the original element
+        $requireOriginal = EventsEnum::REQUIRE_ORIGINAL[$class] ?? [];
 
         // If not an event which requires the original, bail
         if (!in_array($event, $requireOriginal, true)) {
             return;
         }
 
-        // Load the original element based on class
-        switch ($class) {
-            case 'craft\elements\Entry':
-                static::$_original = Entry::find()->id($id)->one();
-                break;
-        }
+        // Load the original element
+        Event::on(
+            $class,
+            Element::EVENT_BEFORE_SAVE,
+            [self::class, 'loadOriginalElement']
+        );
     }
 
     // ========================================================================= //
@@ -172,6 +177,43 @@ class Events
 
         // Mark valid
         return true;
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Send the corresponding message.
+     * @throws Throwable
+     */
+    private static function _sendMessage($element, $event): void
+    {
+        // Set data for message templates
+        $data = [
+            // Content variables
+            'original' => static::$_original,
+            'element' => $element,
+            // Config variables
+            'activeUser' => Craft::$app->getUser()->getIdentity(),
+            'event' => $event,
+        ];
+
+
+        // todo: Dynamically add the $data['entry'] value
+
+
+        return; // TEMP
+
+
+        // Get messages related to this trigger
+        $messages = $trigger->getMessages();
+
+        // Send each message to all recipients
+        foreach ($messages as $message) {
+            /** @var MessageModel $message */
+            $message->sendAll($data);
+        }
+
+
     }
 
 }
