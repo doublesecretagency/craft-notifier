@@ -31,9 +31,9 @@ class Notification extends Element
 {
 
     /**
-     * @var bool Whether to dispatch notifications via the jobs queue (vs bypass the queue and send immediately).
+     * @var string|null Optional description of the notification.
      */
-    public bool $useQueue = true;
+    public ?string $description = null;
 
     /**
      * @var string|null Which event will activate the notification.
@@ -59,6 +59,13 @@ class Notification extends Element
      * @var array Message configuration details.
      */
     public array $messageConfig = [];
+
+    /**
+     * @var bool Whether to dispatch notifications via the jobs queue (vs bypass the queue and send immediately).
+     */
+    public bool $useQueue = true;
+
+    // ========================================================================= //
 
     public static function displayName(): string
     {
@@ -272,6 +279,8 @@ class Notification extends Element
             ],
         ]);
     }
+
+    // ========================================================================= //
 
     /**
      * @inheritdoc

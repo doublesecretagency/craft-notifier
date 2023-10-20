@@ -23,3 +23,12 @@
 
 {% include 'notifier/notifications/_edit/content/event' %}
 {% include 'notifier/notifications/_edit/content/message' %}
+{{ forms.textField({
+    label: "Description"|t('app'),
+    instructions: "Optionally describe this notification."|t('notifier'),
+    id: 'description',
+    name: 'description',
+    value: notification.description,
+    errors: notification.getErrors('description'),
+}) }}
+
