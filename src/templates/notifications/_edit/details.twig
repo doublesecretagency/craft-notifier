@@ -1,1 +1,56 @@
-enabled
+{% import '_includes/forms' as forms %}
+
+{% set selectOptions = [
+    {label: 'Entries', value: 'entries'},
+    {label: 'Assets', value: 'assets'},
+    {label: 'Users', value: 'users'},
+] %}
+
+<div class="meta">
+    {{ forms.selectField({
+        label: 'Triggered By',
+        id: 'triggerType',
+        name: 'triggerType',
+        options: selectOptions,
+        value: 'assets',
+        class: 'selectize',
+    }) }}
+    {{ forms.textField({
+        label: 'Slug'|t('app'),
+        id: 'slug',
+        name: 'slug',
+        value: notification.slug,
+    }) }}
+    {{ forms.lightswitchField({
+        label: 'Use Jobs Queue'|t('app'),
+        instructions: 'Whether to dispatch notifications via the jobs queue (vs bypass the queue and send immediately).'|t('notifier'),
+        id: 'useQueue',
+        name: 'useQueue',
+        on: notification.useQueue,
+    }) }}
+    {{ forms.lightswitchField({
+        label: 'Enabled'|t('app'),
+        id: 'enabled',
+        name: 'enabled',
+        on: notification.enabled,
+    }) }}
+</div>
+
+<dl class="meta read-only">
+    <div class="data">
+        <dt class="heading">{{ 'ID'|t('app') }}</dt>
+        <dd class="value">{{ notification.id }}</dd>
+    </div>
+{#    <div class="data">#}
+{#        <dt class="heading">{{ 'Status'|t('app') }}</dt>#}
+{#        <dd class="value"><span class="status live"></span><span>Live</span></dd>#}
+{#    </div>#}
+    <div class="data">
+        <dt class="heading">{{ 'Created at'|t('app') }}</dt>
+        <dd class="value">{{ notification.dateCreated|datetime('short') }}</dd>
+    </div>
+    <div class="data">
+        <dt class="heading">{{ 'Updated at'|t('app') }}</dt>
+        <dd class="value">{{ notification.dateUpdated|datetime('short') }}</dd>
+    </div>
+</dl>

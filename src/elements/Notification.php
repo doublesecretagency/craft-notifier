@@ -31,6 +31,11 @@ class Notification extends Element
 {
 
     /**
+     * @var bool Whether to dispatch notifications via the jobs queue (vs bypass the queue and send immediately).
+     */
+    public bool $useQueue = true;
+
+    /**
      * @var string|null Which event will activate the notification.
      */
     public ?string $event = null;
