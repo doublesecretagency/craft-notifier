@@ -52,13 +52,13 @@ class Events
             // Loop through events for each group
             foreach ($element['events'] as $event => $description) {
 
-                // Loop through matching notifications
-                foreach ($notifications["{$class}::{$event}"] as $notification) {
-
-                    // Register each notification event
-                    static::_register($notification, $class, $event);
-
-                }
+//                // Loop through matching notifications
+//                foreach ($notifications["{$class}::{$event}"] as $notification) {
+//
+//                    // Register each notification event
+//                    static::_register($notification, $class, $event);
+//
+//                }
 
             }
 

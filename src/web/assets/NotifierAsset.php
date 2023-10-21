@@ -28,18 +28,14 @@ class NotifierAsset extends AssetBundle
     {
         parent::init();
 
-        $this->sourcePath = '@doublesecretagency/notifier/resources';
+        $this->sourcePath = '@doublesecretagency/notifier/web/assets/dist';
 
         $this->depends = [
             VueAsset::class,
         ];
 
-        $this->css = [
-            'css/notifier.css',
-        ];
-
         $this->js = [
-            'js/notifier.js',
+            'js/notification.js',
         ];
     }
 

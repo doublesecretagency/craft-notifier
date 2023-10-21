@@ -2,6 +2,12 @@
 {% import '_includes/forms' as forms %}
 {% set fullPageForm = true %}
 
+{# Load assets #}
+{% do view.registerAssetBundle(notifierAssets) %}
+
+{# Initialize the notification #}
+{% js 'window.initNotification();' %}
+
 {# Breadcrumbs #}
 {% set crumbs = [
     {'label': 'Notifications'|t('notifier'), 'url': cpUrl('notifications')},
@@ -24,7 +30,7 @@
 
 {# Button above content #}
 {% block actionButton %}
-    <input type="button" class="btn" value="{{ 'Send Test Message'|t('notifier') }}">
+    <div id="notification-test-button-top"></div>
     <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
 {% endblock %}
 
@@ -32,9 +38,7 @@
 {% block content %}
     {{ actionInput('notifier/notifications/save') }}
     {{ notification ? hiddenInput('id', id) }}
-    <div class="flex-fields">
-        {% include 'notifier/notifications/_edit/content' with {'notification': notification} only %}
-    </div>
+    {% include 'notifier/notifications/_edit/content' with {'notification': notification} only %}
 {% endblock %}
 
 {# Sidebar #}
