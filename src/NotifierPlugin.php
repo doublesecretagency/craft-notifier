@@ -13,15 +13,20 @@ namespace doublesecretagency\notifier;
 
 use Craft;
 use craft\base\Plugin;
+use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\SetElementTableAttributeHtmlEvent;
+use craft\helpers\UrlHelper;
 use craft\services\Elements;
+use craft\services\Plugins;
 use craft\services\Utilities;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\elements\Notification;
-use doublesecretagency\notifier\helpers\Events;
-use doublesecretagency\notifier\utilities\LogUtility;
+use doublesecretagency\notifier\enums\Options;
+//use doublesecretagency\notifier\helpers\Events;
+//use doublesecretagency\notifier\utilities\LogUtility;
 use doublesecretagency\notifier\variables\Notifier as NotifierVariable;
 use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
@@ -61,6 +66,9 @@ class NotifierPlugin extends Plugin
         parent::init();
         self::$plugin = $this;
 
+        // Redirect after plugin is installed
+        $this->_postInstallRedirect();
+
         // If plugin isn't installed yet, bail
         if (!$this->isInstalled) {
             return;
@@ -73,14 +81,15 @@ class NotifierPlugin extends Plugin
         // Register enhancements for the control panel
         if (Craft::$app->getRequest()->getIsCpRequest()) {
             $this->_registerCpRoutes();
-            $this->_registerUtilities();
+//            $this->_registerUtilities();
+            $this->_registerTableAttributes();
         }
 
         // Load Twig extension
         Craft::$app->getView()->registerTwigExtension(new Extension());
 
         // Register all notification events
-        Events::registerAll();
+//        Events::registerAll();
     }
 
     /**
@@ -95,6 +104,36 @@ class NotifierPlugin extends Plugin
         $item['url'] = 'notifications';
 
         return $item;
+    }
+
+    // ========================================================================= //
+
+    /**
+     * After the plugin has been installed,
+     * redirect to the Notifications page.
+     *
+     * @return void
+     */
+    private function _postInstallRedirect(): void
+    {
+        // After the plugin has been installed
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
+            static function (PluginEvent $event) {
+                // If installed plugin isn't Notifier, bail
+                if ('notifier' !== $event->plugin->handle) {
+                    return;
+                }
+                // If installed via console, no need for a redirect
+                if (Craft::$app->getRequest()->getIsConsoleRequest()) {
+                    return;
+                }
+                // Redirect to the Notifications page (with a welcome message)
+                $url = UrlHelper::cpUrl('notifications', ['welcome' => 1]);
+                Craft::$app->getResponse()->redirect($url)->send();
+            }
+        );
     }
 
     // ========================================================================= //
@@ -145,17 +184,72 @@ class NotifierPlugin extends Plugin
         );
     }
 
+//    /**
+//     * Register utilities.
+//     */
+//    private function _registerUtilities(): void
+//    {
+//        Event::on(
+//            Utilities::class,
+//            Utilities::EVENT_REGISTER_UTILITY_TYPES,
+//            static function (RegisterComponentTypesEvent $event) {
+//                // Add logging utility
+//                $event->types[] = LogUtility::class;
+//            }
+//        );
+//    }
+
     /**
-     * Register utilities.
+     * Register index table attributes.
      */
-    private function _registerUtilities(): void
+    private function _registerTableAttributes(): void
     {
         Event::on(
-            Utilities::class,
-            Utilities::EVENT_REGISTER_UTILITY_TYPES,
-            static function (RegisterComponentTypesEvent $event) {
-                // Add logging utility
-                $event->types[] = LogUtility::class;
+            Notification::class,
+            Notification::EVENT_SET_TABLE_ATTRIBUTE_HTML,
+            static function (SetElementTableAttributeHtmlEvent $event) {
+
+                /** @var Notification $notification */
+                $notification = $event->sender;
+
+                // Render attribute of each column
+                switch ($event->attribute) {
+
+                    case 'eventType':
+                        // Attempt to display proper label of Event Type
+                        $event->html = Options::EVENT_TYPE[$notification->eventType] ?? $notification->eventType;
+                        break;
+
+                    case 'event':
+                        // Get all events within specified type
+                        $events = Options::ALL_EVENTS[$notification->eventType] ?? [];
+                        // Filter through all events
+                        $filtered = array_filter($events,
+                            static function ($e) use ($notification) {
+                                // Get the value of each potential event
+                                $value = ($e['value'] ?? false);
+                                // Return whether value matches selected event
+                                return $value === $notification->event;
+                            }
+                        );
+                        // Get the first (and only) matching event
+                        $mainEvent = reset($filtered);
+                        // Attempt to display proper label of Event
+                        $event->html = $mainEvent['label'] ?? $notification->event;
+                        break;
+
+                    case 'messageType':
+                        // Attempt to display proper label of Message Type
+                        $event->html = Options::MESSAGE_TYPE[$notification->messageType] ?? $notification->messageType;
+                        break;
+
+                    case 'recipientsType':
+                        // Attempt to display proper label of Recipients Type
+                        $event->html = Options::RECIPIENTS_TYPE[$notification->recipientsType] ?? $notification->recipientsType;
+                        break;
+
+                }
+
             }
         );
     }

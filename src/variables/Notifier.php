@@ -12,8 +12,8 @@
 namespace doublesecretagency\notifier\variables;
 
 use Craft;
-use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
+use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Events;
 
 /**
@@ -36,35 +36,35 @@ class Notifier
         return $query;
     }
 
-    /**
-     * Compile the select options for all available events.
-     *
-     * @return array
-     */
-    public function eventsOptions(): array
-    {
-        // Initialize select options
-        $options = [];
-
-        // Loop through all available events
-        foreach (Events::AVAILABLE as $group => $element) {
-
-            // Append options group
-            $options[] = ['optgroup' => $group];
-
-            // Loop through events for each group
-            foreach ($element['events'] as $event => $description) {
-                // Append an option for each event
-                $options[] = [
-                    'label' => $description,
-                    'value' => "{$element['class']}::{$event}"
-                ];
-            }
-
-        }
-
-        // Return the select options
-        return $options;
-    }
+//    /**
+//     * Compile the select options for all available events.
+//     *
+//     * @return array
+//     */
+//    public function eventsOptions(): array
+//    {
+//        // Initialize select options
+//        $options = [];
+//
+//        // Loop through all available events
+//        foreach (Events::AVAILABLE as $group => $element) {
+//
+//            // Append options group
+//            $options[] = ['optgroup' => $group];
+//
+//            // Loop through events for each group
+//            foreach ($element['events'] as $event => $description) {
+//                // Append an option for each event
+//                $options[] = [
+//                    'label' => $description,
+//                    'value' => "{$element['class']}::{$event}"
+//                ];
+//            }
+//
+//        }
+//
+//        // Return the select options
+//        return $options;
+//    }
 
 }

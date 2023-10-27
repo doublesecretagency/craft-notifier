@@ -26,11 +26,17 @@ class NotificationQuery extends ElementQuery
 
         $this->query->select([
             'notifier_notifications.id',
+            'notifier_notifications.description',
+            'notifier_notifications.useQueue',
+            'notifier_notifications.eventType',
             'notifier_notifications.event',
             'notifier_notifications.eventConfig',
             'notifier_notifications.messageType',
-            'notifier_notifications.messageTemplate',
             'notifier_notifications.messageConfig',
+            'notifier_notifications.messageBody',
+            'notifier_notifications.recipientsType',
+            'notifier_notifications.recipientsConfig',
+
         ]);
 
         return parent::beforePrepare();

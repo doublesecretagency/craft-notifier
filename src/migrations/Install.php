@@ -20,6 +20,8 @@ use craft\db\Migration;
 class Install extends Migration
 {
 
+    const NOTIFICATIONS = '{{%notifier_notifications}}';
+
     /**
      * @inheritdoc
      */
@@ -34,7 +36,7 @@ class Install extends Migration
      */
     public function safeDown(): void
     {
-        $this->dropTableIfExists('{{%notifier_notifications}}');
+        $this->dropTableIfExists(self::NOTIFICATIONS);
     }
 
     /**
@@ -42,17 +44,27 @@ class Install extends Migration
      */
     protected function createTables(): void
     {
-        $this->createTable('{{%notifier_notifications}}', [
-            'id'              => $this->integer()->notNull(),
-            'event'           => $this->string(),
-            'eventConfig'     => $this->text(),
-            'messageType'     => $this->string(),
-            'messageTemplate' => $this->string(),
-            'messageConfig'   => $this->text(),
-            'dateCreated'     => $this->dateTime()->notNull(),
-            'dateUpdated'     => $this->dateTime()->notNull(),
-            'dateDeleted'     => $this->dateTime()->null(),
-            'uid'             => $this->uid(),
+        // If table already exists, bail
+        if ($this->db->tableExists(self::NOTIFICATIONS)) {
+            return;
+        }
+
+        $this->createTable(self::NOTIFICATIONS, [
+            'id'               => $this->integer()->notNull(),
+            'description'      => $this->string(),
+            'useQueue'         => $this->boolean(),
+            'eventType'        => $this->string(),
+            'event'            => $this->string(),
+            'eventConfig'      => $this->text(),
+            'messageType'      => $this->string(),
+            'messageConfig'    => $this->text(),
+            'messageBody'      => $this->string(),
+            'recipientsType'   => $this->string(),
+            'recipientsConfig' => $this->text(),
+            'dateCreated'      => $this->dateTime()->notNull(),
+            'dateUpdated'      => $this->dateTime()->notNull(),
+            'dateDeleted'      => $this->dateTime()->null(),
+            'uid'              => $this->uid(),
             'PRIMARY KEY([[id]])',
         ]);
     }
@@ -62,7 +74,7 @@ class Install extends Migration
      */
     protected function addForeignKeys(): void
     {
-        $this->addForeignKey(null, '{{%notifier_notifications}}', ['id'], '{{%elements}}', ['id'], 'CASCADE');
+        $this->addForeignKey(null, self::NOTIFICATIONS, ['id'], '{{%elements}}', ['id'], 'CASCADE');
     }
 
 }

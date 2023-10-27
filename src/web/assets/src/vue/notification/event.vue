@@ -1,15 +1,15 @@
 <template>
     <div
         class="flex-fields"
-        v-show="notificationStore.triggerType"
+        v-show="notificationStore.eventType"
     >
         <hr style="margin-top:0 !important">
         <div id="event-field" class="field" data-attribute="event">
             <div class="heading">
-                <label id="event-label" for="event">{{ notificationStore.trigger }} Trigger<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
+                <label id="event-label" for="event">{{ notificationStore.event }} Event<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
             </div>
             <div id="event-instructions" class="instructions">
-                <p>Which event will activate the notification?</p>
+                <p>Select which event will activate the notification.</p>
             </div>
             <div class="input ltr">
                 <div class="select">
@@ -20,7 +20,7 @@
                         aria-describedby="event-instructions"
                         aria-labelledby="event-label"
                     >
-                        <option value="">Select a trigger event... </option>
+                        <option value=""></option>
                         <option v-for="option in notificationStore.eventOptions" :value="option.value">
                             {{ option.label }}
                         </option>

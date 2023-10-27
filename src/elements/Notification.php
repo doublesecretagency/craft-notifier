@@ -36,7 +36,17 @@ class Notification extends Element
     public ?string $description = null;
 
     /**
-     * @var string|null Which event will activate the notification.
+     * @var bool Whether to dispatch notifications via the jobs queue (vs bypass the queue and send immediately).
+     */
+    public bool $useQueue = true;
+
+    /**
+     * @var string|null Type of event which will activate the notification.
+     */
+    public ?string $eventType = null;
+
+    /**
+     * @var string|null Specific event which will activate the notification.
      */
     public ?string $event = null;
 
@@ -51,19 +61,24 @@ class Notification extends Element
     public ?string $messageType = null;
 
     /**
-     * @var string|null Twig template for rendering the message.
-     */
-    public ?string $messageTemplate = null;
-
-    /**
      * @var array Message configuration details.
      */
     public array $messageConfig = [];
 
     /**
-     * @var bool Whether to dispatch notifications via the jobs queue (vs bypass the queue and send immediately).
+     * @var string|null Twig template for rendering the message.
      */
-    public bool $useQueue = true;
+    public ?string $messageBody = null;
+
+    /**
+     * @var string|null Type of recipients. (ie: Admins)
+     */
+    public ?string $recipientsType = null;
+
+    /**
+     * @var array Message configuration details.
+     */
+    public array $recipientsConfig = [];
 
     // ========================================================================= //
 
@@ -159,22 +174,31 @@ class Notification extends Element
     {
         return [
             'slug' => ['label' => Craft::t('app', 'Slug')],
-            'uri' => ['label' => Craft::t('app', 'URI')],
-            'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
-            'id' => ['label' => Craft::t('app', 'ID')],
-            'uid' => ['label' => Craft::t('app', 'UID')],
+            'uri'  => ['label' => Craft::t('app', 'URI')],
+
+            'description'    => ['label' => Craft::t('app', 'Description')],
+            'useQueue'       => ['label' => Craft::t('app', 'Use Queue')],
+            'eventType'      => ['label' => Craft::t('app', 'Event Type')],
+            'event'          => ['label' => Craft::t('app', 'Event')],
+            'messageType'    => ['label' => Craft::t('app', 'Message Type')],
+            'recipientsType' => ['label' => Craft::t('app', 'Recipients Type')],
+
+            'id'          => ['label' => Craft::t('app', 'ID')],
+            'uid'         => ['label' => Craft::t('app', 'UID')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
-            // ...
         ];
     }
 
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
-            'link',
-            'dateCreated',
-            // ...
+            'description',
+            'eventType',
+            'event',
+            'messageType',
+            'recipientsType',
+            'useQueue',
         ];
     }
 
@@ -183,39 +207,6 @@ class Notification extends Element
         return array_merge(parent::defineRules(), [
             // ...
         ]);
-    }
-
-    public function getUriFormat(): ?string
-    {
-        // If notifications should have URLs, define their URI format here
-        return null;
-    }
-
-    protected function previewTargets(): array
-    {
-        $previewTargets = [];
-        $url = $this->getUrl();
-        if ($url) {
-            $previewTargets[] = [
-                'label' => Craft::t('app', 'Primary {type} page', [
-                    'type' => self::lowerDisplayName(),
-                ]),
-                'url' => $url,
-            ];
-        }
-        return $previewTargets;
-    }
-
-    protected function route(): array|string|null
-    {
-        // Define how notifications should be routed when their URLs are requested
-        return [
-            'templates/render',
-            [
-                'template' => 'site/template/path',
-                'variables' => ['notification' => $this],
-            ]
-        ];
     }
 
     public function canView(User $user): bool
@@ -304,11 +295,16 @@ class Notification extends Element
             }
 
             // Save to the `notifier_notifications` table
-            $record->event           = $this->event;
-            $record->eventConfig     = $this->eventConfig;
-            $record->messageType     = $this->messageType;
-            $record->messageTemplate = $this->messageTemplate;
-            $record->messageConfig   = $this->messageConfig;
+            $record->description      = $this->description;
+            $record->useQueue         = $this->useQueue;
+            $record->eventType        = $this->eventType;
+            $record->event            = $this->event;
+            $record->eventConfig      = $this->eventConfig;
+            $record->messageType      = $this->messageType;
+            $record->messageConfig    = $this->messageConfig;
+            $record->messageBody      = $this->messageBody;
+            $record->recipientsType   = $this->recipientsType;
+            $record->recipientsConfig = $this->recipientsConfig;
 
             $record->save(false);
         }

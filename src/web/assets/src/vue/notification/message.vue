@@ -1,7 +1,7 @@
 <template>
     <div
         class="flex-fields"
-        v-show="notificationStore.triggerType && notificationStore.eventSelected"
+        v-show="notificationStore.eventType && notificationStore.eventSelected"
     >
         <hr>
         <div
@@ -13,12 +13,12 @@
                 <label id="messageType-label" for="messageType">Message Type<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
             </div>
             <div id="messageType-instructions" class="instructions">
-                <p>What kind of message will be sent?</p>
+                <p>Select what type of message will be sent.</p>
             </div>
             <div class="input ltr">
                 <div class="select">
                     <select v-model="notificationStore.messageType" id="messageType" name="messageType" aria-labelledby="messageType-label">
-                        <option value="">Select a message type... </option>
+                        <option value=""></option>
                         <option v-for="(label, value) in notificationStore.messageTypeOptions" :value="value">
                             {{ label }}
                         </option>
@@ -28,48 +28,64 @@
         </div>
 
         <div
-            id="emailSubject-field"
+            id="messageConfig-emailSubject-field"
             class="field width-100"
-            data-attribute="emailSubject"
+            data-attribute="messageConfig-emailSubject"
             v-show="'email' === notificationStore.messageType"
         >
             <div class="heading">
-                <label id="emailSubject-label" for="emailSubject">Email Subject<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
+                <label id="messageConfig-emailSubject-label" for="messageConfig-emailSubject">Email Subject<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
                 <div class="flex-grow"></div>
             </div>
             <div class="input ltr">
-                <input type="text" id="emailSubject" class="nicetext text fullwidth" name="fields[emailSubject]" autocomplete="off" dir="ltr" />
+                <input
+                    type="text"
+                    v-model="notificationStore.messageConfig.emailSubject"
+                    id="messageConfig-emailSubject"
+                    class="nicetext text fullwidth"
+                    name="messageConfig[emailSubject]"
+                    autocomplete="off"
+                    dir="ltr"
+                />
             </div>
         </div>
 
         <div
-            id="announcementTitle-field"
+            id="messageConfig-announcementTitle-field"
             class="field width-100"
-            data-attribute="announcementTitle"
+            data-attribute="messageConfig-announcementTitle"
             v-show="'announcement' === notificationStore.messageType"
         >
             <div class="heading">
-                <label id="announcementTitle-label" for="announcementTitle">Announcement Title<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
+                <label id="messageConfig-announcementTitle-label" for="messageConfig-announcementTitle">Announcement Title<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
                 <div class="flex-grow"></div>
             </div>
             <div class="input ltr">
-                <input type="text" id="announcementTitle" class="nicetext text fullwidth" name="fields[announcementTitle]" autocomplete="off" dir="ltr" />
+                <input
+                    type="text"
+                    v-model="notificationStore.messageConfig.announcementTitle"
+                    id="messageConfig-announcementTitle"
+                    class="nicetext text fullwidth"
+                    name="messageConfig[announcementTitle]"
+                    autocomplete="off"
+                    dir="ltr"
+                />
             </div>
         </div>
 
         <div
-            id="flashType-field"
+            id="messageConfig-flashType-field"
             class="field width-100"
-            data-attribute="flashType"
+            data-attribute="messageConfig-flashType"
             v-show="'flash' === notificationStore.messageType"
         >
             <div class="heading">
-                <label id="flashType-label" for="flashType">Flash Message Type<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
+                <label id="messageConfig-flashType-label" for="messageConfig-flashType">Flash Message Type<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
                 <div class="flex-grow"></div>
             </div>
             <div class="input ltr">
                 <div class="select">
-                    <select v-model="notificationStore.flashType" id="flashType" name="flashType" aria-labelledby="flashType-label">
+                    <select v-model="notificationStore.messageConfig.flashType" id="messageConfig-flashType" name="messageConfig[flashType]" aria-labelledby="messageConfig-flashType-label">
                         <option v-for="(label, value) in notificationStore.flashTypeOptions" :value="value">
                             {{ flashIcon(value) }}&nbsp; {{ label }}
                         </option>
@@ -99,7 +115,7 @@
                     cols="50"
                     placeholder="{% include 'path/to/template' %}"
                     aria-describedby="messageBody-instructions"
-                ></textarea>
+                >{{ notificationStore.messageBody }}</textarea>
             </div>
         </div>
         <div

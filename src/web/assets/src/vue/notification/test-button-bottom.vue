@@ -1,7 +1,7 @@
 <template>
     <div
         class="flex-fields"
-        v-show="notificationStore.triggerType && notificationStore.eventSelected && notificationStore.messageType && notificationStore.recipientType"
+        v-show="notificationStore.eventType && notificationStore.eventSelected && notificationStore.messageType && notificationStore.recipientsType"
     >
         <hr>
         <p>Save the notification before submitting a test message!</p>

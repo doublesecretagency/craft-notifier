@@ -32,8 +32,13 @@ class m230525_192157_from_beta extends Migration
      */
     public function safeUp(): bool
     {
-        $this->_createTable();
+        // Install new table
+        (new Install())->safeUp();
+
+        // Port existing data
         $this->_portNotifications();
+
+        // Drop old tables
         $this->dropTableIfExists('{{%notifier_messages}}');
         $this->dropTableIfExists('{{%notifier_triggers}}');
 
@@ -50,35 +55,6 @@ class m230525_192157_from_beta extends Migration
     }
 
     // ========================================================================= //
-
-    /**
-     * Create table if it doesn't exist.
-     */
-    private function _createTable(): void
-    {
-        // If table already exists, bail
-        if ($this->db->tableExists('{{%notifier_notifications}}')) {
-            return;
-        }
-
-        // Create new table
-        $this->createTable('{{%notifier_notifications}}', [
-            'id'              => $this->integer()->notNull(),
-            'event'           => $this->string(),
-            'eventConfig'     => $this->text(),
-            'messageType'     => $this->string(),
-            'messageTemplate' => $this->string(),
-            'messageConfig'   => $this->text(),
-            'dateCreated'     => $this->dateTime()->notNull(),
-            'dateUpdated'     => $this->dateTime()->notNull(),
-            'dateDeleted'     => $this->dateTime()->null(),
-            'uid'             => $this->uid(),
-            'PRIMARY KEY([[id]])',
-        ]);
-
-        // Add foreign key
-        $this->addForeignKey(null, '{{%notifier_notifications}}', ['id'], '{{%elements}}', ['id'], 'CASCADE');
-    }
 
     /**
      * Port all existing notification data.
@@ -131,11 +107,16 @@ class m230525_192157_from_beta extends Migration
         // Create the notification
         $notification = new Notification([
             'title'           => "Notification #{$this->_currentNotification}",
-            'event'           => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE',
-            'eventConfig'     => $trigger['config'],
-            'messageType'     => $message['type'],
-            'messageTemplate' => $message['template'],
-            'messageConfig'   => $message['config'],
+            'description'      => '[IMPORTED] Please check details to ensure notification continues working as intended.',
+            'useQueue'         => true,
+            'eventType'        => 'entries',
+            'event'            => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE',
+            'eventConfig'      => $trigger['config'],
+            'messageType'      => $message['type'],
+            'messageConfig'    => $message['config'],
+            'messageBody'      => $message['template'],
+            'recipientsType'   => null,
+            'recipientsConfig' => null,
         ]);
 
         // Save the notification

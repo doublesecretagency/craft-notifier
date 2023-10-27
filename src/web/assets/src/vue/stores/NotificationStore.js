@@ -6,89 +6,41 @@ export const useNotificationStore = defineStore('notification', () => {
     // ========================================================================= //
     // State
 
-    // Current trigger type
-    const triggerType = ref('');
+    // Initialize options
+    const eventTypeOptions = ref({});
+    const messageTypeOptions = ref({});
+    const flashTypeOptions = ref({});
+    const recipientsTypeOptions = ref({});
 
-    // Available trigger types
-    const triggerTypeOptions = ref({
-        entries: 'Entries',
-        assets:  'Assets',
-        users:   'Users',
-    });
-
-    // Currently selected event
+    // Initialize data
+    const eventType = ref('');
     const eventSelected = ref('');
-
-    // Available events for all trigger types
-    const eventOptionsAll = ref({
-        entries: [
-            {
-                label: 'When an entry is fully saved and propagated',
-                value: 'craft\\elements\\Entry::EVENT_AFTER_PROPAGATE'
-            }
-        ],
-        assets: [
-            {
-                label: 'When a file is uploaded',
-                value: 'upload'
-            }
-        ],
-        users: [
-            {
-                label: 'When a new user is added',
-                value: 'new-user'
-            }
-        ]
-    });
-
-    // Current message type
+    const eventConfig = ref({});
     const messageType = ref('');
-
-    // Available message types
-    const messageTypeOptions = ref({
-        email:        'Email',
-        sms:          'SMS (Text Message)',
-        announcement: 'Announcement',
-        flash:        'Flash Message',
-    });
-
-    // Current flash message type
-    const flashType = ref('notice');
-
-    // Available flash message types
-    const flashTypeOptions = ref({
-        success: 'Success',
-        notice:  'Notice',
-        error:   'Error',
-    });
-
-    // Current recipient type
-    const recipientType = ref('');
-
-    // Available recipient types
-    const recipientTypeOptions = ref({
-        'current-user':        'Current User',
-        'all-admins':          'All Admins',
-        'all-users':           'All Users',
-        'all-users-in-groups': 'All Users in Group(s)',
-        'custom-recipients':   'Custom Recipients',
-    });
+    const messageConfig = ref({});
+    const messageBody = ref('');
+    const recipientsType = ref('');
+    const recipientsConfig = ref({});
 
     // ========================================================================= //
     // Getters
 
     /**
-     * Get label of the current trigger type.
+     * Get label of the current event type.
      */
-    const trigger = computed(() => {
-        return triggerTypeOptions.value[triggerType.value];
+    const event = computed(() => {
+        // Return label of the currently selected event type
+        return eventTypeOptions.value[eventType.value] ?? null;
     });
 
     /**
-     * Get list of events based on the current trigger type.
+     * Get list of events based on the current event type.
      */
     const eventOptions = computed(() => {
-        return eventOptionsAll.value[triggerType.value];
+        // Get all events
+        const allEvents = window.notificationOptions['allEvents'] ?? null;
+        // Return events of currently selected event type
+        return allEvents[eventType.value] ?? null;
     });
 
     // ========================================================================= //
@@ -104,21 +56,41 @@ export const useNotificationStore = defineStore('notification', () => {
 
     // ========================================================================= //
 
+    // Populate options based on PHP data
+    eventTypeOptions.value      = window.notificationOptions['eventType']      ?? null;
+    messageTypeOptions.value    = window.notificationOptions['messageType']    ?? null;
+    flashTypeOptions.value      = window.notificationOptions['flashType']      ?? null;
+    recipientsTypeOptions.value = window.notificationOptions['recipientsType'] ?? null;
+
+    // Populate values from existing element data
+    eventType.value        = window.notificationData['eventType']        ?? null;
+    eventSelected.value    = window.notificationData['eventSelected']    ?? null;
+    eventConfig.value      = window.notificationData['eventConfig']      ?? null;
+    messageType.value      = window.notificationData['messageType']      ?? null;
+    messageConfig.value    = window.notificationData['messageConfig']    ?? null;
+    messageBody.value      = window.notificationData['messageBody']      ?? null;
+    recipientsType.value   = window.notificationData['recipientsType']   ?? null;
+    recipientsConfig.value = window.notificationData['recipientsConfig'] ?? null;
+
     // Return reactive values
     return {
-        // State
-        triggerType,
-        triggerTypeOptions,
-        eventSelected,
-        messageType,
+        // State: Options
+        eventTypeOptions,
         messageTypeOptions,
-        flashType,
         flashTypeOptions,
-        recipientType,
-        recipientTypeOptions,
+        recipientsTypeOptions,
+        // State: Data
+        eventType,
+        eventSelected,
+        eventConfig,
+        messageType,
+        messageConfig,
+        messageBody,
+        recipientsType,
+        recipientsConfig,
 
         // Getters
-        trigger,
+        event,
         eventOptions,
 
         // Actions

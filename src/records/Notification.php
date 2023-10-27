@@ -19,11 +19,16 @@ use craft\db\SoftDeleteTrait;
  * @since 1.0.0
  *
  * @property int $id
+ * @property string $description
+ * @property bool $useQueue
+ * @property string $eventType
  * @property string $event
  * @property array $eventConfig
  * @property string $messageType
- * @property string $messageTemplate
  * @property array $messageConfig
+ * @property string $messageBody
+ * @property string $recipientsType
+ * @property array $recipientsConfig
  */
 class Notification extends ActiveRecord
 {

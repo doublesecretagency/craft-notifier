@@ -3,8 +3,31 @@
 {% set elementType = 'doublesecretagency\\notifier\\elements\\Notification' %}
 {% set canHaveDrafts = true %}
 
+{# Whether to display the page in "Welcome" mode #}
+{% set welcome = craft.app.request.getQueryParam('welcome') %}
+
+{# Path to documentation #}
+{% set docs = 'https://plugins.doublesecretagency.com/notifier' %}
+
 {% block actionButton %}
     <div class="btngroup">
         <a href="{{ cpUrl('notifications/new') }}" class="btn submit add icon">{{ 'New Notification'|t('notifier') }}</a>
     </div>
+{% endblock %}
+
+{% block content %}
+    {% if welcome %}
+        {% set iconUrl = view.getAssetManager().getPublishedUrl('@doublesecretagency/notifier/icon.svg', true) %}
+        <div class="pane" style="">
+            <img src="{{ iconUrl }}" alt="" width="120" style="float:left; margin:12px;">
+            <div style="padding-left:160px">
+                <h2>Welcome, and thanks for using Notifier! &nbsp;🎉</h2>
+                <p>To get started, click the "New Notification" button above.</p>
+                <p>If you haven't already, take a look at our <a href="{{ docs }}/" target="_blank">complete documentation...</a></p>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
 {% endblock %}
