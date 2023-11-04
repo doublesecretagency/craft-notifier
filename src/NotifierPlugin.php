@@ -25,8 +25,9 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Options;
-//use doublesecretagency\notifier\helpers\Events;
 //use doublesecretagency\notifier\utilities\LogUtility;
+use doublesecretagency\notifier\services\Events;
+use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\variables\Notifier as NotifierVariable;
 use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
@@ -34,6 +35,9 @@ use yii\base\Event;
 /**
  * Notifier plugin
  * @since 1.0.0
+ *
+ * @property Events $events
+ * @property Messages $messages
  */
 class NotifierPlugin extends Plugin
 {
@@ -66,6 +70,12 @@ class NotifierPlugin extends Plugin
         parent::init();
         self::$plugin = $this;
 
+        // Load plugin components
+        $this->setComponents([
+            'events' => Events::class,
+            'messages' => Messages::class,
+        ]);
+
         // Redirect after plugin is installed
         $this->_postInstallRedirect();
 
@@ -89,7 +99,7 @@ class NotifierPlugin extends Plugin
         Craft::$app->getView()->registerTwigExtension(new Extension());
 
         // Register all notification events
-//        Events::registerAll();
+        $this->events->registerNotificationEvents();
     }
 
     /**

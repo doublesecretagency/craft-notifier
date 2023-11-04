@@ -19,7 +19,9 @@ use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use doublesecretagency\notifier\elements\conditions\NotificationCondition;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
+use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\records\Notification as NotificationRecord;
+use yii\base\Event;
 use yii\base\Exception as BaseException;
 use yii\web\Response;
 
@@ -311,4 +313,18 @@ class Notification extends Element
 
         parent::afterSave($isNew);
     }
+
+    // ========================================================================= //
+
+    /**
+     * Send this Notification based on the activated Event.
+     *
+     * @param Event $event
+     * @return bool
+     */
+    public function send(Event $event): bool
+    {
+        return NotifierPlugin::getInstance()->messages->send($this, $event);
+    }
+
 }
