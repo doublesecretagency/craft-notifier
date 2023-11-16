@@ -11,6 +11,7 @@
 
 namespace doublesecretagency\notifier\models;
 
+use Craft;
 use craft\base\Model;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 
@@ -27,37 +28,30 @@ class OutboundAnnouncement extends Model implements EnvelopeInterface
 //    public ?string $to = null;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $subject = null;
+    public string $title = '';
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $message = null;
+    public string $message = '';
 
     /**
      * Send the announcement.
+     *
+     * @return bool
      */
     public function send(): bool
     {
+        // Send the announcement
+        Craft::$app->getAnnouncements()->push($this->title, $this->message, 'notifier');
 
-        // SEND ANNOUNCEMENT
-
-
-//        // If unsuccessful, log error and bail
-//        if (!$success) {
-//            Log::warning("Unable to send the announcement.");
-//            return false;
-//        }
-//
 //        // Log success message
-//        Log::success("The announcement to {$this->to} was sent successfully!");
+//        Log::success("The announcement to {$this->to} was sent successfully! ({$this->title})");
 
-        // Return whether message was sent successfully
-//        return $success;
+        // Return successfully
         return true;
-
     }
 
 }

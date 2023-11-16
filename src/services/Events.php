@@ -17,6 +17,7 @@ use craft\events\LocateUploadedFilesEvent;
 use craft\events\ModelEvent;
 use craft\events\UserEvent;
 use craft\fields\Assets;
+use craft\helpers\ElementHelper;
 use craft\services\Users;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\NotifierPlugin;
@@ -41,6 +42,12 @@ class Events extends Component
             Entry::class,
             Entry::EVENT_AFTER_PROPAGATE,
             static function (ModelEvent $event) {
+                /** @var Entry $entry */
+                $entry = $event->sender;
+                // If draft or revision, skip it
+                if (ElementHelper::isDraftOrRevision($entry)) {
+                    return;
+                }
                 // Get all notifications for this event
                 $notifications = Notification::find()
                     ->where([

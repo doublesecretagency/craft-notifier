@@ -11,7 +11,9 @@
 
 namespace doublesecretagency\notifier\models;
 
+use Craft;
 use craft\base\Model;
+use craft\errors\MissingComponentException;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 
 /**
@@ -27,38 +29,47 @@ class OutboundFlash extends Model implements EnvelopeInterface
 //    public ?string $to = null;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $type = null;
+    public string $type = 'notice';
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $message = null;
+    public string $message = '';
 
     /**
      * Send the flash message.
+     *
+     * @return bool
+     * @throws MissingComponentException
      */
     public function send(): bool
     {
+        // Get session services
+        $session = Craft::$app->getSession();
 
-        // SEND FLASH MESSAGE
+        // Set flash message according to type
+        switch ($this->type) {
+            case 'success':
+                $session->setSuccess($this->message);
+                break;
+            case 'notice':
+                $session->setNotice($this->message);
+                break;
+            case 'error':
+                $session->setError($this->message);
+                break;
+            default:
+//                Log::warning("Unable to send the flash message, invalid flash type.");
+                return false;
+        }
 
-
-//        // If unsuccessful, log error and bail
-//        if (!$success) {
-//            Log::warning("Unable to send the SMS message using the Twilio API.");
-//            Log::error("Check the plugin's configuration settings.");
-//            return false;
-//        }
-//
 //        // Log success message
-//        Log::success("The text to {$this->to} was sent successfully!");
+//        Log::success("The flash message was sent successfully!");
 
-        // Return whether message was sent successfully
-//        return $success;
+        // Return successfully
         return true;
-
     }
 
 }

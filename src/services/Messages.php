@@ -17,8 +17,13 @@ use craft\helpers\Queue;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\jobs\SendMessage;
+use doublesecretagency\notifier\models\OutboundAnnouncement;
 use doublesecretagency\notifier\models\OutboundEmail;
+use doublesecretagency\notifier\models\OutboundFlash;
+use doublesecretagency\notifier\models\OutboundSms;
+use Throwable;
 use yii\base\Event;
+use yii\base\Exception;
 
 /**
  * Class Messages
@@ -55,15 +60,23 @@ class Messages extends Component
         // Send message based on type
         switch ($notification->messageType) {
             case 'email':
+                // Compile an email
                 $envelope = $this->_compileEmail($notification, $event);
                 break;
             case 'sms':
+                // Compile an SMS (text) message
                 $envelope = $this->_compileSms($notification, $event);
                 break;
             case 'announcement':
+                // Always use the queue
+                $notification->useQueue = true;
+                // Compile an announcement
                 $envelope = $this->_compileAnnouncement($notification, $event);
                 break;
             case 'flash':
+                // Never use the queue
+                $notification->useQueue = false;
+                // Compile a flash message
                 $envelope = $this->_compileFlash($notification, $event);
                 break;
             default:
@@ -89,39 +102,6 @@ class Messages extends Component
     // ========================================================================= //
 
     /**
-     * Parse all Twig tags embedded within text.
-     *
-     * @param string $text
-     * @param Notification $notification
-     * @param Event $event
-     * @return string
-     */
-    public function parseTwig(string $text, Notification $notification, Event $event): string
-    {
-        // Set all data to be parsed
-        $data = [
-            // Config Variables
-            'recipient' => null,
-            'activeUser' => null,
-            'event' => $event,
-            // Content Variables
-            'original' => null,
-            'entry' => $event->sender,
-        ];
-
-        // Get view services
-        $view = Craft::$app->getView();
-
-        // Parse short tags
-        $text = $view->renderObjectTemplate($text, $event->sender, $data);
-
-        // Return fully compiled message
-        return $text;
-    }
-
-    // ========================================================================= //
-
-    /**
      * Compile the message as an email.
      *
      * @param Notification $notification
@@ -137,9 +117,11 @@ class Messages extends Component
         $to = getenv('TEST_EMAIL');
         // ENDTEMP
 
+
+
         // Parse message body and subject
-        $body = $this->parseTwig($notification->messageBody, $notification, $event);
-        $subject = $this->parseTwig($notification->messageConfig['emailSubject'] ?? null, $notification, $event);
+        $body    = $this->parseTwig($notification, $event, $notification->messageBody);
+        $subject = $this->parseTwig($notification, $event, $notification->messageConfig['emailSubject'] ?? null);
 
         // Put outbound email into envelope
         return new OutboundEmail([
@@ -154,17 +136,18 @@ class Messages extends Component
      *
      * @param Notification $notification
      * @param Event $event
-     * @return bool
+     * @return EnvelopeInterface
      */
-    private function _compileSms(Notification $notification, Event $event): bool
+    private function _compileSms(Notification $notification, Event $event): EnvelopeInterface
     {
-        Craft::dd([
-            'Method' => '_compileSms',
-            'Notification' => $notification,
-        ]);
+        // Parse message body
+        $message = $this->parseTwig($notification, $event, $notification->messageBody);
 
-        // Return whether the notification was sent successfully
-        return true;
+        // Put outbound SMS (text) message into envelope
+        return new OutboundSms([
+//            'to' => $to,
+            'message' => $message,
+        ]);
     }
 
     /**
@@ -172,17 +155,20 @@ class Messages extends Component
      *
      * @param Notification $notification
      * @param Event $event
-     * @return bool
+     * @return EnvelopeInterface
      */
-    private function _compileAnnouncement(Notification $notification, Event $event): bool
+    private function _compileAnnouncement(Notification $notification, Event $event): EnvelopeInterface
     {
-        Craft::dd([
-            'Method' => '_compileAnnouncement',
-            'Notification' => $notification,
-        ]);
+        // Parse message body and title
+        $message = $this->parseTwig($notification, $event, $notification->messageBody);
+        $title   = $this->parseTwig($notification, $event, $notification->messageConfig['announcementTitle'] ?? null);
 
-        // Return whether the notification was sent successfully
-        return true;
+        // Put outbound announcement into envelope
+        return new OutboundAnnouncement([
+//            'to' => $to,
+            'title' => $title,
+            'message' => $message,
+        ]);
     }
 
     /**
@@ -190,17 +176,61 @@ class Messages extends Component
      *
      * @param Notification $notification
      * @param Event $event
-     * @return bool
+     * @return EnvelopeInterface
      */
-    private function _compileFlash(Notification $notification, Event $event): bool
+    private function _compileFlash(Notification $notification, Event $event): EnvelopeInterface
     {
-        Craft::dd([
-            'Method' => '_compileFlash',
-            'Notification' => $notification,
-        ]);
+        // Parse message body
+        $message = $this->parseTwig($notification, $event, $notification->messageBody);
 
-        // Return whether the notification was sent successfully
-        return true;
+        // Get flash type
+        $type = ($notification->messageConfig['flashType'] ?? 'notice');
+
+        // Put outbound flash message into envelope
+        return new OutboundFlash([
+//            'to' => $to,
+            'type' => $type,
+            'message' => $message,
+        ]);
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Parse all Twig tags embedded within text.
+     *
+     * @param Notification $notification
+     * @param Event $event
+     * @param string $text
+     * @return string
+     */
+    public function parseTwig(Notification $notification, Event $event, string $text): string
+    {
+        // Set all data to be parsed
+        $data = [
+            // Config Variables
+            'recipient' => null,
+            'activeUser' => null,
+            'event' => $event,
+            // Content Variables
+            'original' => null,
+            'entry' => $event->sender,
+        ];
+
+        // Get view services
+        $view = Craft::$app->getView();
+
+        // Attempt to parse short tags
+        try {
+            // Get parsed string
+            $text = $view->renderObjectTemplate($text, $event->sender, $data);
+        } catch (Exception|Throwable $e) {
+            // Get unparsed string
+            $text = "PARSE ERROR: {$text}";
+        }
+
+        // Return parsed text
+        return $text;
     }
 
 }

@@ -69,7 +69,7 @@ abstract class Options
      * Available flash message types.
      */
     public const FLASH_TYPE = [
-        'success' => 'Success',
+//        'success' => 'Success', // Disabled to mask bug (conflict with default "on save" flash message)
         'notice'  => 'Notice',
         'error'   => 'Error',
     ];

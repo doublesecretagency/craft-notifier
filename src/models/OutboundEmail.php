@@ -15,6 +15,7 @@ use Craft;
 use craft\base\Model;
 use craft\mail\Message as Email;
 use doublesecretagency\notifier\base\EnvelopeInterface;
+use yii\base\InvalidConfigException;
 
 /**
  * Class OutboundEmail
@@ -29,30 +30,28 @@ class OutboundEmail extends Model implements EnvelopeInterface
     public ?string $to = null;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $subject = null;
+    public string $subject = '';
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $body = null;
+    public string $body = '';
 
     /**
      * Send the email message.
+     *
+     * @return bool
+     * @throws InvalidConfigException
      */
     public function send(): bool
     {
-
-        // HOORAY, IT WORKS!!
-//        Craft::dd([
-//            'to' => $this->to,
-//            'subject' => $this->subject,
-//            'body' => $this->body,
-////            'success' => $success,
-////            'error' => $email,
-//        ]);
-
+        // If no recipient specified, log warning and bail
+        if (!$this->to) {
+//            Log::warning("Unable to send email, no recipient specified.");
+            return false;
+        }
 
         // Compile email
         $email = new Email();
@@ -76,7 +75,6 @@ class OutboundEmail extends Model implements EnvelopeInterface
 
         // Return whether message was sent successfully
         return $success;
-
     }
 
 }

@@ -27,12 +27,14 @@ class OutboundSms extends Model implements EnvelopeInterface
     public ?string $phoneNumber = null;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $message = null;
+    public string $message = '';
 
     /**
      * Send the SMS (text) message.
+     *
+     * @return bool
      */
     public function send(): bool
     {
