@@ -42,11 +42,16 @@ abstract class Options
         'assets' => [
             [
                 'label' => 'When a new file is uploaded and saved',
-                'value' => 'locate-uploaded-files',
-                'class' => 'craft\fields\Assets::EVENT_LOCATE_UPLOADED_FILES'
+                'value' => 'after-propagate',
+                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
             ]
         ],
         'users' => [
+            [
+                'label' => 'When a new user is created',
+                'value' => 'after-propagate',
+                'class' => 'craft\elements\User::EVENT_AFTER_PROPAGATE'
+            ],
             [
                 'label' => 'When a user is activated',
                 'value' => 'after-activate-user',

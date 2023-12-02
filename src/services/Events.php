@@ -12,11 +12,11 @@
 namespace doublesecretagency\notifier\services;
 
 use craft\base\Component;
+use craft\elements\Asset;
 use craft\elements\Entry;
-use craft\events\LocateUploadedFilesEvent;
+use craft\elements\User;
 use craft\events\ModelEvent;
 use craft\events\UserEvent;
-use craft\fields\Assets;
 use craft\helpers\ElementHelper;
 use craft\services\Users;
 use doublesecretagency\notifier\elements\Notification;
@@ -36,6 +36,20 @@ class Events extends Component
      * @return void
      */
     public function registerNotificationEvents(): void
+    {
+        $this->_registerEntriesEvents();
+        $this->_registerAssetsEvents();
+        $this->_registerUsersEvents();
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Register all events for Entries.
+     *
+     * @return void
+     */
+    private function _registerEntriesEvents(): void
     {
         // When an entry is fully saved and propagated
         Event::on(
@@ -59,24 +73,68 @@ class Events extends Component
                 NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
             }
         );
+    }
 
+    /**
+     * Register all events for Assets.
+     *
+     * @return void
+     */
+    private function _registerAssetsEvents(): void
+    {
         // When a new file is uploaded and saved
         Event::on(
-            Assets::class,
-            Assets::EVENT_LOCATE_UPLOADED_FILES,
-            static function (LocateUploadedFilesEvent $event) {
+            Asset::class,
+            Asset::EVENT_AFTER_PROPAGATE,
+            static function (ModelEvent $event) {
+                /** @var Asset $entry */
+                $asset = $event->sender;
+                // If not first time being saved, skip it
+                if (!$asset->firstSave) {
+                    return;
+                }
                 // Get all notifications for this event
                 $notifications = Notification::find()
                     ->where([
                         'eventType' => 'assets',
-                        'event' => 'locate-uploaded-files',
+                        'event' => 'after-propagate',
                     ])
                     ->all();
                 // Send all matching notifications
                 NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
             }
         );
+    }
 
+    /**
+     * Register all events for Users.
+     *
+     * @return void
+     */
+    private function _registerUsersEvents(): void
+    {
+        // When a new user is created
+        Event::on(
+            User::class,
+            User::EVENT_AFTER_PROPAGATE,
+            static function (ModelEvent $event) {
+                /** @var User $entry */
+                $user = $event->sender;
+                // If not first time being saved, skip it
+                if (!$user->firstSave) {
+                    return;
+                }
+                // Get all notifications for this event
+                $notifications = Notification::find()
+                    ->where([
+                        'eventType' => 'users',
+                        'event' => 'after-propagate',
+                    ])
+                    ->all();
+                // Send all matching notifications
+                NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
+            }
+        );
         // When a user is activated
         Event::on(
             Users::class,
@@ -90,16 +148,11 @@ class Events extends Component
                     ])
                     ->all();
                 // Send all matching notifications
-                NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
+                NotifierPlugin::getInstance()->messages->sendAll($notifications, $event, [
+                    'object' => $event->user,
+                ]);
             }
         );
-
-        /**
-         *
-         *  <---  More activation Events will be registered here
-         *
-         */
-
     }
 
 }
