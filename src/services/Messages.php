@@ -188,8 +188,9 @@ class Messages extends Component
      */
     private function _compileFlash(Notification $notification, Event $event, array $data): EnvelopeInterface
     {
-        // Parse message body
+        // Parse message body and title
         $message = $this->parseTwig($notification, $event, $data, $notification->messageBody);
+        $title   = $this->parseTwig($notification, $event, $data, $notification->messageConfig['flashTitle'] ?? null);
 
         // Get flash type
         $type = ($notification->messageConfig['flashType'] ?? 'notice');
@@ -198,6 +199,7 @@ class Messages extends Component
         return new OutboundFlash([
 //            'to' => $to,
             'type' => $type,
+            'title' => $title,
             'message' => $message,
         ]);
     }

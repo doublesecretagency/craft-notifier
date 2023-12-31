@@ -13,7 +13,7 @@
                 <label id="messageType-label" for="messageType">Message Type<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
             </div>
             <div id="messageType-instructions" class="instructions">
-                <p>Select what type of message will be sent.</p>
+                <p>What type of message will be sent?</p>
             </div>
             <div class="input ltr">
                 <div class="select">
@@ -95,16 +95,39 @@
         </div>
 
         <div
+            id="messageConfig-flashTitle-field"
+            class="field width-100"
+            data-attribute="messageConfig-flashTitle"
+            v-show="'flash' === notificationStore.messageType"
+        >
+            <div class="heading">
+                <label id="messageConfig-flashTitle-label" for="messageConfig-flashTitle">Flash Message Title<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
+                <div class="flex-grow"></div>
+            </div>
+            <div class="input ltr">
+                <input
+                    type="text"
+                    v-model="notificationStore.messageConfig.flashTitle"
+                    id="messageConfig-flashTitle"
+                    class="nicetext text fullwidth"
+                    name="messageConfig[flashTitle]"
+                    autocomplete="off"
+                    dir="ltr"
+                />
+            </div>
+        </div>
+
+        <div
             id="messageBody-field"
             class="field"
             data-attribute="messageBody"
             v-show="notificationStore.messageType"
         >
             <div class="heading">
-                <label id="messageBody-label" for="messageBody">Message Body<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
+                <label id="messageBody-label" for="messageBody">{{ 'flash' === notificationStore.messageType ? 'Flash Message Details' : 'Message Body' }}<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
             </div>
             <div id="messageBody-instructions" class="instructions">
-                <p>Learn more about <a href="https://plugins.doublesecretagency.com/notifier/messages/variables/" rel="noopener" target="_blank">automatic variables</a>.</p>
+                <p>Learn more about <a href="https://plugins.doublesecretagency.com/notifier/messages/templating" rel="noopener" target="_blank">templating</a> and <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" rel="noopener" target="_blank">special variables</a>.</p>
             </div>
             <div class="input ltr">
                 <textarea
@@ -118,15 +141,15 @@
                 >{{ notificationStore.messageBody }}</textarea>
             </div>
         </div>
-        <div
-            class="readable"
-            style="margin-top:-18px !important"
-            v-show="'email' === notificationStore.messageType"
-        >
-            <blockquote class="note tip">
-                <p><strong>Need to write a longer message?</strong> You can <code>{% include %}</code> a separate Twig template to make the message as long as desired.</p>
-            </blockquote>
-        </div>
+<!--        <div-->
+<!--            class="readable"-->
+<!--            style="margin-top:-18px !important"-->
+<!--            v-show="'email' === notificationStore.messageType"-->
+<!--        >-->
+<!--            <blockquote class="note tip">-->
+<!--                <p><strong>Need to write a longer message?</strong> You can <code>{% include %}</code> a separate Twig template to make the message as long as desired.</p>-->
+<!--            </blockquote>-->
+<!--        </div>-->
     </div>
 </template>
 

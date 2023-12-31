@@ -22,9 +22,9 @@ abstract class Options
      * Available event types.
      */
     public const EVENT_TYPE = [
+        'users'   => 'Users',
         'entries' => 'Entries',
         'assets'  => 'Assets',
-        'users'   => 'Users',
     ];
 
     /**
@@ -32,6 +32,18 @@ abstract class Options
      * https://craftcms.com/docs/4.x/extend/events.html#event-code-generator
      */
     public const ALL_EVENTS = [
+        'users' => [
+            [
+                'label' => 'When a new user is created',
+                'value' => 'after-propagate',
+                'class' => 'craft\elements\User::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When a user is activated',
+                'value' => 'after-activate-user',
+                'class' => 'craft\services\Users::EVENT_AFTER_ACTIVATE_USER'
+            ]
+        ],
         'entries' => [
             [
                 'label' => 'When an entry is fully saved and propagated',
@@ -44,18 +56,6 @@ abstract class Options
                 'label' => 'When a new file is uploaded and saved',
                 'value' => 'after-propagate',
                 'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
-            ]
-        ],
-        'users' => [
-            [
-                'label' => 'When a new user is created',
-                'value' => 'after-propagate',
-                'class' => 'craft\elements\User::EVENT_AFTER_PROPAGATE'
-            ],
-            [
-                'label' => 'When a user is activated',
-                'value' => 'after-activate-user',
-                'class' => 'craft\services\Users::EVENT_AFTER_ACTIVATE_USER'
             ]
         ]
     ];
@@ -83,7 +83,7 @@ abstract class Options
      * Available recipient types.
      */
     public const RECIPIENTS_TYPE = [
-        'current-user'      => 'User who activated the Event',
+        'current-user'      => 'User who triggered the Event',
         'selected-users'    => 'Only selected User(s)',
         'selected-groups'   => 'All Users in selected User Group(s)',
         'all-admins'        => 'All Admins',

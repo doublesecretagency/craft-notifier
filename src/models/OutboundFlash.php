@@ -14,7 +14,9 @@ namespace doublesecretagency\notifier\models;
 use Craft;
 use craft\base\Model;
 use craft\errors\MissingComponentException;
+use craft\helpers\Html;
 use doublesecretagency\notifier\base\EnvelopeInterface;
+use yii\helpers\Markdown;
 
 /**
  * Class OutboundFlash
@@ -36,6 +38,11 @@ class OutboundFlash extends Model implements EnvelopeInterface
     /**
      * @var string
      */
+    public string $title = '';
+
+    /**
+     * @var string
+     */
     public string $message = '';
 
     /**
@@ -49,16 +56,19 @@ class OutboundFlash extends Model implements EnvelopeInterface
         // Get session services
         $session = Craft::$app->getSession();
 
+        // Set message details
+        $details = ['details' => Markdown::process($this->message)];
+
         // Set flash message according to type
         switch ($this->type) {
             case 'success':
-                $session->setSuccess($this->message);
+                $session->setSuccess($this->title, $details);
                 break;
             case 'notice':
-                $session->setNotice($this->message);
+                $session->setNotice($this->title, $details);
                 break;
             case 'error':
-                $session->setError($this->message);
+                $session->setError($this->title, $details);
                 break;
             default:
 //                Log::warning("Unable to send the flash message, invalid flash type.");
