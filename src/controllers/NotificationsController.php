@@ -20,6 +20,7 @@ use doublesecretagency\notifier\elements\Notification;
 use Throwable;
 use yii\base\Exception;
 use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -31,7 +32,77 @@ class NotificationsController extends Controller
 {
 
     /**
-     * Save a notification.
+     * Edit a Notification.
+     *
+     * @param int|null $notificationId
+     * @param Notification|null $notification
+     * @return Response
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionEdit(?int $notificationId = null, ?Notification $notification = null): Response
+    {
+        $this->requireAdmin();
+
+        // If notification isn't already present
+        if (!$notification) {
+            // Create the notification model
+            $notification = $this->_getNotificationModel($notificationId);
+        }
+
+        // Whether the notification is new
+        $isNewNotification = !$notification->id;
+
+        // Set page title
+        $title = ($notification->title ?? Craft::t('notifier', 'Add a New Notification'));
+
+        // Set breadcrumbs
+        $crumbs = [
+            [
+                'label' => Craft::t('notifier', 'Notifications'),
+                'url'   => 'notifications',
+            ],
+        ];
+
+        // Set tabs
+        $tabs = [
+            'meta' => [
+                'label' => Craft::t('notifier', 'Meta'),
+                'url'   => '#meta',
+            ],
+            'event' => [
+                'label' => Craft::t('notifier', 'Event'),
+                'url'   => '#event',
+            ],
+            'message' => [
+                'label' => Craft::t('notifier', 'Message'),
+                'url'   => '#message',
+            ],
+            'recipients' => [
+                'label' => Craft::t('notifier', 'Recipients'),
+                'url'   => '#recipients',
+            ],
+        ];
+
+        // Returns a CP screen response
+        return $this->asCpScreen()
+            ->title($title)
+            ->crumbs($crumbs)
+            ->tabs($tabs)
+            ->action('notifier/notifications/save')
+            ->redirectUrl('notifier/notifications')
+            ->saveShortcutRedirectUrl('notifier/notifications/{id}')
+//            ->editUrl($notification->id ? "notifier/notifications/{$notification->id}" : null)
+            ->editUrl($notification->getCpEditUrl())
+            ->contentTemplate('notifier/notifications/_edit', [
+                'notificationId' => $notificationId,
+                'notification' => $notification,
+                'isNewNotification' => $isNewNotification,
+            ]);
+    }
+
+    /**
+     * Save a Notification.
      *
      * @return Response|null
      * @throws BadRequestHttpException
@@ -52,7 +123,7 @@ class NotificationsController extends Controller
         $session = Craft::$app->getSession();
 
         // Get POST values
-        $id               = $request->getBodyParam('id') ?: null;
+        $notificationId   = $request->getBodyParam('notificationId') ?: null;
         $enabled          = $request->getBodyParam('enabled');
         $title            = $request->getBodyParam('title');
         $description      = $request->getBodyParam('description');
@@ -62,15 +133,17 @@ class NotificationsController extends Controller
         $eventConfig      = $request->getBodyParam('eventConfig');
         $messageType      = $request->getBodyParam('messageType');
         $messageConfig    = $request->getBodyParam('messageConfig');
-        $messageBody      = $request->getBodyParam('messageBody');
         $recipientsType   = $request->getBodyParam('recipientsType');
         $recipientsConfig = $request->getBodyParam('recipientsConfig');
 
+        // Extract specific event
+        $event = ($event[$eventType] ?? null);
+
         // Create the notification model
-        $notification = $this->_getNotificationModel($id);
+        $notification = $this->_getNotificationModel($notificationId);
 
         // Set model values
-        $notification->id               = $id               ?? $notification->id;
+        $notification->id               = $notificationId   ?? $notification->id;
         $notification->enabled          = $enabled          ?? $notification->enabled;
         $notification->title            = $title            ?? $notification->title;
         $notification->description      = $description      ?? $notification->description;
@@ -80,7 +153,6 @@ class NotificationsController extends Controller
         $notification->eventConfig      = $eventConfig      ?? $notification->eventConfig;
         $notification->messageType      = $messageType      ?? $notification->messageType;
         $notification->messageConfig    = $messageConfig    ?? $notification->messageConfig;
-        $notification->messageBody      = $messageBody      ?? $notification->messageBody;
         $notification->recipientsType   = $recipientsType   ?? $notification->recipientsType;
         $notification->recipientsConfig = $recipientsConfig ?? $notification->recipientsConfig;
 
@@ -110,10 +182,10 @@ class NotificationsController extends Controller
         $this->requirePostRequest();
 
         // Get specified ID
-        $id = $this->request->getRequiredBodyParam('id');
+        $notificationId = $this->request->getRequiredBodyParam('id');
 
         // Get Notification by ID
-        $notification = Craft::$app->getElements()->getElementById($id, Notification::class);
+        $notification = Craft::$app->getElements()->getElementById($notificationId, Notification::class);
 
         // If no matching Notification
         if (!$notification) {
@@ -148,19 +220,19 @@ class NotificationsController extends Controller
     /**
      * Fetches or creates a Notification.
      *
-     * @param int|null $id
+     * @param int|null $notificationId
      * @return Notification
      * @throws NotFoundHttpException if the requested entry cannot be found
      */
-    private function _getNotificationModel(?int $id): Notification
+    private function _getNotificationModel(?int $notificationId): Notification
     {
         // If an ID was specified
-        if ($id) {
+        if ($notificationId) {
 
             // Get the existing notification
             /** @var Notification|null $notification */
             $notification = Notification::find()
-                ->id($id)
+                ->id($notificationId)
                 ->status(null)
                 ->one();
 

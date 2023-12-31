@@ -1,0 +1,23 @@
+{% import '_includes/forms' as forms %}
+
+{# Common instructions for multiple fields #}
+{% set commonInstructions = 'Which specific event will activate the notification?'|t('notifier') %}
+
+<div id="event" class="flex-fields hidden">
+
+    {{ forms.selectField({
+        label: 'Event Type'|t('notifier'),
+        instructions: 'What type of event will activate the notification?'|t('notifier'),
+        id: 'eventType',
+        name: 'eventType',
+        value: notification.eventType,
+        options: {'':''}|merge(notificationOptions.eventType),
+        toggle: true,
+        targetPrefix: '.event-type-',
+    }) }}
+
+    {% include 'notifier/notifications/_edit/event/users' %}
+    {% include 'notifier/notifications/_edit/event/entries' %}
+    {% include 'notifier/notifications/_edit/event/assets' %}
+
+</div>

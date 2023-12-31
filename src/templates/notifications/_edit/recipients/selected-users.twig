@@ -1,0 +1,26 @@
+{% import '_includes/forms' as forms %}
+
+<div class="recipients-type-selected-users hidden">
+    <div class="readable">
+        <blockquote class="note tip">
+            {% include 'notifier/notifications/_edit/recipients/message-types/note/active-users-only' %}
+        </blockquote>
+    </div>
+
+    <p>Please specify which User(s) should receive the message:</p>
+
+    {# status: entry.getAttributeStatus('authorId'), #}
+
+    {#{{ forms.elementSelectField({#}
+    {#    label: "Specify Message Recipients"|t('notifier'),#}
+    {#    instructions: "Select all users who will receive this message."|t('notifier'),#}
+    {#    id: 'config-recipients-specific-users',#}
+    {#    name: 'config[recipients][specific][users]',#}
+    {#    elementType: notifierUserElementType,#}
+    {#    selectionLabel: "Select a recipient"|t('notifier'),#}
+    {#}) }}#}
+
+    {# criteria: authorOptionCriteria, #}
+    {# elements: (author is defined and author ? [author]) #}
+
+</div>

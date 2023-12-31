@@ -26,7 +26,6 @@ use craft\db\SoftDeleteTrait;
  * @property array $eventConfig
  * @property string $messageType
  * @property array $messageConfig
- * @property string $messageBody
  * @property string $recipientsType
  * @property array $recipientsConfig
  */

@@ -1,0 +1,22 @@
+{% import '_includes/forms' as forms %}
+
+<div class="message-type-email hidden">
+    {{ forms.textField({
+        label: "Email Subject"|t('notifier'),
+        id: 'messageConfig-emailSubject',
+        name: 'messageConfig[emailSubject]',
+        value: (notification.messageConfig.emailSubject ?? null),
+        errors: notification.getErrors('messageConfig[emailSubject]'),
+    }) }}
+
+    {{ forms.textareaField({
+        label: "Email Message"|t('notifier'),
+        instructions: commonInstructions,
+        placeholder: commonPlaceholder,
+        rows: 6,
+        id: 'messageConfig-emailMessage',
+        name: 'messageConfig[emailMessage]',
+        value: (notification.messageConfig.emailMessage ?? null),
+        errors: notification.getErrors('messageConfig[emailMessage]'),
+    }) }}
+</div>

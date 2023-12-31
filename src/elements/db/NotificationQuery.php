@@ -33,7 +33,6 @@ class NotificationQuery extends ElementQuery
             'notifier_notifications.eventConfig',
             'notifier_notifications.messageType',
             'notifier_notifications.messageConfig',
-            'notifier_notifications.messageBody',
             'notifier_notifications.recipientsType',
             'notifier_notifications.recipientsConfig',
 

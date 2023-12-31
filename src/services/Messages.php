@@ -125,8 +125,8 @@ class Messages extends Component
 
 
         // Parse message body and subject
-        $body    = $this->parseTwig($notification, $event, $data, $notification->messageBody);
         $subject = $this->parseTwig($notification, $event, $data, $notification->messageConfig['emailSubject'] ?? null);
+        $body    = $this->parseTwig($notification, $event, $data, $notification->messageConfig['emailMessage'] ?? null);
 
         // Put outbound email into envelope
         return new OutboundEmail([
@@ -147,7 +147,7 @@ class Messages extends Component
     private function _compileSms(Notification $notification, Event $event, array $data): EnvelopeInterface
     {
         // Parse message body
-        $message = $this->parseTwig($notification, $event, $data, $notification->messageBody);
+        $message = $this->parseTwig($notification, $event, $data, $notification->messageConfig['smsMessage'] ?? null);
 
         // Put outbound SMS (text) message into envelope
         return new OutboundSms([
@@ -167,8 +167,8 @@ class Messages extends Component
     private function _compileAnnouncement(Notification $notification, Event $event, array $data): EnvelopeInterface
     {
         // Parse message body and title
-        $message = $this->parseTwig($notification, $event, $data, $notification->messageBody);
         $title   = $this->parseTwig($notification, $event, $data, $notification->messageConfig['announcementTitle'] ?? null);
+        $message = $this->parseTwig($notification, $event, $data, $notification->messageConfig['announcementMessage'] ?? null);
 
         // Put outbound announcement into envelope
         return new OutboundAnnouncement([
@@ -189,8 +189,8 @@ class Messages extends Component
     private function _compileFlash(Notification $notification, Event $event, array $data): EnvelopeInterface
     {
         // Parse message body and title
-        $message = $this->parseTwig($notification, $event, $data, $notification->messageBody);
         $title   = $this->parseTwig($notification, $event, $data, $notification->messageConfig['flashTitle'] ?? null);
+        $message = $this->parseTwig($notification, $event, $data, $notification->messageConfig['flashDetails'] ?? null);
 
         // Get flash type
         $type = ($notification->messageConfig['flashType'] ?? 'notice');

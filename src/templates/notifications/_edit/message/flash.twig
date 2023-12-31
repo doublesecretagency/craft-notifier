@@ -1,0 +1,30 @@
+{% import '_includes/forms' as forms %}
+
+<div class="message-type-flash hidden">
+    {{ forms.selectField({
+        label: 'Flash Message Type'|t('notifier'),
+        id: 'messageConfig-flashType',
+        name: 'messageConfig[flashType]',
+        value: (notification.messageConfig.flashType ?? null),
+        options: notificationOptions.flashType,
+    }) }}
+
+    {{ forms.textField({
+        label: "Flash Message Title"|t('notifier'),
+        id: 'messageConfig-flashTitle',
+        name: 'messageConfig[flashTitle]',
+        value: (notification.messageConfig.flashTitle ?? null),
+        errors: notification.getErrors('messageConfig[flashTitle]'),
+    }) }}
+
+    {{ forms.textareaField({
+        label: "Flash Message Details"|t('notifier'),
+        instructions: commonInstructions,
+        placeholder: commonPlaceholder,
+        rows: 2,
+        id: 'messageConfig-flashDetails',
+        name: 'messageConfig[flashDetails]',
+        value: (notification.messageConfig.flashDetails ?? null),
+        errors: notification.getErrors('messageConfig[flashDetails]'),
+    }) }}
+</div>

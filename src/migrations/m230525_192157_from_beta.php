@@ -104,6 +104,9 @@ class m230525_192157_from_beta extends Migration
         // Increment the current notification
         $this->_currentNotification++;
 
+        // Add message body to config
+        $message['config']['emailMessage'] = "{% include '{$message['template']}' %}";
+
         // Create the notification
         $notification = new Notification([
             'title'           => "Notification #{$this->_currentNotification}",
@@ -114,7 +117,6 @@ class m230525_192157_from_beta extends Migration
             'eventConfig'      => $trigger['config'],
             'messageType'      => $message['type'],
             'messageConfig'    => $message['config'],
-            'messageBody'      => $message['template'],
             'recipientsType'   => null,
             'recipientsConfig' => null,
         ]);

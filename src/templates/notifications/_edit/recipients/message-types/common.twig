@@ -1,0 +1,20 @@
+{% import '_includes/forms' as forms %}
+
+<div class="message-type-email message-type-sms message-type-announcement hidden">
+    {{ forms.selectField({
+        label: 'Recipients Type'|t('notifier'),
+        instructions: 'Who will receive this message?'|t('notifier'),
+        id: 'recipientsType',
+        name: 'recipientsType',
+        value: notification.recipientsType,
+        options: {'':''}|merge(notificationOptions.recipientsType),
+        toggle: true,
+        targetPrefix: '.recipients-type-',
+    }) }}
+    {% include 'notifier/notifications/_edit/recipients/current-user' %}
+    {% include 'notifier/notifications/_edit/recipients/selected-users' %}
+    {% include 'notifier/notifications/_edit/recipients/selected-groups' %}
+    {% include 'notifier/notifications/_edit/recipients/all-admins' %}
+    {% include 'notifier/notifications/_edit/recipients/all-users' %}
+    {% include 'notifier/notifications/_edit/recipients/custom-recipients' %}
+</div>

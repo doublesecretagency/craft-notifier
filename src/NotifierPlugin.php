@@ -186,10 +186,11 @@ class NotifierPlugin extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             static function (RegisterUrlRulesEvent $event) {
-                // Notifications
-                $event->rules['notifications']          = ['template' => 'notifier/notifications/_index'];
-                $event->rules['notifications/new']      = ['template' => 'notifier/notifications/_edit'];
-                $event->rules['notifications/<id:\d+>'] = ['template' => 'notifier/notifications/_edit'];
+                // Index
+                $event->rules['notifications'] = ['template' => 'notifier/notifications/_index'];
+                // Edit
+                $event->rules['notifications/new']                  = 'notifier/notifications/edit';
+                $event->rules['notifications/<notificationId:\d+>'] = 'notifier/notifications/edit';
             }
         );
     }

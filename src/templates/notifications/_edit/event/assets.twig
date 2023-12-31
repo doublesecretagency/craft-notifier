@@ -1,0 +1,12 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-assets hidden">
+    {{ forms.selectField({
+        label: 'Assets Event'|t('notifier'),
+        instructions: commonInstructions,
+        id: 'event-assets',
+        name: 'event[assets]',
+        value: notification.event,
+        options: {'':''}|merge(notificationOptions.allEvents['assets']),
+    }) }}
+</div>

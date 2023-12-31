@@ -58,7 +58,6 @@ class Install extends Migration
             'eventConfig'      => $this->text(),
             'messageType'      => $this->string(),
             'messageConfig'    => $this->text(),
-            'messageBody'      => $this->string(),
             'recipientsType'   => $this->string(),
             'recipientsConfig' => $this->text(),
             'dateCreated'      => $this->dateTime()->notNull(),

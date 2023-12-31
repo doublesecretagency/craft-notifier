@@ -1,0 +1,25 @@
+{% import '_includes/forms' as forms %}
+
+<div class="recipients-type-selected-groups hidden">
+    <div class="readable">
+        <blockquote class="note tip">
+            {% include 'notifier/notifications/_edit/recipients/message-types/note/active-users-only' %}
+        </blockquote>
+    </div>
+
+    <p>Please specify which User Groups should receive the message:</p>
+    {{ forms.checkboxSelectField({
+        label: "Select User Groups"|t('app'),
+        instructions: "Which user groups should be included?"|t('notifier'),
+        id: 'config-recipients-groups',
+        name: 'config[recipients][groups]',
+        showAllOption: true,
+    }) }}
+    {#
+    values: (message.config.recipients.groups ?? '*'),
+    options: notifierOptions.recipients.userGroups,
+    #}
+
+    <p>If a User is in more than one group, they will only receive a single message.</p>
+
+</div>

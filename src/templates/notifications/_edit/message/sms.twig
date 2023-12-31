@@ -1,0 +1,14 @@
+{% import '_includes/forms' as forms %}
+
+<div class="message-type-sms hidden">
+    {{ forms.textareaField({
+        label: "SMS Message"|t('notifier'),
+        instructions: commonInstructions,
+        placeholder: commonPlaceholder,
+        rows: 3,
+        id: 'messageConfig-smsMessage',
+        name: 'messageConfig[smsMessage]',
+        value: (notification.messageConfig.smsMessage ?? null),
+        errors: notification.getErrors('messageConfig[smsMessage]'),
+    }) }}
+</div>

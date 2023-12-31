@@ -1,93 +1,9 @@
-{% extends '_layouts/cp' %}
 {% import '_includes/forms' as forms %}
-{% set fullPageForm = true %}
 
-{# Load assets #}
-{% do view.registerAssetBundle(notifierAssets) %}
+{# Render hidden input if notification exists #}
+{{ not isNewNotification ? hiddenInput('notificationId', notificationId) }}
 
-{# Initialize the notification #}
-{% js 'window.initNotification();' %}
-
-{# Breadcrumbs #}
-{% set crumbs = [
-    {'label': 'Notifications'|t('notifier'), 'url': cpUrl('notifications')},
-] %}
-
-{# Fallback to null ID #}
-{% set id = (id ?? null) %}
-
-{# Get the existing notification if an ID was specified #}
-{% set notification = (id ? craft.notifier.notifications.id(id).status(null).one()) %}
-
-{# If notification doesn't exist #}
-{% if not notification %}
-    {# Create a blank notification #}
-    {% set notification = create('doublesecretagency\\notifier\\elements\\Notification') %}
-{% endif %}
-
-{# Compile existing element data #}
-{% set notificationData = {
-    'eventType'        : (notification.eventType        ?? null),
-    'eventSelected'    : (notification.event            ?? null),
-    'eventConfig'      : (notification.eventConfig      ?? null),
-    'messageType'      : (notification.messageType      ?? null),
-    'messageConfig'    : (notification.messageConfig    ?? null),
-    'messageBody'      : (notification.messageBody      ?? null),
-    'recipientsType'   : (notification.recipientsType   ?? null),
-    'recipientsConfig' : (notification.recipientsConfig ?? null),
-} %}
-
-{# Pass notification data to Vue #}
-{% js "window.notificationData = #{notificationData|json_encode};" at head %}
-
-{# Pass notification options to Vue #}
-{% js "window.notificationOptions = #{notificationOptions|json_encode};" at head %}
-
-{# Set page title #}
-{% set title = notification.title ?? 'Add a New Notification'|t('notifier') %}
-
-{# Button above content #}
-{% block actionButton %}
-{#    <div id="notification-test-button-top"></div>#}
-    <div class="btngroup">
-        <button type="button" class="btn submit formsubmit">{{ 'Save'|t('app') }}</button>
-        <button type="button" class="btn submit menubtn"></button>
-        <div class="menu">
-            <ul>
-                <li>
-                    <a class="formsubmit" data-redirect="{{ (id ? 'notifications/{id}' : notification.getCpEditUrl())|hash }}">
-                        {{ forms.optionShortcutLabel('S') }}
-                        {{ "Save and continue editing"|t('app') }}
-                    </a>
-                </li>
-                <li><a class="formsubmit" data-redirect="{{ 'notifications/new#'|hash }}">{{ "Save and add another"|t('app') }}</a></li>
-            </ul>
-            <hr>
-            <ul role="group">
-                <li role="option" aria-selected="false">
-                    <a
-                        class="formsubmit error"
-                        data-action="notifier/notifications/delete"
-                        data-redirect="{{ 'notifications#'|hash }}"
-                        data-confirm="Are you sure you want to delete this notification?"
-                        tabindex="-1"
-                    >
-                        Delete notification
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-{% endblock %}
-
-{# Main content #}
-{% block content %}
-    {{ actionInput('notifier/notifications/save') }}
-    {{ notification ? hiddenInput('id', id) }}
-    {% include 'notifier/notifications/_edit/content' with {'notification': notification} only %}
-{% endblock %}
-
-{# Sidebar #}
-{% block details %}
-    {% include 'notifier/notifications/_edit/details' %}
-{% endblock %}
+{% include 'notifier/notifications/_edit/meta' %}
+{% include 'notifier/notifications/_edit/event' %}
+{% include 'notifier/notifications/_edit/message' %}
+{% include 'notifier/notifications/_edit/recipients' %}

@@ -1,0 +1,24 @@
+{% import '_includes/forms' as forms %}
+
+<div id="meta" class="flex-fields">
+
+    {{ forms.textField({
+        label: "Title"|t('app'),
+        id: 'title',
+        name: 'title',
+        value: notification.title,
+        errors: notification.getErrors('title'),
+        first: true,
+        autofocus: true,
+        required: true,
+    }) }}
+
+    {{ forms.textField({
+        label: "Description"|t('app'),
+        id: 'description',
+        name: 'description',
+        value: notification.description,
+        errors: notification.getErrors('description'),
+    }) }}
+
+</div>

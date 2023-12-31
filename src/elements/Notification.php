@@ -68,11 +68,6 @@ class Notification extends Element
     public array $messageConfig = [];
 
     /**
-     * @var string|null Twig template for rendering the message.
-     */
-    public ?string $messageBody = null;
-
-    /**
      * @var string|null Type of recipients. (ie: Admins)
      */
     public ?string $recipientsType = null;
@@ -304,7 +299,6 @@ class Notification extends Element
             $record->eventConfig      = $this->eventConfig;
             $record->messageType      = $this->messageType;
             $record->messageConfig    = $this->messageConfig;
-            $record->messageBody      = $this->messageBody;
             $record->recipientsType   = $this->recipientsType;
             $record->recipientsConfig = $this->recipientsConfig;
 

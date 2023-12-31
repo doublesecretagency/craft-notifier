@@ -1,0 +1,12 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-users hidden">
+    {{ forms.selectField({
+        label: 'Users Event'|t('notifier'),
+        instructions: commonInstructions,
+        id: 'event-users',
+        name: 'event[users]',
+        value: notification.event,
+        options: {'':''}|merge(notificationOptions.allEvents['users']),
+    }) }}
+</div>
