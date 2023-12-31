@@ -2,7 +2,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
-import EventType from '../vue/notification/event-type';
 import Event from '../vue/notification/event';
 import Message from '../vue/notification/message';
 import Recipients from '../vue/notification/recipients';
@@ -14,11 +13,6 @@ window.initNotification = () => {
 
     // Get instance of Pinia
     const pinia = createPinia();
-
-    // Event Type
-    createApp(EventType)
-        .use(pinia)
-        .mount("#eventType-field");
 
     // Event
     createApp(Event)

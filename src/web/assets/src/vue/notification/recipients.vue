@@ -13,7 +13,7 @@
                 <label id="recipientsType-label" for="recipientsType">Recipients<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
             </div>
             <div id="recipientsType-instructions" class="instructions">
-                <p>Select who will receive this message.</p>
+                <p>Who will receive this message?</p>
             </div>
             <div class="input ltr">
                 <div class="select">
@@ -26,15 +26,15 @@
                 </div>
             </div>
         </div>
-        <div
-            class="readable"
-            style="margin-top:-16px !important"
-            v-show="notificationStore.recipientsType"
-        >
-            <blockquote class="note tip">
-                <p v-html="recipientsTypeSummary"></p>
-            </blockquote>
-        </div>
+<!--        <div-->
+<!--            class="readable"-->
+<!--            style="margin-top:-16px !important"-->
+<!--            v-show="notificationStore.recipientsType"-->
+<!--        >-->
+<!--            <blockquote class="note tip">-->
+<!--                <p v-html="recipientsTypeSummary"></p>-->
+<!--            </blockquote>-->
+<!--        </div>-->
 
         <fieldset
             id="recipientsConfig-selectedUserGroups-field"
@@ -82,7 +82,7 @@
                 <label id="recipientsConfig-customRecipients-label" for="recipientsConfig-customRecipients">Custom Recipients<span class="visually-hidden">Required</span><span class="required" aria-hidden="true"></span></label>
             </div>
             <div id="recipientsConfig-customRecipients-instructions" class="instructions">
-                <p>Learn more about <a href="https://plugins.doublesecretagency.com/notifier/messages/variables/" rel="noopener" target="_blank">automatic variables</a>.</p>
+                <p>Learn more about <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" rel="noopener" target="_blank">special variables</a>.</p>
             </div>
             <div class="input ltr">
                 <textarea

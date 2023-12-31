@@ -1,7 +1,6 @@
 {% import '_includes/forms' as forms %}
 
 <div class="meta">
-    <div id="eventType-field" class="field" data-attribute="eventType"></div>
     {{ forms.textField({
         label: 'Slug'|t('app'),
         id: 'slug',
@@ -9,17 +8,17 @@
         value: notification.slug,
     }) }}
     {{ forms.lightswitchField({
+        label: 'Enabled'|t('app'),
+        id: 'enabled',
+        name: 'enabled',
+        on: notification.enabled,
+    }) }}
+    {{ forms.lightswitchField({
         label: 'Use Jobs Queue'|t('app'),
         instructions: 'Whether to dispatch notifications via the jobs queue (vs bypass the queue and send immediately).'|t('notifier'),
         id: 'useQueue',
         name: 'useQueue',
         on: notification.useQueue,
-    }) }}
-    {{ forms.lightswitchField({
-        label: 'Enabled'|t('app'),
-        id: 'enabled',
-        name: 'enabled',
-        on: notification.enabled,
     }) }}
 </div>
 
