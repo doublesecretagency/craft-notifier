@@ -2,18 +2,15 @@
   "private": true,
   "main": "index.js",
   "devDependencies": {
-    "vuepress": "^1.9",
-    "vuepress-plugin-clean-urls": "^1.1",
-    "vuepress-theme-craftdocs": "^2.0"
+    "vitepress": "^1.0.0-rc"
   },
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "watch": "vuepress dev docs",
-    "prod": "vuepress build docs",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "nuke": "rm -rf node_modules/ && rm package-lock.json && npm cache clear --force && npm update"
   }
 }

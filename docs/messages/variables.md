@@ -1,6 +1,12 @@
-# Automatic Variables
+---
+description:
+---
 
-The following variables will be **automatically available** within your Twig [message template](/messages/set-template/). Certain variables will (or won't) exist, depending on how each notification was triggered.
+# Special Variables
+
+🚩
+
+The following variables will be **automatically available** within your Twig [message template](/messages/set-template). Certain variables will (or won't) exist, depending on how each notification was triggered.
 
 #### [**Config Variables**](#config-variables) - Always Available
 
@@ -21,7 +27,7 @@ The following variables will be **automatically available** within your Twig [me
 | `asset`      | Asset Events | The updated Asset which triggered the notification.
 -->
 
-## Where can I use automatic variables?
+## Where can I use special variables?
 
 ### Email Subject
 

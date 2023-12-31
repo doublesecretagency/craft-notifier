@@ -2,3 +2,7 @@
 .idea
 .DS_Store
 node_modules
+
+# Vitepress
+docs/.vitepress/dist
+docs/.vitepress/cache
