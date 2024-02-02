@@ -28,6 +28,7 @@ use doublesecretagency\notifier\enums\Options;
 //use doublesecretagency\notifier\utilities\LogUtility;
 use doublesecretagency\notifier\services\Events;
 use doublesecretagency\notifier\services\Messages;
+use doublesecretagency\notifier\services\Recipients;
 use doublesecretagency\notifier\variables\Notifier as NotifierVariable;
 use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
@@ -38,6 +39,7 @@ use yii\base\Event;
  *
  * @property Events $events
  * @property Messages $messages
+ * @property Recipients $recipients
  */
 class NotifierPlugin extends Plugin
 {
@@ -74,6 +76,7 @@ class NotifierPlugin extends Plugin
         $this->setComponents([
             'events' => Events::class,
             'messages' => Messages::class,
+            'recipients' => Recipients::class,
         ]);
 
         // Redirect after plugin is installed

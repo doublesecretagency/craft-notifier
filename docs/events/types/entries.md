@@ -6,9 +6,9 @@ description:
 
 🚩
 
-### "When an entry is fully saved and propagated"
+## "When an entry is fully saved and propagated"
 
-Triggered once an entry has completely finished saving, and has propagated across all available sites.
+Sends a notification when **an entry has completely finished saving, and propagated across all sites**.
 
 
 

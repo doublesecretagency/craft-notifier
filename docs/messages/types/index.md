@@ -4,7 +4,7 @@ description:
 
 # All Message Types
 
-🚩
+✅
 
 ## [Email](/messages/types/email)
 

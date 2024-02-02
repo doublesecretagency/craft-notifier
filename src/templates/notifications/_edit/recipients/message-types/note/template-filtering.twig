@@ -1,3 +1,4 @@
-{% set templatingUrl = 'https://plugins.doublesecretagency.com/notifier/messages/templating' %}
+{% set skipMessageUrl = 'https://plugins.doublesecretagency.com/notifier/messages/skip-message' %}
 
-<p>Additional filtering of Users can be done at the <a href="{{ templatingUrl }}" target="_blank">template level</a>.</p>
+<p><strong>Additional Filtering of Recipients</strong></p>
+<p>Within the context of the Twig message body, you can <a href="{{ skipMessageUrl }}" target="_blank">skip a recipient</a> if they don't meet certain conditions.</p>

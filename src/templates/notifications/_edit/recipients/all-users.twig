@@ -1,10 +1,14 @@
+{% set skipMessageUrl = 'https://plugins.doublesecretagency.com/notifier/messages/skip-message' %}
+
 <div class="recipients-type-all-users hidden">
-    <div class="readable">
+    <p>Sends the message to <strong>all Users in the system.</strong></p>
+    <div class="readable" style="margin-bottom:10px">
         <blockquote class="note warning">
-            <p>PLEASE USE WITH CARE!</p>
+            <p><strong>USE WITH CAUTION!</strong></p>
+            <p>Ensure you want all system Users to see the message.</p>
+            <p>Otherwise, take proper care to <a href="{{ skipMessageUrl }}" target="_blank">skip any recipients</a> which don't meet certain conditions.</p>
         </blockquote>
     </div>
-    <p>Message will be sent to all Users in the system.</p>
     <div class="readable">
         <blockquote class="note tip">
             {% include 'notifier/notifications/_edit/recipients/message-types/note/template-filtering' %}

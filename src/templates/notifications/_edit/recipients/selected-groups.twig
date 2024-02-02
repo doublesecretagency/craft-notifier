@@ -1,25 +1,36 @@
 {% import '_includes/forms' as forms %}
 
+{# Get all User Groups #}
+{% set groups = craft.app.userGroups.getAllGroups() %}
+
+{# Convert to array of select options #}
+{% set options = [] %}
+{% for group in groups %}
+    {% set options = options|merge([{
+        'value': group.id,
+        'label': group.name
+    }]) %}
+{% endfor %}
+
 <div class="recipients-type-selected-groups hidden">
+    {{ forms.checkboxSelectField({
+        label: "Select User Group(s)"|t('app'),
+        instructions: "Which user groups will receive the message?"|t('notifier'),
+        id: 'recipientsConfig-userGroups',
+        name: 'recipientsConfig[userGroups]',
+        showAllOption: true,
+        options: options,
+        values: (notification.recipientsConfig.userGroups ?? '*'),
+    }) }}
+    <div class="readable" style="margin-bottom:10px">
+        <blockquote class="note tip">
+            <p><strong>One Message Per User</strong></p>
+            <p>If a User is in more than one group, they will receive only a single message.</p>
+        </blockquote>
+    </div>
     <div class="readable">
         <blockquote class="note tip">
             {% include 'notifier/notifications/_edit/recipients/message-types/note/active-users-only' %}
         </blockquote>
     </div>
-
-    <p>Please specify which User Groups should receive the message:</p>
-    {{ forms.checkboxSelectField({
-        label: "Select User Groups"|t('app'),
-        instructions: "Which user groups should be included?"|t('notifier'),
-        id: 'config-recipients-groups',
-        name: 'config[recipients][groups]',
-        showAllOption: true,
-    }) }}
-    {#
-    values: (message.config.recipients.groups ?? '*'),
-    options: notifierOptions.recipients.userGroups,
-    #}
-
-    <p>If a User is in more than one group, they will only receive a single message.</p>
-
 </div>

@@ -103,11 +103,11 @@ abstract class Options
      * Available recipient types.
      */
     public const RECIPIENTS_TYPE = [
-        'current-user'      => 'User who triggered the Event',
-        'selected-users'    => 'Only selected User(s)',
-        'selected-groups'   => 'All Users in selected User Group(s)',
-        'all-admins'        => 'All Admins',
+        'current-user'      => 'Current User (who triggers the Event)',
         'all-users'         => 'All Users',
+        'all-admins'        => 'All Admins',
+        'selected-groups'   => 'All Users in selected User Group(s)',
+        'selected-users'    => 'Only selected User(s)',
         'custom-recipients' => 'Custom Recipients',
     ];
 

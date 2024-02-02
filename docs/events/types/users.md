@@ -6,10 +6,10 @@ description:
 
 🚩
 
-### "When a new user is created"
+## "When a new user is created"
 
-Triggered when a new User is created.
+Sends a notification when **a new User is created**.
 
-### "When a user is activated"
+## "When a user is activated"
 
-Triggered when a user account is activated.
+Sends a notification when **a User account is activated**.

@@ -23,6 +23,7 @@ use doublesecretagency\notifier\models\OutboundAnnouncement;
 use doublesecretagency\notifier\models\OutboundEmail;
 use doublesecretagency\notifier\models\OutboundFlash;
 use doublesecretagency\notifier\models\OutboundSms;
+use doublesecretagency\notifier\NotifierPlugin;
 use Throwable;
 use yii\base\Event;
 use yii\base\Exception;
@@ -57,87 +58,105 @@ class Messages extends Component
      * @param Notification $notification
      * @param Event $event
      * @param array $data
-     * @return bool
+     * @return void
      */
-    public function send(Notification $notification, Event $event, array $data = []): bool
+    public function send(Notification $notification, Event $event, array $data = []): void
     {
         // Send message based on type
         switch ($notification->messageType) {
             case 'email':
-                // Compile an email
-                $envelope = $this->_compileEmail($notification, $event, $data);
+                // Compile one or more email
+                $envelopes = $this->_compileEmail($notification, $event, $data);
                 break;
             case 'sms':
-                // Compile an SMS (text) message
-                $envelope = $this->_compileSms($notification, $event, $data);
+                // Compile one or more SMS (text) messages
+                $envelopes = $this->_compileSms($notification, $event, $data);
                 break;
             case 'announcement':
                 // Always use the queue
                 $notification->useQueue = true;
-                // Compile an announcement
-                $envelope = $this->_compileAnnouncement($notification, $event, $data);
+                // Compile a single announcement (in an array)
+                $envelopes = [$this->_compileAnnouncement($notification, $event, $data)];
                 break;
             case 'flash':
                 // Never use the queue
                 $notification->useQueue = false;
-                // Compile a flash message
-                $envelope = $this->_compileFlash($notification, $event, $data);
+                // Compile a single flash message (in an array)
+                $envelopes = [$this->_compileFlash($notification, $event, $data)];
                 break;
             default:
                 // Message wasn't sent, type not recognized
-                return false;
+                return;
         }
 
-        // If sending via the queue
-        if ($notification->useQueue) {
-            // Add message to the queue
-            Queue::push(new SendMessage(['envelope' => $envelope]));
-            // Successful enough
-            $success = true;
-        } else {
-            // Attempt to send the message immediately
-            $success = $envelope->send();
+        // Loop through each envelope
+        foreach ($envelopes as $envelope) {
+
+            // If sending via the queue
+            if ($notification->useQueue) {
+                // Add message to the queue
+                Queue::push(new SendMessage(['envelope' => $envelope]));
+            } else {
+                // Send the message immediately
+                $envelope->send();
+            }
+
         }
 
-        // Return whether the notification was sent successfully
-        return $success;
     }
 
     // ========================================================================= //
 
     /**
-     * Compile the message as an email.
+     * Compile the message as one or more emails.
      *
      * @param Notification $notification
      * @param Event $event
      * @param array $data
-     * @return EnvelopeInterface
+     * @return EnvelopeInterface[]
      */
-    private function _compileEmail(Notification $notification, Event $event, array $data): EnvelopeInterface
+    private function _compileEmail(Notification $notification, Event $event, array $data): array
     {
-        // EACH RECIPIENT MESSAGE
-        // WILL BE DISPATCHED INDIVIDUALLY
+        // Get email addresses for all recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($notification->recipientsType, $notification);
 
-        // TEMP
-        $to = getenv('TEST_EMAIL');
-        // ENDTEMP
+        // Initialize outbound messages
+        $outbound = [];
 
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $notification,
+            'event' => $event,
+            'data' => $data,
+        ];
 
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
 
-        // Parse message body and subject
-        $subject = $this->parseTwig($notification, $event, $data, $notification->messageConfig['emailSubject'] ?? null);
-        $body    = $this->parseTwig($notification, $event, $data, $notification->messageConfig['emailMessage'] ?? null);
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
 
-        // Put outbound email into envelope
-        return new OutboundEmail([
-            'to' => $to,
-            'subject' => $subject,
-            'body' => $body,
-        ]);
+            // Parse message body and subject
+            $subject = $this->parseTwig($config, $notification->messageConfig['emailSubject'] ?? null);
+            $body    = $this->parseTwig($config, $notification->messageConfig['emailMessage'] ?? null);
+
+            // Put outbound email into envelope
+            $outbound[] = new OutboundEmail([
+                'to' => $recipient->emailAddress,
+                'subject' => $subject,
+                'body' => $body,
+            ]);
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
     }
 
     /**
-     * Compile the message as an SMS (Text Message).
+     * Compile the message as one or more SMS (Text Message).
      *
      * @param Notification $notification
      * @param Event $event
@@ -146,8 +165,16 @@ class Messages extends Component
      */
     private function _compileSms(Notification $notification, Event $event, array $data): EnvelopeInterface
     {
+        // Compress variables for Twig
+        $config = [
+            'recipient' => null,
+            'notification' => $notification,
+            'event' => $event,
+            'data' => $data,
+        ];
+
         // Parse message body
-        $message = $this->parseTwig($notification, $event, $data, $notification->messageConfig['smsMessage'] ?? null);
+        $message = $this->parseTwig($config, $notification->messageConfig['smsMessage'] ?? null);
 
         // Put outbound SMS (text) message into envelope
         return new OutboundSms([
@@ -166,9 +193,17 @@ class Messages extends Component
      */
     private function _compileAnnouncement(Notification $notification, Event $event, array $data): EnvelopeInterface
     {
+        // Compress variables for Twig
+        $config = [
+            'recipient' => null,
+            'notification' => $notification,
+            'event' => $event,
+            'data' => $data,
+        ];
+
         // Parse message body and title
-        $title   = $this->parseTwig($notification, $event, $data, $notification->messageConfig['announcementTitle'] ?? null);
-        $message = $this->parseTwig($notification, $event, $data, $notification->messageConfig['announcementMessage'] ?? null);
+        $title   = $this->parseTwig($config, $notification->messageConfig['announcementTitle'] ?? null);
+        $message = $this->parseTwig($config, $notification->messageConfig['announcementMessage'] ?? null);
 
         // Put outbound announcement into envelope
         return new OutboundAnnouncement([
@@ -188,9 +223,17 @@ class Messages extends Component
      */
     private function _compileFlash(Notification $notification, Event $event, array $data): EnvelopeInterface
     {
+        // Compress variables for Twig
+        $config = [
+            'recipient' => null,
+            'notification' => $notification,
+            'event' => $event,
+            'data' => $data,
+        ];
+
         // Parse message body and title
-        $title   = $this->parseTwig($notification, $event, $data, $notification->messageConfig['flashTitle'] ?? null);
-        $message = $this->parseTwig($notification, $event, $data, $notification->messageConfig['flashDetails'] ?? null);
+        $title   = $this->parseTwig($config, $notification->messageConfig['flashTitle'] ?? null);
+        $message = $this->parseTwig($config, $notification->messageConfig['flashDetails'] ?? null);
 
         // Get flash type
         $type = ($notification->messageConfig['flashType'] ?? 'notice');
@@ -209,14 +252,15 @@ class Messages extends Component
     /**
      * Parse all Twig tags embedded within text.
      *
-     * @param Notification $notification
-     * @param Event $event
-     * @param array $data
+     * @param array $config
      * @param string $text
      * @return string
      */
-    public function parseTwig(Notification $notification, Event $event, array $data, string $text): string
+    public function parseTwig(array $config, string $text): string
     {
+        // Extract config variables
+        extract($config);
+
         // Configure common data
         $commonData = [
             // Config Variables

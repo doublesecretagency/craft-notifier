@@ -39,7 +39,7 @@ export default defineConfig({
           {
             items: [
               {text: 'Recipients',          link: '/recipients/'},
-              {text: 'All Recipient Types', link: '/recipients/types'},
+              {text: 'All Recipient Types', link: '/recipients/types/'},
               {text: 'Dynamic Recipients',  link: '/recipients/dynamic'},
               {text: 'Users as Recipients', link: '/recipients/users'}
             ]
@@ -146,7 +146,7 @@ export default defineConfig({
           text: 'Messages',
           items: [
             {text: 'Overview',               link: '/messages/'},
-            {text: 'Message Types',          link: '/messages/types/',
+            {text: 'All Message Types',      link: '/messages/types/',
               items: [
                 {text: 'Email',              link: '/messages/types/email'},
                 {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
@@ -166,7 +166,16 @@ export default defineConfig({
           text: 'Recipients',
           items: [
             {text: 'Overview',            link: '/recipients/'},
-            {text: 'All Recipient Types', link: '/recipients/types'},
+            {text: 'All Recipient Types', link: '/recipients/types/',
+              items: [
+                {text: 'Current User',      link: '/recipients/types/current-user'},
+                {text: 'All Users',         link: '/recipients/types/all-users'},
+                {text: 'All Admins',        link: '/recipients/types/all-admins'},
+                {text: 'Selected Groups',   link: '/recipients/types/selected-groups'},
+                {text: 'Selected Users',    link: '/recipients/types/selected-users'},
+                {text: 'Custom Recipients', link: '/recipients/types/custom-recipients'},
+              ]
+            },
             {text: 'Dynamic Recipients',  link: '/recipients/dynamic'},
             {text: 'Users as Recipients', link: '/recipients/users'}
           ]

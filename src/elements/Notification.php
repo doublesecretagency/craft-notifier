@@ -314,11 +314,11 @@ class Notification extends Element
      * Send this Notification based on the activated Event.
      *
      * @param Event $event
-     * @return bool
+     * @return void
      */
-    public function send(Event $event): bool
+    public function send(Event $event): void
     {
-        return NotifierPlugin::getInstance()->messages->send($this, $event);
+        NotifierPlugin::getInstance()->messages->send($this, $event);
     }
 
 }
