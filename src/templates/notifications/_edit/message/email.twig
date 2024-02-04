@@ -19,4 +19,14 @@
         value: (notification.messageConfig.emailMessage ?? null),
         errors: notification.getErrors('messageConfig[emailMessage]'),
     }) }}
+
+    {{ forms.lightswitchField({
+        label: 'Send Message via Queue'|t('app'),
+        instructions: queueInstructions,
+        id: 'messageConfig-emailQueue',
+        name: 'messageConfig[emailQueue]',
+        offLabel: 'Send immediately',
+        onLabel: 'Add to queue',
+        on: (notification.messageConfig.emailQueue ?? true),
+    }) }}
 </div>

@@ -65,22 +65,26 @@ class Messages extends Component
         // Send message based on type
         switch ($notification->messageType) {
             case 'email':
+                // Use the queue if specified
+                $useQueue = ($notification->messageConfig['emailQueue'] ?? true);
                 // Compile one or more email
                 $envelopes = $this->_compileEmail($notification, $event, $data);
                 break;
             case 'sms':
+                // Use the queue if specified
+                $useQueue = ($notification->messageConfig['smsQueue'] ?? true);
                 // Compile one or more SMS (text) messages
                 $envelopes = $this->_compileSms($notification, $event, $data);
                 break;
             case 'announcement':
                 // Always use the queue
-                $notification->useQueue = true;
+                $useQueue = true;
                 // Compile a single announcement (in an array)
                 $envelopes = [$this->_compileAnnouncement($notification, $event, $data)];
                 break;
             case 'flash':
                 // Never use the queue
-                $notification->useQueue = false;
+                $useQueue = false;
                 // Compile a single flash message (in an array)
                 $envelopes = [$this->_compileFlash($notification, $event, $data)];
                 break;
@@ -91,16 +95,14 @@ class Messages extends Component
 
         // Loop through each envelope
         foreach ($envelopes as $envelope) {
-
             // If sending via the queue
-            if ($notification->useQueue) {
+            if ($useQueue) {
                 // Add message to the queue
                 Queue::push(new SendMessage(['envelope' => $envelope]));
             } else {
-                // Send the message immediately
+                // Send message immediately
                 $envelope->send();
             }
-
         }
 
     }

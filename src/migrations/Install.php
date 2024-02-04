@@ -52,7 +52,6 @@ class Install extends Migration
         $this->createTable(self::NOTIFICATIONS, [
             'id'               => $this->integer()->notNull(),
             'description'      => $this->string(),
-            'useQueue'         => $this->boolean(),
             'eventType'        => $this->string(),
             'event'            => $this->string(),
             'eventConfig'      => $this->text(),

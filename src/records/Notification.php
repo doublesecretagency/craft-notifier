@@ -20,7 +20,6 @@ use craft\db\SoftDeleteTrait;
  *
  * @property int $id
  * @property string $description
- * @property bool $useQueue
  * @property string $eventType
  * @property string $event
  * @property array $eventConfig

@@ -14,11 +14,14 @@ namespace doublesecretagency\notifier\controllers;
 use Craft;
 use craft\errors\ElementNotFoundException;
 use craft\errors\MissingComponentException;
+use craft\helpers\Json;
+use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\elements\Notification;
 use Throwable;
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -84,12 +87,23 @@ class NotificationsController extends Controller
             ],
         ];
 
+        // If slug doesn't yet exist
+        if (!$notification->slug) {
+            // Initialize the slug generator
+            $this->_slugGenerator($notification);
+        }
+
         // Returns a CP screen response
         return $this->asCpScreen()
             ->title($title)
             ->crumbs($crumbs)
             ->tabs($tabs)
             ->action('notifier/notifications/save')
+            ->addAltAction(Craft::t('app', 'Save and continue editing'), [
+                'redirect' => 'notifier/notifications/{id}',
+                'shortcut' => true,
+                'retainScroll' => true,
+            ])
             ->redirectUrl('notifier/notifications')
             ->saveShortcutRedirectUrl('notifier/notifications/{id}')
 //            ->editUrl($notification->id ? "notifier/notifications/{$notification->id}" : null)
@@ -98,6 +112,9 @@ class NotificationsController extends Controller
                 'notificationId' => $notificationId,
                 'notification' => $notification,
                 'isNewNotification' => $isNewNotification,
+            ])
+            ->sidebarTemplate('notifier/notifications/_edit/details', [
+                'notification' => $notification,
             ]);
     }
 
@@ -126,8 +143,8 @@ class NotificationsController extends Controller
         $notificationId   = $request->getBodyParam('notificationId') ?: null;
         $enabled          = $request->getBodyParam('enabled');
         $title            = $request->getBodyParam('title');
+        $slug             = $request->getBodyParam('slug');
         $description      = $request->getBodyParam('description');
-        $useQueue         = $request->getBodyParam('useQueue');
         $eventType        = $request->getBodyParam('eventType');
         $event            = $request->getBodyParam('event');
         $eventConfig      = $request->getBodyParam('eventConfig');
@@ -146,8 +163,8 @@ class NotificationsController extends Controller
         $notification->id               = $notificationId   ?? $notification->id;
         $notification->enabled          = $enabled          ?? $notification->enabled;
         $notification->title            = $title            ?? $notification->title;
+        $notification->slug             = $slug             ?? $notification->slug;
         $notification->description      = $description      ?? $notification->description;
-        $notification->useQueue         = $useQueue         ?? $notification->useQueue;
         $notification->eventType        = $eventType        ?? $notification->eventType;
         $notification->event            = $event            ?? $notification->event;
         $notification->eventConfig      = $eventConfig      ?? $notification->eventConfig;
@@ -175,7 +192,7 @@ class NotificationsController extends Controller
      *
      * @return Response|null
      * @throws BadRequestHttpException
-     * @throws Exception
+     * @throws Throwable
      */
     public function actionDelete(): ?Response
     {
@@ -247,6 +264,45 @@ class NotificationsController extends Controller
 
         // Return a fresh notification
         return new Notification();
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Dynamically generate the slug.
+     *
+     * Snippet borrowed from:
+     * https://github.com/craftcms/cms/blob/4f96c7e83201316c3e37832ece10dcc5d35b46ab/src/base/Element.php#L4907-L4924
+     *
+     * @param Notification $notification
+     * @return void
+     */
+    private function _slugGenerator(Notification $notification): void
+    {
+        try {
+
+            $view = Craft::$app->getView();
+            $site = $notification->getSite();
+            $charMapJs = Json::encode($site->language !== Craft::$app->language
+                ? StringHelper::asciiCharMap(true, $site->language)
+                : null
+            );
+
+            Craft::$app->getView()->registerJsWithVars(
+                fn($titleSelector, $slugSelector) => <<<JS
+new Craft.SlugGenerator($titleSelector, $slugSelector, {
+    charMap: $charMapJs,
+})
+JS,
+                [
+                    sprintf('#%s', $view->namespaceInputId('title')),
+                    sprintf('#%s', $view->namespaceInputId('slug')),
+                ]
+            );
+
+        } catch (InvalidConfigException $exception) {
+            // Don't bother with slug generator
+        }
     }
 
 }

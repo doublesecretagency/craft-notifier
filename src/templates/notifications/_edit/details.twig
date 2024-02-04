@@ -13,13 +13,6 @@
         name: 'enabled',
         on: notification.enabled,
     }) }}
-    {{ forms.lightswitchField({
-        label: 'Use Jobs Queue'|t('app'),
-        instructions: 'Whether to dispatch notifications via the jobs queue (vs bypass the queue and send immediately).'|t('notifier'),
-        id: 'useQueue',
-        name: 'useQueue',
-        on: notification.useQueue,
-    }) }}
 </div>
 
 <dl class="meta read-only">

@@ -38,11 +38,6 @@ class Notification extends Element
     public ?string $description = null;
 
     /**
-     * @var bool Whether to dispatch notifications via the jobs queue (vs bypass the queue and send immediately).
-     */
-    public bool $useQueue = true;
-
-    /**
      * @var string|null Type of event which will activate the notification.
      */
     public ?string $eventType = null;
@@ -174,7 +169,6 @@ class Notification extends Element
             'uri'  => ['label' => Craft::t('app', 'URI')],
 
             'description'    => ['label' => Craft::t('app', 'Description')],
-            'useQueue'       => ['label' => Craft::t('app', 'Use Queue')],
             'eventType'      => ['label' => Craft::t('app', 'Event Type')],
             'event'          => ['label' => Craft::t('app', 'Event')],
             'messageType'    => ['label' => Craft::t('app', 'Message Type')],
@@ -195,7 +189,6 @@ class Notification extends Element
             'event',
             'messageType',
             'recipientsType',
-            'useQueue',
         ];
     }
 
@@ -293,7 +286,6 @@ class Notification extends Element
 
             // Save to the `notifier_notifications` table
             $record->description      = $this->description;
-            $record->useQueue         = $this->useQueue;
             $record->eventType        = $this->eventType;
             $record->event            = $this->event;
             $record->eventConfig      = $this->eventConfig;

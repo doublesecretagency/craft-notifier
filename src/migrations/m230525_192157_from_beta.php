@@ -111,7 +111,6 @@ class m230525_192157_from_beta extends Migration
         $notification = new Notification([
             'title'           => "Notification #{$this->_currentNotification}",
             'description'      => '[IMPORTED] Please check details to ensure notification continues working as intended.',
-            'useQueue'         => true,
             'eventType'        => 'entries',
             'event'            => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE',
             'eventConfig'      => $trigger['config'],
