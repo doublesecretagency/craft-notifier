@@ -27,16 +27,29 @@ class Recipients extends Component
 {
 
     /**
-     * Get all emails for selected recipients.
+     * @var string|null
+     */
+    private ?string $_emailField = null;
+
+    /**
+     * @var string|null
+     */
+    private ?string $_smsField = null;
+
+    /**
+     * Get all selected recipients.
      *
-     * @param string $recipientsType
      * @param Notification|null $notification
      * @return array
      */
-    public function getRecipients(string $recipientsType, ?Notification $notification = null): array
+    public function getRecipients(?Notification $notification = null): array
     {
+        // Set field handles of User contact info
+        $this->_emailField = ($notification->messageConfig['emailField'] ?? null);
+        $this->_smsField   = ($notification->messageConfig['smsField']   ?? null);
+
         // Gather recipients based on type
-        switch ($recipientsType) {
+        switch ($notification->recipientsType ?? null) {
             case 'current-user':      return $this->_currentUser();
             case 'all-users':         return $this->_allUsers();
             case 'all-admins':        return $this->_allAdmins();
@@ -45,20 +58,11 @@ class Recipients extends Component
             case 'custom-recipients': return ($notification ? $this->_customRecipients($notification) : []);
         }
 
+        // todo: Log "recipient type not specified"
+
         // Invalid recipients type
         return [];
     }
-
-//    /**
-//     * Get all phone numbers for selected recipients.
-//     *
-//     * @param $recipientsType
-//     * @return array
-//     */
-//    public function getPhoneNumbers($recipientsType): array
-//    {
-//        return [];
-//    }
 
     // ========================================================================= //
 
@@ -191,8 +195,12 @@ class Recipients extends Component
     {
         // Convert Users to Recipients
         array_walk($users,
-            static function (&$value) {
-                $value = new Recipient(['user' => $value]);
+            function (&$value) {
+                $value = new Recipient([
+                    'user'       => $value,
+                    'emailField' => $this->_emailField,
+                    'smsField'   => $this->_smsField,
+                ]);
             }
         );
 

@@ -51,11 +51,9 @@ class SendMessage extends BaseJob
      */
     protected function defaultDescription(): string
     {
-        return Translation::prep('notifier', 'Sending {messageType} to {recipientsType}', [
-            'messageType' => 'an email',
-            'recipientsType' => 'all users',
-//            'messageType' => $this->envelope->messageType,
-//            'recipientsType' => $this->envelope->recipientsType,
+        return Translation::prep('notifier', 'Sending {messageType} to {recipient}', [
+            'messageType' => ($this->envelope->jobInfo['messageType'] ?? 'unspecified message'),
+            'recipient'   => ($this->envelope->jobInfo['recipient']   ?? 'unknown recipient'),
         ]);
     }
 

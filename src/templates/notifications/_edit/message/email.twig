@@ -1,8 +1,18 @@
 {% import '_includes/forms' as forms %}
 
 <div class="message-type-email hidden">
+    {{ forms.selectField({
+        label: "User's Email Address Field"|t('notifier'),
+        instructions: fieldInstructions|t('notifier', {'type' : 'email address'}),
+        id: 'messageConfig-emailField',
+        name: 'messageConfig[emailField]',
+        value: (notification.messageConfig.emailField ?? null),
+        options: notificationOptions.emailField,
+    }) }}
+
     {{ forms.textField({
         label: "Email Subject"|t('notifier'),
+        instructions: commonInstructions,
         id: 'messageConfig-emailSubject',
         name: 'messageConfig[emailSubject]',
         value: (notification.messageConfig.emailSubject ?? null),
@@ -21,7 +31,7 @@
     }) }}
 
     {{ forms.lightswitchField({
-        label: 'Send Message via Queue'|t('app'),
+        label: "Send Message via Queue"|t('notifier'),
         instructions: queueInstructions,
         id: 'messageConfig-emailQueue',
         name: 'messageConfig[emailQueue]',

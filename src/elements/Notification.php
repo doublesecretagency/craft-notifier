@@ -313,4 +313,26 @@ class Notification extends Element
         NotifierPlugin::getInstance()->messages->send($this, $event);
     }
 
+    // ========================================================================= //
+
+    /**
+     * Determine the task recipient.
+     *
+     * @return string
+     */
+    public function getTaskRecipient(): string
+    {
+        // Set task recipient based on recipients type
+        switch ($this->recipientsType) {
+            case 'current-user':      return 'the current user';
+            case 'all-users':         return 'all Users';
+            case 'all-admins':        return 'all Admins';
+            case 'selected-groups':   return 'all Users in selected User Group(s)';
+            case 'selected-users':    return 'selected User';
+            case 'custom-recipients': return 'custom recipient';
+        }
+        // Fallback to "unknown"
+        return 'unknown recipient';
+    }
+
 }

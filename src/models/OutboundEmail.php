@@ -25,6 +25,11 @@ class OutboundEmail extends Model implements EnvelopeInterface
 {
 
     /**
+     * @var array
+     */
+    public array $jobInfo = [];
+
+    /**
      * @var string|null
      */
     public ?string $to = null;

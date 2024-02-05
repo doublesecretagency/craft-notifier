@@ -29,6 +29,21 @@ class Recipient extends Model
     /**
      * @var string|null
      */
+    public ?string $emailField = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $smsField = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $name = null;
+
+    /**
+     * @var string|null
+     */
     public ?string $emailAddress = null;
 
     /**
@@ -45,13 +60,48 @@ class Recipient extends Model
     {
         parent::init();
 
-        // If user was specified without an email address
-        if ($this->user && !$this->emailAddress) {
-            // Get email address from user
-            $this->emailAddress = $this->user->email;
+        // Extract relevant data from User
+        $this->_extractUserData();
+    }
+
+    /**
+     * Extract all relevant data from the User.
+     *
+     * @return void
+     */
+    public function _extractUserData(): void
+    {
+        // If no user was specified, bail
+        if (!$this->user) {
+            return;
         }
 
+        // If no preset name
+        if (!$this->name) {
+            // Get from the user
+            $this->name = $this->user->getName();
+        }
+
+        // If no preset email address
+        if (!$this->emailAddress) {
+            // If an alternate email field was specified
+            if ($this->emailField) {
+                // Get from alternate email address
+                $this->emailAddress = $this->user->{$this->emailField};
+            } else {
+                // Get from default User email address
+                $this->emailAddress = $this->user->email;
+            }
+        }
+
+        // If no preset phone number and field exists
+        if (!$this->phoneNumber && $this->smsField) {
+            // Get from User's custom phone number
+            $this->phoneNumber = $this->user->{$this->smsField};
+        }
     }
+
+    // ========================================================================= //
 
     /**
      * Get recipient's name or email address.
@@ -61,7 +111,7 @@ class Recipient extends Model
     public function __toString(): string
     {
         // Return recipient's name or email address
-        return ($this->user->getName() ?? $this->emailAddress ?? '');
+        return ($this->name ?? $this->emailAddress ?? '');
     }
 
 }

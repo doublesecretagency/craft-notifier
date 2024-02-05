@@ -95,6 +95,11 @@ class Messages extends Component
 
         // Loop through each envelope
         foreach ($envelopes as $envelope) {
+            // If invalid envelope, log and skip it
+            if (!$envelope) {
+                // @todo Log invalid envelope
+                continue;
+            }
             // If sending via the queue
             if ($useQueue) {
                 // Add message to the queue
@@ -120,7 +125,7 @@ class Messages extends Component
     private function _compileEmail(Notification $notification, Event $event, array $data): array
     {
         // Get email addresses for all recipients
-        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($notification->recipientsType, $notification);
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($notification);
 
         // Initialize outbound messages
         $outbound = [];
@@ -131,6 +136,9 @@ class Messages extends Component
             'event' => $event,
             'data' => $data,
         ];
+
+        // Get generic recipient name
+        $genericRecipient = $notification->getTaskRecipient();
 
         // Loop through all recipients
         foreach ($recipients as $recipient) {
@@ -149,6 +157,10 @@ class Messages extends Component
                 'to' => $recipient->emailAddress,
                 'subject' => $subject,
                 'body' => $body,
+                'jobInfo' => [
+                    'messageType' => 'an email',
+                    'recipient' => ($recipient->name ?? $genericRecipient),
+                ]
             ]);
 
         }
@@ -163,26 +175,51 @@ class Messages extends Component
      * @param Notification $notification
      * @param Event $event
      * @param array $data
-     * @return EnvelopeInterface
+     * @return EnvelopeInterface[]
      */
-    private function _compileSms(Notification $notification, Event $event, array $data): EnvelopeInterface
+    private function _compileSms(Notification $notification, Event $event, array $data): array
     {
-        // Compress variables for Twig
-        $config = [
-            'recipient' => null,
+        // Get email addresses for all recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($notification);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
             'notification' => $notification,
             'event' => $event,
             'data' => $data,
         ];
 
-        // Parse message body
-        $message = $this->parseTwig($config, $notification->messageConfig['smsMessage'] ?? null);
+        // Get generic recipient name
+        $genericRecipient = $notification->getTaskRecipient();
 
-        // Put outbound SMS (text) message into envelope
-        return new OutboundSms([
-//            'to' => $to,
-            'message' => $message,
-        ]);
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Parse message body
+            $message = $this->parseTwig($config, $notification->messageConfig['smsMessage'] ?? null);
+
+            // Put outbound SMS (text) message into envelope
+            $outbound[] = new OutboundSms([
+                'phoneNumber' => $recipient->phoneNumber,
+                'message' => $message,
+                'jobInfo' => [
+                    'messageType' => 'an SMS message',
+                    'recipient' => ($recipient->name ?? $genericRecipient),
+                ]
+            ]);
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
     }
 
     /**
@@ -207,11 +244,18 @@ class Messages extends Component
         $title   = $this->parseTwig($config, $notification->messageConfig['announcementTitle'] ?? null);
         $message = $this->parseTwig($config, $notification->messageConfig['announcementMessage'] ?? null);
 
+        // Get generic recipient name
+        $genericRecipient = $notification->getTaskRecipient();
+
         // Put outbound announcement into envelope
         return new OutboundAnnouncement([
-//            'to' => $to,
             'title' => $title,
             'message' => $message,
+            'adminsOnly' => ($notification->recipientsConfig['adminsOnly'] ?? false),
+            'jobInfo' => [
+                'messageType' => 'an announcement',
+                'recipient' => ($recipient->name ?? $genericRecipient),
+            ]
         ]);
     }
 
@@ -242,10 +286,9 @@ class Messages extends Component
 
         // Put outbound flash message into envelope
         return new OutboundFlash([
-//            'to' => $to,
             'type' => $type,
             'title' => $title,
-            'message' => $message,
+            'message' => $message
         ]);
     }
 

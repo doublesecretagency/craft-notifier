@@ -1,0 +1,13 @@
+{% import '_includes/forms' as forms %}
+
+<div class="message-type-announcement hidden">
+    {{ forms.lightswitchField({
+        label: "Admins Only"|t('notifier'),
+        instructions: "Whether the announcement should be shown only to Admins.",
+        id: 'recipientsConfig-adminsOnly',
+        name: 'recipientsConfig[adminsOnly]',
+        offLabel: 'All Users',
+        onLabel: 'Admins Only',
+        on: (notification.recipientsConfig.adminsOnly ?? true),
+    }) }}
+</div>

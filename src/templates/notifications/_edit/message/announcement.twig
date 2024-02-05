@@ -3,6 +3,7 @@
 <div class="message-type-announcement hidden">
     {{ forms.textField({
         label: "Announcement Title"|t('notifier'),
+        instructions: commonInstructions,
         id: 'messageConfig-announcementTitle',
         name: 'messageConfig[announcementTitle]',
         value: (notification.messageConfig.announcementTitle ?? null),

@@ -12,6 +12,7 @@
 namespace doublesecretagency\notifier;
 
 use Craft;
+use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
@@ -26,6 +27,7 @@ use craft\web\UrlManager;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Options;
 //use doublesecretagency\notifier\utilities\LogUtility;
+use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\Events;
 use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
@@ -43,6 +45,11 @@ use yii\base\Event;
  */
 class NotifierPlugin extends Plugin
 {
+
+    /**
+     * @var bool The plugin has a settings page.
+     */
+    public bool $hasCpSettings = true;
 
     /**
      * @var string Current schema version of the plugin.
@@ -103,6 +110,29 @@ class NotifierPlugin extends Plugin
 
         // Register all notification events
         $this->events->registerNotificationEvents();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function createSettingsModel(): ?Model
+    {
+        return new Settings();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function settingsHtml(): ?string
+    {
+        // Get data from config file
+        $configFile = Craft::$app->getConfig()->getConfigFromFile('notifier');
+
+        // Load plugin settings template
+        return Craft::$app->getView()->renderTemplate('notifier/settings', [
+            'configFile' => $configFile,
+            'settings' => $this->getSettings(),
+        ]);
     }
 
     /**

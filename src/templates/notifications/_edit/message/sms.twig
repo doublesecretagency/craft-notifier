@@ -1,6 +1,15 @@
 {% import '_includes/forms' as forms %}
 
 <div class="message-type-sms hidden">
+    {{ forms.selectField({
+        label: "User's Phone Number Field"|t('notifier'),
+        instructions: fieldInstructions|t('notifier', {'type' : 'phone number'}),
+        id: 'messageConfig-smsField',
+        name: 'messageConfig[smsField]',
+        value: (notification.messageConfig.smsField ?? null),
+        options: notificationOptions.smsField,
+    }) }}
+
     {{ forms.textareaField({
         label: "SMS Message"|t('notifier'),
         instructions: commonInstructions,
@@ -13,7 +22,7 @@
     }) }}
 
     {{ forms.lightswitchField({
-        label: 'Send Message via Queue'|t('app'),
+        label: "Send Message via Queue"|t('notifier'),
         instructions: queueInstructions,
         id: 'messageConfig-smsQueue',
         name: 'messageConfig[smsQueue]',

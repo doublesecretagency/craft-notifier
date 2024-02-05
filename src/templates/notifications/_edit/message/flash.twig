@@ -2,7 +2,8 @@
 
 <div class="message-type-flash hidden">
     {{ forms.selectField({
-        label: 'Flash Message Type'|t('notifier'),
+        label: "Flash Message Type"|t('notifier'),
+        instructions: "Which type of flash message should appear?"|t('notifier'),
         id: 'messageConfig-flashType',
         name: 'messageConfig[flashType]',
         value: (notification.messageConfig.flashType ?? null),
@@ -11,6 +12,7 @@
 
     {{ forms.textField({
         label: "Flash Message Title"|t('notifier'),
+        instructions: commonInstructions,
         id: 'messageConfig-flashTitle',
         name: 'messageConfig[flashTitle]',
         value: (notification.messageConfig.flashTitle ?? null),

@@ -14,7 +14,6 @@ namespace doublesecretagency\notifier\models;
 use Craft;
 use craft\base\Model;
 use craft\errors\MissingComponentException;
-use craft\helpers\Html;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 use yii\helpers\Markdown;
 
@@ -24,11 +23,6 @@ use yii\helpers\Markdown;
  */
 class OutboundFlash extends Model implements EnvelopeInterface
 {
-
-//    /**
-//     * @var string|null
-//     */
-//    public ?string $to = null;
 
     /**
      * @var string

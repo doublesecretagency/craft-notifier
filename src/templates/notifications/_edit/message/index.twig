@@ -14,6 +14,9 @@
     'queueUrl' : 'https://craftcms.com/docs/4.x/queue.html',
 }) %}
 
+{# Untranslated instructions for email/SMS fields #}
+{% set fieldInstructions = "Select which User field stores the recipient's {type}." %}
+
 <div id="message" class="flex-fields hidden">
 
     {{ forms.selectField({

@@ -22,10 +22,10 @@ use doublesecretagency\notifier\base\EnvelopeInterface;
 class OutboundAnnouncement extends Model implements EnvelopeInterface
 {
 
-//    /**
-//     * @var string|null
-//     */
-//    public ?string $to = null;
+    /**
+     * @var array
+     */
+    public array $jobInfo = [];
 
     /**
      * @var string
@@ -38,6 +38,11 @@ class OutboundAnnouncement extends Model implements EnvelopeInterface
     public string $message = '';
 
     /**
+     * @var bool
+     */
+    public bool $adminsOnly = false;
+
+    /**
      * Send the announcement.
      *
      * @return bool
@@ -45,7 +50,12 @@ class OutboundAnnouncement extends Model implements EnvelopeInterface
     public function send(): bool
     {
         // Send the announcement
-        Craft::$app->getAnnouncements()->push($this->title, $this->message, 'notifier');
+        Craft::$app->getAnnouncements()->push(
+            $this->title,
+            $this->message,
+            'notifier',
+            $this->adminsOnly
+        );
 
 //        // Log success message
 //        Log::success("The announcement to {$this->to} was sent successfully! ({$this->title})");
