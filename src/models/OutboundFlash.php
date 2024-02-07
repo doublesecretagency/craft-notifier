@@ -12,16 +12,15 @@
 namespace doublesecretagency\notifier\models;
 
 use Craft;
-use craft\base\Model;
 use craft\errors\MissingComponentException;
-use doublesecretagency\notifier\base\EnvelopeInterface;
+use doublesecretagency\notifier\elements\Notification;
 use yii\helpers\Markdown;
 
 /**
  * Class OutboundFlash
  * @since 1.0.0
  */
-class OutboundFlash extends Model implements EnvelopeInterface
+class OutboundFlash extends BaseEnvelope
 {
 
     /**
@@ -47,6 +46,17 @@ class OutboundFlash extends Model implements EnvelopeInterface
      */
     public function send(): bool
     {
+        // Get original notification
+        /** @var Notification $notification */
+        $notification = Notification::find()
+            ->id($this->notificationId)
+            ->one();
+
+        // If invalid notification, bail (unable to log)
+        if (!$notification) {
+            return false;
+        }
+
         // Get session services
         $session = Craft::$app->getSession();
 
@@ -65,12 +75,12 @@ class OutboundFlash extends Model implements EnvelopeInterface
                 $session->setError($this->title, $details);
                 break;
             default:
-//                Log::warning("Unable to send the flash message, invalid flash type.");
+                $notification->log->warning("Unable to send the flash message, invalid flash type.", $this->envelopeId);
                 return false;
         }
 
-//        // Log success message
-//        Log::success("The flash message was sent successfully!");
+        // Log success message
+        $notification->log->success("Successfully sent flash message!", $this->envelopeId);
 
         // Return successfully
         return true;

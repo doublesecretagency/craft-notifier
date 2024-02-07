@@ -19,6 +19,7 @@ use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use doublesecretagency\notifier\elements\conditions\NotificationCondition;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
+use doublesecretagency\notifier\models\NotificationLog;
 use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\records\Notification as NotificationRecord;
 use yii\base\Event;
@@ -71,6 +72,24 @@ class Notification extends Element
      * @var array Message configuration details.
      */
     public array $recipientsConfig = [];
+
+    /**
+     * @var NotificationLog|null
+     */
+    public ?NotificationLog $log = null;
+
+    /**
+     * Initialize notification log
+     *
+     * @return void
+     */
+    public function init(): void
+    {
+        parent::init();
+
+        // Initialize notification log
+        $this->log = new NotificationLog(['notificationId' => $this->id]);
+    }
 
     // ========================================================================= //
 

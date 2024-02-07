@@ -97,15 +97,18 @@ class Messages extends Component
         foreach ($envelopes as $envelope) {
             // If invalid envelope, log and skip it
             if (!$envelope) {
-                // @todo Log invalid envelope
+                // Log invalid envelope
+                $notification->log->warning("Can't send, envelope is invalid.", $envelope->envelopeId);
                 continue;
             }
             // If sending via the queue
             if ($useQueue) {
                 // Add message to the queue
+                $notification->log->info("Adding message to queue.", $envelope->envelopeId);
                 Queue::push(new SendMessage(['envelope' => $envelope]));
             } else {
                 // Send message immediately
+                $notification->log->info("Sending message immediately (bypassing queue).", $envelope->envelopeId);
                 $envelope->send();
             }
         }
@@ -143,6 +146,12 @@ class Messages extends Component
         // Loop through all recipients
         foreach ($recipients as $recipient) {
 
+            // Set job info
+            $jobInfo = [
+                'messageType' => 'an email',
+                'recipient' => ($recipient->name ?? $genericRecipient),
+            ];
+
             // Compress variables for Twig
             $config = array_merge($baseConfig, [
                 'recipient' => $recipient,
@@ -152,16 +161,22 @@ class Messages extends Component
             $subject = $this->parseTwig($config, $notification->messageConfig['emailSubject'] ?? null);
             $body    = $this->parseTwig($config, $notification->messageConfig['emailMessage'] ?? null);
 
-            // Put outbound email into envelope
-            $outbound[] = new OutboundEmail([
+            // Get message details
+            $details = [
                 'to' => $recipient->emailAddress,
                 'subject' => $subject,
                 'body' => $body,
-                'jobInfo' => [
-                    'messageType' => 'an email',
-                    'recipient' => ($recipient->name ?? $genericRecipient),
-                ]
-            ]);
+            ];
+
+            // Initialize logging for envelope
+            $envelopeId = $notification->log->envelope($jobInfo, $details);
+
+            // Put outbound email into envelope
+            $outbound[] = new OutboundEmail(array_merge([
+                'notificationId' => $notification->id,
+                'envelopeId' => $envelopeId,
+                'jobInfo' => $jobInfo
+            ], $details));
 
         }
 
@@ -198,6 +213,12 @@ class Messages extends Component
         // Loop through all recipients
         foreach ($recipients as $recipient) {
 
+            // Set job info
+            $jobInfo = [
+                'messageType' => 'an SMS message',
+                'recipient' => ($recipient->name ?? $genericRecipient),
+            ];
+
             // Compress variables for Twig
             $config = array_merge($baseConfig, [
                 'recipient' => $recipient,
@@ -206,15 +227,21 @@ class Messages extends Component
             // Parse message body
             $message = $this->parseTwig($config, $notification->messageConfig['smsMessage'] ?? null);
 
-            // Put outbound SMS (text) message into envelope
-            $outbound[] = new OutboundSms([
+            // Get message details
+            $details = [
                 'phoneNumber' => $recipient->phoneNumber,
                 'message' => $message,
-                'jobInfo' => [
-                    'messageType' => 'an SMS message',
-                    'recipient' => ($recipient->name ?? $genericRecipient),
-                ]
-            ]);
+            ];
+
+            // Initialize logging for envelope
+            $envelopeId = $notification->log->envelope($jobInfo, $details);
+
+            // Put outbound SMS (text) message into envelope
+            $outbound[] = new OutboundSms(array_merge([
+                'notificationId' => $notification->id,
+                'envelopeId' => $envelopeId,
+                'jobInfo' => $jobInfo
+            ], $details));
 
         }
 
@@ -232,6 +259,15 @@ class Messages extends Component
      */
     private function _compileAnnouncement(Notification $notification, Event $event, array $data): EnvelopeInterface
     {
+        // Whether announcement is being sent only to Admins
+        $adminsOnly = ($notification->recipientsConfig['adminsOnly'] ?? false);
+
+        // Set job info
+        $jobInfo = [
+            'messageType' => 'an announcement',
+            'recipient' => ($adminsOnly ? 'system Admins only' : 'all control panel users'),
+        ];
+
         // Compress variables for Twig
         $config = [
             'recipient' => null,
@@ -244,19 +280,22 @@ class Messages extends Component
         $title   = $this->parseTwig($config, $notification->messageConfig['announcementTitle'] ?? null);
         $message = $this->parseTwig($config, $notification->messageConfig['announcementMessage'] ?? null);
 
-        // Get generic recipient name
-        $genericRecipient = $notification->getTaskRecipient();
-
-        // Put outbound announcement into envelope
-        return new OutboundAnnouncement([
+        // Get message details
+        $details = [
             'title' => $title,
             'message' => $message,
-            'adminsOnly' => ($notification->recipientsConfig['adminsOnly'] ?? false),
-            'jobInfo' => [
-                'messageType' => 'an announcement',
-                'recipient' => ($recipient->name ?? $genericRecipient),
-            ]
-        ]);
+            'adminsOnly' => $adminsOnly,
+        ];
+
+        // Initialize logging for envelope
+        $envelopeId = $notification->log->envelope($jobInfo, $details);
+
+        // Put outbound announcement into envelope
+        return new OutboundAnnouncement(array_merge([
+            'notificationId' => $notification->id,
+            'envelopeId' => $envelopeId,
+            'jobInfo' => $jobInfo
+        ], $details));
     }
 
     /**
@@ -284,12 +323,31 @@ class Messages extends Component
         // Get flash type
         $type = ($notification->messageConfig['flashType'] ?? 'notice');
 
-        // Put outbound flash message into envelope
-        return new OutboundFlash([
+        // Get message details
+        $details = [
             'type' => $type,
             'title' => $title,
             'message' => $message
-        ]);
+        ];
+
+        // Attempt to get the currently active user
+        try {
+            $currentUser = Craft::$app->getUser()->getIdentity();
+        } catch (Throwable $e) {
+            $currentUser = null;
+        }
+
+        // Initialize logging for envelope
+        $envelopeId = $notification->log->envelope([
+            'messageType' => 'a flash message',
+            'recipient' => ($currentUser->name ?? 'the current user'),
+        ], $details);
+
+        // Put outbound flash message into envelope
+        return new OutboundFlash(array_merge([
+            'notificationId' => $notification->id,
+            'envelopeId' => $envelopeId
+        ], $details));
     }
 
     // ========================================================================= //

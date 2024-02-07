@@ -1,0 +1,6 @@
+<div class="envelope-event">
+    <div class="timestamp">{{ date("#{envelope.envelope.dateCreated} +00:00")|date(timeFormat) }}</div>
+    <div class="message">{{ envelope.envelope.message }}</div>
+    <div class="flex-grow"></div>
+    {% include 'notifier/_utility/log/envelope-buttons' %}
+</div>

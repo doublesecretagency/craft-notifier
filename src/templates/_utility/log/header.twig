@@ -1,0 +1,25 @@
+{% set dateNav %}
+    <a href="?date={{ prevDay }}" title="Previous Day">&#9664;</a>
+    {% if isToday or isFuture %}
+        <span class="the-future">&nbsp;</span>
+    {% else %}
+        <a href="?date={{ nextDay }}" title="Next Day">&#9654;</a>
+    {% endif %}
+{% endset %}
+
+<div class="notification-log-header">
+    <div class="readable left">
+        <h2>
+            <span class="date-nav">{{ dateNav|raw }}</span>
+            <span class="date">{{ date|date(dateFormat) }}</span>
+            {% if isToday %}
+                <span class="today">TODAY</span>
+            {% endif %}
+        </h2>
+    </div>
+    <div class="buttons right">
+        {% if dayLog %}
+            <button type="button" class="btn submit" onclick="window.deleteDay('{{ date }}')">Delete Day Logs</button>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,26 @@
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\LogAsset') %}
+
+{% set dateFormat = 'F j, Y' %}
+{% set timeFormat = 'g:i:s a' %}
+
+<div class="notification-log">
+
+    {% include 'notifier/_utility/log/header' %}
+
+    {% if dayLog %}
+        {% for envelope in dayLog %}
+            <div class="envelope" id="envelope-{{ envelope.envelope.id }}">
+                {% include 'notifier/_utility/log/envelope-event' %}
+                {% include 'notifier/_utility/log/envelope-details' %}
+                {% for log in envelope.logs %}
+                    {% include 'notifier/_utility/log/log-event' %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-logs">
+            <p>Nothing logged on this day</p>
+        </div>
+    {% endif %}
+
+</div>

@@ -43,11 +43,11 @@ abstract class Options
                 'value' => 'after-activate-user',
                 'class' => 'craft\services\Users::EVENT_AFTER_ACTIVATE_USER'
             ],
-            [
-                'label' => 'When a user is deleted',
-                'value' => 'after-delete-user',
-//                'class' => 'craft\services\Users::EVENT_AFTER_ACTIVATE_USER'
-            ]
+//            [
+//                'label' => 'When a user is deleted',
+//                'value' => 'after-delete-user',
+////                'class' => 'craft\services\Users::EVENT_AFTER_ACTIVATE_USER'
+//            ]
         ],
         'entries' => [
             [
@@ -55,11 +55,11 @@ abstract class Options
                 'value' => 'after-propagate',
                 'class' => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE'
             ],
-            [
-                'label' => 'When an entry is deleted',
-                'value' => 'after-delete-entry',
-//                'class' => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE'
-            ]
+//            [
+//                'label' => 'When an entry is deleted',
+//                'value' => 'after-delete-entry',
+////                'class' => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE'
+//            ]
         ],
         'assets' => [
             [
@@ -67,16 +67,16 @@ abstract class Options
                 'value' => 'after-propagate',
                 'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
             ],
-            [
-                'label' => 'When an asset is moved',
-                'value' => 'after-move-asset',
-//                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
-            ],
-            [
-                'label' => 'When an asset is deleted',
-                'value' => 'after-delete-asset',
-//                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
-            ]
+//            [
+//                'label' => 'When an asset is moved',
+//                'value' => 'after-move-asset',
+////                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
+//            ],
+//            [
+//                'label' => 'When an asset is deleted',
+//                'value' => 'after-delete-asset',
+////                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
+//            ]
         ]
     ];
 

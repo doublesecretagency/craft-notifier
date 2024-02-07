@@ -234,6 +234,8 @@ class NotificationsController extends Controller
         return $this->redirectToPostedUrl();
     }
 
+    // ========================================================================= //
+
     /**
      * Fetches or creates a Notification.
      *

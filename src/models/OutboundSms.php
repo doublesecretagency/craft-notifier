@@ -11,11 +11,10 @@
 
 namespace doublesecretagency\notifier\models;
 
-use craft\base\Model;
 use craft\helpers\App;
-use doublesecretagency\notifier\base\EnvelopeInterface;
+use craft\helpers\Json;
+use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\NotifierPlugin;
-use Twilio\Exceptions\ConfigurationException;
 use Twilio\Exceptions\TwilioException;
 use Twilio\Rest\Client;
 
@@ -23,13 +22,8 @@ use Twilio\Rest\Client;
  * Class OutboundSms
  * @since 1.0.0
  */
-class OutboundSms extends Model implements EnvelopeInterface
+class OutboundSms extends BaseEnvelope
 {
-
-    /**
-     * @var array
-     */
-    public array $jobInfo = [];
 
     /**
      * @var string|null
@@ -45,73 +39,102 @@ class OutboundSms extends Model implements EnvelopeInterface
      * Send the SMS (text) message.
      *
      * @return bool
-     * @throws ConfigurationException
-     * @throws TwilioException
      */
     public function send(): bool
     {
-        // Ensure we're working with a valid phone number
-        $recipientPhoneNumber = $this->_formatPhoneNumber($this->phoneNumber);
+        // Get original notification
+        /** @var Notification $notification */
+        $notification = Notification::find()
+            ->id($this->notificationId)
+            ->one();
 
-        // If number is not valid, log error and bail
-        if (!$recipientPhoneNumber) {
-            // @todo Log error message
+        // If invalid notification, bail (unable to log)
+        if (!$notification) {
             return false;
         }
 
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        // Initialize Twilio client
-        $twilio = new Client(
-            App::parseEnv($settings->twilioAccountSid),
-            App::parseEnv($settings->twilioAuthToken)
-        );
+        // Check if any part of credentials are missing
+        $missing = [];
+
+        // Check each value exists
+        if (!App::parseEnv($settings->twilioAccountSid)) {
+            $missing[] = "Twilio Account SID";
+        }
+        if (!App::parseEnv($settings->twilioAuthToken)) {
+            $missing[] = "Twilio Auth Token";
+        }
+
+        // If something is missing, log error and return failure
+        if ($missing) {
+            $m = implode(' and ', $missing);
+            $notification->log->error("Invalid Twilio credentials. Missing {$m}.", $this->envelopeId);
+            return false;
+        }
+
+        // Get the Twilio phone number
+        $from = App::parseEnv($settings->twilioPhoneNumber);
+
+        // If no sender exists, log error and return failure
+        if (!$from) {
+            $notification->log->error('Unable to send SMS, no Twilio phone number exists.', $this->envelopeId);
+            return false;
+        }
 
         // Send to test phone number if it exists,
         // otherwise send to intended recipient
-        $to = (App::parseEnv($settings->testToPhoneNumber) ?: $recipientPhoneNumber);
+        $to = (App::parseEnv($settings->testToPhoneNumber) ?: $this->phoneNumber);
+
+        // If no recipient exists, log error and return failure
+        if (!$to) {
+            $notification->log->error('Unable to send SMS, no recipient phone number exists.', $this->envelopeId);
+            return false;
+        }
+
+        // Properly format the recipient's phone number
+        // or nullify if phone number is invalid
+        $to = $this->_formatPhoneNumber($to);
+
+        // If recipient phone number is invalid, log error and return failure
+        if (!$to) {
+            $notification->log->error('Unable to send SMS, recipient phone number is invalid.', $this->envelopeId);
+            return false;
+        }
 
         // Attempt to send SMS message
         try {
 
+            // Initialize Twilio client
+            $twilio = new Client(
+                App::parseEnv($settings->twilioAccountSid),
+                App::parseEnv($settings->twilioAuthToken)
+            );
+
             // Generate and send a new SMS message
             $twilio->messages->create($to, [
-                'from' => App::parseEnv($settings->twilioPhoneNumber),
+                'from' => $from,
                 'body' => $this->message
             ]);
 
         } catch (TwilioException $exception) {
 
-            // $exception = [
-            //     'statusCode' => '401',
-            //     'moreInfo' => 'https://www.twilio.com/docs/errors/20003',
-            //     'message' => '[HTTP 401] Unable to create record: Authentication Error - invalid username',
-            // ];
+            // Set error message
+            $message = ($exception->getMessage() ?? 'Unknown error: '.Json::encode($exception));
 
-            // @todo Log failure message
+            // Log error message
+            $notification->log->error($message, $this->envelopeId);
 
             // Return failure
             return false;
         }
 
-        // @todo Log success message
+        // Log success message
+        $notification->log->success("Successfully sent SMS message!", $this->envelopeId);
 
-
-//        // If unsuccessful, log error and bail
-//        if (!$success) {
-//            Log::warning("Unable to send the SMS message using the Twilio API.");
-//            Log::error("Check the plugin's configuration settings.");
-//            return false;
-//        }
-//
-//        // Log success message
-//        Log::success("The text to {$this->to} was sent successfully!");
-
-        // Return whether message was sent successfully
-//        return $success;
+        // Return success
         return true;
-
     }
 
     // ========================================================================= //
@@ -130,13 +153,13 @@ class OutboundSms extends Model implements EnvelopeInterface
         }
 
         // Strip all non-digits from the phone number
-        $phone = preg_replace('/[^0-9]/', '', $number);
+        $phone = preg_replace('/\D/', '', $number);
 
         // Get number of digits
         $digits = strlen($phone);
 
         // If fewer than 10 digits, return null
-        if (10 < $digits) {
+        if ($digits < 10) {
             return null;
         }
 

@@ -12,22 +12,16 @@
 namespace doublesecretagency\notifier\models;
 
 use Craft;
-use craft\base\Model;
 use craft\mail\Message as Email;
-use doublesecretagency\notifier\base\EnvelopeInterface;
+use doublesecretagency\notifier\elements\Notification;
 use yii\base\InvalidConfigException;
 
 /**
  * Class OutboundEmail
  * @since 1.0.0
  */
-class OutboundEmail extends Model implements EnvelopeInterface
+class OutboundEmail extends BaseEnvelope
 {
-
-    /**
-     * @var array
-     */
-    public array $jobInfo = [];
 
     /**
      * @var string|null
@@ -52,9 +46,20 @@ class OutboundEmail extends Model implements EnvelopeInterface
      */
     public function send(): bool
     {
+        // Get original notification
+        /** @var Notification $notification */
+        $notification = Notification::find()
+            ->id($this->notificationId)
+            ->one();
+
+        // If invalid notification, bail (unable to log)
+        if (!$notification) {
+            return false;
+        }
+
         // If no recipient specified, log warning and bail
         if (!$this->to) {
-//            Log::warning("Unable to send email, no recipient specified.");
+            $notification->log->error("Unable to send email, no recipient specified.", $this->envelopeId);
             return false;
         }
 
@@ -68,15 +73,15 @@ class OutboundEmail extends Model implements EnvelopeInterface
         // Send email
         $success = Craft::$app->getMailer()->send($email);
 
-//        // If unsuccessful, log error and bail
-//        if (!$success) {
-//            Log::warning("Unable to send the email using Craft's native email handling.");
-//            Log::error("Check your general email settings within Craft.");
-//            return false;
-//        }
-//
-//        // Log success message
-//        Log::success("The email to {$this->to} was sent successfully! ({$this->subject})");
+        // If unsuccessful, log error and bail
+        if (!$success) {
+            $notification->log->warning("Unable to send the email using Craft's native email handling.", $this->envelopeId);
+            $notification->log->error("Check your general email settings within Craft.", $this->envelopeId);
+            return false;
+        }
+
+        // Log success message
+        $notification->log->success("Successfully sent email message!", $this->envelopeId);
 
         // Return whether message was sent successfully
         return $success;

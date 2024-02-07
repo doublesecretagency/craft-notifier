@@ -2,41 +2,44 @@
 description:
 ---
 
-# Notification Logs
+# Notification Log
 
-🚩
+✅
 
-A complete history of notification attempts will be recorded in a log file. To see what has been processed, check out the log data, either via the control panel or by opening the log file directly.
+To see a detailed notification log, visit **Utilities > Notification Log** in the control panel:
 
-## Control Panel
+<img class="dropshadow" src="/images/logs/notification-log.png" alt="" style="width:1184px; margin-top:10px">
 
-To see the detailed log, visit the **Utilities > Notification Logs** page in your control panel.
+## Individual log events
 
-<img class="dropshadow" src="/images/OLD/guides/notification-logs.png" alt="" style="max-width:760px; margin-top:10px">
+Each log event displays the path taken by that message as it was packed up and delivered.
 
-## Log File
+Click the **Details** button to reveal additional information about what each message contained:
 
-The screenshot above is a GUI representation of the underlying text log data...
+<img src="/images/logs/log-details.png" alt="" style="width:755px; margin-top:10px">
 
-```
-{"*":"2021-08-06 11:32:37 [info] Determining which email addresses based on custom Twig snippet..."
-{"*":"2021-08-06 11:32:37 [info] Preparing to send email message to alice@example.com..."
-{"*":"--> 2021-08-06 11:32:39 [success] The email to alice@example.com was sent successfully! (New Article: Styles of Summer)"
-{"*":"2021-08-06 11:32:39 [info] Preparing to send email message to bob-example.com..."
-{"*":"--> 2021-08-06 11:32:39 [warning] \"bob-example.com\" is not a valid email address."
-{"*":"--> 2021-08-06 11:32:39 [error] Invalid recipient, email could not be sent."
-```
+The **Config** button will open the original [Notification](/elements) which generated the outgoing message.
 
-:::tip Truncated Example
-The data shown here has been truncated for example purposes. Each row is actually part of a much more complex JSON encoded string. If you open the log file, you will see additional data available on each line.
+## Deleting log events
+
+To delete a single message log, click the **X** button.
+
+To delete all logs on a given date, click the **Delete Day Logs** button at the top of the page.
+
+## Navigating between dates
+
+Click the **left & right arrows** to move back or forward a full day...
+
+<img class="dropshadow" src="/images/logs/log-header.png" alt="" style="width:771px; margin-top:10px">
+
+Left will go back to the previous day, right will take you to the following day. Once you have reached the current day, it will be impossible to navigate any further into the future.
+
+:::warning TODAY
+If displaying logs for the current day, a **TODAY** tag will appear beside the date.
 :::
 
-### File Path
-
-All log data will be stored in the following file...
+To manually navigate to a specific date, simply **change the page URL to the desired date:**
 
 ```
-yoursite/storage/logs/notifier.log
+/admin/utilities/notification-log?date=2024-02-16
 ```
-
-No logging data is stored in the database.

@@ -1,0 +1,32 @@
+{# Get details #}
+{% set details = envelope.envelope.details|json_decode %}
+
+<div id="details-{{ envelope.envelope.id }}" style="display:none">
+    <div class="envelope-details">
+
+        <div class="timestamp">&nbsp;</div>
+        <div class="details-container flex-grow">
+
+            {% if details %}
+                <table>
+                    {% for key,value in details %}
+                        {% if key == 'adminsOnly' %}
+                            {% set value = (value ? 'Yes' : 'No') %}
+                        {% endif %}
+                        {% if key == 'type' %}
+                            {% set value = value|title %}
+                        {% endif %}
+                        <tr>
+                            <th>{{ key|kebab|title|replace('-',' ') }}:</th>
+                            <td>{{ value }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No further details</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>

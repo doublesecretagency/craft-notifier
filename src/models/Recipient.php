@@ -69,7 +69,7 @@ class Recipient extends Model
      *
      * @return void
      */
-    public function _extractUserData(): void
+    private function _extractUserData(): void
     {
         // If no user was specified, bail
         if (!$this->user) {

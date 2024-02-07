@@ -20,7 +20,11 @@ use craft\db\Migration;
 class Install extends Migration
 {
 
+    /**
+     * Table names.
+     */
     const NOTIFICATIONS = '{{%notifier_notifications}}';
+    const LOG = '{{%notifier_log}}';
 
     /**
      * @inheritdoc
@@ -36,6 +40,7 @@ class Install extends Migration
      */
     public function safeDown(): void
     {
+        $this->dropTableIfExists(self::LOG);
         $this->dropTableIfExists(self::NOTIFICATIONS);
     }
 
@@ -44,27 +49,40 @@ class Install extends Migration
      */
     protected function createTables(): void
     {
-        // If table already exists, bail
-        if ($this->db->tableExists(self::NOTIFICATIONS)) {
-            return;
+        // If table does not already exist, create it
+        if (!$this->db->tableExists(self::NOTIFICATIONS)) {
+            $this->createTable(self::NOTIFICATIONS, [
+                'id'               => $this->integer()->notNull(),
+                'description'      => $this->string(),
+                'eventType'        => $this->string(),
+                'event'            => $this->string(),
+                'eventConfig'      => $this->text(),
+                'messageType'      => $this->string(),
+                'messageConfig'    => $this->text(),
+                'recipientsType'   => $this->string(),
+                'recipientsConfig' => $this->text(),
+                'dateCreated'      => $this->dateTime()->notNull(),
+                'dateUpdated'      => $this->dateTime()->notNull(),
+                'dateDeleted'      => $this->dateTime()->null(),
+                'uid'              => $this->uid(),
+                'PRIMARY KEY([[id]])',
+            ]);
         }
 
-        $this->createTable(self::NOTIFICATIONS, [
-            'id'               => $this->integer()->notNull(),
-            'description'      => $this->string(),
-            'eventType'        => $this->string(),
-            'event'            => $this->string(),
-            'eventConfig'      => $this->text(),
-            'messageType'      => $this->string(),
-            'messageConfig'    => $this->text(),
-            'recipientsType'   => $this->string(),
-            'recipientsConfig' => $this->text(),
-            'dateCreated'      => $this->dateTime()->notNull(),
-            'dateUpdated'      => $this->dateTime()->notNull(),
-            'dateDeleted'      => $this->dateTime()->null(),
-            'uid'              => $this->uid(),
-            'PRIMARY KEY([[id]])',
-        ]);
+        // If table does not already exist, create it
+        if (!$this->db->tableExists(self::LOG)) {
+            $this->createTable(self::LOG, [
+                'id'             => $this->primaryKey(),
+                'notificationId' => $this->integer(),
+                'envelopeId'     => $this->integer(),
+                'type'           => $this->string(),
+                'message'        => $this->string(),
+                'details'        => $this->text(),
+                'dateCreated'    => $this->dateTime()->notNull(),
+                'dateUpdated'    => $this->dateTime()->notNull(),
+                'uid'            => $this->uid(),
+            ]);
+        }
     }
 
     /**
@@ -72,7 +90,11 @@ class Install extends Migration
      */
     protected function addForeignKeys(): void
     {
+        // Relate Notifications to Elements
         $this->addForeignKey(null, self::NOTIFICATIONS, ['id'], '{{%elements}}', ['id'], 'CASCADE');
+
+        // Relate Logs to Notifications
+        $this->addForeignKey(null, self::LOG, ['notificationId'], self::NOTIFICATIONS, ['id'], 'SET NULL');
     }
 
 }

@@ -12,13 +12,12 @@
 namespace doublesecretagency\notifier\web\assets;
 
 use craft\web\AssetBundle;
-use craft\web\assets\vue\VueAsset;
 
 /**
- * Class NotifierAsset
+ * Class LogAsset
  * @since 1.0.0
  */
-class NotifierAsset extends AssetBundle
+class LogAsset extends AssetBundle
 {
 
     /**
@@ -30,12 +29,12 @@ class NotifierAsset extends AssetBundle
 
         $this->sourcePath = '@doublesecretagency/notifier/web/assets/dist';
 
-        $this->depends = [
-            VueAsset::class,
+        $this->css = [
+            'css/log.css',
         ];
 
         $this->js = [
-            'js/notification.js',
+            'js/log.js',
         ];
     }
 

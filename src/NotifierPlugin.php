@@ -26,7 +26,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Options;
-//use doublesecretagency\notifier\utilities\LogUtility;
+use doublesecretagency\notifier\utilities\NotificationLog;
 use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\Events;
 use doublesecretagency\notifier\services\Messages;
@@ -101,7 +101,7 @@ class NotifierPlugin extends Plugin
         // Register enhancements for the control panel
         if (Craft::$app->getRequest()->getIsCpRequest()) {
             $this->_registerCpRoutes();
-//            $this->_registerUtilities();
+            $this->_registerUtilities();
             $this->_registerTableAttributes();
         }
 
@@ -228,20 +228,20 @@ class NotifierPlugin extends Plugin
         );
     }
 
-//    /**
-//     * Register utilities.
-//     */
-//    private function _registerUtilities(): void
-//    {
-//        Event::on(
-//            Utilities::class,
-//            Utilities::EVENT_REGISTER_UTILITY_TYPES,
-//            static function (RegisterComponentTypesEvent $event) {
-//                // Add logging utility
-//                $event->types[] = LogUtility::class;
-//            }
-//        );
-//    }
+    /**
+     * Register utilities.
+     */
+    private function _registerUtilities(): void
+    {
+        Event::on(
+            Utilities::class,
+            Utilities::EVENT_REGISTER_UTILITY_TYPES,
+            static function (RegisterComponentTypesEvent $event) {
+                // Add logging utility
+                $event->types[] = NotificationLog::class;
+            }
+        );
+    }
 
     /**
      * Register index table attributes.

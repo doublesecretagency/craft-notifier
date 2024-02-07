@@ -12,20 +12,14 @@
 namespace doublesecretagency\notifier\models;
 
 use Craft;
-use craft\base\Model;
-use doublesecretagency\notifier\base\EnvelopeInterface;
+use doublesecretagency\notifier\elements\Notification;
 
 /**
  * Class OutboundAnnouncement
  * @since 1.0.0
  */
-class OutboundAnnouncement extends Model implements EnvelopeInterface
+class OutboundAnnouncement extends BaseEnvelope
 {
-
-    /**
-     * @var array
-     */
-    public array $jobInfo = [];
 
     /**
      * @var string
@@ -49,6 +43,17 @@ class OutboundAnnouncement extends Model implements EnvelopeInterface
      */
     public function send(): bool
     {
+        // Get original notification
+        /** @var Notification $notification */
+        $notification = Notification::find()
+            ->id($this->notificationId)
+            ->one();
+
+        // If invalid notification, bail (unable to log)
+        if (!$notification) {
+            return false;
+        }
+
         // Send the announcement
         Craft::$app->getAnnouncements()->push(
             $this->title,
@@ -57,8 +62,8 @@ class OutboundAnnouncement extends Model implements EnvelopeInterface
             $this->adminsOnly
         );
 
-//        // Log success message
-//        Log::success("The announcement to {$this->to} was sent successfully! ({$this->title})");
+        // Log success message
+        $notification->log->success("Successfully sent announcement!", $this->envelopeId);
 
         // Return successfully
         return true;

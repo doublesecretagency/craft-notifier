@@ -1,0 +1,4 @@
+<div class="log-event">
+    <div class="timestamp">{{ date("#{log.dateCreated} +00:00")|date(timeFormat) }}</div>
+    <div class="message flex-grow log-{{ log.type }}">{{ log.message }}</div>
+</div>
