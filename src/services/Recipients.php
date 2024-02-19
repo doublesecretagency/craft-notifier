@@ -50,15 +50,13 @@ class Recipients extends Component
 
         // Gather recipients based on type
         switch ($notification->recipientsType ?? null) {
-            case 'current-user':      return $this->_currentUser();
-            case 'all-users':         return $this->_allUsers();
-            case 'all-admins':        return $this->_allAdmins();
-            case 'selected-groups':   return ($notification ? $this->_selectedGroups($notification)   : []);
-            case 'selected-users':    return ($notification ? $this->_selectedUsers($notification)    : []);
-            case 'custom-recipients': return ($notification ? $this->_customRecipients($notification) : []);
+            case 'current-user':       return $this->_currentUser();
+            case 'all-users':          return $this->_allUsers();
+            case 'all-admins':         return $this->_allAdmins();
+            case 'selected-groups':    return ($notification ? $this->_selectedGroups($notification)    : []);
+            case 'selected-users':     return ($notification ? $this->_selectedUsers($notification)     : []);
+            case 'dynamic-recipients': return ($notification ? $this->_dynamicRecipients($notification) : []);
         }
-
-        // todo: Log "recipient type not specified"
 
         // Invalid recipients type
         return [];
@@ -173,12 +171,12 @@ class Recipients extends Component
     }
 
     /**
-     * Get custom recipients.
+     * Get dynamic recipients.
      *
      * @param Notification $notification
      * @return array
      */
-    private function _customRecipients(Notification $notification): array
+    private function _dynamicRecipients(Notification $notification): array
     {
         return [];
     }

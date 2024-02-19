@@ -4,8 +4,6 @@ description:
 
 # Skip Sending a Message
 
-✅
-
 Within the context of the Twig template, you can skip sending a **single message** to an **individual recipient**.
 
 Each recipient is processed individually, so a message could be stopped completely by skipping all recipients.
@@ -33,22 +31,22 @@ You can use that information to determine whether a particular message should be
 
 ```twig
 {# Skip message if the recipient is a specific person #}
-{% if recipient.id == 42 %}
+{% if recipient.user.id == 42 %}
+    {% skipMessage %}
+{% endif %}
+
+{# Skip message if the field value didn't change #}
+{% if original.myField == entry.myField %}
     {% skipMessage %}
 {% endif %}
 
 {# Skip message if the recipient is in a specific group #}
-{% if recipient.isInGroup('groupHandle') %}
+{% if recipient.user.isInGroup('groupHandle') %}
     {% skipMessage %}
 {% endif %}
 
 {# Skip message if a custom dropdown is set to "Under Review" #}
 {% if entry.reviewStatus == 'underReview' %}
-    {% skipMessage %}
-{% endif %}
-
-{# Skip message if the field value didn't change #}
-{% if originalEntry.myField == entry.myField %}
     {% skipMessage %}
 {% endif %}
 ```

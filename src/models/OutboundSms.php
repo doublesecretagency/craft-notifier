@@ -14,6 +14,7 @@ namespace doublesecretagency\notifier\models;
 use craft\helpers\App;
 use craft\helpers\Json;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\NotifierPlugin;
 use Twilio\Exceptions\TwilioException;
 use Twilio\Rest\Client;
@@ -44,9 +45,7 @@ class OutboundSms extends BaseEnvelope
     {
         // Get original notification
         /** @var Notification $notification */
-        $notification = Notification::find()
-            ->id($this->notificationId)
-            ->one();
+        $notification = Notifier::getNotification($this->notificationId);
 
         // If invalid notification, bail (unable to log)
         if (!$notification) {

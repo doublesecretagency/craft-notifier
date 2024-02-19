@@ -1,0 +1,20 @@
+{% import '_includes/forms' as forms %}
+
+{# Load field info #}
+{% set placeholder = include('notifier/notifications/_edit/recipients/dynamic-recipients/placeholder') %}
+
+<div class="recipients-type-dynamic-recipients hidden">
+    <p>Use Twig to create an array of Users (or email addresses, or phone numbers).</p>
+    <p>See the full documentation for <a href="https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients" target="_blank">dynamic recipients</a>.</p>
+
+    {{ forms.textareaField({
+        label: "Determine Recipients Dynamically"|t('notifier'),
+        instructions: "Enter a custom Twig snippet to determine who will receive the message.",
+        placeholder: placeholder,
+        id: 'config-recipients-dynamic-recipients',
+        name: 'recipientsConfig[dynamicRecipients]',
+        value: (notification.recipientsConfig.dynamicRecipients ?? ''),
+        class: 'code',
+        rows: 8,
+    }) }}
+</div>

@@ -12,10 +12,9 @@
 namespace doublesecretagency\notifier\web\twig;
 
 use Craft;
-//use doublesecretagency\notifier\helpers\Notifier;
+use doublesecretagency\notifier\helpers\Notifier;
 use craft\elements\User;
 use doublesecretagency\notifier\enums\Options;
-use doublesecretagency\notifier\web\assets\NotifierAsset;
 use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -44,8 +43,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
         // Return globally accessible variables
         return [
-//            'notifier' => new Notifier(),
-            'notifierAssets' => NotifierAsset::class,
+            'notifier' => new Notifier(),
             'notificationOptions' => [
                 'eventType'      => Options::EVENT_TYPE,
                 'allEvents'      => Options::ALL_EVENTS,
@@ -90,8 +88,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
         // Initialize field options
         $fieldOptions = [
             'email' => [
-                '' => '',
-                'email' => 'Email (native User field)',
+                // '' => '', // not needed?
+                'email' => 'Email [native User field]',
             ],
             'sms' => [
                 '' => ''

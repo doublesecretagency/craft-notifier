@@ -4,8 +4,6 @@ description:
 
 # Recipients
 
-✅
-
 Each notification will be sent to one or more **recipients**.
 
 Some examples of recipient types are:
@@ -32,7 +30,7 @@ If needed, you can start with a pre-existing set of recipients (ie: "All Admins"
 
 ```twig
 {# Don't send message to Doug #}
-{% if recipient.id == 42 %}
+{% if recipient.user.id == 42 %}
     {% skipMessage %}
 {% endif %}
 ```

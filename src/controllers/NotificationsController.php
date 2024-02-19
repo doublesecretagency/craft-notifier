@@ -19,6 +19,7 @@ use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\helpers\Notifier;
 use Throwable;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -249,11 +250,8 @@ class NotificationsController extends Controller
         if ($notificationId) {
 
             // Get the existing notification
-            /** @var Notification|null $notification */
-            $notification = Notification::find()
-                ->id($notificationId)
-                ->status(null)
-                ->one();
+            /** @var Notification $notification */
+            $notification = Notifier::getNotification($notificationId);
 
             // If a notification was found, return it
             if ($notification) {

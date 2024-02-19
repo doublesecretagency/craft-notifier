@@ -13,6 +13,7 @@ namespace doublesecretagency\notifier\models;
 
 use Craft;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\helpers\Notifier;
 
 /**
  * Class OutboundAnnouncement
@@ -45,9 +46,7 @@ class OutboundAnnouncement extends BaseEnvelope
     {
         // Get original notification
         /** @var Notification $notification */
-        $notification = Notification::find()
-            ->id($this->notificationId)
-            ->one();
+        $notification = Notifier::getNotification($this->notificationId);
 
         // If invalid notification, bail (unable to log)
         if (!$notification) {

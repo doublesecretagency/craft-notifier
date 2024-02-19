@@ -22,7 +22,6 @@ use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use craft\services\Plugins;
 use craft\services\Utilities;
-use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Options;
@@ -31,7 +30,6 @@ use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\Events;
 use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
-use doublesecretagency\notifier\variables\Notifier as NotifierVariable;
 use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
 
@@ -96,7 +94,6 @@ class NotifierPlugin extends Plugin
 
         // Register components
         $this->_registerElementTypes();
-        $this->_registerVariables();
 
         // Register enhancements for the control panel
         if (Craft::$app->getRequest()->getIsCpRequest()) {
@@ -191,21 +188,6 @@ class NotifierPlugin extends Plugin
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
             static function (RegisterComponentTypesEvent $event) {
                 $event->types[] = Notification::class;
-            }
-        );
-    }
-
-    /**
-     * Register variables.
-     */
-    private function _registerVariables(): void
-    {
-        Event::on(
-            CraftVariable::class,
-            CraftVariable::EVENT_INIT,
-            static function (Event $event) {
-                $variable = $event->sender;
-                $variable->set('notifier', NotifierVariable::class);
             }
         );
     }

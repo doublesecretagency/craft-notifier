@@ -4,8 +4,6 @@ description:
 
 # All Admins
 
-✅
-
 Sends the message to **all Users with Admin permissions.**
 
 :::tip Additional Filtering of Recipients

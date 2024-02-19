@@ -1,9 +1,13 @@
 {% import '_includes/forms' as forms %}
 
 <div class="message-type-announcement hidden">
+    <hr>
+
+    {% include 'notifier/notifications/_edit/message/docs-links' %}
+
     {{ forms.textField({
         label: "Announcement Title"|t('notifier'),
-        instructions: commonInstructions,
+        instructions: "First line of the announcement, in larger bold letters.",
         id: 'messageConfig-announcementTitle',
         name: 'messageConfig[announcementTitle]',
         value: (notification.messageConfig.announcementTitle ?? null),
@@ -12,7 +16,7 @@
 
     {{ forms.textareaField({
         label: "Announcement Message"|t('notifier'),
-        instructions: commonInstructions,
+        instructions: "Main body of the announcement.",
         placeholder: commonPlaceholder,
         rows: 3,
         id: 'messageConfig-announcementMessage',

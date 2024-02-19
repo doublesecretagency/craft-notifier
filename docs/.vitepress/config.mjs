@@ -33,15 +33,14 @@ export default defineConfig({
               {text: 'All Message Types',      link: '/messages/types/'},
               {text: 'Message Templating',     link: '/messages/templating'},
               {text: 'Special Variables',      link: '/messages/variables'},
-              {text: 'Skip Sending a Message', link: '/messages/skip-message'}
+              {text: 'Skip Sending a Message', link: '/messages/skip-message'},
+              {text: 'Optional Queue',         link: '/messages/queue'},
             ]
           },
           {
             items: [
               {text: 'Recipients',          link: '/recipients/'},
-              {text: 'All Recipient Types', link: '/recipients/types/'},
-              {text: 'Dynamic Recipients',  link: '/recipients/dynamic'},
-              {text: 'Users as Recipients', link: '/recipients/users'}
+              {text: 'All Recipient Types', link: '/recipients/types/'}
             ]
           }
         ]
@@ -50,76 +49,77 @@ export default defineConfig({
         text: 'More',
         items: [
           {text: 'Elements', link: '/elements'},
-          {text: 'Queue',    link: '/queue'},
           {text: 'Logging',  link: '/logging'}
         ]
       },
-      {
-        text: 'Examples',
-        items: [
-          {
-            items: [
-              {text: 'When a User registers, send a "welcome" email', link: '/examples/users/when-user-registers-send-welcome-email'},
-            ]
-          },
-          {
-            items: [
-              {text: 'When an Entry is created, email all Admins',     link: '/examples/entries/when-entry-created-email-admins'},
-              {text: 'When an Entry is updated, post CP announcement', link: '/examples/entries/when-entry-updated-post-announcement'},
-            ]
-          },
-          {
-            items: [
-              {text: 'When an Asset is uploaded, send an SMS (text message)', link: '/examples/assets/when-asset-uploaded-send-sms-text'},
-            ]
-          },
-        ]
-      },
+      // {
+      //   text: 'Examples',
+      //   items: [
+      //     {
+      //       items: [
+      //         {text: 'When a User registers, send a "welcome" email', link: '/examples/users/when-user-registers-send-welcome-email'},
+      //       ]
+      //     },
+      //     {
+      //       items: [
+      //         {text: 'When an Entry is created, email all Admins',     link: '/examples/entries/when-entry-created-email-admins'},
+      //         {text: 'When an Entry is updated, post CP announcement', link: '/examples/entries/when-entry-updated-post-announcement'},
+      //       ]
+      //     },
+      //     {
+      //       items: [
+      //         {text: 'When an Asset is uploaded, send an SMS (text message)', link: '/examples/assets/when-asset-uploaded-send-sms-text'},
+      //       ]
+      //     },
+      //   ]
+      // },
     ],
 
     sidebar: {
 
-      // Examples of User Events
-      '/examples/users/': [
-        {
-          text: 'User Events',
-          items: [
-            {text: 'When a User registers, send a "welcome" email', link: '/examples/users/when-user-registers-send-welcome-email'},
-          ]
-        }
-      ],
-      // Examples of Entry Events
-      '/examples/entries/': [
-        {
-          text: 'Entry Events',
-          items: [
-            {text: 'When an Entry is created, email all Admins',     link: '/examples/entries/when-entry-created-email-admins'},
-            {text: 'When an Entry is updated, post CP announcement', link: '/examples/entries/when-entry-updated-post-announcement'},
-          ]
-        }
-      ],
-      // Examples of Asset Events
-      '/examples/assets/': [
-        {
-          text: 'Asset Events',
-          items: [
-            {text: 'When an Asset is uploaded, send an SMS (text message)', link: '/examples/assets/when-asset-uploaded-send-sms-text'},
-          ]
-        }
-      ],
+      // // Examples of User Events
+      // '/examples/users/': [
+      //   {
+      //     text: 'User Events',
+      //     items: [
+      //       {text: 'When a User registers, send a "welcome" email', link: '/examples/users/when-user-registers-send-welcome-email'},
+      //     ]
+      //   }
+      // ],
+      // // Examples of Entry Events
+      // '/examples/entries/': [
+      //   {
+      //     text: 'Entry Events',
+      //     items: [
+      //       {text: 'When an Entry is created, email all Admins',     link: '/examples/entries/when-entry-created-email-admins'},
+      //       {text: 'When an Entry is updated, post CP announcement', link: '/examples/entries/when-entry-updated-post-announcement'},
+      //     ]
+      //   }
+      // ],
+      // // Examples of Asset Events
+      // '/examples/assets/': [
+      //   {
+      //     text: 'Asset Events',
+      //     items: [
+      //       {text: 'When an Asset is uploaded, send an SMS (text message)', link: '/examples/assets/when-asset-uploaded-send-sms-text'},
+      //     ]
+      //   }
+      // ],
 
       // Getting Started
       '/getting-started/': [
         {
           text: 'Getting Started',
           items: [
-            {text: 'Overview', link: '/getting-started/',
+            {text: 'Overview',        link: '/getting-started/',
               items: [
                 {text: 'Install via Plugin Store', link: '/getting-started/#installation-via-plugin-store'},
                 {text: 'Install via CLI',          link: '/getting-started/#installation-via-console-commands'}
               ]
             },
-            {text: 'Twilio',   link: '/getting-started/twilio'},
+            {text: 'Twilio',          link: '/getting-started/twilio'},
+            {text: 'Settings Page',   link: '/getting-started/settings'},
+            {text: 'PHP Config File', link: '/getting-started/config'},
           ]
         }
       ],
@@ -156,7 +156,8 @@ export default defineConfig({
             },
             {text: 'Templating',             link: '/messages/templating'},
             {text: 'Special Variables',      link: '/messages/variables'},
-            {text: 'Skip Sending a Message', link: '/messages/skip-message'}
+            {text: 'Skip Sending a Message', link: '/messages/skip-message'},
+            {text: 'Optional Queue',         link: '/messages/queue'},
           ]
         }
       ],
@@ -168,16 +169,14 @@ export default defineConfig({
             {text: 'Overview',            link: '/recipients/'},
             {text: 'All Recipient Types', link: '/recipients/types/',
               items: [
-                {text: 'Current User',      link: '/recipients/types/current-user'},
-                {text: 'All Users',         link: '/recipients/types/all-users'},
-                {text: 'All Admins',        link: '/recipients/types/all-admins'},
-                {text: 'Selected Groups',   link: '/recipients/types/selected-groups'},
-                {text: 'Selected Users',    link: '/recipients/types/selected-users'},
-                {text: 'Custom Recipients', link: '/recipients/types/custom-recipients'},
+                {text: 'Current User',       link: '/recipients/types/current-user'},
+                {text: 'All Users',          link: '/recipients/types/all-users'},
+                {text: 'All Admins',         link: '/recipients/types/all-admins'},
+                {text: 'Selected Groups',    link: '/recipients/types/selected-groups'},
+                {text: 'Selected Users',     link: '/recipients/types/selected-users'},
+                {text: 'Dynamic Recipients', link: '/recipients/types/dynamic-recipients'},
               ]
-            },
-            {text: 'Dynamic Recipients',  link: '/recipients/dynamic'},
-            {text: 'Users as Recipients', link: '/recipients/users'}
+            }
           ]
         }
       ],
@@ -188,7 +187,6 @@ export default defineConfig({
           text: 'More',
           items: [
             {text: 'Elements', link: '/elements'},
-            {text: 'Queue',    link: '/queue'},
             {text: 'Logging',  link: '/logging'}
           ]
         }
@@ -200,15 +198,20 @@ export default defineConfig({
 
     socialLinks: [
       {
-        icon: 'github',
-        link: 'https://github.com/doublesecretagency/craft-notifier'
-      },
-      {
         icon: {
-          svg: '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 54 54"><title>Plugin Store</title><path d="M47.813 0H5.625A5.6 5.6 0 0 0 0 5.625v42.188a5.6 5.6 0 0 0 5.625 5.625h42.188c3.062 0 5.625-2.5 5.625-5.625V5.625A5.6 5.6 0 0 0 47.813 0M26.625 32.563c1.75 0 3.625-.688 5.438-2.313l2.5 2.875c-2.625 2.125-5.625 3.313-8.625 3.313-5.938 0-9.688-3.938-8.813-9.5s5.938-9.5 11.875-9.5c2.875 0 5.563 1.125 7.438 3.187l-3.5 2.875c-1-1.312-2.688-2.187-4.563-2.187-3.562 0-6.312 2.312-6.875 5.625-.5 3.312 1.5 5.625 5.125 5.625" fill="#e5422b"/></svg>'
+          svg: `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" aria-hidden="true">
+    <title>Plugin Store</title>
+    <!--! Font Awesome Pro 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+    <path d="M96 0C78.3 0 64 14.3 64 32v96h64V32c0-17.7-14.3-32-32-32zM288 0c-17.7 0-32 14.3-32 32v96h64V32c0-17.7-14.3-32-32-32zM32 160c-17.7 0-32 14.3-32 32s14.3 32 32 32v32c0 77.4 55 142 128 156.8V480c0 17.7 14.3 32 32 32s32-14.3 32-32V412.8C297 398 352 333.4 352 256V224c17.7 0 32-14.3 32-32s-14.3-32-32-32H32z"/>
+</svg>`
         },
         link: 'https://plugins.craftcms.com/notifier',
         ariaLabel: 'Plugin Store'
+      },
+      {
+        icon: 'github',
+        link: 'https://github.com/doublesecretagency/craft-notifier'
       }
     ],
 

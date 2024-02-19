@@ -4,16 +4,11 @@ description:
 
 # Messages
 
-✅
-
 Each notification contains a dynamic **message**, composed by you, using Twig.
 
-Several message types are available, including:
+Several message types are available, including **email** and **SMS (text)** messages.
 
-- **Email**
-- **SMS (Text Message)**
-
-:::warning List of Message Types
+:::warning All Message Types
 For more information, see the [complete list of message types...](/messages/types/)
 :::
 

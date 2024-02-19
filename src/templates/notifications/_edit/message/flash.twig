@@ -10,9 +10,13 @@
         options: notificationOptions.flashType,
     }) }}
 
+    <hr>
+
+    {% include 'notifier/notifications/_edit/message/docs-links' %}
+
     {{ forms.textField({
         label: "Flash Message Title"|t('notifier'),
-        instructions: commonInstructions,
+        instructions: "Primary message, displayed in bold.",
         id: 'messageConfig-flashTitle',
         name: 'messageConfig[flashTitle]',
         value: (notification.messageConfig.flashTitle ?? null),
@@ -21,7 +25,7 @@
 
     {{ forms.textareaField({
         label: "Flash Message Details"|t('notifier'),
-        instructions: commonInstructions,
+        instructions: "Optional message details.",
         placeholder: commonPlaceholder,
         rows: 2,
         id: 'messageConfig-flashDetails',

@@ -23,6 +23,7 @@ use doublesecretagency\notifier\models\OutboundAnnouncement;
 use doublesecretagency\notifier\models\OutboundEmail;
 use doublesecretagency\notifier\models\OutboundFlash;
 use doublesecretagency\notifier\models\OutboundSms;
+use doublesecretagency\notifier\models\Recipient;
 use doublesecretagency\notifier\NotifierPlugin;
 use Throwable;
 use yii\base\Event;
@@ -364,29 +365,36 @@ class Messages extends Component
         // Extract config variables
         extract($config);
 
-        // Configure common data
-        $commonData = [
-            // Config Variables
-            'recipient' => null,
-            'activeUser' => null,
+        /** @var Notification $notification */
+        /** @var Event $event */
+        /** @var array $data */
+        /** @var Recipient $recipient */
+
+        // Configure special variables
+        $vars = [
+            // Event Variables
             'event' => $event,
-            // Content Variables
-            'original' => null,
             'object' => $event->sender,
+            // People Variables
+            'recipient' => $recipient,
+            // Element Variables
+            'element' => null,
+            'original' => ($data['original'] ?? null),
         ];
 
-        // Merge all data to be parsed
-        $data = array_merge($commonData, $data);
-
-        // If data object is an element
-        if (is_a($data['object'], Element::class)) {
+        // If object is an element
+        if (is_a($vars['object'], Element::class)) {
             // Get the element
-            $element = $data['object'];
+            $element = $vars['object'];
             // Get the element type in camelCase
             $type = StringHelper::camelCase($element::lowerDisplayName());
-            // Dynamically set the element variable by its type
-            $data[$type] = $element;
+            // Set aliases for element
+            $vars['element'] = $element;
+            $vars[$type] = $element;
         }
+
+        // Merge data with variables to be parsed
+        $vars = array_merge($data, $vars);
 
         // Get view services
         $view = Craft::$app->getView();
@@ -394,10 +402,10 @@ class Messages extends Component
         // Attempt to parse short tags
         try {
             // Get parsed string
-            $text = $view->renderObjectTemplate($text, $data['object'], $data);
+            $text = $view->renderObjectTemplate($text, $vars['object'], $vars);
         } catch (Exception|Throwable $e) {
-            // Get unparsed string
-            $text = "PARSE ERROR: {$text}";
+            // Get error message
+            $text = "[UNABLE TO PARSE NOTIFICATION] {$e->getMessage()}";
         }
 
         // Return parsed text

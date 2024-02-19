@@ -4,10 +4,21 @@ description:
 
 # SMS (Text Message)
 
-🚩
+Sends **an SMS (text message)** when the notification event is triggered.
 
-When an event is triggered, Notifier can send an SMS (text message) to the specified recipients.
+<img class="dropshadow" src="/images/messages/sms-example.png" alt="" style="max-width:414px; margin-top:10px; margin-bottom:14px">
 
-Each recipient will receive a unique copy of the message. It's possible to include variables which specify a user's unique information.
+:::warning Twilio Required
+In order to send SMS messages, you must have a fully configured [Twilio](/getting-started/twilio) account.
+:::
 
-### Message Body
+## Config
+
+<img class="dropshadow" src="/images/messages/sms-config.png" alt="" style="max-width:650px; margin-top:10px">
+
+<!--@include: @/messages/types/docs-links.md-->
+<!--@include: @/messages/types/queue-link.md-->
+
+## SMS Recipients
+
+Text messages can be sent to [all recipient types](/recipients/types/).

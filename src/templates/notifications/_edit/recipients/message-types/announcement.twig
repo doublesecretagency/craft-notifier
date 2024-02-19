@@ -2,11 +2,11 @@
 
 <div class="message-type-announcement hidden">
     {{ forms.lightswitchField({
-        label: "Admins Only"|t('notifier'),
-        instructions: "Whether the announcement should be shown only to Admins.",
+        label: "Restricted to Admins Only?"|t('notifier'),
+        instructions: "Whether the announcement will be shown to all CP users, or only Admins.",
         id: 'recipientsConfig-adminsOnly',
         name: 'recipientsConfig[adminsOnly]',
-        offLabel: 'All Users',
+        offLabel: 'All Control Panel Users',
         onLabel: 'Admins Only',
         on: (notification.recipientsConfig.adminsOnly ?? true),
     }) }}

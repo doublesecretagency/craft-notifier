@@ -4,11 +4,9 @@ description:
 
 # Optional Queue
 
-✅
-
 For some [message types](/messages/types/), it's possible to **send notifications via the [job queue](https://craftcms.com/docs/4.x/extend/queue-jobs.html)**. This is the recommended behavior for most cases, however, you can always circumvent the queue and send messages immediately.
 
-<img src="/images/queue/queue-toggle.png" alt="" style="width:345px; margin-top:10px">
+<img class="dropshadow" src="/images/queue/queue-toggle.png" alt="" style="width:345px; margin-top:10px">
 
 :::tip Exceptions
 - [Announcements](/messages/types/announcement) will **always** use the queue.

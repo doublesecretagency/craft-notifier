@@ -4,8 +4,6 @@ description:
 
 # All Users
 
-✅
-
 Sends the message to **all Users in the system.**
 
 :::warning ⚠️ USE WITH CAUTION!

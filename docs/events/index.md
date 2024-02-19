@@ -4,8 +4,6 @@ description:
 
 # Events
 
-✅
-
 Each notification will be triggered by an **event**. Events can be considered "trigger points" within the Craft system.
 
 Commonly used events include:
@@ -14,7 +12,7 @@ Commonly used events include:
 - **When a new User is created**
 - **When an Asset is uploaded**
 
-:::warning List of Event Types
+:::warning All Event Types
 For more information, see the [complete list of event types...](/events/types/)
 :::
 

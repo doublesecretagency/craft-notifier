@@ -14,6 +14,7 @@ namespace doublesecretagency\notifier\models;
 use Craft;
 use craft\errors\MissingComponentException;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\helpers\Notifier;
 use yii\helpers\Markdown;
 
 /**
@@ -48,9 +49,7 @@ class OutboundFlash extends BaseEnvelope
     {
         // Get original notification
         /** @var Notification $notification */
-        $notification = Notification::find()
-            ->id($this->notificationId)
-            ->one();
+        $notification = Notifier::getNotification($this->notificationId);
 
         // If invalid notification, bail (unable to log)
         if (!$notification) {

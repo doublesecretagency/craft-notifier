@@ -27,31 +27,32 @@ layout: home
 hero:
   name: "Notifier"
   text: "plugin for Craft CMS"
-  tagline: "Send custom Twig messages when Craft events are triggered."
+  tagline: "Send custom Twig messages when Craft events get triggered."
   image:
     src: /images/meta/notifier.png
     alt: Notifier plugin for Craft CMS
   actions:
+    - theme: alt
+      text: Events
+      link: /events/
+    - theme: alt
+      text: Messages
+      link: /messages/
+    - theme: alt
+      text: Recipients
+      link: /recipients/
     - theme: brand
       text: Get Started →
       link: /getting-started/
-    - theme: alt
-      text: Examples
-      link: /examples/
 
 features:
-  - icon: ✍️
-    title: Triggers
-    details: Send out a message every time an event is triggered &#40;ie, "on Entry save"&#41;.
-  - icon: ✉️
-    title: Messages
-    details: Customize messages using simple Twig templates and pre-defined variables.
-  - icon: 🙋‍♀️
-    title: Recipients
-    details: Send emails to selected recipients, with more message formats coming soon!
+  - icon: ⚙️
+    title: Triggered by System Events
+    details: Choose which Craft events will send Notifications. Each Notification can be configured independently.
+  - icon: ％
+    title: Customized Twig Messages
+    details: Create custom messages based on your own Twig logic. Messages can use special variables about the recipient and affected element.
+  - icon: 📭
+    title: Variety of Recipients
+    details: When sending a message to multiple users, each recipient will receive their own personalized copy of the Twig message. 
 ---
-
-<div style="margin: 20px auto 0; max-width: 1152px;">
-    <p style="font-weight: bold">Want to share new posts with your audience? Need to get notified when something changes?</p>
-    <p style="margin-top: 10px;">The Notifier plugin allows you to create messages which will be sent out whenever certain triggers are activated. Configure a notification trigger, then add as many outgoing messages as you wish. Each message can be sent to a specific group of recipients, and message templates can be easily managed via Twig.</p>
-</div>

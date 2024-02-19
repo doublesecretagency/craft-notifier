@@ -4,8 +4,6 @@ description: Follow these instructions to set up the Notifier plugin for Craft C
 
 # Getting Started
 
-✅
-
 ## Installation via Plugin Store
 
 To install the Notifier plugin via the plugin store, follow these steps:

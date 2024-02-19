@@ -4,24 +4,18 @@ description:
 
 # Flash Message
 
-🚩
-
-Notifier can post a **flash message** when an [event](/events/) is triggered.
-
-Only the **current user** will be able to see the message, which appears briefly in the bottom-left corner of the control panel.
+Posts **a flash message** when the notification event is triggered.
 
 <img class="dropshadow" src="/images/messages/flash-example.png" alt="" style="max-width:366px; margin-top:10px">
 
-This message will appear only once, after triggering the event and refreshing (or going to a new page).
+## Config
 
-## Configuration
+<img class="dropshadow" src="/images/messages/flash-config.png" alt="" style="max-width:650px; margin-top:10px">
 
-<img class="dropshadow" src="/images/messages/flash-config.png" alt="" style="max-width:718px; margin-top:10px">
+<!--@include: @/messages/types/docs-links.md-->
 
-### Flash Message Type
-- Notice
-- Error
+## Flash Message Recipient
 
-### Flash Message Title
+Only the **current user** will be able to see the message.
 
-### Flash Message Details
+It will briefly appear in the bottom-left corner of the control panel. The message will appear only once, after the user triggers the event and refreshes (or goes to a new page).

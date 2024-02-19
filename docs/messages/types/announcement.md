@@ -4,26 +4,18 @@ description:
 
 # Announcement
 
-🚩
-
-When an event is triggered, Notifier can post an announcement to the Craft control panel.
+Posts **an announcement** to the Craft control panel when the notification event is triggered.
 
 <img class="dropshadow" src="/images/messages/announcement-example.png" alt="" style="max-width:396px; margin-top:10px">
 
-## Example
+## Config
 
-<img class="dropshadow" src="/images/messages/announcement-config.png" alt="" style="max-width:718px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/announcement-config.png" alt="" style="max-width:650px; margin-top:10px">
 
-## Fields
+<!--@include: @/messages/types/docs-links.md-->
 
-### Announcement Title
+## Announcement Recipients
 
-> The first line of the announcement, in larger bold letters.
+Announcements can be shown to all control panel users, or restricted to only Admins.
 
-Accepts [special variables](/messages/variables), but does not permit HTML or Markdown.
-
-### Message Body
-
-> The main message of the announcement.
-
-Accepts [special variables](/messages/variables), HTML and/or Markdown.
+<img class="dropshadow" src="/images/messages/announcement-recipients.png" alt="" style="max-width:650px; margin-top:10px">

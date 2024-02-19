@@ -10,9 +10,13 @@
         options: notificationOptions.emailField,
     }) }}
 
+    <hr>
+
+    {% include 'notifier/notifications/_edit/message/docs-links' %}
+
     {{ forms.textField({
         label: "Email Subject"|t('notifier'),
-        instructions: commonInstructions,
+        instructions: "Subject line of outgoing email.",
         id: 'messageConfig-emailSubject',
         name: 'messageConfig[emailSubject]',
         value: (notification.messageConfig.emailSubject ?? null),
@@ -20,8 +24,8 @@
     }) }}
 
     {{ forms.textareaField({
-        label: "Email Message"|t('notifier'),
-        instructions: commonInstructions,
+        label: "Email Body"|t('notifier'),
+        instructions: "Body of outgoing email.",
         placeholder: commonPlaceholder,
         rows: 6,
         id: 'messageConfig-emailMessage',
@@ -29,6 +33,8 @@
         value: (notification.messageConfig.emailMessage ?? null),
         errors: notification.getErrors('messageConfig[emailMessage]'),
     }) }}
+
+    <hr>
 
     {{ forms.lightswitchField({
         label: "Send Message via Queue"|t('notifier'),

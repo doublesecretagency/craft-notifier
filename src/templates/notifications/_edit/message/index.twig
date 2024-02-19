@@ -1,11 +1,5 @@
 {% import '_includes/forms' as forms %}
 
-{# Common instructions for various dynamic text fields #}
-{% set commonInstructions = "Learn more about [templating]({templatingUrl}) and [special variables]({variablesUrl})."|t('notifier', {
-    'templatingUrl' : 'https://plugins.doublesecretagency.com/notifier/messages/templating',
-    'variablesUrl'  : 'https://plugins.doublesecretagency.com/notifier/messages/variables',
-}) %}
-
 {# Common placeholder for various dynamic text fields #}
 {% set commonPlaceholder = "{% include 'path/to/template' %}" %}
 

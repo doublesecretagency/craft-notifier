@@ -4,89 +4,71 @@ description:
 
 # Special Variables
 
-🚩
+The following variables will be **automatically available** within your [message template](/messages/templating).
 
-The following variables will be **automatically available** within your Twig [message template](/messages/set-template). Certain variables will (or won't) exist, depending on how each notification was triggered.
+[//]: # (They can also be used to determine [dynamic recipients]&#40;/recipients/types/dynamic-recipients&#41;, with **one notable exception.** For obvious reasons, the `recipient` variable cannot be available while determining the recipient.)
 
-#### [**Config Variables**](#config-variables) - Always Available
+### Event Variables
 
-| Variable     | Availability | Description
-|:-------------|--------------|-------------
-| `recipient`  | All Events   | Individual recipient (User or email address) of each message.
-| `activeUser` | All Events   | The logged-in User who triggered the notification.
-| `event`      | All Events   | The entire [Event](https://docs.craftcms.com/api/v3/craft-events-modelevent.html) which triggered the notification.
+| Variable | Description                                                                                      |
+|:---------|--------------------------------------------------------------------------------------------------|
+| `event`  | The underlying triggered [Event](https://docs.craftcms.com/api/v4/craft-events-modelevent.html). |
+| `object` | The element or object which triggered the notification. (aka `$event->sender`)                   |
 
-#### [**Content Variables**](#content-variables) - Mixed Availability
+### People Variables
 
-| Variable     | Availability | Description
-|:-------------|--------------|-------------
-| `original`   | On Save      | The original version of a saved Element.
-| `entry`      | Entry Events | The updated Entry which triggered the notification.
-<!--
-| `user`       | User Events  | The updated User which triggered the notification.
-| `asset`      | Asset Events | The updated Asset which triggered the notification.
--->
+| Variable      | Description                                        |
+|:--------------|----------------------------------------------------|
+| `currentUser` | The logged-in User who triggered the notification. |
 
-## Where can I use special variables?
-
-### Email Subject
-
-For email messages, these variables are available in the [subject line](/messages/set-template/#email-subject).
-
-### Custom Recipients
-
-If your message compiles a set of [custom recipients](/recipients/#custom-selection), these variables will also be available within the context of your custom Twig snippet. The only exception will be the `recipient` variable (which cannot exist before the recipients have been determined).
-
-## Config Variables
-
-### `recipient`
-
-#### Available on All Events
-
-Individual recipient of each message. Can be either a [User Model](https://docs.craftcms.com/api/v3/craft-elements-user.html) or basic email address, depending upon how the [recipients](/recipients/) were determined.
-
-:::warning One Recipient Per Message
-Each message is processed separately for each individual recipient. The entire message template will be re-evaluated with the current `recipient` every time it is parsed.
+:::warning One recipient per outgoing message
+Each message will be parsed separately for each individual recipient.
 :::
 
-### `activeUser`
+| Variable                 | Description                                                            |
+|:-------------------------|------------------------------------------------------------------------|
+| `recipient`              | Individual recipient of each message.                                  |
+| `recipient.user`         | User model of recipient.                                               |
+| `recipient.name`         | Name of recipient.                                                     |
+| `recipient.emailAddress` | Email address of recipient.                                            |
+| `recipient.phoneNumber`  | Phone number of recipient.                                             |
+| `recipient.emailField`   | Field from which the email address was retrieved.                      |
+| `recipient.smsField`     | Field from which the phone number was retrieved.                       |
 
-#### Available on All Events
+### Element Variables
 
-The logged-in User who triggered the notification. For example, if this message were triggered when a User saved an Entry, that User would be referenced as the `activeUser`.
+[//]: # (:::warning Element Events)
+[//]: # (Element variables are only available if the event was triggered by an element action.)
+[//]: # (:::)
 
-### `event`
+| Variable                    | Description                                                                              |
+|:----------------------------|------------------------------------------------------------------------------------------|
+| `entry` _(or another type)_ | Alias of `element`. [(see below)](#alias-of-element)                                     |
+| `element`                   | Element which triggered the event.                                                       |
+| `original`                  | The original version of a changed Element. [(see below)](#fetching-the-original-element) |
 
-#### Available on All Events
+## Alias of `element`
 
-The [Event](https://docs.craftcms.com/api/v3/craft-events-modelevent.html) itself, which triggered the notification.
+The `element` variable will be automatically aliased based on its **element type**:
 
-## Content Variables
+| Variable      | Element Type |
+|:--------------|--------------|
+| `user`        | User         |
+| `entry`       | Entry        |
+| `asset`       | Asset        |
+| `matrixBlock` | Matrix Block |
+| _etc_         | _etc_        |
 
-### `original`
+:::warning Supports plugins and modules!
+This pattern also works for third-party Elements introduced by plugins or modules.
+:::
 
-#### Available when an element is being saved
+## Fetching the `original` element
 
-The original version of a saved element. You can use this to compare against the modified version of the same element.
+If the notification was triggered by an "on save" event, the `original` element will also be fetched prior to saving.
 
-### `entry`
+This can be very useful when comparing the `original` (pre-save) values to the `element` (post-save) values.
 
-#### Available on Entry events
-
-The [Entry](https://docs.craftcms.com/api/v3/craft-elements-entry.html) affected by this event.
-
-<!--
-
-### `user`
-
-#### Available on User events
-
-The [User](https://docs.craftcms.com/api/v3/craft-elements-user.html) affected by this event.
-
-### `asset`
-
-#### Available on Asset events
-
-The [Asset](https://docs.craftcms.com/api/v3/craft-elements-asset.html) affected by this event.
-
--->
+:::tip Optionally Skip Messages
+One major reason to compare `original` with `element` is to [optionally skip messages](/messages/skip-message) based on your own custom Twig logic.
+:::

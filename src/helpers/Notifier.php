@@ -9,14 +9,14 @@
  * @copyright Copyright (c) 2021 Double Secret Agency
  */
 
-namespace doublesecretagency\notifier\variables;
+namespace doublesecretagency\notifier\helpers;
 
 use Craft;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
 use doublesecretagency\notifier\elements\Notification;
 
 /**
- * Notifier variable
+ * Class Notifier
  * @since 1.0.0
  */
 class Notifier
@@ -28,11 +28,26 @@ class Notifier
      * @param array $criteria
      * @return NotificationQuery
      */
-    public function notifications(array $criteria = []): NotificationQuery
+    public static function notifications(array $criteria = []): NotificationQuery
     {
         $query = Notification::find();
         Craft::configure($query, $criteria);
         return $query;
+    }
+
+    /**
+     * Get a single Notification by its ID.
+     *
+     * @param int $id
+     * @return Notification|null
+     */
+    public static function getNotification(int $id): ?Notification
+    {
+        // Return the matching Notification
+        return static::notifications()
+            ->id($id)
+            ->status(null)
+            ->one();
     }
 
 }

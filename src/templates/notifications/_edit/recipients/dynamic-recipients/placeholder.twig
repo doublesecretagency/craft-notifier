@@ -1,0 +1,7 @@
+{%- verbatim -%}
+{# Get a custom selection of Users #}
+{% set users = craft.users.all() %}
+
+{# Compiles array of Users #}
+{{ setRecipients(users) }}
+{%- endverbatim -%}

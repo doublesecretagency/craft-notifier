@@ -343,12 +343,12 @@ class Notification extends Element
     {
         // Set task recipient based on recipients type
         switch ($this->recipientsType) {
-            case 'current-user':      return 'the current user';
-            case 'all-users':         return 'all Users';
-            case 'all-admins':        return 'all Admins';
-            case 'selected-groups':   return 'all Users in selected User Group(s)';
-            case 'selected-users':    return 'selected User';
-            case 'custom-recipients': return 'custom recipient';
+            case 'current-user':       return 'the current user';
+            case 'all-users':          return 'all Users';
+            case 'all-admins':         return 'all Admins';
+            case 'selected-groups':    return 'all Users in selected User Group(s)';
+            case 'selected-users':     return 'selected User';
+            case 'dynamic-recipients': return 'dynamic recipients';
         }
         // Fallback to "unknown"
         return 'unknown recipient';

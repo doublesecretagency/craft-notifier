@@ -4,7 +4,9 @@ description:
 
 # All Recipient Types
 
-✅
+:::tip Not Available to All Message Types
+There are a few select message types (namely [Announcements](/messages/types/announcement#announcement-recipients) and [Flash Messages](/messages/types/flash#flash-message-recipient)) which cannot send to all recipient types listed below. Follow those links to see which recipients will actually receive each message type.
+:::
 
 :::warning Additional Filtering of Recipients
 Regardless of which recipients are specified, you can always [skip a message](/messages/skip-message) if an individual recipient fails to meet your custom criteria.
@@ -30,6 +32,6 @@ Sends the message to **all Users in selected User Groups.**
 
 Sends the message to **only selected Users.**
 
-## [Custom Recipients](/recipients/types/custom-recipients)
+## [Dynamic Recipients](/recipients/types/dynamic-recipients) <Badge type="warning" text="Coming Soon" />
 
-Sends the message to **a dynamic set of recipients, as defined by a Twig snippet.**
+Sends the message to **a dynamically-compiled set of recipients, as defined by a Twig snippet.**

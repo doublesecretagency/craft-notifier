@@ -10,9 +10,13 @@
         options: notificationOptions.smsField,
     }) }}
 
+    <hr>
+
+    {% include 'notifier/notifications/_edit/message/docs-links' %}
+
     {{ forms.textareaField({
-        label: "SMS Message"|t('notifier'),
-        instructions: commonInstructions,
+        label: "SMS Message Body"|t('notifier'),
+        instructions: "Message to be sent via SMS (text message).",
         placeholder: commonPlaceholder,
         rows: 3,
         id: 'messageConfig-smsMessage',
@@ -20,6 +24,8 @@
         value: (notification.messageConfig.smsMessage ?? null),
         errors: notification.getErrors('messageConfig[smsMessage]'),
     }) }}
+
+    <hr>
 
     {{ forms.lightswitchField({
         label: "Send Message via Queue"|t('notifier'),

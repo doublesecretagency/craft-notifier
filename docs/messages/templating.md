@@ -4,8 +4,6 @@ description:
 
 # Templating
 
-✅
-
 Generally speaking, you will have the full suite of Twig tags, filters, and functions available to you. Any fields which allow you to enter Twig will be parsed as normal templates.
 
 ## Separate Twig File

@@ -4,8 +4,6 @@ description:
 
 # All Users in selected User Group(s)
 
-✅
-
 Sends the message to **all Users in selected User Groups.**
 
 <img class="dropshadow" src="/images/recipients/selected-groups.png" alt="" style="max-width:340px; margin-top:10px">

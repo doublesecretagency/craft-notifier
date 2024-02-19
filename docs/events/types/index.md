@@ -4,7 +4,7 @@ description:
 
 # All Event Types
 
-✅
+<img class="dropshadow" src="/images/events/event-types.png" alt="" style="width:433px; margin-top:10px">
 
 ## [Users](/events/types/users)
 

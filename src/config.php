@@ -22,6 +22,6 @@ return [
     //'twilioPhoneNumber' => getenv('TWILIO_PHONE_NUMBER'),
 
     // Phone number to use for SMS testing purposes
-    //'testToPhoneNumber' => 'getenv('TEST_TO_PHONE_NUMBER')',
+    //'testToPhoneNumber' => getenv('TEST_TO_PHONE_NUMBER'),
 
 ];
