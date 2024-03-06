@@ -40,4 +40,9 @@ class Settings extends Model
      */
     public ?string $testToPhoneNumber = null; // TO
 
+    /**
+     * @var array|false Adjust the default Twig sandbox configuration. Set to `false` to disable sandbox entirely.
+     */
+    public array|false $twigSandbox = [];
+
 }

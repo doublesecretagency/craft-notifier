@@ -28,13 +28,13 @@ class SkipMessageNode extends Node
     public function compile(Compiler $compiler): void
     {
         $runtimeError = RuntimeError::class;
-        $message = "Message not sent because `skipMessage` was encountered while rendering the template.";
+        $message = '';
 
         // Get specified message
         if ($this->hasNode('message')) {
             $customMessage = $this->getNode('message')->getAttribute('value');
             if ($customMessage) {
-                $message = "{$message} ({$customMessage})";
+                $message = "{$message} {$customMessage}";
             }
         }
 

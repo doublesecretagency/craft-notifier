@@ -16,18 +16,33 @@ use craft\base\Component;
 use craft\base\Element;
 use craft\helpers\Queue;
 use craft\helpers\StringHelper;
+use craft\web\twig\Environment;
+use craft\web\twig\Extension;
+use craft\web\twig\GlobalsExtension;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\enums\TwigSandbox;
 use doublesecretagency\notifier\jobs\SendMessage;
 use doublesecretagency\notifier\models\OutboundAnnouncement;
 use doublesecretagency\notifier\models\OutboundEmail;
 use doublesecretagency\notifier\models\OutboundFlash;
 use doublesecretagency\notifier\models\OutboundSms;
 use doublesecretagency\notifier\models\Recipient;
+use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\NotifierPlugin;
+use doublesecretagency\notifier\web\twig\MessageExtension;
 use Throwable;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Extension\StringLoaderExtension;
+use Twig\Loader\FilesystemLoader;
+use Twig\Sandbox\SecurityPolicy;
+use Twig\Template as TwigTemplate;
+use Twig\TemplateWrapper;
+use yii\base\Arrayable;
 use yii\base\Event;
 use yii\base\Exception;
+use yii\base\Model;
 
 /**
  * Class Messages
@@ -35,6 +50,16 @@ use yii\base\Exception;
  */
 class Messages extends Component
 {
+
+    /**
+     * @var Environment|null
+     */
+    private ?Environment $_twigSandbox = null;
+
+    /**
+     * @var TemplateWrapper[]
+     */
+    private array $_objectTemplates = [];
 
     /**
      * Send all Notifications activated by a single Event.
@@ -96,10 +121,8 @@ class Messages extends Component
 
         // Loop through each envelope
         foreach ($envelopes as $envelope) {
-            // If invalid envelope, log and skip it
+            // If invalid envelope, skip it
             if (!$envelope) {
-                // Log invalid envelope
-                $notification->log->warning("Can't send, envelope is invalid.", $envelope->envelopeId);
                 continue;
             }
             // If sending via the queue
@@ -158,9 +181,20 @@ class Messages extends Component
                 'recipient' => $recipient,
             ]);
 
-            // Parse message body and subject
-            $subject = $this->parseTwig($config, $notification->messageConfig['emailSubject'] ?? null);
-            $body    = $this->parseTwig($config, $notification->messageConfig['emailMessage'] ?? null);
+            // Attempt to parse message body and subject
+            try {
+                // Parse text
+                $subject = $this->_parseTwig($config, $notification->messageConfig['emailSubject'] ?? null);
+                $body    = $this->_parseTwig($config, $notification->messageConfig['emailMessage'] ?? null);
+                // No parse error by default
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                // Unable to parse text
+                $subject = ($notification->messageConfig['emailSubject'] ?? null);
+                $body    = ($notification->messageConfig['emailMessage'] ?? null);
+                // Get parse error
+                $parseError = $e;
+            }
 
             // Get message details
             $details = [
@@ -171,6 +205,12 @@ class Messages extends Component
 
             // Initialize logging for envelope
             $envelopeId = $notification->log->envelope($jobInfo, $details);
+
+            // If a parsing error occurred, log and skip it
+            if ($parseError) {
+                $this->_logError($parseError, $notification, $envelopeId);
+                continue;
+            }
 
             // Put outbound email into envelope
             $outbound[] = new OutboundEmail(array_merge([
@@ -225,8 +265,18 @@ class Messages extends Component
                 'recipient' => $recipient,
             ]);
 
-            // Parse message body
-            $message = $this->parseTwig($config, $notification->messageConfig['smsMessage'] ?? null);
+            // Attempt to parse message body
+            try {
+                // Parse text
+                $message = $this->_parseTwig($config, $notification->messageConfig['smsMessage'] ?? null);
+                // No parse error by default
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                // Unable to parse text
+                $message = ($notification->messageConfig['smsMessage'] ?? null);
+                // Get parse error
+                $parseError = $e;
+            }
 
             // Get message details
             $details = [
@@ -236,6 +286,12 @@ class Messages extends Component
 
             // Initialize logging for envelope
             $envelopeId = $notification->log->envelope($jobInfo, $details);
+
+            // If a parsing error occurred, log and skip it
+            if ($parseError) {
+                $this->_logError($parseError, $notification, $envelopeId);
+                continue;
+            }
 
             // Put outbound SMS (text) message into envelope
             $outbound[] = new OutboundSms(array_merge([
@@ -256,9 +312,9 @@ class Messages extends Component
      * @param Notification $notification
      * @param Event $event
      * @param array $data
-     * @return EnvelopeInterface
+     * @return EnvelopeInterface|null
      */
-    private function _compileAnnouncement(Notification $notification, Event $event, array $data): EnvelopeInterface
+    private function _compileAnnouncement(Notification $notification, Event $event, array $data): ?EnvelopeInterface
     {
         // Whether announcement is being sent only to Admins
         $adminsOnly = ($notification->recipientsConfig['adminsOnly'] ?? false);
@@ -277,9 +333,20 @@ class Messages extends Component
             'data' => $data,
         ];
 
-        // Parse message body and title
-        $title   = $this->parseTwig($config, $notification->messageConfig['announcementTitle'] ?? null);
-        $message = $this->parseTwig($config, $notification->messageConfig['announcementMessage'] ?? null);
+        // Attempt to parse message body and title
+        try {
+            // Parse text
+            $title   = $this->_parseTwig($config, $notification->messageConfig['announcementTitle'] ?? null);
+            $message = $this->_parseTwig($config, $notification->messageConfig['announcementMessage'] ?? null);
+            // No parse error by default
+            $parseError = null;
+        } catch (Exception|Throwable $e) {
+            // Unable to parse text
+            $title   = ($notification->messageConfig['announcementTitle'] ?? null);
+            $message = ($notification->messageConfig['announcementMessage'] ?? null);
+            // Get parse error
+            $parseError = $e;
+        }
 
         // Get message details
         $details = [
@@ -290,6 +357,12 @@ class Messages extends Component
 
         // Initialize logging for envelope
         $envelopeId = $notification->log->envelope($jobInfo, $details);
+
+        // If a parsing error occurred, log and skip it
+        if ($parseError) {
+            $this->_logError($parseError, $notification, $envelopeId);
+            return null;
+        }
 
         // Put outbound announcement into envelope
         return new OutboundAnnouncement(array_merge([
@@ -305,9 +378,9 @@ class Messages extends Component
      * @param Notification $notification
      * @param Event $event
      * @param array $data
-     * @return EnvelopeInterface
+     * @return EnvelopeInterface|null
      */
-    private function _compileFlash(Notification $notification, Event $event, array $data): EnvelopeInterface
+    private function _compileFlash(Notification $notification, Event $event, array $data): ?EnvelopeInterface
     {
         // Compress variables for Twig
         $config = [
@@ -317,9 +390,20 @@ class Messages extends Component
             'data' => $data,
         ];
 
-        // Parse message body and title
-        $title   = $this->parseTwig($config, $notification->messageConfig['flashTitle'] ?? null);
-        $message = $this->parseTwig($config, $notification->messageConfig['flashDetails'] ?? null);
+        // Attempt to parse message body and title
+        try {
+            // Parse text
+            $title   = $this->_parseTwig($config, $notification->messageConfig['flashTitle'] ?? null);
+            $message = $this->_parseTwig($config, $notification->messageConfig['flashDetails'] ?? null);
+            // No parse error by default
+            $parseError = null;
+        } catch (Exception|Throwable $e) {
+            // Unable to parse text
+            $title   = ($notification->messageConfig['flashTitle'] ?? null);
+            $message = ($notification->messageConfig['flashDetails'] ?? null);
+            // Get parse error
+            $parseError = $e;
+        }
 
         // Get flash type
         $type = ($notification->messageConfig['flashType'] ?? 'notice');
@@ -344,6 +428,12 @@ class Messages extends Component
             'recipient' => ($currentUser->name ?? 'the current user'),
         ], $details);
 
+        // If a parsing error occurred, log and skip it
+        if ($parseError) {
+            $this->_logError($parseError, $notification, $envelopeId);
+            return null;
+        }
+
         // Put outbound flash message into envelope
         return new OutboundFlash(array_merge([
             'notificationId' => $notification->id,
@@ -359,8 +449,10 @@ class Messages extends Component
      * @param array $config
      * @param string $text
      * @return string
+     * @throws Exception
+     * @throws Throwable
      */
-    public function parseTwig(array $config, string $text): string
+    private function _parseTwig(array $config, string $text): string
     {
         // Extract config variables
         extract($config);
@@ -396,20 +488,205 @@ class Messages extends Component
         // Merge data with variables to be parsed
         $vars = array_merge($data, $vars);
 
-        // Get view services
-        $view = Craft::$app->getView();
+        /** @var Settings $settings */
+        $settings = NotifierPlugin::$plugin->getSettings();
 
-        // Attempt to parse short tags
-        try {
-            // Get parsed string
-            $text = $view->renderObjectTemplate($text, $vars['object'], $vars);
-        } catch (Exception|Throwable $e) {
-            // Get error message
-            $text = "[UNABLE TO PARSE NOTIFICATION] {$e->getMessage()}";
+        // If sandbox is explicitly disabled
+        if (false === $settings->twigSandbox) {
+
+            // Parse text via default Craft Twig environment
+            $text = Craft::$app->getView()->renderObjectTemplate($text, $vars['object'], $vars);
+
+        } else {
+
+            // Parse text via secure Twig sandbox environment
+            $text = $this->_renderObjectTemplate($text, $vars['object'], $vars);
+
         }
 
         // Return parsed text
         return $text;
+    }
+
+    /**
+     * Log a parsing error.
+     *
+     * @param Exception|Throwable $e
+     * @param Notification $notification
+     * @param int $envelopeId
+     * @return void
+     */
+    private function _logError(Exception|Throwable $e, Notification $notification, int $envelopeId): void
+    {
+        // If message was skipped intentionally
+        if (is_a($e, RuntimeError::class)) {
+            // Log a warning
+            $message = $this->_cleanError("[SKIPPED] {$e->getMessage()}");
+            $notification->log->warning($message, $envelopeId);
+        } else {
+            // Log an error
+            $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
+            $notification->log->error($message, $envelopeId);
+        }
+    }
+
+    /**
+     * Clean an error message.
+     *
+     * @param string $text
+     * @return string
+     */
+    private function _cleanError(string $text): string
+    {
+        // Replace string token with comprehensible name
+        return preg_replace('/"__string_template__[a-z0-9]+"/', 'Twig snippet', $text);
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Returns a sandboxed Twig environment.
+     *
+     * @return Environment
+     * @throws Exception
+     */
+    private function _getTwig(): Environment
+    {
+        // If sandbox already exists, return it
+        if ($this->_twigSandbox) {
+            return $this->_twigSandbox;
+        }
+
+        /** @var Settings $settings */
+        $settings = NotifierPlugin::$plugin->getSettings();
+
+        // Get override configuration
+        $sandbox = ($settings->twigSandbox ?? []);
+
+        // Replace specified Twig allowances
+        $tags       = ($sandbox['override']['tags']       ?? TwigSandbox::DEFAULT_TAGS);
+        $filters    = ($sandbox['override']['filters']    ?? TwigSandbox::DEFAULT_FILTERS);
+        $functions  = ($sandbox['override']['functions']  ?? TwigSandbox::DEFAULT_FUNCTIONS);
+        $methods    = ($sandbox['override']['methods']    ?? TwigSandbox::DEFAULT_METHODS);
+        $properties = ($sandbox['override']['properties'] ?? TwigSandbox::DEFAULT_PROPERTIES);
+
+        // Append specified Twig allowances
+        $tags       = array_merge($tags,       ($sandbox['allow']['tags']       ?? []));
+        $filters    = array_merge($filters,    ($sandbox['allow']['filters']    ?? []));
+        $functions  = array_merge($functions,  ($sandbox['allow']['functions']  ?? []));
+        $methods    = array_merge($methods,    ($sandbox['allow']['methods']    ?? []));
+        $properties = array_merge($properties, ($sandbox['allow']['properties'] ?? []));
+
+        // Remove specified Twig allowances
+        $tags       = array_diff($tags,       ($sandbox['disallow']['tags']       ?? []));
+        $filters    = array_diff($filters,    ($sandbox['disallow']['filters']    ?? []));
+        $functions  = array_diff($functions,  ($sandbox['disallow']['functions']  ?? []));
+        $methods    = array_diff($methods,    ($sandbox['disallow']['methods']    ?? []));
+        $properties = array_diff($properties, ($sandbox['disallow']['properties'] ?? []));
+
+        // Create a new Twig environment
+        $templatesPath = Craft::$app->getPath()->getSiteTemplatesPath();
+        $loader = new FilesystemLoader($templatesPath);
+        $this->_twigSandbox = new Environment($loader);
+        $this->_twigSandbox->addExtension(new MessageExtension());
+
+        // Add native Craft extensions
+        $this->_twigSandbox->addExtension(new StringLoaderExtension());
+        $this->_twigSandbox->addExtension(new Extension(Craft::$app->getView(), $this->_twigSandbox));
+        $this->_twigSandbox->addExtension(new GlobalsExtension());
+
+        // Add sandbox security policy
+        $policy = new SecurityPolicy($tags, $filters, $methods, $properties, $functions);
+        $sandbox = new SandboxExtension($policy, true);
+        $this->_twigSandbox->addExtension($sandbox);
+
+        // Return sandbox
+        return $this->_twigSandbox;
+    }
+
+    /**
+     * Renders an object template via the Twig sandbox.
+     *
+     * @param string $template the source template string
+     * @param mixed $object the object that should be passed into the template
+     * @param array $variables any additional variables that should be available to the template
+     * @return string The rendered template.
+     * @throws Throwable in case of failure
+     */
+    private function _renderObjectTemplate(string $template, mixed $object, array $variables = []): string
+    {
+        // If there are no dynamic tags, just return the template
+        if (!str_contains($template, '{')) {
+            return trim($template);
+        }
+
+        // Get sandboxed Twig environment
+        $twig = $this->_getTwig();
+
+        // Temporarily disable strict variables if it's enabled
+        $strictVariables = $twig->isStrictVariables();
+
+        // If strict variables, disable them
+        if ($strictVariables) {
+            $twig->disableStrictVariables();
+        }
+
+        // Set escaper strategy
+        $twig->setDefaultEscaperStrategy(false);
+
+        try {
+            // Is this the first time we've parsed this template?
+            $cacheKey = md5($template);
+            if (!isset($this->_objectTemplates[$cacheKey])) {
+                // Replace shortcut "{var}"s with "{{object.var}}"s, without affecting normal Twig tags
+                $template = Craft::$app->getView()->normalizeObjectTemplate($template);
+                $this->_objectTemplates[$cacheKey] = $twig->createTemplate($template);
+            }
+
+            // Get the variables to pass to the template
+            if ($object instanceof Model) {
+                foreach ($object->attributes() as $name) {
+                    if (!isset($variables[$name]) && str_contains($template, $name)) {
+                        $variables[$name] = $object->$name;
+                    }
+                }
+            }
+
+            // Get attributes of object to pass to the template
+            if ($object instanceof Arrayable) {
+                // See if we should be including any of the extra fields
+                $extra = [];
+                foreach ($object->extraFields() as $field => $definition) {
+                    if (is_int($field)) {
+                        $field = $definition;
+                    }
+                    if (preg_match('/\b' . preg_quote($field, '/') . '\b/', $template)) {
+                        $extra[] = $field;
+                    }
+                }
+                $variables += $object->toArray([], $extra, false);
+            }
+
+            // Compile variables
+            $variables['object'] = $object;
+            $variables['_variables'] = $variables;
+
+            // Render it!
+            /** @var TwigTemplate $templateObj */
+            $templateObj = $this->_objectTemplates[$cacheKey];
+            return trim($templateObj->render($variables));
+
+        } finally {
+
+            // Reset escaper strategy
+            $twig->setDefaultEscaperStrategy();
+
+            // Re-enable strict variables
+            if ($strictVariables) {
+                $twig->enableStrictVariables();
+            }
+
+        }
     }
 
 }

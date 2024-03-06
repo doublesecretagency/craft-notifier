@@ -35,6 +35,7 @@ export default defineConfig({
               {text: 'Special Variables',      link: '/messages/variables'},
               {text: 'Skip Sending a Message', link: '/messages/skip-message'},
               {text: 'Optional Queue',         link: '/messages/queue'},
+              {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
             ]
           },
           {
@@ -154,10 +155,11 @@ export default defineConfig({
                 {text: 'Flash Message',      link: '/messages/types/flash'},
               ]
             },
-            {text: 'Templating',             link: '/messages/templating'},
+            {text: 'Message Templating',     link: '/messages/templating'},
             {text: 'Special Variables',      link: '/messages/variables'},
             {text: 'Skip Sending a Message', link: '/messages/skip-message'},
             {text: 'Optional Queue',         link: '/messages/queue'},
+            {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
           ]
         }
       ],

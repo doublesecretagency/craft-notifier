@@ -27,6 +27,9 @@ return [
     // Phone number to use for SMS testing purposes
     'testToPhoneNumber' => getenv('TEST_TO_PHONE_NUMBER'),
 
+    // Adjust the default Twig sandbox configuration
+    'twigSandbox' => []
+
 ];
 ```
 
@@ -50,3 +53,13 @@ Set the testing phone number in your local `.env` file, then load it via the PHP
 # Testing phone number in local environment
 TEST_TO_PHONE_NUMBER="888-555-4444"
 ```
+
+### `twigSandbox`
+
+_array_ - Defaults to `[]` (changes none of the defaults).
+
+Optionally adjust the default Twig sandbox configuration.
+
+:::warning Configuration Instructions
+For more details on how to use this powerful feature, please consult the [Twig Sandbox](/messages/twig-sandbox) page.
+:::

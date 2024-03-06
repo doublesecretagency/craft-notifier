@@ -30,7 +30,7 @@ use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\Events;
 use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
-use doublesecretagency\notifier\web\twig\Extension;
+use doublesecretagency\notifier\web\twig\GlobalExtension;
 use yii\base\Event;
 
 /**
@@ -103,7 +103,7 @@ class NotifierPlugin extends Plugin
         }
 
         // Load Twig extension
-        Craft::$app->getView()->registerTwigExtension(new Extension());
+        Craft::$app->getView()->registerTwigExtension(new GlobalExtension());
 
         // Register all notification events
         $this->events->registerNotificationEvents();

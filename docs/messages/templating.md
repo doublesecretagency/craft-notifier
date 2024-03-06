@@ -2,43 +2,41 @@
 description:
 ---
 
-# Templating
-
-Generally speaking, you will have the full suite of Twig tags, filters, and functions available to you. Any fields which allow you to enter Twig will be parsed as normal templates.
-
-## Separate Twig File
-
-When composing a message, take into account how long your message needs to be. For shorter messages, it may be easiest to simply write your message within the control panel. For longer messages, you may choose to `include` a separate Twig file.
-
-```twig
-{# Use a normal Twig template for a long message #}
-{% include 'emails/new-user-activated' %}
-```
-
-Since each template is a normal Twig environment, you can use `extends`, `include`, or any other tags just as you typically would.
+# Message Templating
 
 ## Twig Parsing
 
-When generating a message, there are two different ways to specify variables...
+When composing Twig snippets for outgoing messages, most tags, filters, and functions will be available to you. It's worth noting, however, that messages are parsed in a secure [Twig Sandbox](/messages/twig-sandbox).
 
-#### 1. Short `{object}` syntax
-
-The `object` will be mapped to the element which triggered the notification.
+There are two different ways to specify variables:
 
 ```twig
+{# Standard syntax (long) #}
+New Article: {{ entry.title }}
+
+{# Object syntax (short) #}
 New Article: {title}
 ```
 
-#### 2. Standard long syntax
+In the short syntax, the `object` is mapped to the element which triggered the notification (ie: the saved Entry).
 
-The `entry` special variable (see below) could be used as well.
-
-```twig
-New Article: {{ entry.title }}
-```
+:::warning No Object Syntax in External Templates
+If you `include` a separate Twig file, the short object syntax won't be available within the included file.
+:::
 
 ## Special Variables
 
 In most situations, you will have access to an additional set of [special variables](/messages/variables).
 
 These variables are highly dependent on context, so pay close attention to where they are being used.
+
+## Separate Twig File
+
+When composing a message, take into account how long your message needs to be. For shorter messages, it may be easiest to simply write your message within the control panel. For longer messages, you may choose to `include` a separate Twig file.
+
+```twig
+{# Use a normal Twig template for a longer message #}
+{% include 'emails/new-user-activated' %}
+```
+
+Since each template is a normal Twig environment, you can use `extends`, `include`, or any other tags just as you typically would.

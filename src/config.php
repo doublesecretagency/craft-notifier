@@ -24,4 +24,8 @@ return [
     // Phone number to use for SMS testing purposes
     //'testToPhoneNumber' => getenv('TEST_TO_PHONE_NUMBER'),
 
+    // Adjust the default Twig sandbox configuration.
+    // Set to `false` to disable sandbox entirely.
+    //'twigSandbox' => []
+
 ];
