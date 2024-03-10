@@ -3,7 +3,21 @@
 ## Unreleased
 
 ### Added
-- Added a new "Notification" element type.
+- Added a new ["Notification" element type](https://plugins.doublesecretagency.com/notifier/elements).
+- Added support for sending [SMS (Text Messages)](https://plugins.doublesecretagency.com/notifier/messages/types/sms-text) via Twilio.
+- Added support for sending [Announcements](https://plugins.doublesecretagency.com/notifier/messages/types/announcement).
+- Added support for sending [Flash Messages](https://plugins.doublesecretagency.com/notifier/messages/types/flash).
+- Added trigger event ["When a new user is created"](https://plugins.doublesecretagency.com/notifier/events/types/users).
+- Added trigger event ["When a user is activated"](https://plugins.doublesecretagency.com/notifier/events/types/users).
+- Added trigger event ["When a new file is uploaded and saved"](https://plugins.doublesecretagency.com/notifier/events/types/assets).
+- Added [Current User](https://plugins.doublesecretagency.com/notifier/recipients/types/current-user) recipient type.
+- Added [Selected Users](https://plugins.doublesecretagency.com/notifier/recipients/types/selected-users) recipient type.
+- Now parses messages in a secure [Twig sandbox](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox).
+
+### Changed
+- Completely overhauled the entire UX.
+- Completely overhauled logging system.
+- Completely rewritten documentation.
 
 ## 0.10.1 - 2022-12-22
 
