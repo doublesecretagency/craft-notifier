@@ -14,12 +14,17 @@ namespace doublesecretagency\notifier\migrations;
 use Craft;
 use craft\db\Migration;
 use craft\db\Query;
+use craft\errors\ElementNotFoundException;
+use craft\helpers\Json;
 use doublesecretagency\notifier\elements\Notification;
+use Throwable;
+use yii\base\Exception;
 
 /**
- * m230525_192157_from_beta migration
+ * m240310_192157_from_beta migration
+ * @since 1.0.0
  */
-class m230525_192157_from_beta extends Migration
+class m240310_192157_from_beta extends Migration
 {
 
     /**
@@ -50,7 +55,7 @@ class m230525_192157_from_beta extends Migration
      */
     public function safeDown(): bool
     {
-        echo "m230525_192157_from_beta cannot be reverted.\n";
+        echo "m240310_192157_from_beta cannot be reverted.\n";
         return false;
     }
 
@@ -104,24 +109,48 @@ class m230525_192157_from_beta extends Migration
         // Increment the current notification
         $this->_currentNotification++;
 
-        // Add message body to config
-        $message['config']['emailMessage'] = "{% include '{$message['template']}' %}";
+        // Extract message config
+        $messageConfig = Json::decode($message['config']);
+
+        // Get recipients type
+        $recipientsType = ($messageConfig['recipients']['type'] ?? '');
+
+        // Corrections to recipients type
+        switch ($recipientsType) {
+            case 'all-users-in-group': $recipientsType = 'selected-groups'; break;
+            case 'custom':             $recipientsType = 'selected-users';  break;
+        }
+
+        // Configure message
+        $messageConfig = [
+            'emailField' => 'email',
+            'emailSubject' => ($messageConfig['subject'] ?? ''),
+            'emailMessage' => "{% include '{$message['template']}' %}",
+        ];
 
         // Create the notification
         $notification = new Notification([
-            'title'           => "Notification #{$this->_currentNotification}",
-            'description'      => '[IMPORTED] Please check details to ensure notification continues working as intended.',
+            'title'            => "Notification #{$this->_currentNotification}",
+            'description'      => '[MIGRATED]',
             'eventType'        => 'entries',
-            'event'            => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE',
+            'event'            => 'after-propagate',
             'eventConfig'      => $trigger['config'],
-            'messageType'      => $message['type'],
-            'messageConfig'    => $message['config'],
-            'recipientsType'   => null,
+            'messageType'      => 'email',
+            'messageConfig'    => $messageConfig,
+            'recipientsType'   => $recipientsType,
             'recipientsConfig' => null,
         ]);
 
-        // Save the notification
-        Craft::$app->getElements()->saveElement($notification);
+        // Attempt to save the notification
+        try {
+            Craft::$app->getElements()->saveElement($notification);
+        } catch (ElementNotFoundException|Exception|Throwable $e) {
+            /**
+             * If the migration fails, just skip it.
+             * It's easy enough for a user to
+             * reconfigure a new Notification.
+             */
+        }
     }
 
 }
