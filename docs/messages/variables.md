@@ -70,5 +70,5 @@ If the notification was triggered by an "on save" event, the `original` element 
 This can be very useful when comparing the `original` (pre-save) values to the `element` (post-save) values.
 
 :::tip Optionally Skip Messages
-One major reason to compare `original` with `element` is to [optionally skip messages](/messages/skip-message) based on your own custom Twig logic.
+One major reason to compare `original` with `element` is to [optionally skip messages](/messages/skip) based on your own custom Twig logic.
 :::

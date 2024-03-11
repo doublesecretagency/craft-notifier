@@ -31,4 +31,4 @@ Additionally, a collection of [special variables](/messages/variables) are avail
 
 ## Stop a message from being sent
 
-If necessary, you can even use Twig to [prevent a message from being sent](/messages/skip-message). The template can perform Twig-based logic while it is being parsed, and gracefully skip a message if certain criteria are not met.
+If necessary, you can even use Twig to [prevent a message from being sent](/messages/skip). The template can perform Twig-based logic while it is being parsed, and gracefully skip a message if certain criteria are not met.

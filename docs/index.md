@@ -7,7 +7,7 @@
 # - property: og:title
 #   content: Notifier plugin for Craft CMS
 # - property: og:description
-#   content: Send custom Twig messages when Craft events get triggered.
+#   content: Send custom Twig messages when Craft events are triggered.
 # - property: og:image
 #   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier.png
 # - property: twitter:card
@@ -17,7 +17,7 @@
 # - property: twitter:title
 #   content: Notifier plugin for Craft CMS
 # - property: twitter:description
-#   content: Send custom Twig messages when Craft events get triggered.
+#   content: Send custom Twig messages when Craft events are triggered.
 # - property: twitter:image
 #   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier.png
 
@@ -27,11 +27,14 @@ layout: home
 hero:
   name: "Notifier"
   text: "plugin for Craft CMS"
-  tagline: "Send custom Twig messages when Craft events get triggered."
+  tagline: "Send custom Twig messages when Craft events are triggered."
   image:
     src: /images/meta/notifier.png
     alt: Notifier plugin for Craft CMS
   actions:
+    - theme: brand
+      text: Get Started →
+      link: /getting-started/
     - theme: alt
       text: Events
       link: /events/
@@ -41,9 +44,6 @@ hero:
     - theme: alt
       text: Recipients
       link: /recipients/
-    - theme: brand
-      text: Get Started →
-      link: /getting-started/
 
 features:
   - icon: ⚙️

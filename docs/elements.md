@@ -6,13 +6,15 @@ description:
 
 Notifications are third-party [elements](https://craftcms.com/docs/4.x/elements.html) within the Craft ecosystem.
 
-Each Notification consists of four parts, in separate tabs...
+<img class="dropshadow" src="/images/elements/notification-elements.png" alt="" style="width:1252px; margin-top:10px">
 
-<img class="dropshadow" src="/images/example-notification.png" alt="" style="max-width:650px; margin-top:10px">
+Each Notification consists of four parts, separated into tabs...
 
 ### Meta
 
-Simple "Title" and "Description" fields, as shown in the screenshot above.
+Simple "Title" and "Description" fields.
+
+<img class="dropshadow" src="/images/elements/example-notification.png" alt="" style="width:650px; margin-top:10px">
 
 ### Event
 

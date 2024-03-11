@@ -4,12 +4,14 @@ description:
 
 # All Recipient Types
 
+<img class="dropshadow" src="/images/recipients/recipient-types.png" alt="" style="width:650px; margin-top:10px">
+
 :::tip Not Available to All Message Types
 There are a few select message types (namely [Announcements](/messages/types/announcement#announcement-recipients) and [Flash Messages](/messages/types/flash#flash-message-recipient)) which cannot send to all recipient types listed below. Follow those links to see which recipients will actually receive each message type.
 :::
 
 :::warning Additional Filtering of Recipients
-Regardless of which recipients are specified, you can always [skip a message](/messages/skip-message) if an individual recipient fails to meet your custom criteria.
+Regardless of which recipients are specified, you can always [skip a message](/messages/skip) if an individual recipient fails to meet your custom criteria.
 :::
 
 ## [Current User (who triggers the Event)](/recipients/types/current-user)

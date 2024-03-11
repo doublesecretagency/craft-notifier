@@ -6,11 +6,11 @@ description:
 
 Sends **an email** when the notification event is triggered.
 
-<img class="dropshadow" src="/images/messages/email-example.png" alt="" style="max-width:740px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/email-example.png" alt="" style="width:740px; margin-top:10px">
 
 ## Config
 
-<img class="dropshadow" src="/images/messages/email-config.png" alt="" style="max-width:659px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/email-config.png" alt="" style="width:659px; margin-top:10px">
 
 <!--@include: @/messages/types/docs-links.md-->
 <!--@include: @/messages/types/queue-link.md-->

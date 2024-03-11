@@ -12,7 +12,7 @@ Some examples of recipient types are:
 - **All Users in Group(s)**
 - **Only a specific User**
 
-If the provided recipient types don't meet your needs, it's also possible to write a [custom Twig snippet](/recipients/dynamic) to generate a dynamic list of recipients at runtime.
+[//]: # (If the provided recipient types don't meet your needs, it's also possible to write a [custom Twig snippet]&#40;/recipients/types/dynamic-recipients&#41; to generate a dynamic list of recipients at runtime.)
 
 :::warning List of Recipient Types
 For more information, see the [complete list of recipient types...](/recipients/types/)
@@ -26,7 +26,7 @@ Each recipient will receive their own unique copy of the message. Any [special v
 
 ## Advance Filtering of Recipients
 
-If needed, you can start with a pre-existing set of recipients (ie: "All Admins"), then reduce the subset even further. By using the [`skipMessage`](/messages/skip-message) tag, you can omit recipients on a granular level.
+If needed, you can start with a pre-existing set of recipients (ie: "All Admins"), then reduce the subset even further. By using the [`skipMessage`](/messages/skip) tag, you can omit recipients on a granular level.
 
 ```twig
 {# Don't send message to Doug #}

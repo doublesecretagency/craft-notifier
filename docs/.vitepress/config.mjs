@@ -1,10 +1,28 @@
 import { defineConfig } from 'vitepress';
 
+const metaUrl = 'https://plugins.doublesecretagency.com/notifier/';
+const metaTitle = 'Notifier plugin for Craft CMS';
+const metaDescription = 'Send custom Twig messages when Craft events are triggered.';
+const metaImage = 'https://plugins.doublesecretagency.com/notifier/images/meta/notifier.png';
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
 
   title: "Notifier plugin",
-  description: "Send custom Twig messages when Craft events get triggered.",
+  description: "Send custom Twig messages when Craft events are triggered.",
+
+  head: [
+    ['meta', {'name': 'og:type', 'content': 'website'}],
+    ['meta', {'name': 'og:url', 'content': metaUrl}],
+    ['meta', {'name': 'og:title', 'content': metaTitle}],
+    ['meta', {'name': 'og:description', 'content': metaDescription}],
+    ['meta', {'name': 'og:image', 'content': metaImage}],
+    ['meta', {'name': 'twitter:card', 'content': 'summary_large_image'}],
+    ['meta', {'name': 'twitter:url', 'content': metaUrl}],
+    ['meta', {'name': 'twitter:title', 'content': metaTitle}],
+    ['meta', {'name': 'twitter:description', 'content': metaDescription}],
+    ['meta', {'name': 'twitter:image', 'content': metaImage}],
+  ],
 
   base: '/notifier/',
   cleanUrls: true,
@@ -33,7 +51,7 @@ export default defineConfig({
               {text: 'All Message Types',      link: '/messages/types/'},
               {text: 'Message Templating',     link: '/messages/templating'},
               {text: 'Special Variables',      link: '/messages/variables'},
-              {text: 'Skip Sending a Message', link: '/messages/skip-message'},
+              {text: 'Skip Sending a Message', link: '/messages/skip'},
               {text: 'Optional Queue',         link: '/messages/queue'},
               {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
             ]
@@ -157,7 +175,7 @@ export default defineConfig({
             },
             {text: 'Message Templating',     link: '/messages/templating'},
             {text: 'Special Variables',      link: '/messages/variables'},
-            {text: 'Skip Sending a Message', link: '/messages/skip-message'},
+            {text: 'Skip Sending a Message', link: '/messages/skip'},
             {text: 'Optional Queue',         link: '/messages/queue'},
             {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
           ]

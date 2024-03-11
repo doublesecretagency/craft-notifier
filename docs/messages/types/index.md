@@ -4,7 +4,7 @@ description:
 
 # All Message Types
 
-<img class="dropshadow" src="/images/messages/message-types.png" alt="" style="max-width:650px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/message-types.png" alt="" style="width:650px; margin-top:10px">
 
 ## [Email](/messages/types/email)
 
