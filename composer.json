@@ -28,7 +28,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^4.0",
+        "craftcms/cms": "^5.0.0-beta",
         "twilio/sdk": "^7.14"
     },
     "autoload": {

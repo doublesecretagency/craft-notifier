@@ -20,7 +20,7 @@ use craft\elements\conditions\ElementCondition;
  */
 class NotificationCondition extends ElementCondition
 {
-    protected function conditionRuleTypes(): array
+    protected function selectableConditionRules(): array
     {
         return array_merge(parent::conditionRuleTypes(), [
             // ...

@@ -217,7 +217,7 @@ class NotifierPlugin extends Plugin
     {
         Event::on(
             Utilities::class,
-            Utilities::EVENT_REGISTER_UTILITY_TYPES,
+            Utilities::EVENT_REGISTER_UTILITIES,
             static function (RegisterComponentTypesEvent $event) {
                 // Add logging utility
                 $event->types[] = NotificationLog::class;
@@ -232,8 +232,8 @@ class NotifierPlugin extends Plugin
     {
         Event::on(
             Notification::class,
-            Notification::EVENT_SET_TABLE_ATTRIBUTE_HTML,
-            static function (SetElementTableAttributeHtmlEvent $event) {
+            Notification::EVENT_DEFINE_ATTRIBUTE_HTML,
+            static function (\craft\events\DefineAttributeHtmlEvent $event) {
 
                 /** @var Notification $notification */
                 $notification = $event->sender;
