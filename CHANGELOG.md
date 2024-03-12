@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0 - 2024-03-11
 
 ### Added
 - Added a new ["Notification" element type](https://plugins.doublesecretagency.com/notifier/elements).
