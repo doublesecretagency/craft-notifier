@@ -24,8 +24,8 @@ return [
     // Phone number to use for SMS testing purposes
     //'testToPhoneNumber' => getenv('TEST_TO_PHONE_NUMBER'),
 
-    // Adjust the default Twig sandbox configuration.
-    // Set to `false` to disable sandbox entirely.
+    // Adjust the default Twig sandbox configuration
+    // https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox
     //'twigSandbox' => []
 
 ];
