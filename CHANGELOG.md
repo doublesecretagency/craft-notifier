@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0 - 2024-03-15
+
+### Changed
+- Determined stable for Craft 5.
+
 ## 2.0.0-beta.1 - 2024-03-12
 
 ### Changed
