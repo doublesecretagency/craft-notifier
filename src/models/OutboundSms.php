@@ -66,10 +66,17 @@ class OutboundSms extends BaseEnvelope
             $missing[] = "Twilio Auth Token";
         }
 
-        // If something is missing, log error and return failure
+        // If something is missing
         if ($missing) {
+
+            // Link to docs for Twilio credentials
+            $url = 'https://plugins.doublesecretagency.com/notifier/getting-started/twilio';
+
+            // Log error
             $m = implode(' and ', $missing);
-            $notification->log->error("Invalid Twilio credentials. Missing {$m}.", $this->envelopeId);
+            $notification->log->error("[Invalid Twilio credentials.]({$url}) Missing {$m}.", $this->envelopeId);
+
+            // Return failure
             return false;
         }
 
