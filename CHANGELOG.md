@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Improved log error messages. ([#20](https://github.com/doublesecretagency/craft-notifier/issues/20), [#21](https://github.com/doublesecretagency/craft-notifier/issues/21))
+
 ## 1.0.0 - 2024-03-11
 
 ### Added
