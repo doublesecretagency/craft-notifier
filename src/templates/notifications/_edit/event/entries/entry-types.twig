@@ -1,0 +1,63 @@
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NestedCheckboxesAsset') %}
+
+{% js on ready %}
+window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes');
+{% endjs %}
+
+<div>
+    <div class="nested-checkboxes">
+
+        <h3>Sections &amp; Entry Types</h3>
+        <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes')"></div>
+
+        <div class="instructions">
+            <p>Only send notifications for selected sections and entry types.</p>
+        </div>
+
+        <ul>
+
+            {# Get selected Entry Types #}
+            {% set sections   = (notification.eventConfig.sections   ?? []) %}
+            {% set entryTypes = (notification.eventConfig.entryTypes ?? []) %}
+
+            {# Loop over available sections #}
+            {% for sectionId,section in availableSectionAndEntryTypes() %}
+                {% set sectionChecked = (sectionId in sections) %}
+                <li>
+                    <input type="checkbox"
+                        class="checkbox checkbox-parent"
+                        id="section-{{ sectionId }}"
+                        name="eventConfig[sections][]"
+                        value="{{ sectionId }}"
+                        {{ sectionChecked ? 'checked=""'|raw }}
+                        onclick="window.nestedCheckboxes.toggleGroup(this, {{ sectionId }})"
+                    >
+                    <label for="section-{{ sectionId }}">
+                        {{ section.name }}
+                    </label>
+                    <ul id="section-{{ sectionId }}-nested">
+                        {# Loop over available entry types #}
+                        {% for typeId,type in section.entryTypes %}
+                            <li>
+                                <input type="checkbox"
+                                    data-group="{{ sectionId }}"
+                                    class="checkbox checkbox-child"
+                                    id="type-{{ typeId }}"
+                                    name="eventConfig[entryTypes][]"
+                                    value="{{ typeId }}"
+                                    {{ typeId in entryTypes ? 'checked=""'|raw }}
+                                    {{ not sectionChecked ? 'disabled' }}
+                                    onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes')"
+                                >
+                                <label for="type-{{ typeId }}">
+                                    {{ type }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+</div>

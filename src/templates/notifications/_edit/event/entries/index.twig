@@ -8,5 +8,12 @@
         name: 'event[entries]',
         value: notification.event,
         options: {'':''}|merge(notificationOptions.allEvents['entries']),
+        toggle: true,
+        targetPrefix: '.entries-event-',
     }) }}
+    <div class="entries-event-after-propagate hidden">
+        <hr>
+        {% include 'notifier/notifications/_edit/event/entries/entry-types' %}
+        {% include 'notifier/notifications/_edit/event/entries/filters' %}
+    </div>
 </div>

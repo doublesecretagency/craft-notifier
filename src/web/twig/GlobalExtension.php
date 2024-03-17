@@ -22,6 +22,7 @@ use craft\fields\PlainText;
 use craft\fields\RadioButtons;
 use craft\fields\Url;
 use craft\fields\Email;
+use Twig\TwigFunction;
 
 /**
  * Class GlobalExtension
@@ -54,8 +55,6 @@ class GlobalExtension extends AbstractExtension implements GlobalsInterface
             ],
         ];
     }
-
-    // ========================================================================= //
 
     /**
      * Generate available field options.
@@ -119,6 +118,57 @@ class GlobalExtension extends AbstractExtension implements GlobalsInterface
 
         // Return field options
         return $fieldOptions;
+    }
+
+    // ========================================================================= //
+
+    /**
+     * @inheritdoc
+     */
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('availableSectionAndEntryTypes', [$this, 'availableSectionAndEntryTypes']),
+        ];
+    }
+
+    /**
+     * Get all available sections and entry types.
+     *
+     * @return array
+     */
+    public function availableSectionAndEntryTypes(): array
+    {
+        // Get sections services
+        $s = Craft::$app->getSections();
+
+        // Initialize sections
+        $sections = [];
+
+        // Loop through all sections
+        foreach ($s->getAllSections() as $section) {
+
+            // Initialize entry types
+            $entryTypes = [];
+
+            // Loop through all entry types in this section
+            foreach ($s->getEntryTypesBySectionId($section->id) as $type) {
+
+                // Add each entry type
+                $entryTypes[$type->id] = $type->name;
+
+            }
+
+            // Add each section (with its respective entry types)
+            $sections[$section->id] = [
+                'name' => $section->name,
+                'entryTypes' => $entryTypes,
+            ];
+
+        }
+
+        // Return compiled options
+        return $sections;
     }
 
 }

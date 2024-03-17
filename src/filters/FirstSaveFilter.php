@@ -1,0 +1,56 @@
+<?php
+/**
+ * Notifier plugin for Craft CMS
+ *
+ * Send custom Twig messages when Craft events are triggered.
+ *
+ * @author    Double Secret Agency
+ * @link      https://plugins.doublesecretagency.com/
+ * @copyright Copyright (c) 2021 Double Secret Agency
+ */
+
+namespace doublesecretagency\notifier\filters;
+
+use Craft;
+use craft\base\ElementInterface;
+
+/**
+ * Filters events based on whether the element is propagating
+ *
+ * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
+ * @see https://github.com/craftcms/webhooks
+ * @since 1.1.0
+ */
+class FirstSaveFilter extends BaseElementFilter
+{
+    public static function displayName(): string
+    {
+        return Craft::t('notifier', 'Element is being saved for the first time');
+    }
+
+    public static function titleYes(): string
+    {
+        return Craft::t('notifier', 'New elements only');
+    }
+
+    public static function titleNo(): string
+    {
+        return Craft::t('notifier', 'Existing elements only');
+    }
+
+    public static function excludes(): array
+    {
+        return [
+            NewElementFilter::class,
+            DraftFilter::class,
+            ProvisionalDraftFilter::class,
+            RevisionFilter::class,
+            ResavingFilter::class,
+        ];
+    }
+
+    protected static function checkElement(ElementInterface $element, bool $value): bool
+    {
+        return ($element->firstSave === $value) && !$element->getIsRevision();
+    }
+}

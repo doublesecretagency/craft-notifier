@@ -19,7 +19,10 @@ use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\filters\ExclusiveFilterInterface;
+use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\helpers\Notifier;
+use doublesecretagency\notifier\NotifierPlugin;
 use Throwable;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -100,19 +103,20 @@ class NotificationsController extends Controller
             ->crumbs($crumbs)
             ->tabs($tabs)
             ->action('notifier/notifications/save')
+            ->saveShortcutRedirectUrl('notifications/{id}')
             ->addAltAction(Craft::t('app', 'Save and continue editing'), [
-                'redirect' => 'notifier/notifications/{id}',
+                'redirect' => 'notifications/{id}',
                 'shortcut' => true,
                 'retainScroll' => true,
             ])
             ->redirectUrl('notifier/notifications')
-            ->saveShortcutRedirectUrl('notifier/notifications/{id}')
-//            ->editUrl($notification->id ? "notifier/notifications/{$notification->id}" : null)
+//            ->editUrl($notification->id ? "notifications/{$notification->id}" : null)
             ->editUrl($notification->getCpEditUrl())
             ->contentTemplate('notifier/notifications/_edit', [
                 'notificationId' => $notificationId,
                 'notification' => $notification,
                 'isNewNotification' => $isNewNotification,
+                'allFilters' => $this->_allFilters($notification),
             ])
             ->sidebarTemplate('notifier/notifications/_edit/details', [
                 'notification' => $notification,
@@ -303,6 +307,74 @@ JS,
         } catch (InvalidConfigException $exception) {
             // Don't bother with slug generator
         }
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Get all event filters.
+     *
+     * @param Notification $notification
+     * @return array
+     */
+    private function _allFilters(Notification $notification): array
+    {
+        // Get all available filters
+        $allFilters = NotifierPlugin::$plugin->events->getAllFilters();
+
+        // Get existing filters
+        $existingFilters = ($notification->eventConfig['filters'] ?? []);
+
+        // Configure and return all filters
+        return array_map(function(string $class) use ($existingFilters) {
+            return $this->_configureFilter($class, $existingFilters);
+        }, $allFilters);
+    }
+
+    /**
+     * Configure each individual filter.
+     *
+     * @param string|FilterInterface $class
+     * @param array $filters
+     * @return array
+     */
+    private function _configureFilter(string|FilterInterface $class, array $filters = []): array
+    {
+        // Get default filter value
+        $defaultValue = $class::defaultValue();
+
+        // Default config values
+        $show = true;
+        $enabled = is_bool($defaultValue);
+        $value = ($defaultValue ?? false);
+
+        // If filter already exists
+        if (isset($filters[$class])) {
+            // Set filter configuration
+//            $show = $class && $event && $class::show($class, $event);
+            $enabled = (bool) $filters[$class];
+            $value = ('yes' === $filters[$class]);
+        }
+
+        // Configure filter
+        $config = [
+            'class' => $class,
+            'displayName' => $class::displayName(),
+            'titleNo' => $class::titleNo(),
+            'titleIgnore' => $class::titleIgnore(),
+            'titleYes' => $class::titleYes(),
+            'show' => $show,
+            'enabled' => $enabled,
+            'value' => $value,
+        ];
+
+        // Append exclusions
+        if (is_subclass_of($class, ExclusiveFilterInterface::class)) {
+            $config['excludes'] = $class::excludes();
+        }
+
+        // Return configuration
+        return $config;
     }
 
 }
