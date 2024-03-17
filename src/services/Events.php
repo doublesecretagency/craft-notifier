@@ -16,10 +16,19 @@ use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
 use craft\events\ModelEvent;
+use craft\events\RegisterComponentTypesEvent;
 use craft\events\UserEvent;
-use craft\helpers\ElementHelper;
 use craft\services\Users;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\filters\DraftFilter;
+use doublesecretagency\notifier\filters\DuplicatingFilter;
+use doublesecretagency\notifier\filters\ElementEnabledFilter;
+use doublesecretagency\notifier\filters\FirstSaveFilter;
+use doublesecretagency\notifier\filters\NewElementFilter;
+use doublesecretagency\notifier\filters\PropagatingFilter;
+use doublesecretagency\notifier\filters\ProvisionalDraftFilter;
+use doublesecretagency\notifier\filters\ResavingFilter;
+use doublesecretagency\notifier\filters\RevisionFilter;
 use doublesecretagency\notifier\NotifierPlugin;
 use yii\base\Event;
 
@@ -29,6 +38,29 @@ use yii\base\Event;
  */
 class Events extends Component
 {
+
+    /**
+     * @event RegisterComponentTypesEvent The event that is triggered when registering filter types.
+     *
+     * Filter types must implement [[FilterInterface]].
+     * ---
+     * ```php
+     * use craft\events\RegisterComponentTypesEvent;
+     * use doublesecretagency\notifier\services\Events as NotifierEvents;
+     * use yii\base\Event;
+     *
+     * if (class_exists(NotifierEvents::class)) {
+     *     Event::on(NotifierEvents::class,
+     *         NotifierEvents::EVENT_REGISTER_FILTER_TYPES,
+     *         function(RegisterComponentTypesEvent $event) {
+     *             $event->types[] = MyFilterType::class;
+     *         }
+     *     );
+     * }
+     * ```
+     * @since 1.1.0
+     */
+    public const EVENT_REGISTER_FILTER_TYPES = 'registerFilterTypes';
 
     /**
      * @var array Original elements prior to saving.
@@ -63,20 +95,11 @@ class Events extends Component
             function (ModelEvent $event) {
                 /** @var Entry $entry */
                 $entry = $event->sender;
-                // If no existing ID, bail
-                if (!$entry->id) {
-                    return;
+                // If entry has an existing ID
+                if ($entry->id) {
+                    // Get the original element
+                    $this->_originals[$entry->id] = Entry::find()->id($entry->id)->one();
                 }
-                // If draft or revision, bail
-                if (ElementHelper::isDraftOrRevision($entry)) {
-                    return;
-                }
-                // Get the original element
-                $original = Entry::find()
-                    ->id($entry->id)
-                    ->one();
-                // Set original element
-                $this->_originals[$entry->id] = $original;
             }
         );
 
@@ -87,10 +110,6 @@ class Events extends Component
             function (ModelEvent $event) {
                 /** @var Entry $entry */
                 $entry = $event->sender;
-                // If draft or revision, bail
-                if (ElementHelper::isDraftOrRevision($entry)) {
-                    return;
-                }
                 // Get all notifications for this event
                 $notifications = Notification::find()
                     ->where([
@@ -98,7 +117,7 @@ class Events extends Component
                         'event' => 'after-propagate',
                     ])
                     ->all();
-                // Pass data to message parser
+                // Configure data for parsing messages
                 $data = [
                     'original' => ($this->_originals[$entry->id] ?? null),
                 ];
@@ -235,5 +254,35 @@ class Events extends Component
             }
         );
     }
+
+    // ========================================================================= //
+
+    /**
+     * Returns all available filter classes.
+     *
+     * @return string[] The available field type classes
+     */
+    public function getAllFilters(): array
+    {
+        $filterTypes = [
+//            NewElementFilter::class,
+            ElementEnabledFilter::class,
+            DraftFilter::class,
+            ProvisionalDraftFilter::class,
+            RevisionFilter::class,
+            FirstSaveFilter::class,
+            DuplicatingFilter::class,
+            PropagatingFilter::class,
+            ResavingFilter::class,
+        ];
+
+        $event = new RegisterComponentTypesEvent([
+            'types' => $filterTypes,
+        ]);
+        $this->trigger(self::EVENT_REGISTER_FILTER_TYPES, $event);
+
+        return $event->types;
+    }
+
 
 }

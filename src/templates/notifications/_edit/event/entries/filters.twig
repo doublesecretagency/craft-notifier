@@ -1,0 +1,44 @@
+{% import '_includes/forms' as forms %}
+
+{# Load assets #}
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\FiltersAsset') %}
+
+{# Whether to show filters #}
+{% set showFilters = allFilters|filter(f => f.show)|length != 0 %}
+
+{# Set the element type #}
+{% set elementType = 'Entry' %}
+
+{% set filtersInput %}
+    <div class="pane" id="filter-pane">
+        <p id="no-filters" class="{{ showFilters ? 'hidden' }}">{{ 'No filters match this event.'|t('notifier') }}</p>
+        <table id="filters" class="data {{ not showFilters ? 'hidden' }}">
+            {% for filter in allFilters %}
+                {% tag 'tr' with {
+                    class: not filter.show ? 'hidden' : false,
+                    data: {
+                        class: filter.class,
+                        excludes: filter.excludes ?? [],
+                    },
+                } %}
+                    <th>{{ filter.displayName | replace('Element', elementType) }}</th>
+                    <td>
+                        <div class="btngroup" tabindex="0">
+                            <div class="btn filter-no {{ filter.enabled and not filter.value ? 'active' }}" data-icon="remove" title="{{ filter.titleNo }}"></div>
+                            <div class="btn filter-ignore {{ not filter.enabled ? 'active' }}" title="{{ filter.titleIgnore }}"><div class="status"></div></div>
+                            <div class="btn filter-yes {{ filter.enabled and filter.value ? 'active' }}" data-icon="checkmark" title="{{ filter.titleYes }}"></div>
+                        </div>
+                        <input type="hidden" name="eventConfig[filters][{{ filter.class }}]" {% if filter.enabled %}value="{{ filter.value ? 'yes' : 'no' }}"{% endif %}>
+                    </td>
+                {% endtag %}
+            {% endfor %}
+        </table>
+        <div id="filter-spinner" class="hidden"><div class="spinner"></div></div>
+    </div>
+{% endset %}
+
+{{ forms.field({
+  id: 'filters',
+  label: "#{elementType} Event Filters"|t('notifier'),
+  instructions: 'Determine whether each message should be sent based on specified conditions.'|t('notifier')
+}, filtersInput) }}

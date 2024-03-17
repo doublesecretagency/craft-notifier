@@ -19,10 +19,14 @@ mix
     // })
 
     // Compile all JavaScript
+    .js(`${src}/js/filters.js`, `${dist}/js`)
     .js(`${src}/js/log.js`, `${dist}/js`)
+    .js(`${src}/js/nested-checkboxes.js`, `${dist}/js`)
 
     // Compile all Sass
+    .sass(`${src}/sass/filters.scss`, `${dist}/css`)
     .sass(`${src}/sass/log.scss`, `${dist}/css`)
+    .sass(`${src}/sass/nested-checkboxes.scss`, `${dist}/css`)
 
     // Disable build notifications
     .disableNotifications()
