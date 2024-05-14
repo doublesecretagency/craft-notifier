@@ -117,7 +117,7 @@
 
 .envelope-button {
   padding-right: 6px;
-  a {
+  button {
     color: #3C60AA;
     border-color: #3C60AA;
     background-color: #E4EBF6;
@@ -138,7 +138,7 @@
   }
   &.delete-envelope {
     padding-right: 12px;
-    a {
+    button {
       color: #A2313D;
       border-color: #A2313D;
       background-color: #F6E6E9;

@@ -6,18 +6,64 @@ var __webpack_exports__ = {};
 /**
  * Open envelope details.
  *
- * @param id
+ * @param envelopeId
  */
-window.openDetails = function (id) {
-  $("#details-".concat(id)).slideToggle();
+window.openDetails = function (envelopeId) {
+  $("#details-".concat(envelopeId)).slideToggle();
+};
+
+/**
+ * Open notification configuration.
+ *
+ * @param notificationId
+ */
+window.openConfig = function (notificationId) {
+  // Make AJAX call to delete envelope
+  Craft.postActionRequest('notifier/log/get-notification', {
+    notificationId: notificationId
+  }, function (response, textStatus) {
+    // If error occurred, display it and bail
+    if (textStatus !== 'success') {
+      Craft.cp.displayError(Craft.t('notifier', 'Unable to get the notification, something went wrong.'));
+      return;
+    }
+
+    // If error occurred, display it and bail
+    if (!(response.success || null)) {
+      Craft.cp.displayError(response.message || Craft.t('notifier', 'Something went wrong.'));
+      return;
+    }
+
+    // Get notification
+    var notification = response.notification;
+
+    // If error occurred, display it and bail
+    if (!notification) {
+      Craft.cp.displayError(Craft.t('notifier', 'Invalid notification ID.'));
+      return;
+    }
+
+    // Set element type
+    var elementType = "doublesecretagency\\notifier\\elements\\Notification";
+
+    // Open slideout editor
+    Craft.createElementEditor(elementType, {
+      siteId: notification.siteId,
+      elementId: notification.id,
+      draftId: notification.draftId,
+      params: {
+        fresh: 1
+      }
+    });
+  });
 };
 
 /**
  * Delete specified envelope.
  *
- * @param id
+ * @param envelopeId
  */
-window.deleteEnvelope = function (id) {
+window.deleteEnvelope = function (envelopeId) {
   // Warning message prior to deletion
   var warning = 'Are you sure you want to delete this log event?';
 
@@ -28,7 +74,7 @@ window.deleteEnvelope = function (id) {
 
   // Make AJAX call to delete envelope
   Craft.postActionRequest('notifier/log/delete', {
-    id: id
+    envelopeId: envelopeId
   }, function (response, textStatus) {
     // If error occurred, display it and bail
     if (textStatus !== 'success') {
@@ -43,7 +89,7 @@ window.deleteEnvelope = function (id) {
     }
 
     // Hide deleted envelope
-    $("#envelope-".concat(id)).slideUp(400, function () {
+    $("#envelope-".concat(envelopeId)).slideUp(400, function () {
       // If no envelopes remain
       if (!$('.envelope').filter(':visible').length) {
         // Reload the page

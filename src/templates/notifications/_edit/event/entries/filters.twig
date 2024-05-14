@@ -4,16 +4,16 @@
 {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\FiltersAsset') %}
 
 {# Whether to show filters #}
-{% set showFilters = allFilters|filter(f => f.show)|length != 0 %}
+{% set showFilters = notification.getFilters|filter(f => f.show)|length != 0 %}
 
 {# Set the element type #}
 {% set elementType = 'Entry' %}
 
 {% set filtersInput %}
-    <div class="pane" id="filter-pane">
-        <p id="no-filters" class="{{ showFilters ? 'hidden' }}">{{ 'No filters match this event.'|t('notifier') }}</p>
-        <table id="filters" class="data {{ not showFilters ? 'hidden' }}">
-            {% for filter in allFilters %}
+    <div class="pane filter-pane">
+        <p class="no-filters {{ showFilters ? 'hidden' }}">{{ 'No filters match this event.'|t('notifier') }}</p>
+        <table class="data filters {{ not showFilters ? 'hidden' }}">
+            {% for filter in notification.getFilters %}
                 {% tag 'tr' with {
                     class: not filter.show ? 'hidden' : false,
                     data: {
@@ -33,7 +33,7 @@
                 {% endtag %}
             {% endfor %}
         </table>
-        <div id="filter-spinner" class="hidden"><div class="spinner"></div></div>
+        <div class="filter-spinner hidden"><div class="spinner"></div></div>
     </div>
 {% endset %}
 

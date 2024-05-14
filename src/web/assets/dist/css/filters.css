@@ -1,56 +1,54 @@
 /**
- * Largely copied from:
+ * Initially copied from:
  * https://github.com/craftcms/webhooks/blob/3.x/src/assets/edit/dist/css/edit-webhook.css
  */
-#filter-pane,
-#filter-pane p {
+.filter-pane {
+  position: relative;
+  display: inline-block;
+  background-color: var(--gray-050);
+  border: none !important;
+  box-shadow: 0 0 0 1px #cdd8e4, 0 2px 12px rgba(205, 216, 228, 0.5) !important;
+}
+.filter-pane.pane:first-child {
+  margin-top: 9px !important;
+}
+.filter-pane p {
   display: inline-block;
 }
 
-#filter-pane {
-  position: relative;
-}
-
-#no-filters {
+.no-filters {
   margin: 0;
 }
 
-#filters tr:first-child > * {
+.filters tr:first-child > * {
   border-top: none;
   padding-top: 0;
 }
-
-#filters tr:last-child > * {
+.filters tr:last-child > * {
   border-bottom: none;
   padding-bottom: 0;
 }
-
-#filters th {
+.filters th {
   font-weight: normal;
 }
-
-#filters .btngroup:focus {
+.filters .btngroup:focus {
   outline: none;
 }
-
-#filters .btn[data-icon]:before {
+.filters .btn[data-icon]:before {
   margin-top: -2px;
   width: 1em;
 }
-
-#filters .filter-yes {
+.filters .filter-yes {
   color: #27ae60;
 }
-
-#filters .filter-no {
+.filters .filter-no {
   color: #d0021b;
 }
-
-#filters .filter-ignore .status {
+.filters .filter-ignore .status {
   margin: 0;
 }
 
-#filter-spinner {
+.filter-spinner {
   position: absolute;
   display: flex;
   justify-content: center;

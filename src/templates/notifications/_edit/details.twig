@@ -1,5 +1,11 @@
 {% import '_includes/forms' as forms %}
 
+{% css %}
+.so-sidebar.details {
+    padding-top: 4px !important;
+}
+{% endcss %}
+
 <div class="meta">
     {{ forms.textField({
         label: 'Slug'|t('app'),

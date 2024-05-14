@@ -16,9 +16,16 @@ use craft\base\Element;
 use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\helpers\UrlHelper;
+use craft\models\FieldLayout;
 use craft\web\CpScreenResponseBehavior;
 use doublesecretagency\notifier\elements\conditions\NotificationCondition;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
+use doublesecretagency\notifier\fieldlayoutelements\notifications\EventFieldLayoutTab;
+use doublesecretagency\notifier\fieldlayoutelements\notifications\MessageFieldLayoutTab;
+use doublesecretagency\notifier\fieldlayoutelements\notifications\MetaFieldLayoutTab;
+use doublesecretagency\notifier\fieldlayoutelements\notifications\RecipientsFieldLayoutTab;
+use doublesecretagency\notifier\filters\ExclusiveFilterInterface;
+use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\models\NotificationLog;
 use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\records\Notification as NotificationRecord;
@@ -272,12 +279,97 @@ class Notification extends Element
     public function prepareEditScreen(Response $response, string $containerId): void
     {
         /** @var Response|CpScreenResponseBehavior $response */
-        $response->crumbs([
-            [
-                'label' => self::pluralDisplayName(),
-                'url' => UrlHelper::cpUrl('notifications'),
-            ],
+        $response
+            ->crumbs([
+                [
+                    'label' => self::pluralDisplayName(),
+                    'url' => UrlHelper::cpUrl('notifications'),
+                ],
+            ])
+            ->metaSidebarTemplate('notifier/notifications/_edit/details', [
+                'notification' => $this,
+            ]);
+    }
+
+    public function getFieldLayout(): ?FieldLayout
+    {
+        $fieldLayout = new FieldLayout();
+
+        $fieldLayout->setTabs([
+            new MetaFieldLayoutTab(),
+            new EventFieldLayoutTab(),
+            new MessageFieldLayoutTab(),
+            new RecipientsFieldLayoutTab(),
         ]);
+
+        return $fieldLayout;
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Get all event filters for Notification.
+     *
+     * @return array
+     */
+    public function getFilters(): array
+    {
+        // Get all available filters
+        $allFilters = NotifierPlugin::$plugin->events->getAllFilters();
+
+        // Get existing filters
+        $existingFilters = ($this->eventConfig['filters'] ?? []);
+
+        // Configure and return all filters
+        return array_map(function(string $class) use ($existingFilters) {
+            return $this->_configureFilter($class, $existingFilters);
+        }, $allFilters);
+    }
+
+    /**
+     * Configure each individual filter.
+     *
+     * @param string|FilterInterface $class
+     * @param array $filters
+     * @return array
+     */
+    private function _configureFilter(string|FilterInterface $class, array $filters = []): array
+    {
+        // Get default filter value
+        $defaultValue = $class::defaultValue();
+
+        // Default config values
+        $show = true;
+        $enabled = is_bool($defaultValue);
+        $value = ($defaultValue ?? false);
+
+        // If filter already exists
+        if (isset($filters[$class])) {
+            // Set filter configuration
+//            $show = $class && $event && $class::show($class, $event);
+            $enabled = (bool) $filters[$class];
+            $value = ('yes' === $filters[$class]);
+        }
+
+        // Configure filter
+        $config = [
+            'class' => $class,
+            'displayName' => $class::displayName(),
+            'titleNo' => $class::titleNo(),
+            'titleIgnore' => $class::titleIgnore(),
+            'titleYes' => $class::titleYes(),
+            'show' => $show,
+            'enabled' => $enabled,
+            'value' => $value,
+        ];
+
+        // Append exclusions
+        if (is_subclass_of($class, ExclusiveFilterInterface::class)) {
+            $config['excludes'] = $class::excludes();
+        }
+
+        // Return configuration
+        return $config;
     }
 
     // ========================================================================= //
@@ -303,15 +395,31 @@ class Notification extends Element
                 $record->id = $this->id;
             }
 
+            // Get request service
+            $request = Craft::$app->getRequest();
+
+            // Get POST values
+            $description      = $request->getBodyParam('description');
+            $eventType        = $request->getBodyParam('eventType');
+            $event            = $request->getBodyParam('event');
+            $eventConfig      = $request->getBodyParam('eventConfig');
+            $messageType      = $request->getBodyParam('messageType');
+            $messageConfig    = $request->getBodyParam('messageConfig');
+            $recipientsType   = $request->getBodyParam('recipientsType');
+            $recipientsConfig = $request->getBodyParam('recipientsConfig');
+
+            // Extract specific event
+            $event = ($event[$eventType] ?? null);
+
             // Save to the `notifier_notifications` table
-            $record->description      = $this->description;
-            $record->eventType        = $this->eventType;
-            $record->event            = $this->event;
-            $record->eventConfig      = $this->eventConfig;
-            $record->messageType      = $this->messageType;
-            $record->messageConfig    = $this->messageConfig;
-            $record->recipientsType   = $this->recipientsType;
-            $record->recipientsConfig = $this->recipientsConfig;
+            $record->description      = $description      ?? $this->description;
+            $record->eventType        = $eventType        ?? $this->eventType;
+            $record->event            = $event            ?? $this->event;
+            $record->eventConfig      = $eventConfig      ?? $this->eventConfig;
+            $record->messageType      = $messageType      ?? $this->messageType;
+            $record->messageConfig    = $messageConfig    ?? $this->messageConfig;
+            $record->recipientsType   = $recipientsType   ?? $this->recipientsType;
+            $record->recipientsConfig = $recipientsConfig ?? $this->recipientsConfig;
 
             $record->save(false);
         }

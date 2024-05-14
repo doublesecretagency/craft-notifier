@@ -12,19 +12,12 @@
 namespace doublesecretagency\notifier\controllers;
 
 use Craft;
-use craft\errors\ElementNotFoundException;
-use craft\errors\MissingComponentException;
 use craft\helpers\Json;
 use craft\helpers\StringHelper;
-use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\elements\Notification;
-use doublesecretagency\notifier\filters\ExclusiveFilterInterface;
-use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\helpers\Notifier;
-use doublesecretagency\notifier\NotifierPlugin;
 use Throwable;
-use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
@@ -56,9 +49,6 @@ class NotificationsController extends Controller
             // Create the notification model
             $notification = $this->_getNotificationModel($notificationId);
         }
-
-        // Whether the notification is new
-        $isNewNotification = !$notification->id;
 
         // Set page title
         $title = ($notification->title ?? Craft::t('notifier', 'Add a New Notification'));
@@ -102,94 +92,21 @@ class NotificationsController extends Controller
             ->title($title)
             ->crumbs($crumbs)
             ->tabs($tabs)
-            ->action('notifier/notifications/save')
+            ->action('elements/save')
             ->saveShortcutRedirectUrl('notifications/{id}')
             ->addAltAction(Craft::t('app', 'Save and continue editing'), [
                 'redirect' => 'notifications/{id}',
                 'shortcut' => true,
                 'retainScroll' => true,
             ])
-            ->redirectUrl('notifier/notifications')
-//            ->editUrl($notification->id ? "notifications/{$notification->id}" : null)
+            ->redirectUrl('notifications')
             ->editUrl($notification->getCpEditUrl())
             ->contentTemplate('notifier/notifications/_edit', [
-                'notificationId' => $notificationId,
                 'notification' => $notification,
-                'isNewNotification' => $isNewNotification,
-                'allFilters' => $this->_allFilters($notification),
             ])
-            ->sidebarTemplate('notifier/notifications/_edit/details', [
+            ->metaSidebarTemplate('notifier/notifications/_edit/details', [
                 'notification' => $notification,
             ]);
-    }
-
-    /**
-     * Save a Notification.
-     *
-     * @return Response|null
-     * @throws BadRequestHttpException
-     * @throws Throwable
-     * @throws ElementNotFoundException
-     * @throws MissingComponentException
-     * @throws Exception
-     */
-    public function actionSave(): ?Response
-    {
-        $this->requirePostRequest();
-        $this->requireLogin();
-
-        // Get request service
-        $request = Craft::$app->getRequest();
-
-        // Get session service
-        $session = Craft::$app->getSession();
-
-        // Get POST values
-        $notificationId   = $request->getBodyParam('notificationId') ?: null;
-        $enabled          = $request->getBodyParam('enabled');
-        $title            = $request->getBodyParam('title');
-        $slug             = $request->getBodyParam('slug');
-        $description      = $request->getBodyParam('description');
-        $eventType        = $request->getBodyParam('eventType');
-        $event            = $request->getBodyParam('event');
-        $eventConfig      = $request->getBodyParam('eventConfig');
-        $messageType      = $request->getBodyParam('messageType');
-        $messageConfig    = $request->getBodyParam('messageConfig');
-        $recipientsType   = $request->getBodyParam('recipientsType');
-        $recipientsConfig = $request->getBodyParam('recipientsConfig');
-
-        // Extract specific event
-        $event = ($event[$eventType] ?? null);
-
-        // Create the notification model
-        $notification = $this->_getNotificationModel($notificationId);
-
-        // Set model values
-        $notification->id               = $notificationId   ?? $notification->id;
-        $notification->enabled          = $enabled          ?? $notification->enabled;
-        $notification->title            = $title            ?? $notification->title;
-        $notification->slug             = $slug             ?? $notification->slug;
-        $notification->description      = $description      ?? $notification->description;
-        $notification->eventType        = $eventType        ?? $notification->eventType;
-        $notification->event            = $event            ?? $notification->event;
-        $notification->eventConfig      = $eventConfig      ?? $notification->eventConfig;
-        $notification->messageType      = $messageType      ?? $notification->messageType;
-        $notification->messageConfig    = $messageConfig    ?? $notification->messageConfig;
-        $notification->recipientsType   = $recipientsType   ?? $notification->recipientsType;
-        $notification->recipientsConfig = $recipientsConfig ?? $notification->recipientsConfig;
-
-        // Save the notification
-        $success = Craft::$app->getElements()->saveElement($notification);
-
-        // Set flash message
-        if ($success) {
-            $session->setNotice(Craft::t('notifier', 'Notification saved.'));
-        } else {
-            $session->setError(Craft::t('notifier', 'Couldn’t save notification.'));
-        }
-
-        // Redirect to index of notifications
-        return $this->redirect(UrlHelper::cpUrl('notifications'));
     }
 
     /**
@@ -307,74 +224,6 @@ JS,
         } catch (InvalidConfigException $exception) {
             // Don't bother with slug generator
         }
-    }
-
-    // ========================================================================= //
-
-    /**
-     * Get all event filters.
-     *
-     * @param Notification $notification
-     * @return array
-     */
-    private function _allFilters(Notification $notification): array
-    {
-        // Get all available filters
-        $allFilters = NotifierPlugin::$plugin->events->getAllFilters();
-
-        // Get existing filters
-        $existingFilters = ($notification->eventConfig['filters'] ?? []);
-
-        // Configure and return all filters
-        return array_map(function(string $class) use ($existingFilters) {
-            return $this->_configureFilter($class, $existingFilters);
-        }, $allFilters);
-    }
-
-    /**
-     * Configure each individual filter.
-     *
-     * @param string|FilterInterface $class
-     * @param array $filters
-     * @return array
-     */
-    private function _configureFilter(string|FilterInterface $class, array $filters = []): array
-    {
-        // Get default filter value
-        $defaultValue = $class::defaultValue();
-
-        // Default config values
-        $show = true;
-        $enabled = is_bool($defaultValue);
-        $value = ($defaultValue ?? false);
-
-        // If filter already exists
-        if (isset($filters[$class])) {
-            // Set filter configuration
-//            $show = $class && $event && $class::show($class, $event);
-            $enabled = (bool) $filters[$class];
-            $value = ('yes' === $filters[$class]);
-        }
-
-        // Configure filter
-        $config = [
-            'class' => $class,
-            'displayName' => $class::displayName(),
-            'titleNo' => $class::titleNo(),
-            'titleIgnore' => $class::titleIgnore(),
-            'titleYes' => $class::titleYes(),
-            'show' => $show,
-            'enabled' => $enabled,
-            'value' => $value,
-        ];
-
-        // Append exclusions
-        if (is_subclass_of($class, ExclusiveFilterInterface::class)) {
-            $config['excludes'] = $class::excludes();
-        }
-
-        // Return configuration
-        return $config;
     }
 
 }
