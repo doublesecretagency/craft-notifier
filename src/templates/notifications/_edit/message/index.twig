@@ -11,22 +11,18 @@
 {# Untranslated instructions for email/SMS fields #}
 {% set fieldInstructions = "Select which User field stores the recipient's {type}." %}
 
-<div id="message" class="flex-fields hidden">
+{{ forms.selectField({
+    label: 'Message Type'|t('notifier'),
+    instructions: 'What type of message will be sent?'|t('notifier'),
+    id: 'messageType',
+    name: 'messageType',
+    options: {'':''}|merge(notificationOptions.messageType),
+    value: notification.messageType,
+    toggle: true,
+    targetPrefix: '.message-type-',
+}) }}
 
-    {{ forms.selectField({
-        label: 'Message Type'|t('notifier'),
-        instructions: 'What type of message will be sent?'|t('notifier'),
-        id: 'messageType',
-        name: 'messageType',
-        options: {'':''}|merge(notificationOptions.messageType),
-        value: notification.messageType,
-        toggle: true,
-        targetPrefix: '.message-type-',
-    }) }}
-
-    {% include 'notifier/notifications/_edit/message/email' %}
-    {% include 'notifier/notifications/_edit/message/sms' %}
-    {% include 'notifier/notifications/_edit/message/announcement' %}
-    {% include 'notifier/notifications/_edit/message/flash' %}
-
-</div>
+{% include 'notifier/notifications/_edit/message/email' %}
+{% include 'notifier/notifications/_edit/message/sms' %}
+{% include 'notifier/notifications/_edit/message/announcement' %}
+{% include 'notifier/notifications/_edit/message/flash' %}

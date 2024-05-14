@@ -1,9 +1,18 @@
 {% import '_includes/forms' as forms %}
 
-{# Render hidden input if notification exists #}
-{{ not isNewNotification ? hiddenInput('notificationId', notificationId) }}
+{# Render hidden inputs #}
+{{ notification.id ? hiddenInput('elementId', notification.id) }}
+{{ notification.siteId ? hiddenInput('siteId', notification.siteId) }}
 
-{% include 'notifier/notifications/_edit/meta' %}
-{% include 'notifier/notifications/_edit/event' %}
-{% include 'notifier/notifications/_edit/message' %}
-{% include 'notifier/notifications/_edit/recipients' %}
+<div id="meta" class="flex-fields">
+    {% include 'notifier/notifications/_edit/meta' %}
+</div>
+<div id="event" class="flex-fields hidden">
+    {% include 'notifier/notifications/_edit/event' %}
+</div>
+<div id="message" class="flex-fields hidden">
+    {% include 'notifier/notifications/_edit/message' %}
+</div>
+<div id="recipients" class="flex-fields hidden">
+    {% include 'notifier/notifications/_edit/recipients' %}
+</div>

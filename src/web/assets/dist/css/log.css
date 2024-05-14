@@ -120,7 +120,7 @@
 .envelope-button {
   padding-right: 6px;
 }
-.envelope-button a {
+.envelope-button button {
   color: #3C60AA;
   border-color: #3C60AA;
   background-color: #E4EBF6;
@@ -133,7 +133,7 @@
   border-style: solid;
   text-decoration: none;
 }
-.envelope-button a:hover, .envelope-button a:active {
+.envelope-button button:hover, .envelope-button button:active {
   color: #5B7BC0;
   border-color: #5B7BC0;
   background-color: #EEF4FE;
@@ -141,12 +141,12 @@
 .envelope-button.delete-envelope {
   padding-right: 12px;
 }
-.envelope-button.delete-envelope a {
+.envelope-button.delete-envelope button {
   color: #A2313D;
   border-color: #A2313D;
   background-color: #F6E6E9;
 }
-.envelope-button.delete-envelope a:hover, .envelope-button.delete-envelope a:active {
+.envelope-button.delete-envelope button:hover, .envelope-button.delete-envelope button:active {
   color: #C75964;
   border-color: #C75964;
   background-color: #F9F0F2;

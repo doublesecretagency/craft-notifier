@@ -13,6 +13,8 @@ namespace doublesecretagency\notifier\controllers;
 
 use Craft;
 use craft\web\Controller;
+use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\records\Log;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
@@ -23,6 +25,44 @@ use yii\web\Response;
  */
 class LogController extends Controller
 {
+
+    public function actionGetNotification(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Get specified ID
+        $notificationId = $this->request->getRequiredBodyParam('notificationId');
+
+        // If no valid ID provided
+        if (!$notificationId || !is_numeric($notificationId)) {
+            // Return JSON response with error message
+            return $this->asJson([
+                'message' => 'Invalid notification ID.',
+                'success' => false,
+            ]);
+        }
+
+        // Get the existing notification
+        /** @var Notification $notification */
+        $notification = Notifier::getNotification($notificationId);
+
+        // If no notification
+        if (!$notification) {
+            // Return JSON response with error message
+            return $this->asJson([
+                'message' => 'Unable to find notification.',
+                'success' => false,
+            ]);
+        }
+
+        // Return JSON response
+        return $this->asJson([
+            'message' => null,
+            'success' => true,
+            'notification' => $notification,
+        ]);
+    }
 
     /**
      * Delete a log event (aka envelope).
@@ -36,7 +76,7 @@ class LogController extends Controller
         $this->requireAcceptsJson();
 
         // Get specified ID
-        $envelopeId = $this->request->getRequiredBodyParam('id');
+        $envelopeId = $this->request->getRequiredBodyParam('envelopeId');
 
         // If no valid ID provided
         if (!$envelopeId || !is_numeric($envelopeId)) {

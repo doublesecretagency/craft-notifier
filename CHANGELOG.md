@@ -2,10 +2,14 @@
 
 ## Unreleased
 
+### Added
+- Added slideouts for Notification elements.
+
 ### Changed
 - New filtering mechanism borrowed heavily from the [Webhooks](https://github.com/craftcms/webhooks/blob/9c901be4d98c8584893c1cbce2b7dad217fbc480/README.md#filtering-events) plugin.
 
 ### Fixed
+- Fixed "Save and continue editing" behavior.
 - Reintroduced filters for Section & Entry Types. ([#22](https://github.com/doublesecretagency/craft-notifier/issues/22))
 - Reintroduced filters for New vs Existing entries. ([#22](https://github.com/doublesecretagency/craft-notifier/issues/22))
 - Reintroduced filters for entry Drafts and Revisions. ([#22](https://github.com/doublesecretagency/craft-notifier/issues/22))

@@ -1,11 +1,11 @@
 <div class="envelope-button">
-    <a href="javascript:openDetails({{ envelope.envelope.id }})">Details</a>
+    <button onclick="openDetails({{ envelope.envelope.id }})">Details</button>
 </div>
 
 <div class="envelope-button">
-    <a href="{{ cpUrl("notifications/#{envelope.envelope.notificationId}") }}">Config</a>
+    <button onclick="openConfig({{ envelope.envelope.notificationId }})">Config</button>
 </div>
 
 <div class="envelope-button delete-envelope">
-    <a href="javascript:deleteEnvelope({{ envelope.envelope.id }})" title="Delete Log Event">X</a>
+    <button onclick="deleteEnvelope({{ envelope.envelope.id }})" title="Delete Log Event">X</button>
 </div>

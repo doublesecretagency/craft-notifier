@@ -8,7 +8,7 @@
 /***/ (() => {
 
 /**
- * Largely copied from:
+ * Initially copied from:
  * https://github.com/craftcms/webhooks/blob/3.x/src/assets/edit/dist/js/EditWebhook.js
  */
 
