@@ -15,6 +15,7 @@ use Craft;
 use doublesecretagency\notifier\helpers\Notifier;
 use craft\elements\User;
 use doublesecretagency\notifier\enums\Options;
+use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use craft\fields\Dropdown;
@@ -25,11 +26,23 @@ use craft\fields\Email;
 use Twig\TwigFunction;
 
 /**
- * Class GlobalExtension
+ * Class Extension
  * @since 1.0.0
  */
-class GlobalExtension extends AbstractExtension implements GlobalsInterface
+class Extension extends AbstractExtension implements GlobalsInterface
 {
+
+    /**
+     * @inheritdoc
+     */
+    public function getTokenParsers(): array
+    {
+        return [
+            new SkipMessageTokenParser(),
+        ];
+    }
+
+    // ========================================================================= //
 
     /**
      * Registers global variables.
