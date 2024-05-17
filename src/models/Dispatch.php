@@ -19,13 +19,14 @@ use craft\helpers\StringHelper;
 use craft\web\twig\Environment;
 use craft\web\twig\Extension;
 use craft\web\twig\GlobalsExtension;
+use craft\web\View;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\TwigSandbox;
 use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\jobs\SendMessage;
 use doublesecretagency\notifier\NotifierPlugin;
-use doublesecretagency\notifier\web\twig\MessageExtension;
+use ReflectionClass;
 use Throwable;
 use Twig\Error\RuntimeError;
 use Twig\Extension\SandboxExtension;
@@ -595,6 +596,9 @@ class Dispatch extends Model
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
+        /** @var View $view */
+        $view = Craft::$app->getView();
+
         // Get override configuration
         $sandbox = ($settings->twigSandbox ?? []);
 
@@ -623,17 +627,27 @@ class Dispatch extends Model
         $templatesPath = Craft::$app->getPath()->getSiteTemplatesPath();
         $loader = new FilesystemLoader($templatesPath);
         $this->_twigSandbox = new Environment($loader);
-        $this->_twigSandbox->addExtension(new MessageExtension());
 
         // Add native Craft extensions
         $this->_twigSandbox->addExtension(new StringLoaderExtension());
-        $this->_twigSandbox->addExtension(new Extension(Craft::$app->getView(), $this->_twigSandbox));
+        $this->_twigSandbox->addExtension(new Extension($view, $this->_twigSandbox));
         $this->_twigSandbox->addExtension(new GlobalsExtension());
 
         // Add sandbox security policy
         $policy = new SecurityPolicy($tags, $filters, $methods, $properties, $functions);
         $sandbox = new SandboxExtension($policy, true);
         $this->_twigSandbox->addExtension($sandbox);
+
+        // Access any plugin-defined extensions (via a private property)
+        $reflection = new ReflectionClass($view);
+        $property = $reflection->getProperty('_twigExtensions');
+        $property->setAccessible(true);
+        $pluginExtensions = $property->getValue($view);
+
+        // Add all extensions defined by plugins or modules
+        foreach ($pluginExtensions as $pluginExtension) {
+            $this->_twigSandbox->addExtension($pluginExtension);
+        }
 
         // Return sandbox
         return $this->_twigSandbox;
