@@ -27,6 +27,7 @@ use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\jobs\SendMessage;
 use doublesecretagency\notifier\NotifierPlugin;
 use ReflectionClass;
+use ReflectionException;
 use Throwable;
 use Twig\Error\RuntimeError;
 use Twig\Extension\SandboxExtension;
@@ -72,7 +73,7 @@ class Dispatch extends Model
     public array $envelopes = [];
 
     /**
-     * @var Environment|null
+     * @var Environment|null Secure Twig sandbox environment.
      */
     private ?Environment $_twigSandbox = null;
 
@@ -525,24 +526,8 @@ class Dispatch extends Model
         // Merge data with variables to be parsed
         $vars = array_merge($this->data, $vars);
 
-        /** @var Settings $settings */
-        $settings = NotifierPlugin::$plugin->getSettings();
-
-        // If sandbox is explicitly disabled
-        if (false === $settings->twigSandbox) {
-
-            // Parse text via default Craft Twig environment
-            $text = Craft::$app->getView()->renderObjectTemplate($text, $vars['object'], $vars);
-
-        } else {
-
-            // Parse text via secure Twig sandbox environment
-            $text = $this->_renderObjectTemplate($text, $vars['object'], $vars);
-
-        }
-
         // Return parsed text
-        return $text;
+        return $this->_renderObjectTemplate($text, $vars['object'], $vars);
     }
 
     /**
@@ -649,6 +634,12 @@ class Dispatch extends Model
             $this->_twigSandbox->addExtension($pluginExtension);
         }
 
+        // If the Closure module is installed
+        if (Craft::$app->hasModule('closure')) {
+            // Add it to the sandbox
+            \nystudio107\closure\Closure::getInstance()?->addClosure($this->_twigSandbox);
+        }
+
         // Return sandbox
         return $this->_twigSandbox;
     }
@@ -664,6 +655,28 @@ class Dispatch extends Model
      */
     private function _renderObjectTemplate(string $template, mixed $object, array $variables = []): string
     {
+        /** @var Settings $settings */
+        $settings = NotifierPlugin::$plugin->getSettings();
+
+        /** @var View $view */
+        $view = Craft::$app->getView();
+
+        // Ensure template is in "site" mode
+        $view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+
+        // If sandbox is explicitly disabled
+        if (false === $settings->twigSandbox) {
+
+            // If the Closure module is installed
+            if (Craft::$app->hasModule('closure')) {
+                // Add it to the default Craft Twig environment
+                \nystudio107\closure\Closure::getInstance()?->addClosure($view->getTwig());
+            }
+
+            // Parse text via default Craft Twig environment
+            return $view->renderObjectTemplate($template, $object, $variables);
+        }
+
         // If there are no dynamic tags, just return the template
         if (!str_contains($template, '{')) {
             return trim($template);
@@ -688,7 +701,7 @@ class Dispatch extends Model
             $cacheKey = md5($template);
             if (!isset($this->_objectTemplates[$cacheKey])) {
                 // Replace shortcut "{var}"s with "{{object.var}}"s, without affecting normal Twig tags
-                $template = Craft::$app->getView()->normalizeObjectTemplate($template);
+                $template = $view->normalizeObjectTemplate($template);
                 $this->_objectTemplates[$cacheKey] = $twig->createTemplate($template);
             }
 
