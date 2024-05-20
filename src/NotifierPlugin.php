@@ -203,8 +203,9 @@ class NotifierPlugin extends Plugin
             static function (RegisterUrlRulesEvent $event) {
                 // Index
                 $event->rules['notifications'] = ['template' => 'notifier/notifications/_index'];
-                // Edit
-                $event->rules['notifications/new']                  = 'notifier/notifications/edit';
+                // New Notification
+                $event->rules['notifications/new'] = 'notifier/notifications/create';
+                // Edit Notification
                 $event->rules['notifications/<notificationId:\d+>'] = 'notifier/notifications/edit';
             }
         );

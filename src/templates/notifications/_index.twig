@@ -11,7 +11,11 @@
 
 {% block actionButton %}
     <a href="{{ cpUrl('utilities/notification-log') }}" class="btn">{{ 'Logs'|t('notifier') }}</a>
-    <a href="{{ cpUrl('notifications/new') }}" class="btn submit add icon">{{ 'New Notification'|t('notifier') }}</a>
+    <a class="btn submit add icon" href="{{ url('notifications/new') }}">
+        {{ 'New {type}'|t('app', {
+            type: 'notification'|t('notifier'),
+        }) }}
+    </a>
 {% endblock %}
 
 {% block content %}
