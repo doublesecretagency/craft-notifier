@@ -12,13 +12,16 @@
 namespace doublesecretagency\notifier\controllers;
 
 use Craft;
+use craft\base\Element;
 use craft\helpers\Json;
 use craft\helpers\StringHelper;
+use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\helpers\Notifier;
 use Throwable;
 use yii\base\InvalidConfigException;
+use yii\base\InvalidRouteException;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -32,15 +35,57 @@ class NotificationsController extends Controller
 {
 
     /**
+     * Create a Notification.
+     *
+     * @return Response
+     * @throws ForbiddenHttpException
+     * @throws InvalidConfigException
+     * @throws Throwable
+     * @throws InvalidRouteException
+     */
+    public function actionCreate(): Response
+    {
+        $notification = Craft::createObject(Notification::class);
+
+        // Make sure the user is allowed to create this notification
+        if (!Craft::$app->getElements()->canSave($notification)) {
+            throw new ForbiddenHttpException('User not authorized to save this notification.');
+        }
+
+        $notification->setScenario(Element::SCENARIO_ESSENTIALS);
+        if (!Craft::$app->getDrafts()->saveElementAsDraft($notification, Craft::$app->getUser()->getId(), null, null, false)) {
+            return $this->asModelFailure($notification, Craft::t('app', 'Couldn’t create {type}.', [
+                'type' => Notification::lowerDisplayName(),
+            ]), 'notification');
+        }
+
+        $editUrl = $notification->getCpEditUrl();
+
+        $response = $this->asModelSuccess($notification, Craft::t('app', '{type} created.', [
+            'type' => Notification::displayName(),
+        ]), 'notification', array_filter([
+            'cpEditUrl' => $this->request->getIsCpRequest() ? $editUrl : null,
+        ]));
+
+        if (!$this->request->getAcceptsJson()) {
+            $response->redirect(UrlHelper::urlWithParams($editUrl, [
+                'fresh' => 1,
+            ]));
+        }
+
+        return $response;
+    }
+
+    /**
      * Edit a Notification.
      *
-     * @param int|null $notificationId
      * @param Notification|null $notification
+     * @param int|null $notificationId
      * @return Response
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
-    public function actionEdit(?int $notificationId = null, ?Notification $notification = null): Response
+    public function actionEdit(?Notification $notification = null, ?int $notificationId = null): Response
     {
         $this->requireAdmin();
 
@@ -87,19 +132,36 @@ class NotificationsController extends Controller
             $this->_slugGenerator($notification);
         }
 
+        // Set action and button label based on draft state
+        if ($notification->getIsDraft()) {
+            // Draft
+            $action = 'elements/apply-draft';
+            $buttonLabel = 'Create {type}';
+        } else {
+            // Published
+            $action = 'elements/save';
+            $buttonLabel = 'Save {type}';
+        }
+
         // Returns a CP screen response
         return $this->asCpScreen()
             ->title($title)
             ->crumbs($crumbs)
             ->tabs($tabs)
-            ->action('elements/save')
-            ->saveShortcutRedirectUrl('notifications/{id}')
+            ->action($action)
+            ->submitButtonLabel(Craft::t('app', $buttonLabel, [
+                'type' => $notification::lowerDisplayName(),
+            ]))
             ->addAltAction(Craft::t('app', 'Save and continue editing'), [
                 'redirect' => 'notifications/{id}',
                 'shortcut' => true,
                 'retainScroll' => true,
             ])
+            ->addAltAction(Craft::t('app', 'Save and add another'), [
+                'redirect' => 'notifications/new',
+            ])
             ->redirectUrl('notifications')
+            ->saveShortcutRedirectUrl('notifications/{id}')
             ->editUrl($notification->getCpEditUrl())
             ->contentTemplate('notifier/notifications/_edit', [
                 'notification' => $notification,
@@ -172,7 +234,7 @@ class NotificationsController extends Controller
 
             // Get the existing notification
             /** @var Notification $notification */
-            $notification = Notifier::getNotification($notificationId);
+            $notification = Notifier::getNotification($notificationId, true);
 
             // If a notification was found, return it
             if ($notification) {

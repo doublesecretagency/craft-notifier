@@ -39,15 +39,23 @@ class Notifier
      * Get a single Notification by its ID.
      *
      * @param int $id
+     * @param bool $includeDrafts
      * @return Notification|null
      */
-    public static function getNotification(int $id): ?Notification
+    public static function getNotification(int $id, bool $includeDrafts = false): ?Notification
     {
-        // Return the matching Notification
-        return static::notifications()
+        // Get Notification by its ID
+        $query = static::notifications()
             ->id($id)
-            ->status(null)
-            ->one();
+            ->status(null);
+
+        // If including drafts, allow drafts
+        if ($includeDrafts) {
+            $query->drafts(null);
+        }
+
+        // Return the matching Notification
+        return $query->one();
     }
 
 }
