@@ -10,9 +10,8 @@
 {% set docs = 'https://plugins.doublesecretagency.com/notifier' %}
 
 {% block actionButton %}
-    <div class="btngroup">
-        <a href="{{ cpUrl('notifications/new') }}" class="btn submit add icon">{{ 'New Notification'|t('notifier') }}</a>
-    </div>
+    <a href="{{ cpUrl('utilities/notification-log') }}" class="btn">{{ 'Logs'|t('notifier') }}</a>
+    <a href="{{ cpUrl('notifications/new') }}" class="btn submit add icon">{{ 'New Notification'|t('notifier') }}</a>
 {% endblock %}
 
 {% block content %}

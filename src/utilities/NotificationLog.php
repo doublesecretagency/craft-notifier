@@ -61,6 +61,27 @@ class NotificationLog extends Utility
      * @inheritdoc
      * @throws Exception
      */
+    public static function toolbarHtml(): string
+    {
+        // Get dynamically specified date
+        $date = Craft::$app->getRequest()->getQueryParam('date');
+
+        // If date is invalid, use today
+        if (!$date) {
+            $date = DateTimeHelper::today()->format('Y-m-d');
+        }
+
+        // Render the utility toolbar template
+        return Craft::$app->getView()->renderTemplate('notifier/_utility/log/toolbar', [
+            'date'   => $date,
+            'dayLog' => static::_getLogs($date),
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     * @throws Exception
+     */
     public static function contentHtml(): string
     {
         // Get dynamically specified date
@@ -85,7 +106,7 @@ class NotificationLog extends Utility
         // Whether date is in the future
         $isFuture = ($now->format('U') < $day->format('U'));
 
-        // Render the utility template
+        // Render the utility content template
         return Craft::$app->getView()->renderTemplate('notifier/_utility/log', [
             'date'     => $date,
             'dayLog'   => static::_getLogs($date),
