@@ -132,8 +132,14 @@ class NotificationsController extends Controller
             $this->_slugGenerator($notification);
         }
 
-        // Set action and button label based on draft state
-        if ($notification->getIsDraft()) {
+        // Get element type
+        $type = $notification::lowerDisplayName();
+
+        // Whether the Notification is a draft
+        $isDraft = $notification->getIsDraft();
+
+        // Configure based on draft state
+        if ($isDraft) {
             // Draft
             $action = 'elements/apply-draft';
             $buttonLabel = 'Create {type}';
@@ -150,7 +156,7 @@ class NotificationsController extends Controller
             ->tabs($tabs)
             ->action($action)
             ->submitButtonLabel(Craft::t('app', $buttonLabel, [
-                'type' => $notification::lowerDisplayName(),
+                'type' => $type,
             ]))
             ->addAltAction(Craft::t('app', 'Save and continue editing'), [
                 'redirect' => 'notifications/{id}',
@@ -159,6 +165,16 @@ class NotificationsController extends Controller
             ])
             ->addAltAction(Craft::t('app', 'Save and add another'), [
                 'redirect' => 'notifications/new',
+            ])
+            ->addAltAction(Craft::t('app', 'Delete {type}', [
+                'type' => $type,
+            ]), [
+                'destructive' => true,
+                'action' => $isDraft ? 'elements/delete-draft' : 'elements/delete',
+                'redirect' => 'notifications',
+                'confirm' => Craft::t('app', 'Are you sure you want to delete this {type}?', [
+                    'type' => $type,
+                ]),
             ])
             ->redirectUrl('notifications')
             ->saveShortcutRedirectUrl('notifications/{id}')
