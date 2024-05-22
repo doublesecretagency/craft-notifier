@@ -18,8 +18,6 @@
         </h2>
     </div>
     <div class="buttons right">
-        {% if dayLog %}
-            <button type="button" class="btn submit" onclick="window.deleteDay('{{ date }}')">Delete Day Logs</button>
-        {% endif %}
+        <a href="{{ cpUrl('notifications') }}" class="btn">{{ 'View Notifications'|t('notifier') }}</a>
     </div>
 </div>
