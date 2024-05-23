@@ -17,7 +17,6 @@ use yii\base\Event;
 /**
  * Filter Interface
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
  */

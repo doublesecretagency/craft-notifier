@@ -16,10 +16,8 @@ use craft\base\ElementInterface;
 use craft\helpers\ElementHelper;
 
 /**
- * Filters events based on whether the element is a draft
+ * Filters events based on whether the element is a draft.
  *
- *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
  */
@@ -38,6 +36,11 @@ class DraftFilter extends BaseElementFilter
     public static function titleNo(): string
     {
         return Craft::t('notifier', 'Must not be a draft');
+    }
+
+    public static function titleIgnore(): string
+    {
+        return Craft::t('notifier', 'Can be a draft or non-draft');
     }
 
     public static function defaultValue(): ?bool

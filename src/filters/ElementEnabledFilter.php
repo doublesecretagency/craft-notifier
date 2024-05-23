@@ -16,9 +16,8 @@ use craft\base\Element;
 use craft\base\ElementInterface;
 
 /**
- * Filters events based on whether the element is enabled
+ * Filters events based on whether the element is enabled.
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
  */
@@ -37,6 +36,11 @@ class ElementEnabledFilter extends BaseElementFilter
     public static function titleNo(): string
     {
         return Craft::t('notifier', 'Must be disabled');
+    }
+
+    public static function titleIgnore(): string
+    {
+        return Craft::t('notifier', 'Can be enabled or disabled');
     }
 
     public static function defaultValue(): ?bool

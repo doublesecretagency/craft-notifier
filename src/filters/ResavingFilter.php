@@ -16,9 +16,8 @@ use craft\base\Element;
 use craft\base\ElementInterface;
 
 /**
- * Filters events based on whether the element is being bulk-resaved
+ * Filters events based on whether the element is being bulk-resaved.
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
  */

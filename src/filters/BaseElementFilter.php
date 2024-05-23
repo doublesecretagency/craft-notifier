@@ -20,9 +20,8 @@ use yii\base\Event;
 use yii\base\NotSupportedException;
 
 /**
- * Base filter for elements
+ * Base filter for elements.
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
  */

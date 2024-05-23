@@ -28,12 +28,13 @@
     eventVal: null,
     filterTimeout: null,
     init: function init() {
-      this.$nameInput = $('#name');
-      this.$classInput = $('#class');
-      this.$eventInput = $('#event');
-      this.$filterSpinner = $('#filter-spinner');
-      this.$noFiltersMessage = $('#no-filters');
-      this.$filtersTable = $('#filters');
+      // this.$nameInput = $('.name');
+      // this.$classInput = $('.class');
+      // this.$eventInput = $('.event');
+
+      this.$filterSpinner = $('.filter-spinner');
+      this.$noFiltersMessage = $('.no-filters');
+      this.$filtersTable = $('.filters');
       this.filters = {};
       this.matchingFilters = [];
       var $filterRows = this.$filtersTable.find('tr');
@@ -45,10 +46,20 @@
         }
       }
       this.applyExclusions();
-      this.addListener(this.$nameInput, 'change, keyup', 'handleTextChange');
-      this.addListener(this.$classInput, 'change, keyup, blur', 'handleEventChange');
-      this.addListener(this.$eventInput, 'change, keyup, blur', 'handleEventChange');
+
+      // this.addListener(this.$nameInput, 'change, keyup', 'handleTextChange');
+      // this.addListener(
+      //     this.$classInput,
+      //     'change, keyup, blur',
+      //     'handleEventChange'
+      // );
+      // this.addListener(
+      //     this.$eventInput,
+      //     'change, keyup, blur',
+      //     'handleEventChange'
+      // );
     },
+
     handleTextChange: function handleTextChange() {
       var input = this.$nameInput.get(0);
 
@@ -176,7 +187,7 @@
     },
     disable: function disable() {
       if (this.enabled) {
-        this.selectIgnore(false);
+        // this.selectIgnore(false);
         this.removeAllListeners(this.$btnGroup);
         this.removeAllListeners(this.$noBtn);
         this.removeAllListeners(this.$ignoreBtn);

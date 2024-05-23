@@ -12,4 +12,4 @@ Sends a notification when **an entry has completely finished saving, and propaga
 
 It's possible to restrict messages to only selected Sections and Entry Types. In addition, you'll find several other filters for determining whether a message should be sent.
 
-<img class="dropshadow" src="/images/events/entry-filters.png" alt="" style="width:564px; margin-top:22px">
+<img class="dropshadow" src="/images/events/entry-types-filters.png" alt="" style="width:570px; margin-top:22px">
