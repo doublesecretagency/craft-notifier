@@ -17,9 +17,8 @@ use craft\events\ModelEvent;
 use yii\base\Event;
 
 /**
- * Filters events based on whether the element is propagating
+ * Filters events based on whether the element is new.
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
  */

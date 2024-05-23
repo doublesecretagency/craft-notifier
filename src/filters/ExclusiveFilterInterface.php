@@ -16,7 +16,6 @@ namespace doublesecretagency\notifier\filters;
  *
  * This can be used by filters which should exclude other filters from being available when this filter is active and enabled.
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
  */

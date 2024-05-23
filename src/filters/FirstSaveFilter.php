@@ -15,9 +15,8 @@ use Craft;
 use craft\base\ElementInterface;
 
 /**
- * Filters events based on whether the element is propagating
+ * Filters events based on whether the element is being saved for the first time.
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
  */
@@ -30,12 +29,17 @@ class FirstSaveFilter extends BaseElementFilter
 
     public static function titleYes(): string
     {
-        return Craft::t('notifier', 'New elements only');
+        return Craft::t('notifier', 'Must be a new entry');
     }
 
     public static function titleNo(): string
     {
-        return Craft::t('notifier', 'Existing elements only');
+        return Craft::t('notifier', 'Must be an existing entry');
+    }
+
+    public static function titleIgnore(): string
+    {
+        return Craft::t('notifier', 'Can be existing or new');
     }
 
     public static function excludes(): array

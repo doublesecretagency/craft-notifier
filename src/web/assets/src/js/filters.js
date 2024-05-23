@@ -21,12 +21,13 @@
         filterTimeout: null,
 
         init: function () {
-            this.$nameInput = $('#name');
-            this.$classInput = $('#class');
-            this.$eventInput = $('#event');
-            this.$filterSpinner = $('#filter-spinner');
-            this.$noFiltersMessage = $('#no-filters');
-            this.$filtersTable = $('#filters');
+            // this.$nameInput = $('.name');
+            // this.$classInput = $('.class');
+            // this.$eventInput = $('.event');
+
+            this.$filterSpinner = $('.filter-spinner');
+            this.$noFiltersMessage = $('.no-filters');
+            this.$filtersTable = $('.filters');
 
             this.filters = {};
             this.matchingFilters = [];
@@ -42,17 +43,17 @@
 
             this.applyExclusions();
 
-            this.addListener(this.$nameInput, 'change, keyup', 'handleTextChange');
-            this.addListener(
-                this.$classInput,
-                'change, keyup, blur',
-                'handleEventChange'
-            );
-            this.addListener(
-                this.$eventInput,
-                'change, keyup, blur',
-                'handleEventChange'
-            );
+            // this.addListener(this.$nameInput, 'change, keyup', 'handleTextChange');
+            // this.addListener(
+            //     this.$classInput,
+            //     'change, keyup, blur',
+            //     'handleEventChange'
+            // );
+            // this.addListener(
+            //     this.$eventInput,
+            //     'change, keyup, blur',
+            //     'handleEventChange'
+            // );
         },
 
         handleTextChange: function () {
@@ -131,9 +132,10 @@
         },
 
         applyExclusions: function () {
-            this.matchingFilters.forEach((f) => {
-                f.enable();
-            });
+            this.matchingFilters
+                .forEach((f) => {
+                    f.enable();
+                });
             this.matchingFilters
                 .filter((f) => f.value === true)
                 .forEach((f) => {
@@ -201,7 +203,7 @@
 
         disable: function () {
             if (this.enabled) {
-                this.selectIgnore(false);
+                // this.selectIgnore(false);
                 this.removeAllListeners(this.$btnGroup);
                 this.removeAllListeners(this.$noBtn);
                 this.removeAllListeners(this.$ignoreBtn);

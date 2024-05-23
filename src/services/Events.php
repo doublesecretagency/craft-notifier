@@ -265,15 +265,15 @@ class Events extends Component
     public function getAllFilters(): array
     {
         $filterTypes = [
-//            NewElementFilter::class,
             ElementEnabledFilter::class,
+            FirstSaveFilter::class,
+//            NewElementFilter::class,
             DraftFilter::class,
             ProvisionalDraftFilter::class,
             RevisionFilter::class,
-            FirstSaveFilter::class,
-            DuplicatingFilter::class,
-            PropagatingFilter::class,
-            ResavingFilter::class,
+//            DuplicatingFilter::class,
+//            PropagatingFilter::class,
+//            ResavingFilter::class,
         ];
 
         $event = new RegisterComponentTypesEvent([

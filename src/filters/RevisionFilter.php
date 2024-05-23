@@ -16,9 +16,8 @@ use craft\base\ElementInterface;
 use craft\helpers\ElementHelper;
 
 /**
- * Filters events based on whether the element is a revision
+ * Filters events based on whether the element is a revision.
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
  */
@@ -37,6 +36,11 @@ class RevisionFilter extends BaseElementFilter
     public static function titleNo(): string
     {
         return Craft::t('notifier', 'Must not be a revision');
+    }
+
+    public static function titleIgnore(): string
+    {
+        return Craft::t('notifier', 'Can be a revision or non-revision');
     }
 
     public static function defaultValue(): ?bool
