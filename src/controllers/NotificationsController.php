@@ -87,12 +87,15 @@ class NotificationsController extends Controller
      */
     public function actionEdit(?Notification $notification = null, ?int $notificationId = null): Response
     {
-        $this->requireAdmin();
-
         // If notification isn't already present
         if (!$notification) {
             // Create the notification model
             $notification = $this->_getNotificationModel($notificationId);
+        }
+
+        // Make sure the user is allowed to save this notification
+        if (!Craft::$app->getElements()->canSave($notification)) {
+            throw new ForbiddenHttpException('User not authorized to save this notification.');
         }
 
         // Set page title
@@ -211,6 +214,11 @@ class NotificationsController extends Controller
                 'type' => Notification::displayName(),
             ]));
             return null;
+        }
+
+        // Make sure the user is allowed to delete this notification
+        if (!Craft::$app->getElements()->canDelete($notification)) {
+            throw new ForbiddenHttpException('User not authorized to delete this notification.');
         }
 
         // Attempt to delete the Notification

@@ -15,6 +15,7 @@
 
 ### Fixed
 - Fixed "Save and continue editing" behavior.
+- Improved user authorization checks.
 - Corrected "Recipients Type" column of Notifications index.
 - Reintroduced filters for Section & Entry Types. ([#22](https://github.com/doublesecretagency/craft-notifier/issues/22))
 - Reintroduced filters for New vs Existing entries. ([#22](https://github.com/doublesecretagency/craft-notifier/issues/22))
