@@ -9,7 +9,7 @@
 }) %}
 
 {# Untranslated instructions for email/SMS fields #}
-{% set fieldInstructions = "Select which User field stores the recipient's {type}." %}
+{% set fieldInstructions = "Select which User field contains the recipient's {type}." %}
 
 {{ forms.selectField({
     label: 'Message Type'|t('notifier'),
