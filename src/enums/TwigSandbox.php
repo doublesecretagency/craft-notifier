@@ -211,6 +211,16 @@ abstract class TwigSandbox
     ];
 
     /**
+     * Default permitted methods.
+     */
+    public const DEFAULT_METHODS = [];
+
+    /**
+     * Default permitted properties.
+     */
+    public const DEFAULT_PROPERTIES = [];
+
+    /**
      * Default permitted functions.
      */
     public const DEFAULT_FUNCTIONS = [
@@ -293,15 +303,5 @@ abstract class TwigSandbox
         'ul',
         'url',
     ];
-
-    /**
-     * Default permitted methods.
-     */
-    public const DEFAULT_METHODS = [];
-
-    /**
-     * Default permitted properties.
-     */
-    public const DEFAULT_PROPERTIES = [];
 
 }
