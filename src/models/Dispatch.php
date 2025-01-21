@@ -26,8 +26,6 @@ use doublesecretagency\notifier\enums\TwigSandbox;
 use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\jobs\SendMessage;
 use doublesecretagency\notifier\NotifierPlugin;
-use ReflectionClass;
-use ReflectionException;
 use Throwable;
 use Twig\Error\RuntimeError;
 use Twig\Extension\SandboxExtension;
@@ -590,23 +588,23 @@ class Dispatch extends Model
         // Replace specified Twig allowances
         $tags       = ($sandbox['override']['tags']       ?? TwigSandbox::DEFAULT_TAGS);
         $filters    = ($sandbox['override']['filters']    ?? TwigSandbox::DEFAULT_FILTERS);
-        $functions  = ($sandbox['override']['functions']  ?? TwigSandbox::DEFAULT_FUNCTIONS);
         $methods    = ($sandbox['override']['methods']    ?? TwigSandbox::DEFAULT_METHODS);
         $properties = ($sandbox['override']['properties'] ?? TwigSandbox::DEFAULT_PROPERTIES);
+        $functions  = ($sandbox['override']['functions']  ?? TwigSandbox::DEFAULT_FUNCTIONS);
 
         // Append specified Twig allowances
         $tags       = array_merge($tags,       ($sandbox['allow']['tags']       ?? []));
         $filters    = array_merge($filters,    ($sandbox['allow']['filters']    ?? []));
-        $functions  = array_merge($functions,  ($sandbox['allow']['functions']  ?? []));
         $methods    = array_merge($methods,    ($sandbox['allow']['methods']    ?? []));
         $properties = array_merge($properties, ($sandbox['allow']['properties'] ?? []));
+        $functions  = array_merge($functions,  ($sandbox['allow']['functions']  ?? []));
 
         // Remove specified Twig allowances
         $tags       = array_diff($tags,       ($sandbox['disallow']['tags']       ?? []));
         $filters    = array_diff($filters,    ($sandbox['disallow']['filters']    ?? []));
-        $functions  = array_diff($functions,  ($sandbox['disallow']['functions']  ?? []));
         $methods    = array_diff($methods,    ($sandbox['disallow']['methods']    ?? []));
         $properties = array_diff($properties, ($sandbox['disallow']['properties'] ?? []));
+        $functions  = array_diff($functions,  ($sandbox['disallow']['functions']  ?? []));
 
         // Create a new Twig environment
         $templatesPath = Craft::$app->getPath()->getSiteTemplatesPath();
@@ -623,11 +621,17 @@ class Dispatch extends Model
         $sandbox = new SandboxExtension($policy, true);
         $this->_twigSandbox->addExtension($sandbox);
 
-        // Access any plugin-defined extensions (via a private property)
-        $reflection = new ReflectionClass($view);
-        $property = $reflection->getProperty('_twigExtensions');
-        $property->setAccessible(true);
-        $pluginExtensions = $property->getValue($view);
+        // Get the Twig environment from the view
+        $twig = $view->getTwig();
+
+        // Get all extensions defined by plugins or modules
+        $pluginExtensions = $twig->getExtensions();
+
+        // Get existing sandbox extensions
+        $sandboxExtensions = $this->_twigSandbox->getExtensions();
+
+        // Remove any extensions that are already in the sandbox
+        $pluginExtensions = array_diff_key($pluginExtensions, $sandboxExtensions);
 
         // Add all extensions defined by plugins or modules
         foreach ($pluginExtensions as $pluginExtension) {
