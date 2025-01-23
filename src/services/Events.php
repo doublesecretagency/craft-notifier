@@ -103,6 +103,29 @@ class Events extends Component
             }
         );
 
+        // When an entry is saved (per each site)
+        Event::on(
+            Entry::class,
+            Entry::EVENT_AFTER_SAVE,
+            function (ModelEvent $event) {
+                /** @var Entry $entry */
+                $entry = $event->sender;
+                // Get all notifications for this event
+                $notifications = Notification::find()
+                    ->where([
+                        'eventType' => 'entries',
+                        'event' => 'after-save',
+                    ])
+                    ->all();
+                // Configure data for parsing messages
+                $data = [
+                    'original' => ($this->_originals[$entry->id] ?? null),
+                ];
+                // Send all matching notifications
+                NotifierPlugin::getInstance()->messages->sendAll($notifications, $event, $data);
+            }
+        );
+
         // When an entry is fully saved and propagated
         Event::on(
             Entry::class,
