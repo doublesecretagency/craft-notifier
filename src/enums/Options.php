@@ -51,6 +51,11 @@ abstract class Options
         ],
         'entries' => [
             [
+                'label' => 'When an entry is saved (per each site)',
+                'value' => 'after-save',
+                'class' => 'craft\elements\Entry::EVENT_AFTER_SAVE'
+            ],
+            [
                 'label' => 'When an entry is fully saved and propagated',
                 'value' => 'after-propagate',
                 'class' => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE'
