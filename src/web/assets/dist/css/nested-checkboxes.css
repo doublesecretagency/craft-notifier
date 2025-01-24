@@ -1,5 +1,6 @@
 .nested-checkboxes {
   position: relative;
+  margin-bottom: 10px;
 }
 .nested-checkboxes .checkbox {
   position: absolute;

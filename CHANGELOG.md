@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- Added filtering by selected Sites. ([#5](https://github.com/doublesecretagency/craft-notifier/issues/5))
 - Added slideouts for Notification elements.
 - Added support for the [Closure](https://github.com/nystudio107/craft-closure) module.
 - Added buttons linking between Notifications and log.

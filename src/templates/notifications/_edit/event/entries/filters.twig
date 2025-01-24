@@ -37,8 +37,16 @@
     </div>
 {% endset %}
 
-{{ forms.field({
-  id: 'filters',
-  label: "#{elementType} Event Filters"|t('notifier'),
-  instructions: 'Determine whether each message should be sent based on specified conditions.'|t('notifier')
-}, filtersInput) }}
+<div class="entries-event-after-save entries-event-after-propagate hidden">
+    {{ forms.field({
+        id: 'filters',
+        label: "#{elementType} Event Filters"|t('notifier'),
+        instructions: 'Determine whether each message should be sent based on specified conditions.'|t('notifier')
+    }, filtersInput) }}
+</div>
+
+{% css %}
+#filters-field {
+    margin-top: 27px !important;
+}
+{% endcss %}

@@ -141,8 +141,48 @@ class Extension extends AbstractExtension implements GlobalsInterface
     public function getFunctions(): array
     {
         return [
+            new TwigFunction('availableSiteGroupsAndSites', [$this, 'availableSiteGroupsAndSites']),
             new TwigFunction('availableSectionAndEntryTypes', [$this, 'availableSectionAndEntryTypes']),
         ];
+    }
+
+    /**
+     * Get all available site groups and sites.
+     *
+     * @return array
+     */
+    public function availableSiteGroupsAndSites(): array
+    {
+        // Get sites services
+        $s = Craft::$app->getSites();
+
+        // Initialize site groups
+        $siteGroups = [];
+
+        // Loop through all site groups
+        foreach ($s->getAllGroups() as $group) {
+
+            // Initialize sites
+            $sites = [];
+
+            // Loop through all sites in this site group
+            foreach ($s->getSitesByGroupId($group->id) as $site) {
+
+                // Add each site
+                $sites[$site->id] = $site->name;
+
+            }
+
+            // Add each site group (with its respective sites)
+            $siteGroups[$group->id] = [
+                'name' => $group->name,
+                'sites' => $sites,
+            ];
+
+        }
+
+        // Return compiled options
+        return $siteGroups;
     }
 
     /**

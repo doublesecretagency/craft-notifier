@@ -111,13 +111,26 @@ class Dispatch extends Model
      */
     private function _filterEntries(): bool
     {
+        // Get event element
+        $element = $this->event->sender;
+
         // Get event config details
         $sections   = ($this->notification->eventConfig['sections']   ?? []);
         $entryTypes = ($this->notification->eventConfig['entryTypes'] ?? []);
         $filters    = ($this->notification->eventConfig['filters']    ?? []);
 
-        // Get event element
-        $element = $this->event->sender;
+        // If triggered by an AFTER_SAVE event
+        if ('after-save' === $this->notification->event) {
+
+            // Get additional config details
+            $sites = ($this->notification->eventConfig['sites'] ?? []);
+
+            // If not in a valid Site, return false
+            if (!in_array($element->siteId, $sites, false)) {
+                return false;
+            }
+
+        }
 
         // If not in a valid Section, return false
         if (!in_array($element->sectionId, $sections, false)) {
