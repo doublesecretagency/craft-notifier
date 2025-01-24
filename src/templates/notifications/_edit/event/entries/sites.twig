@@ -1,0 +1,63 @@
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NestedCheckboxesAsset') %}
+
+{% js on ready %}
+window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-sites');
+{% endjs %}
+
+<div class="entries-event-after-save hidden">
+    <div class="nested-checkboxes nested-checkboxes-sites">
+
+        <h3>Sites</h3>
+        <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-sites')"></div>
+
+        <div class="instructions">
+            <p>Send notifications for each selected copy of the entry (irrelevant of which version was saved).</p>
+        </div>
+
+        <ul>
+
+            {# Get selected Sites #}
+            {% set siteGroups = (notification.eventConfig.siteGroups ?? []) %}
+            {% set sites      = (notification.eventConfig.sites      ?? []) %}
+
+            {# Loop over available site groups #}
+            {% for groupId,group in availableSiteGroupsAndSites() %}
+                {% set groupChecked = (groupId in siteGroups) %}
+                <li>
+                    <input type="checkbox"
+                        class="checkbox checkbox-parent"
+                        id="site-group-{{ groupId }}"
+                        name="eventConfig[siteGroups][]"
+                        value="{{ groupId }}"
+                        {{ groupChecked ? 'checked=""'|raw }}
+                        onclick="window.nestedCheckboxes.toggleGroup(this, 'site-group', {{ groupId }})"
+                    >
+                    <label for="site-group-{{ groupId }}">
+                        {{ group.name }}
+                    </label>
+                    <ul id="site-group-{{ groupId }}-nested">
+                        {# Loop over available sites #}
+                        {% for siteId,site in group.sites %}
+                            <li>
+                                <input type="checkbox"
+                                    data-group="site-group-{{ groupId }}"
+                                    class="checkbox checkbox-child"
+                                    id="site-{{ siteId }}"
+                                    name="eventConfig[sites][]"
+                                    value="{{ siteId }}"
+                                    {{ siteId in sites ? 'checked=""'|raw }}
+                                    {{ not groupChecked ? 'disabled' }}
+                                    onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-sites')"
+                                >
+                                <label for="site-{{ siteId }}">
+                                    {{ site }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+</div>

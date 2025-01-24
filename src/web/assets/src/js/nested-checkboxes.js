@@ -2,9 +2,9 @@
 window.nestedCheckboxes = {
 
     // Toggle nested checkboxes when parent is checked/unchecked
-    toggleGroup: function(el, group) {
+    toggleGroup: function(el, type, group) {
         // Get children of specified group
-        const $children = $(`[data-group="${group}"]`);
+        const $children = $(`[data-group="${type}-${group}"]`);
         // If parent is checked
         if (el.checked) {
             // Enable children

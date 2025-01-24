@@ -6,9 +6,9 @@ var __webpack_exports__ = {};
 // Control behavior of nested checkboxes
 window.nestedCheckboxes = {
   // Toggle nested checkboxes when parent is checked/unchecked
-  toggleGroup: function toggleGroup(el, group) {
+  toggleGroup: function toggleGroup(el, type, group) {
     // Get children of specified group
-    var $children = $("[data-group=\"".concat(group, "\"]"));
+    var $children = $("[data-group=\"".concat(type, "-").concat(group, "\"]"));
     // If parent is checked
     if (el.checked) {
       // Enable children

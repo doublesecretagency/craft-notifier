@@ -11,9 +11,8 @@
         toggle: true,
         targetPrefix: '.entries-event-',
     }) }}
-    <div class="entries-event-after-save entries-event-after-propagate hidden">
-        <hr>
-        {% include 'notifier/notifications/_edit/event/entries/entry-types' %}
-        {% include 'notifier/notifications/_edit/event/entries/filters' %}
-    </div>
+    <hr class="entries-event-after-save entries-event-after-propagate hidden">
+    {% include 'notifier/notifications/_edit/event/entries/sites' %}
+    {% include 'notifier/notifications/_edit/event/entries/entry-types' %}
+    {% include 'notifier/notifications/_edit/event/entries/filters' %}
 </div>
