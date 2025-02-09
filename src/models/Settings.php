@@ -40,8 +40,42 @@ class Settings extends Model
      */
     public ?string $testToPhoneNumber = null; // TO
 
+    // ========================================================================= //
+
     /**
-     * @var array|false Adjust the default Twig sandbox configuration. Set to `false` to disable sandbox entirely.
+     * TWIG SANDBOX SECURITY POLICY
+     * @see https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox
+     */
+
+    /**
+     * @var string Set the mode for integrating blacklist/whitelist options:
+     *  - 'append': Add to the existing list of options. (default)
+     *  - 'override': Replace the existing list of options.
+     *  - 'disabled': Bypass the sandbox entirely.
+     */
+    public string $twigSandboxMode = 'append';
+
+    /**
+     * @var array Custom blacklist security policy.
+     *
+     * Will either "append" or "override" default blacklist,
+     * based on the specified `twigSandboxMode`.
+     */
+    public array $twigSandboxBlacklist = [];
+
+    /**
+     * @var array Custom whitelist security policy.
+     *
+     * Will either "append" or "override" default whitelist,
+     * based on the specified `twigSandboxMode`.
+     */
+    public array $twigSandboxWhitelist = [];
+
+    // ========================================================================= //
+
+    /**
+     * @deprecated in 1.1.0
+     * @var array|false Original setting to adjust the default Twig sandbox configuration.
      */
     public array|false $twigSandbox = [];
 

@@ -14,10 +14,10 @@ namespace doublesecretagency\notifier;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
+use craft\events\DefineAttributeHtmlEvent;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
-use craft\events\SetElementTableAttributeHtmlEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use craft\services\Plugins;
@@ -234,7 +234,7 @@ class NotifierPlugin extends Plugin
         Event::on(
             Notification::class,
             Notification::EVENT_DEFINE_ATTRIBUTE_HTML,
-            static function (\craft\events\DefineAttributeHtmlEvent $event) {
+            static function (DefineAttributeHtmlEvent $event) {
 
                 /** @var Notification $notification */
                 $notification = $event->sender;
