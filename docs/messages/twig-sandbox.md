@@ -1,48 +1,86 @@
 ---
-description:
+description: For security purposes, all message templates are parsed in a secure Twig sandbox with limited functionality. This sandbox can be customized to fit your needs, or disabled entirely in rare cases.
 ---
 
 # Twig Sandbox
 
 :::warning Secure Sandbox
-For security purposes, all [message templates](/messages/templating) are parsed in a secure **sandbox mode** with limited functionality.
+For security purposes, all [message templates](/messages/templating) are parsed in a secure **Twig sandbox** with limited functionality. This sandbox can be customized to fit your needs, or disabled entirely in rare cases.
 :::
 
-Please consult the complete list of [default values](https://github.com/doublesecretagency/craft-notifier/blob/v2-dev/src/enums/TwigSandbox.php) on Github.
+Under the hood, Notifier relies on the [nystudio107/craft-twig-sandbox](https://github.com/nystudio107/craft-twig-sandbox) package to provide a secure Twig environment.
 
-## Adjust the Sandbox Configuration
+To get a good understanding of how the sandbox works, please consult the [default blacklist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php) and
+[default whitelist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php).
+
+## Customizing the Twig Sandbox
+
 If necessary, you can manually configure the sandbox by editing the [PHP Config File](/getting-started/config#twigsandbox).
 
-Add a `twigSandbox` parameter to the `config/notifier.php` file:
+For example, here's how to **permit the `include` tag** without making any other changes to the native blacklist...
 
-```php EXAMPLE
-'twigSandbox' => [
-
-    // Add to the default allowed list
-    'allow' => [
-        ...
-    ],
-    
-    // Remove from the default allowed list
-    'disallow' => [
-        ...
-    ],
-    
-    // Replace the default allowed list
-    'override' => [
-        ...
-    ],
-    
-]
+```php
+// config/notifier.php
+return [
+    'twigSandboxMode' => 'except',  // Twig specs will be removed from the list
+    'twigSandboxBlacklist' => [     // Apply the blacklist,
+        'tags' => ['include']       // but allow the `include` tag
+    ]
+];
 ```
 
-| Action     | Behavior                               |
-|:-----------|----------------------------------------|
-| `allow`    | Adds to the default allowed list.      |
-| `disallow` | Removes from the default allowed list. |
-| `override` | Replaces the default allowed list.     |
+The example above uses the [default blacklist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php), but removes the `include` tag from it. In other words, we're marking the `include` tag as safe, and allowing it to be used in message templates.
 
-Within each of those nested arrays, you can specify the following Twig types:
+## Config Parameters
+
+There are three config parameters for customizing the Twig sandbox, but you will **never need more than two** at the same time.
+
+### `twigSandboxMode`
+
+_string_ - Defaults to `append`.
+
+Determines how the supplied Twig specifications should be handled.
+
+- `append` - Add the Twig specs to the list.
+- `except` - Remove the Twig specs from the list.
+- `override` - Replace the entire list with the Twig specs.
+- `disabled` - Completely [disable](#disable-sandbox-completely) the sandbox (not recommended).
+
+### `twigSandboxBlacklist`
+
+_array_ - Defaults to an empty array.
+
+Enables and modifies the [default blacklist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php).
+
+### `twigSandboxWhitelist`
+
+_array_ - Defaults to an empty array.
+
+Enables and modifies the [default whitelist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php).
+
+:::warning Don't use both lists!
+Either the blacklist or the whitelist can be used, but **not both**.
+
+If both (or neither) lists are specified, the blacklist will take precedence.
+:::
+
+## How to Configure the Sandbox
+
+When configuring the sandbox, it's important to keep in mind three things:
+ - Are you altering the blacklist or the whitelist?
+ - Which Twig tags, filters, functions, methods, or properties are you specifying?
+ - Do you want your new Twig specs to be appended to, excluded from, or completely override the default list?
+
+```php
+return [
+    'twigSandboxMode' => $mode,             // How are we altering the list?
+    'twigSandbox{Blacklist|Whitelist}' => [ // Which list are we altering?
+        $twigSpecs                          // What changes are we making?
+    ]
+];
+```
+
+Whether you choose the blacklist or the whitelist, you can specify the following Twig types:
 
 | Types        | Description                       |
 |:-------------|-----------------------------------|
@@ -52,49 +90,34 @@ Within each of those nested arrays, you can specify the following Twig types:
 | `methods`    | Craft and native Twig methods.    |
 | `properties` | Craft and native Twig properties. |
 
-:::tip Defaults
-See the complete list of [default values](https://github.com/doublesecretagency/craft-notifier/blob/v2-dev/src/enums/TwigSandbox.php) on Github.
-:::
-
-In this way, you can easily allow additional Twig:
+Each type takes the form of a nested array:
 
 ```php
-// Permit the `do` tag
-'allow' => [
-    'tags' => ['do']
-]
+return [
+    'twigSandboxMode' => 'append',  // Twig specs will be added to the list
+    'twigSandboxWhitelist' => [     // Apply the whitelist, and
+        'tags' => [                 // add these tags, filters, and functions
+            'extends',
+            'include'
+        ],
+        'filters' => [
+            'json_decode', 
+            'json_encode'
+        ],
+        'functions' => [
+            'ceil',
+            'floor'
+        ],
+    ]
+];
 ```
-
-Or disallow Twig from the default list:
-
-```php
-// Blocks the `macro` tag
-'disallow' => [
-    'tags' => ['macro']
-]
-```
-
-To disallow **all values** of a given Twig type, override it with an empty array:
-
-```php
-// No tags allowed
-'override' => [
-    'tags' => []
-]
-```
-
-Omitted types will fall back to their respective default values.
-
-:::warning Twig Sandbox Extension
-For further information, including how to structure  `methods` and `properties`, please consult the [official Twig docs](https://twig.symfony.com/doc/3.x/api.html#sandbox-extension).
-:::
 
 ## Disable Sandbox Completely
 
 It is also possible to disable the Twig sandbox entirely, and rely on Craft's native Twig functionality.
 
 ```php
-'twigSandbox' => false
+'twigSandboxMode' => 'disabled'
 ```
 
 :::danger WARNING - Possible Security Risks!

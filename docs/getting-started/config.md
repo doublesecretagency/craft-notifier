@@ -27,8 +27,10 @@ return [
     // Phone number to use for SMS testing purposes
     'testToPhoneNumber' => getenv('TEST_TO_PHONE_NUMBER'),
 
-    // Adjust the default Twig sandbox configuration
-    'twigSandbox' => []
+    // Customize the Twig sandbox configuration
+    'twigSandboxMode' => 'append',
+    'twigSandboxBlacklist' => [],  // Do not use both lists
+    'twigSandboxWhitelist' => []   // at the same time
 
 ];
 ```
@@ -45,7 +47,7 @@ Learn more about managing your [Twilio API credentials](/getting-started/twilio)
 
 _string_|_null_ - Defaults to `null`.
 
-Recipient phone number to intercept all outbound SMS messages. Similar to [`testToEmailAddress`](https://craftcms.com/docs/4.x/config/general.html#testtoemailaddress).
+Recipient phone number to intercept all outbound SMS messages. Similar to [`testToEmailAddress`](https://craftcms.com/docs/5.x/reference/config/general.html#testtoemailaddress).
 
 Set the testing phone number in your local `.env` file, then load it via the PHP config file:
 
@@ -54,12 +56,37 @@ Set the testing phone number in your local `.env` file, then load it via the PHP
 TEST_TO_PHONE_NUMBER="888-555-4444"
 ```
 
-### `twigSandbox`
-
-_array_ - Defaults to `[]` (changes none of the defaults).
-
-Optionally adjust the default Twig sandbox configuration.
+## Twig Sandbox
 
 :::warning Configuration Instructions
 For more details on how to use this powerful feature, please consult the [Twig Sandbox](/messages/twig-sandbox) page.
+:::
+
+### `twigSandboxMode`
+
+_string_ - Defaults to `append`.
+
+Determines how the supplied Twig specifications should be handled.
+
+- `append` - Add the Twig specs to the list.
+- `except` - Remove the Twig specs from the list.
+- `override` - Replace the entire list with the Twig specs.
+- `disabled` - Completely [disable](/messages/twig-sandbox#disable-sandbox-completely) the sandbox (not recommended).
+
+### `twigSandboxBlacklist`
+
+_array_ - Defaults to an empty array.
+
+Enables and modifies the [default blacklist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php).
+
+### `twigSandboxWhitelist`
+
+_array_ - Defaults to an empty array.
+
+Enables and modifies the [default whitelist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php).
+
+:::warning Don't use both lists!
+Either the blacklist or the whitelist can be used, but **not both**.
+
+If both (or neither) lists are specified, the blacklist will take precedence.
 :::

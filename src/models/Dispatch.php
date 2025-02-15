@@ -16,25 +16,15 @@ use craft\base\Element;
 use craft\base\Model;
 use craft\helpers\Queue;
 use craft\helpers\StringHelper;
-use craft\web\twig\Environment;
-use craft\web\twig\Extension;
-use craft\web\twig\GlobalsExtension;
 use craft\web\View;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 use doublesecretagency\notifier\elements\Notification;
-use doublesecretagency\notifier\enums\TwigSandbox;
 use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\jobs\SendMessage;
 use doublesecretagency\notifier\NotifierPlugin;
+use nystudio107\crafttwigsandbox\web\SandboxView;
 use Throwable;
 use Twig\Error\RuntimeError;
-use Twig\Extension\SandboxExtension;
-use Twig\Extension\StringLoaderExtension;
-use Twig\Loader\FilesystemLoader;
-use Twig\Sandbox\SecurityPolicy;
-use Twig\Template as TwigTemplate;
-use Twig\TemplateWrapper;
-use yii\base\Arrayable;
 use yii\base\Event;
 use yii\base\Exception;
 
@@ -71,14 +61,108 @@ class Dispatch extends Model
     public array $envelopes = [];
 
     /**
-     * @var Environment|null Secure Twig sandbox environment.
+     * @var SandboxView|null Secure Twig sandbox environment.
      */
-    private ?Environment $_twigSandbox = null;
+    private ?SandboxView $_sandboxView = null;
+
+    // ========================================================================= //
 
     /**
-     * @var TemplateWrapper[]
+     * Initialize the dispatch.
+     *
+     * @return void
      */
-    private array $_objectTemplates = [];
+    public function init(): void
+    {
+        // Run parent init
+        parent::init();
+
+        // Find and correct any deprecated settings
+        $this->_checkDeprecatedSettings();
+    }
+
+    /**
+     * Find and correct any deprecated settings.
+     */
+    private function _checkDeprecatedSettings(): void
+    {
+        // Get plugin settings
+        $settings = NotifierPlugin::$plugin->getSettings();
+
+        // If no settings, bail
+        if (!$settings) {
+            return;
+        }
+
+        // Get the deprecated settings
+        /** @noinspection PhpDeprecationInspection */
+        $twigSandbox = $settings->twigSandbox;
+
+        // If unchanged, bail
+        if ([] === $twigSandbox) {
+            return;
+        }
+
+        // Deprecation message
+        $message =
+            '[Notifier plugin] '.
+            'The [`twigSandbox` config setting](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox) '.
+            'has been **deprecated and replaced**. '.
+            'Please update your `config/notifier.php` file accordingly.';
+
+        // Mark as deprecated
+        Craft::$app->getDeprecator()->log(
+            '`twigSandbox` config setting',
+            $message
+        );
+
+        // If sandbox is disabled (the old way)
+        if (false === $twigSandbox) {
+            // Set sandbox mode to disabled (the new way)
+            $settings->twigSandboxMode = 'disabled';
+            // Bail
+            return;
+        }
+
+        // If not an array, bail
+        if (!is_array($twigSandbox)) {
+            return;
+        }
+
+        // If sandbox is set to "allow"
+        if (isset($twigSandbox['allow'])) {
+            // Add values to whitelist
+            $mode = 'append';
+            $whitelist = $twigSandbox['allow'];
+
+        // Else, if sandbox is set to "disallow"
+        } else if (isset($twigSandbox['disallow'])) {
+            // Remove values from whitelist
+            $mode = 'except';
+            $whitelist = $twigSandbox['disallow'];
+
+        // Else, if sandbox is set to "override"
+        } else if (isset($twigSandbox['override'])) {
+            // Override values in whitelist
+            $mode = 'override';
+            $whitelist = $twigSandbox['override'];
+
+        // Else, something's not right
+        } else {
+            // Bail
+            return;
+
+        }
+
+        // Set a whitelist
+        $settings->twigSandboxWhitelist = $whitelist;
+
+        // Append values to whitelist
+        $settings->twigSandboxMode = $mode;
+
+        // Update settings
+        NotifierPlugin::$plugin->setSettings($settings->attributes);
+    }
 
     // ========================================================================= //
 
@@ -577,91 +661,6 @@ class Dispatch extends Model
     // ========================================================================= //
 
     /**
-     * Returns a sandboxed Twig environment.
-     *
-     * @return Environment
-     * @throws Exception
-     */
-    private function _getTwig(): Environment
-    {
-        // If sandbox already exists, return it
-        if ($this->_twigSandbox) {
-            return $this->_twigSandbox;
-        }
-
-        /** @var Settings $settings */
-        $settings = NotifierPlugin::$plugin->getSettings();
-
-        /** @var View $view */
-        $view = Craft::$app->getView();
-
-        // Get override configuration
-        $sandbox = ($settings->twigSandbox ?? []);
-
-        // Replace specified Twig allowances
-        $tags       = ($sandbox['override']['tags']       ?? TwigSandbox::DEFAULT_TAGS);
-        $filters    = ($sandbox['override']['filters']    ?? TwigSandbox::DEFAULT_FILTERS);
-        $methods    = ($sandbox['override']['methods']    ?? TwigSandbox::DEFAULT_METHODS);
-        $properties = ($sandbox['override']['properties'] ?? TwigSandbox::DEFAULT_PROPERTIES);
-        $functions  = ($sandbox['override']['functions']  ?? TwigSandbox::DEFAULT_FUNCTIONS);
-
-        // Append specified Twig allowances
-        $tags       = array_merge($tags,       ($sandbox['allow']['tags']       ?? []));
-        $filters    = array_merge($filters,    ($sandbox['allow']['filters']    ?? []));
-        $methods    = array_merge($methods,    ($sandbox['allow']['methods']    ?? []));
-        $properties = array_merge($properties, ($sandbox['allow']['properties'] ?? []));
-        $functions  = array_merge($functions,  ($sandbox['allow']['functions']  ?? []));
-
-        // Remove specified Twig allowances
-        $tags       = array_diff($tags,       ($sandbox['disallow']['tags']       ?? []));
-        $filters    = array_diff($filters,    ($sandbox['disallow']['filters']    ?? []));
-        $methods    = array_diff($methods,    ($sandbox['disallow']['methods']    ?? []));
-        $properties = array_diff($properties, ($sandbox['disallow']['properties'] ?? []));
-        $functions  = array_diff($functions,  ($sandbox['disallow']['functions']  ?? []));
-
-        // Create a new Twig environment
-        $templatesPath = Craft::$app->getPath()->getSiteTemplatesPath();
-        $loader = new FilesystemLoader($templatesPath);
-        $this->_twigSandbox = new Environment($loader);
-
-        // Add native Craft extensions
-        $this->_twigSandbox->addExtension(new StringLoaderExtension());
-        $this->_twigSandbox->addExtension(new Extension($view, $this->_twigSandbox));
-        $this->_twigSandbox->addExtension(new GlobalsExtension());
-
-        // Add sandbox security policy
-        $policy = new SecurityPolicy($tags, $filters, $methods, $properties, $functions);
-        $sandbox = new SandboxExtension($policy, true);
-        $this->_twigSandbox->addExtension($sandbox);
-
-        // Get the Twig environment from the view
-        $twig = $view->getTwig();
-
-        // Get all extensions defined by plugins or modules
-        $pluginExtensions = $twig->getExtensions();
-
-        // Get existing sandbox extensions
-        $sandboxExtensions = $this->_twigSandbox->getExtensions();
-
-        // Remove any extensions that are already in the sandbox
-        $pluginExtensions = array_diff_key($pluginExtensions, $sandboxExtensions);
-
-        // Add all extensions defined by plugins or modules
-        foreach ($pluginExtensions as $pluginExtension) {
-            $this->_twigSandbox->addExtension($pluginExtension);
-        }
-
-        // If the Closure module is installed
-        if (Craft::$app->hasModule('closure')) {
-            // Add it to the sandbox
-            \nystudio107\closure\Closure::getInstance()?->addClosure($this->_twigSandbox);
-        }
-
-        // Return sandbox
-        return $this->_twigSandbox;
-    }
-
-    /**
      * Renders an object template via the Twig sandbox.
      *
      * @param string $template the source template string
@@ -672,17 +671,22 @@ class Dispatch extends Model
      */
     private function _renderObjectTemplate(string $template, mixed $object, array $variables = []): string
     {
+        // If there are no dynamic tags, just return the template
+        if (!str_contains($template, '{')) {
+            return trim($template);
+        }
+
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        /** @var View $view */
-        $view = Craft::$app->getView();
-
-        // Ensure template is in "site" mode
-        $view->setTemplateMode(View::TEMPLATE_MODE_SITE);
-
         // If sandbox is explicitly disabled
-        if (false === $settings->twigSandbox) {
+        if ('disabled' === $settings->twigSandboxMode) {
+
+            /** @var View $view */
+            $view = Craft::$app->getView();
+
+            // Ensure template is in "site" mode
+            $view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
             // If the Closure module is installed
             if (Craft::$app->hasModule('closure')) {
@@ -694,78 +698,15 @@ class Dispatch extends Model
             return $view->renderObjectTemplate($template, $object, $variables);
         }
 
-        // If there are no dynamic tags, just return the template
-        if (!str_contains($template, '{')) {
-            return trim($template);
+        // If sandboxed Twig environment doesn't exist, create it
+        if (!$this->_sandboxView) {
+            $this->_sandboxView = (new Sandbox([
+                'settings' => $settings
+            ]))->view;
         }
 
-        // Get sandboxed Twig environment
-        $twig = $this->_getTwig();
-
-        // Temporarily disable strict variables if it's enabled
-        $strictVariables = $twig->isStrictVariables();
-
-        // If strict variables, disable them
-        if ($strictVariables) {
-            $twig->disableStrictVariables();
-        }
-
-        // Set escaper strategy
-        $twig->setDefaultEscaperStrategy(false);
-
-        try {
-            // Is this the first time we've parsed this template?
-            $cacheKey = md5($template);
-            if (!isset($this->_objectTemplates[$cacheKey])) {
-                // Replace shortcut "{var}"s with "{{object.var}}"s, without affecting normal Twig tags
-                $template = $view->normalizeObjectTemplate($template);
-                $this->_objectTemplates[$cacheKey] = $twig->createTemplate($template);
-            }
-
-            // Get the variables to pass to the template
-            if ($object instanceof \yii\base\Model) {
-                foreach ($object->attributes() as $name) {
-                    if (!isset($variables[$name]) && str_contains($template, $name)) {
-                        $variables[$name] = $object->$name;
-                    }
-                }
-            }
-
-            // Get attributes of object to pass to the template
-            if ($object instanceof Arrayable) {
-                // See if we should be including any of the extra fields
-                $extra = [];
-                foreach ($object->extraFields() as $field => $definition) {
-                    if (is_int($field)) {
-                        $field = $definition;
-                    }
-                    if (preg_match('/\b' . preg_quote($field, '/') . '\b/', $template)) {
-                        $extra[] = $field;
-                    }
-                }
-                $variables += $object->toArray([], $extra, false);
-            }
-
-            // Compile variables
-            $variables['object'] = $object;
-            $variables['_variables'] = $variables;
-
-            // Render it!
-            /** @var TwigTemplate $templateObj */
-            $templateObj = $this->_objectTemplates[$cacheKey];
-            return trim($templateObj->render($variables));
-
-        } finally {
-
-            // Reset escaper strategy
-            $twig->setDefaultEscaperStrategy();
-
-            // Re-enable strict variables
-            if ($strictVariables) {
-                $twig->enableStrictVariables();
-            }
-
-        }
+        // Parse text via sandbox environment
+        return $this->_sandboxView->renderObjectTemplate($template, $object, $variables);
     }
 
     // ========================================================================= //
