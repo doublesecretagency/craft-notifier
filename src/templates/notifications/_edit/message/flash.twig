@@ -1,4 +1,5 @@
 {% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
 
 <div class="message-type-flash hidden">
     {{ forms.selectField({
@@ -23,7 +24,7 @@
         errors: notification.getErrors('messageConfig[flashTitle]'),
     }) }}
 
-    {{ forms.textareaField({
+    {{ codeEditor.textAreaField({
         label: "Flash Message Details"|t('notifier'),
         instructions: "Optional message details.",
         placeholder: commonPlaceholder,

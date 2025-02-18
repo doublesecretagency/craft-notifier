@@ -29,6 +29,7 @@
     ],
     "require": {
         "craftcms/cms": "^5.0",
+        "nystudio107/craft-code-editor": "^1.0",
         "nystudio107/craft-twig-sandbox": "^5.0.2",
         "twilio/sdk": "^7.14"
     },
