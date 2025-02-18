@@ -13,6 +13,7 @@
 
 ### Changed
 - New filtering mechanism borrowed heavily from the [Webhooks](https://github.com/craftcms/webhooks/blob/9c901be4d98c8584893c1cbce2b7dad217fbc480/README.md#filtering-events) plugin.
+- Twig template fields now use the [nystudio107/craft-code-editor](https://github.com/nystudio107/craft-code-editor) package.
 - Refactored the [Twig sandbox](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox) to use [nystudio107/craft-twig-sandbox](https://github.com/nystudio107/craft-twig-sandbox).
 
 ### Fixed
