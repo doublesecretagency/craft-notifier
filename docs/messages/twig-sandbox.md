@@ -15,15 +15,15 @@ To get a good understanding of how the sandbox works, please consult the [defaul
 
 ## Customizing the Twig Sandbox
 
-If necessary, you can manually configure the sandbox by editing the [PHP Config File](/getting-started/config#twigsandbox).
+You can manually configure the sandbox by editing the [PHP Config File](/getting-started/config#twigsandbox).
 
-For example, here's how to **permit the `include` tag** without making any other changes to the native blacklist...
+For example, here's how to **permit the `include` tag** without making any other changes to the existing default blacklist...
 
 ```php
 // config/notifier.php
 return [
-    'twigSandboxMode' => 'except',  // Twig specs will be removed from the list
-    'twigSandboxBlacklist' => [     // Apply the blacklist,
+    'twigSandboxMode' => 'except',  // Exception mode
+    'twigSandboxBlacklist' => [     // Use the default blacklist,
         'tags' => ['include']       // but allow the `include` tag
     ]
 ];
@@ -33,7 +33,7 @@ The example above uses the [default blacklist](https://github.com/nystudio107/cr
 
 ## Config Parameters
 
-There are three config parameters for customizing the Twig sandbox, but you will **never need more than two** at the same time.
+There are three config parameters for customizing the Twig sandbox, but you will never need more than two at the same time. Do not use the blacklist and whitelist together, **choose one or the other**.
 
 ### `twigSandboxMode`
 
@@ -44,7 +44,13 @@ Determines how the supplied Twig specifications should be handled.
 - `append` - Add the Twig specs to the list.
 - `except` - Remove the Twig specs from the list.
 - `override` - Replace the entire list with the Twig specs.
-- `disabled` - Completely [disable](#disable-sandbox-completely) the sandbox (not recommended).
+- `disabled` - Completely [disable](#disable-sandbox-completely) the sandbox. _(not recommended)_
+
+:::warning Don't use the Blacklist and Whitelist simultaneously
+Either the blacklist or the whitelist can be used, but **not both**.
+
+If both (or neither) lists are specified, the blacklist will take precedence.
+:::
 
 ### `twigSandboxBlacklist`
 
@@ -57,12 +63,6 @@ Enables and modifies the [default blacklist](https://github.com/nystudio107/craf
 _array_ - Defaults to an empty array.
 
 Enables and modifies the [default whitelist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php).
-
-:::warning Don't use both lists!
-Either the blacklist or the whitelist can be used, but **not both**.
-
-If both (or neither) lists are specified, the blacklist will take precedence.
-:::
 
 ## How to Configure the Sandbox
 
@@ -94,8 +94,8 @@ Each type takes the form of a nested array:
 
 ```php
 return [
-    'twigSandboxMode' => 'append',  // Twig specs will be added to the list
-    'twigSandboxWhitelist' => [     // Apply the whitelist, and
+    'twigSandboxMode' => 'append',
+    'twigSandboxWhitelist' => [     // Use the default whitelist, and
         'tags' => [                 // add these tags, filters, and functions
             'extends',
             'include'
@@ -123,5 +123,5 @@ It is also possible to disable the Twig sandbox entirely, and rely on Craft's na
 :::danger WARNING - Possible Security Risks!
 When disabling or reconfiguring the Twig sandbox, be aware of **who has permission to edit Notifications**. Ensure that Notification editors are trusted system users, otherwise you may be opening up a security loophole for bad actors.
 
-You can always manage who has access to the Notifier plugin by managing their individual User (or Group) permission settings.
+Within the Craft control panel, you can also manage who has access to the Notifier plugin by managing their individual User (or Group) [permission settings](https://craftcms.com/docs/5.x/system/user-management.html#permissions).
 :::
