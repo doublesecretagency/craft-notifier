@@ -640,8 +640,14 @@ class Dispatch extends Model
             $message = $this->_cleanError("[SKIPPED] {$e->getMessage()}");
             $this->notification->log->warning($message, $envelopeId);
         } else {
-            // Log an error
+            // Compile the error
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
+            // If message contains "is not allowed in"
+            if (str_contains($message, 'is not allowed in')) {
+                // Append link to sandbox documentation
+                $message .= ' Learn how to [configure the Twig sandbox](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox).';
+            }
+            // Log the error
             $this->notification->log->error($message, $envelopeId);
         }
     }

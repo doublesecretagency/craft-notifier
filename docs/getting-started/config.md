@@ -56,37 +56,10 @@ Set the testing phone number in your local `.env` file, then load it via the PHP
 TEST_TO_PHONE_NUMBER="888-555-4444"
 ```
 
-## Twig Sandbox
+### `twigSandboxMode` / `...Blacklist` / `...Whitelist`
 
-:::warning Configuration Instructions
-For more details on how to use this powerful feature, please consult the [Twig Sandbox](/messages/twig-sandbox) page.
-:::
+In order to parse message templates safely, Notifier uses a secure [Twig sandbox](/messages/twig-sandbox) with restricted functionality. The sandbox can be fully customized via the plugin's PHP config file.
 
-### `twigSandboxMode`
-
-_string_ - Defaults to `append`.
-
-Determines how the supplied Twig specifications should be handled.
-
-- `append` - Add the Twig specs to the list.
-- `except` - Remove the Twig specs from the list.
-- `override` - Replace the entire list with the Twig specs.
-- `disabled` - Completely [disable](/messages/twig-sandbox#disable-sandbox-completely) the sandbox (not recommended).
-
-### `twigSandboxBlacklist`
-
-_array_ - Defaults to an empty array.
-
-Enables and modifies the [default blacklist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php).
-
-### `twigSandboxWhitelist`
-
-_array_ - Defaults to an empty array.
-
-Enables and modifies the [default whitelist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php).
-
-:::warning Don't use both lists!
-Either the blacklist or the whitelist can be used, but **not both**.
-
-If both (or neither) lists are specified, the blacklist will take precedence.
+:::warning Configuring the Sandbox
+For complete instructions on customizing the Twig sandbox, please see the [Twig Sandbox](/messages/twig-sandbox) documentation.
 :::

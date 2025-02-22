@@ -30,4 +30,13 @@ return [
     //'twigSandboxBlacklist' => [],  // Do not use both lists
     //'twigSandboxWhitelist' => []   // at the same time
 
+    /**
+     * EXAMPLE:
+     * Removes the `include` tag from the existing default blacklist.
+     */
+    'twigSandboxMode' => 'except',  // Exception mode
+    'twigSandboxBlacklist' => [     // Use the default blacklist,
+        'tags' => ['include']       // but allow the `include` tag
+    ]
+
 ];
