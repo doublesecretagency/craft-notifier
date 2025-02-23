@@ -6,17 +6,11 @@ description: Using a PHP config file, you can override several of the plugin's s
 
 Everything on the plugin's [Settings](/getting-started/settings) page can also be managed via PHP in a config file. By setting these values in `config/notifier.php`, they take precedence over whatever may be set in the control panel.
 
-```shell
-# Copy this file...
-/vendor/doublesecretagency/craft-notifier/src/config.php
-
-# To here... (and rename it)
-/config/notifier.php
-```
-
-Much like the `db.php` and `general.php` files, `notifier.php` is [environmentally aware](https://craftcms.com/docs/4.x/config/#multi-environment-configs). You can also pass in environment values using the `getenv` PHP method.
+To configure the sandbox, start by creating a `config/notifier.php` file. It might look something like this...
 
 ```php
+// config/notifier.php
+
 return [
 
     // Twilio (only needed if using Twilio to send SMS messages)
@@ -27,13 +21,10 @@ return [
     // Phone number to use for SMS testing purposes
     'testToPhoneNumber' => getenv('TEST_TO_PHONE_NUMBER'),
 
-    // Customize the Twig sandbox configuration
-    'twigSandboxMode' => 'append',
-    'twigSandboxBlacklist' => [],  // Do not use both lists
-    'twigSandboxWhitelist' => []   // at the same time
-
 ];
 ```
+
+Much like the `db.php` and `general.php` files, `notifier.php` is [environmentally aware](https://craftcms.com/docs/4.x/config/#multi-environment-configs). You can also pass in environment values using the `getenv` PHP method.
 
 ## Settings available via Control Panel
 
@@ -56,10 +47,8 @@ Set the testing phone number in your local `.env` file, then load it via the PHP
 TEST_TO_PHONE_NUMBER="888-555-4444"
 ```
 
-### `twigSandboxMode` / `...Blacklist` / `...Whitelist`
+## Deprecated Settings
 
-In order to parse message templates safely, Notifier uses a secure [Twig sandbox](/messages/twig-sandbox) with restricted functionality. The sandbox can be fully customized via the plugin's PHP config file.
+### `twigSandbox` [DEPRECATED]
 
-:::warning Configuring the Sandbox
-For complete instructions on customizing the Twig sandbox, please see the [Twig Sandbox](/messages/twig-sandbox) documentation.
-:::
+This config setting is deprecated. For the new approach, see the [Twig Sandbox](/messages/twig-sandbox) documentation.

@@ -65,6 +65,11 @@ class Dispatch extends Model
      */
     private ?SandboxView $_sandboxView = null;
 
+    /**
+     * @var array Array of deprecated configuration settings.
+     */
+    private array $_deprecatedConfig = [];
+
     // ========================================================================= //
 
     /**
@@ -96,7 +101,7 @@ class Dispatch extends Model
 
         // Get the deprecated settings
         /** @noinspection PhpDeprecationInspection */
-        $twigSandbox = $settings->twigSandbox;
+        $twigSandbox = $settings->twigSandbox ?? [];
 
         // If unchanged, bail
         if ([] === $twigSandbox) {
@@ -105,10 +110,10 @@ class Dispatch extends Model
 
         // Deprecation message
         $message =
-            '[Notifier plugin] '.
-            'The [`twigSandbox` config setting](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox) '.
-            'has been **deprecated and replaced**. '.
-            'Please update your `config/notifier.php` file accordingly.';
+            '[Notifier] '.
+            'The `twigSandbox` config setting has been '.
+            '[deprecated and replaced](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox). '.
+            'Create a `config/notifier-sandbox.php` file and update accordingly.';
 
         // Mark as deprecated
         Craft::$app->getDeprecator()->log(
@@ -118,8 +123,8 @@ class Dispatch extends Model
 
         // If sandbox is disabled (the old way)
         if (false === $twigSandbox) {
-            // Set sandbox mode to disabled (the new way)
-            $settings->twigSandboxMode = 'disabled';
+            // Set mode to disabled (the new way)
+            $this->_deprecatedConfig['mode'] = Sandbox::DISABLE;
             // Bail
             return;
         }
@@ -130,38 +135,27 @@ class Dispatch extends Model
         }
 
         // If sandbox is set to "allow"
-        if (isset($twigSandbox['allow'])) {
-            // Add values to whitelist
-            $mode = 'append';
-            $whitelist = $twigSandbox['allow'];
+        if ($twig = ($twigSandbox['allow'] ?? [])) {
+            $mode = Sandbox::ADD;
 
         // Else, if sandbox is set to "disallow"
-        } else if (isset($twigSandbox['disallow'])) {
-            // Remove values from whitelist
-            $mode = 'except';
-            $whitelist = $twigSandbox['disallow'];
+        } else if ($twig = ($twigSandbox['disallow'] ?? [])) {
+            $mode = Sandbox::REMOVE;
 
         // Else, if sandbox is set to "override"
-        } else if (isset($twigSandbox['override'])) {
-            // Override values in whitelist
-            $mode = 'override';
-            $whitelist = $twigSandbox['override'];
+        } else if ($twig = ($twigSandbox['override'] ?? [])) {
+            $mode = Sandbox::REPLACE;
 
         // Else, something's not right
         } else {
             // Bail
             return;
-
         }
 
-        // Set a whitelist
-        $settings->twigSandboxWhitelist = $whitelist;
-
-        // Append values to whitelist
-        $settings->twigSandboxMode = $mode;
-
-        // Update settings
-        NotifierPlugin::$plugin->setSettings($settings->attributes);
+        // Configure the whitelist according to deprecated settings
+        $this->_deprecatedConfig['list'] = Sandbox::WHITELIST;
+        $this->_deprecatedConfig['mode'] = $mode;
+        $this->_deprecatedConfig['twig'] = $twig;
     }
 
     // ========================================================================= //
@@ -682,11 +676,27 @@ class Dispatch extends Model
             return trim($template);
         }
 
-        /** @var Settings $settings */
-        $settings = NotifierPlugin::$plugin->getSettings();
+        // Get the sandbox configuration
+        $config = Craft::$app->config->getConfigFromFile('notifier-sandbox');
+
+        // If deprecated config exists
+        if ($this->_deprecatedConfig) {
+            // Defer to deprecated config
+            $config = $this->_deprecatedConfig;
+        }
+
+        // If no config is specified
+        if (!$config) {
+            // Set the default config
+            $config = [
+                'list' => Sandbox::BLACKLIST,
+                'mode' => Sandbox::ADD,
+                'twig' => [],
+            ];
+        }
 
         // If sandbox is explicitly disabled
-        if ('disabled' === $settings->twigSandboxMode) {
+        if (Sandbox::DISABLE === ($config['mode'] ?? null)) {
 
             /** @var View $view */
             $view = Craft::$app->getView();
@@ -706,9 +716,7 @@ class Dispatch extends Model
 
         // If sandboxed Twig environment doesn't exist, create it
         if (!$this->_sandboxView) {
-            $this->_sandboxView = (new Sandbox([
-                'settings' => $settings
-            ]))->view;
+            $this->_sandboxView = (new Sandbox(['config' => $config]))->view;
         }
 
         // Parse text via sandbox environment

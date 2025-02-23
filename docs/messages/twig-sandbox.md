@@ -15,16 +15,22 @@ To get a good understanding of how the sandbox works, please consult the [defaul
 
 ## Customizing the Twig Sandbox
 
-You can manually configure the sandbox by editing the [PHP Config File](/getting-started/config#twigsandbox).
+To configure the sandbox, start by creating a `config/notifier-sandbox.php` file.
 
-For example, here's how to **permit the `include` tag** without making any other changes to the existing default blacklist...
+Within the context of that file, you can specify which Twig tags, filters, functions, methods, or properties should be allowed or disallowed. You can choose to add, remove, or replace the default list of Twig specs.
+
+For example, here's how to **permit the `include` tag** without making any other changes to the existing default blacklist:
 
 ```php
-// config/notifier.php
+// config/notifier-sandbox.php
+
+use doublesecretagency\notifier\models\Sandbox;
+
 return [
-    'twigSandboxMode' => 'except',  // Exception mode
-    'twigSandboxBlacklist' => [     // Use the default blacklist,
-        'tags' => ['include']       // but allow the `include` tag
+    'list' => Sandbox::BLACKLIST, // Use the default blacklist,
+    'mode' => Sandbox::REMOVE,    // but remove the `include` tag.
+    'twig' => [
+        'tags' => ['include']
     ]
 ];
 ```
@@ -33,54 +39,47 @@ The example above uses the [default blacklist](https://github.com/nystudio107/cr
 
 ## Config Parameters
 
-There are three config parameters for customizing the Twig sandbox, but you will never need more than two at the same time. Do not use the blacklist and whitelist together, **choose one or the other**.
-
-### `twigSandboxMode`
-
-_string_ - Defaults to `append`.
-
-Determines how the supplied Twig specifications should be handled.
-
-- `append` - Add the Twig specs to the list.
-- `except` - Remove the Twig specs from the list.
-- `override` - Replace the entire list with the Twig specs.
-- `disabled` - Completely [disable](#disable-sandbox-completely) the sandbox. _(not recommended)_
-
-:::warning Don't use the Blacklist and Whitelist simultaneously
-Either the blacklist or the whitelist can be used, but **not both**.
-
-If both (or neither) lists are specified, the blacklist will take precedence.
-:::
-
-### `twigSandboxBlacklist`
-
-_array_ - Defaults to an empty array.
-
-Enables and modifies the [default blacklist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php).
-
-### `twigSandboxWhitelist`
-
-_array_ - Defaults to an empty array.
-
-Enables and modifies the [default whitelist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php).
-
-## How to Configure the Sandbox
-
 When configuring the sandbox, it's important to keep in mind three things:
- - Are you altering the blacklist or the whitelist?
- - Which Twig tags, filters, functions, methods, or properties are you specifying?
- - Do you want your new Twig specs to be appended to, excluded from, or completely override the default list?
+
+- Are you using the blacklist or the whitelist?
+- Do you want your new Twig specs to be added to, removed from, or completely replace the default list?
+- Which Twig tags, filters, functions, methods, or properties are you specifying?
 
 ```php
 return [
-    'twigSandboxMode' => $mode,             // How are we altering the list?
-    'twigSandbox{Blacklist|Whitelist}' => [ // Which list are we altering?
-        $twigSpecs                          // What changes are we making?
-    ]
+    'list' => $list, // Which list are we using?
+    'mode' => $mode, // How are we altering the list?
+    'twig' => $twig  // What changes are we making?
 ];
 ```
 
-Whether you choose the blacklist or the whitelist, you can specify the following Twig types:
+### `'list'`
+
+_string_ - Defaults to `Sandbox::BLACKLIST`.
+
+Select which list to enable and modify:
+
+- `Sandbox::BLACKLIST` - The default [blacklist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php).
+- `Sandbox::WHITELIST` - The default [whitelist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php).
+
+### `'mode'`
+
+_string_ - Defaults to `Sandbox::ADD`.
+
+Select how the supplied Twig specifications should be handled:
+
+- `Sandbox::ADD` - Add the Twig specs to the list.
+- `Sandbox::REMOVE` - Remove the Twig specs from the list.
+- `Sandbox::REPLACE` - Replace the entire list with the Twig specs.
+- `Sandbox::DISABLE` - Completely [disable](#disable-sandbox-completely) the sandbox. _(not recommended)_
+
+### `'twig'`
+
+_array_ - Defaults to `[]`.
+
+Specify which Twig tags, filters, functions, methods, or properties will be added, removed, or replaced.
+
+Within the context of the `twig` parameter, you can specify the following Twig types:
 
 | Types        | Description                       |
 |:-------------|-----------------------------------|
@@ -93,10 +92,13 @@ Whether you choose the blacklist or the whitelist, you can specify the following
 Each type takes the form of a nested array:
 
 ```php
+use doublesecretagency\notifier\models\Sandbox;
+
 return [
-    'twigSandboxMode' => 'append',
-    'twigSandboxWhitelist' => [     // Use the default whitelist, and
-        'tags' => [                 // add these tags, filters, and functions
+    'list' => Sandbox::WHITELIST, // Use the default whitelist, and
+    'mode' => Sandbox::ADD,       // add these tags, filters, and functions.
+    'twig' => [
+        'tags' => [
             'extends',
             'include'
         ],
@@ -117,11 +119,15 @@ return [
 It is also possible to disable the Twig sandbox entirely, and rely on Craft's native Twig functionality.
 
 ```php
-'twigSandboxMode' => 'disabled'
+use doublesecretagency\notifier\models\Sandbox;
+
+return [
+    'mode' => Sandbox::DISABLE
+];
 ```
 
 :::danger WARNING - Possible Security Risks!
 When disabling or reconfiguring the Twig sandbox, be aware of **who has permission to edit Notifications**. Ensure that Notification editors are trusted system users, otherwise you may be opening up a security loophole for bad actors.
 
-Within the Craft control panel, you can also manage who has access to the Notifier plugin by managing their individual User (or Group) [permission settings](https://craftcms.com/docs/5.x/system/user-management.html#permissions).
+Within the Craft control panel, you can also manage who has access to the Notifier plugin by managing their individual User (or Group) permission settings.
 :::
