@@ -11,6 +11,7 @@
 
 namespace doublesecretagency\notifier\models;
 
+use Craft;
 use craft\base\Model;
 use craft\helpers\StringHelper;
 use nystudio107\crafttwigsandbox\twig\BaseSecurityPolicy;
@@ -26,9 +27,36 @@ class Sandbox extends Model
 {
 
     /**
-     * @var Settings The plugin settings.
+     * Config options for 'list':
+     *
+     * Default blacklist:
+     * https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php
+     *
+     * Default whitelist:
+     * https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php
      */
-    public Settings $settings;
+    public const BLACKLIST = 'blacklist'; // Default
+    public const WHITELIST = 'whitelist';
+
+    /**
+     * Config options for 'mode':
+     *
+     * - ADD specified Twig values to the security policy.
+     * - REMOVE specified Twig values from the security policy.
+     * - REPLACE the security policy with the specified Twig values.
+     * - DISABLE the security policy entirely.
+     */
+    public const ADD = 'add'; // Default
+    public const REMOVE = 'remove';
+    public const REPLACE = 'replace';
+    public const DISABLE = 'disable';
+
+    // ========================================================================= //
+
+    /**
+     * @var array The sandbox configuration.
+     */
+    public array $config;
 
     /**
      * @var BaseSecurityPolicy|null The security policy.
@@ -63,28 +91,17 @@ class Sandbox extends Model
         // Run parent init
         parent::init();
 
-        // If a whitelist is specified
-        if ($this->settings->twigSandboxWhitelist) {
-
+        // If whitelist is specified
+        if (self::WHITELIST === ($this->config['list'] ?? null)) {
             // Create a new whitelist
             $this->securityPolicy = new WhitelistSecurityPolicy();
-
-            // Get specified whitelist config values
-            $config = $this->settings->twigSandboxWhitelist;
-
-        // Else, use blacklist by default
         } else {
-
             // Create a new blacklist
             $this->securityPolicy = new BlacklistSecurityPolicy();
-
-            // Get specified blacklist config values
-            $config = $this->settings->twigSandboxBlacklist ?? [];
-
         }
 
         // Configure the security policy
-        $this->_configurePolicy($config);
+        $this->_configurePolicy();
 
         // Set configured sandbox view
         $this->view = new SandboxView([
@@ -94,37 +111,37 @@ class Sandbox extends Model
 
     /**
      * Configure the security policy.
-     *
-     * @param array $config
      */
-    private function _configurePolicy(array $config): void
+    private function _configurePolicy(): void
     {
         // Get the sandbox mode
-        $mode = ($this->settings->twigSandboxMode ?? 'append');
+        $mode = ($this->config['mode'] ?? self::ADD);
 
-        // If set to "override" mode
-        if ('override' === $mode) {
+        // Get the Twig configuration
+        $twig = ($this->config['twig'] ?? []);
 
-            // Override security policy for all Twig types
-            foreach ($this->twigTypes as $type) {
-                $this->_override($config, $type);
-            }
+        // Switch based on mode
+        switch ($mode) {
 
-        // Else, if set to "except" mode
-        } else if ('except' === $mode) {
+            // Replace the security policy for each Twig type
+            case self::REPLACE:
+                foreach ($this->twigTypes as $type) {
+                    $this->_replace($twig, $type);
+                }
+                break;
 
-            // Remove exceptions from security policy for all Twig types
-            foreach ($this->twigTypes as $type) {
-                $this->_except($config, $type);
-            }
+            // Remove values from the security policy for each Twig type
+            case self::REMOVE:
+                foreach ($this->twigTypes as $type) {
+                    $this->_remove($twig, $type);
+                }
+                break;
 
-        // Else, assume "append" mode
-        } else {
-
-            // Append values to security policy for all Twig types
-            foreach ($this->twigTypes as $type) {
-                $this->_append($config, $type);
-            }
+            // Add values to the security policy for each Twig type
+            default:
+                foreach ($this->twigTypes as $type) {
+                    $this->_add($twig, $type);
+                }
 
         }
     }
@@ -132,13 +149,13 @@ class Sandbox extends Model
     // ========================================================================= //
 
     /**
-     * Append values to the security policy for this Twig type.
+     * Add values to the security policy for this Twig type.
      *
      * @param array $config
      * @param string $type
      * @return void
      */
-    private function _append(array $config, string $type): void
+    private function _add(array $config, string $type): void
     {
         // Get specified config values
         $specified = $config[$type] ?? [];
@@ -153,7 +170,7 @@ class Sandbox extends Model
         // Get existing values
         $values = $this->securityPolicy->$getTwig();
 
-        // Optionally append Twig values
+        // Optionally add Twig values
         if (isset($specified) && is_array($specified)) {
             // Merge existing values with specified values
             $values = array_merge($values, $specified);
@@ -164,13 +181,13 @@ class Sandbox extends Model
     }
 
     /**
-     * Remove exceptions from the security policy for this Twig type.
+     * Remove values from the security policy for this Twig type.
      *
      * @param array $config
      * @param string $type
      * @return void
      */
-    private function _except(array $config, string $type): void
+    private function _remove(array $config, string $type): void
     {
         // Get specified config values
         $specified = $config[$type] ?? [];
@@ -196,13 +213,13 @@ class Sandbox extends Model
     }
 
     /**
-     * Override the security policy for this Twig type.
+     * Replace the security policy for this Twig type.
      *
      * @param array $config
      * @param string $type
      * @return void
      */
-    private function _override(array $config, string $type): void
+    private function _replace(array $config, string $type): void
     {
         // Get specified config values
         $specified = $config[$type] ?? [];

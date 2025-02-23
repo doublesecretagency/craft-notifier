@@ -75,7 +75,7 @@ class Settings extends Model
 
     /**
      * @deprecated in 1.1.0
-     * @var array|false Original setting to adjust the default Twig sandbox configuration.
+     * @var array|false Original setting for adjusting the default Twig sandbox configuration.
      */
     public array|false $twigSandbox = [];
 
