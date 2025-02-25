@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.0 - 2025-02-25
 
 ### Added
 - Added filtering by selected Sites. ([#5](https://github.com/doublesecretagency/craft-notifier/issues/5))
