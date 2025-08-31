@@ -15,6 +15,7 @@ use Craft;
 use craft\base\Utility;
 use craft\helpers\DateTimeHelper;
 use DateTime;
+use DateTimeZone;
 use doublesecretagency\notifier\records\Log;
 use Exception;
 
@@ -157,15 +158,17 @@ class NotificationLog extends Utility
         $dayLog = [];
 
         // Get system timezone
-        $timeZone = Craft::$app->timeZone;
+        $systemTimeZone = new DateTimeZone(Craft::$app->timeZone);
+        $dateObj = new DateTime($date, $systemTimeZone);
 
-        // Convert dateCreated to the system timezone
-        $dateCreated = "DATE(CONVERT_TZ(dateCreated, 'UTC', '{$timeZone}'))";
+        // Start and end of the day in system timezone
+        $startOfDay = (clone $dateObj)->setTime(0, 0, 0)->format('Y-m-d H:i:s');
+        $endOfDay = (clone $dateObj)->setTime(23, 59, 59)->format('Y-m-d H:i:s');
 
         // Get all envelopes on selected day
         $envelopes = Log::find()
-            ->where([$dateCreated => $date])
-            ->andWhere(['type' => 'envelope'])
+            ->where(['type' => 'envelope'])
+            ->andWhere(['between', 'dateCreated', $startOfDay, $endOfDay])
             ->orderBy('id')
             ->all();
 
