@@ -15,6 +15,7 @@ use craft\base\Component;
 use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
+use craft\commerce\elements\Order;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Users;
 use doublesecretagency\notifier\filters\DraftFilter;
@@ -23,6 +24,7 @@ use doublesecretagency\notifier\filters\FirstSaveFilter;
 use doublesecretagency\notifier\filters\ProvisionalDraftFilter;
 use doublesecretagency\notifier\filters\RevisionFilter;
 use doublesecretagency\notifier\helpers\events\AssetEvents;
+use doublesecretagency\notifier\helpers\events\CommerceOrderEvents;
 use doublesecretagency\notifier\helpers\events\EntryEvents;
 use doublesecretagency\notifier\helpers\events\UserEvents;
 use yii\base\Event;
@@ -72,6 +74,10 @@ class Events extends Component
         $this->_registerEntryEvents();
         $this->_registerAssetEvents();
         $this->_registerUserEvents();
+
+        if (class_exists(Order::class)) {
+            $this->_registerCommerceOrderEvents();
+        }
     }
 
     // ========================================================================= //
@@ -148,6 +154,28 @@ class Events extends Component
             Users::class,
             Users::EVENT_AFTER_ACTIVATE_USER,
             [UserEvents::class, 'afterActivateUser']
+        );
+    }
+
+    /**
+     * Register all events for Commerce Orders.
+     *
+     * @return void
+     */
+    private function _registerCommerceOrderEvents(): void
+    {
+        // When an order is completed (placed)
+        Event::on(
+            Order::class,
+            Order::EVENT_AFTER_COMPLETE_ORDER,
+            [CommerceOrderEvents::class, 'afterCompleteOrder']
+        );
+
+        // When an order is fully paid
+        Event::on(
+            Order::class,
+            Order::EVENT_AFTER_ORDER_PAID,
+            [CommerceOrderEvents::class, 'afterOrderPaid']
         );
     }
 
