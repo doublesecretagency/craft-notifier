@@ -1,0 +1,12 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-commerce-orders hidden">
+    {{ forms.selectField({
+        label: 'Commerce Orders Event'|t('notifier'),
+        instructions: commonInstructions,
+        id: 'event-commerce-orders',
+        name: 'event[commerce-orders]',
+        value: notification.event,
+        options: {'':''}|merge(notificationOptions.allEvents['commerce-orders']),
+    }) }}
+</div>

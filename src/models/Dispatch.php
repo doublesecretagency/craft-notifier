@@ -186,6 +186,7 @@ class Dispatch extends Model
                 return $this->_filterEntries();
             case 'users':
             case 'assets':
+            case 'commerce-orders':
                 // No further filters
                 return true;
         }

@@ -22,9 +22,10 @@ abstract class Options
      * Available event types.
      */
     public const EVENT_TYPE = [
-        'users'   => 'Users',
-        'entries' => 'Entries',
-        'assets'  => 'Assets',
+        'users'            => 'Users',
+        'entries'          => 'Entries',
+        'assets'           => 'Assets',
+        'commerce-orders'  => 'Commerce Orders',
     ];
 
     /**
@@ -82,6 +83,18 @@ abstract class Options
 //                'value' => 'after-delete-asset',
 ////                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
 //            ]
+        ],
+        'commerce-orders' => [
+            [
+                'label' => 'When an order is completed (placed)',
+                'value' => 'after-complete-order',
+                'class' => 'craft\commerce\elements\Order::EVENT_AFTER_COMPLETE_ORDER'
+            ],
+            [
+                'label' => 'When an order is fully paid',
+                'value' => 'after-order-paid',
+                'class' => 'craft\commerce\elements\Order::EVENT_AFTER_ORDER_PAID'
+            ],
         ]
     ];
 
