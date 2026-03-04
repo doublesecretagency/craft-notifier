@@ -7,6 +7,6 @@
         id: 'event-commerce-orders',
         name: 'event[commerce-orders]',
         value: notification.event,
-        options: {'':''}|merge(notificationOptions.allEvents['commerce-orders']),
+        options: {'':''}|merge(notificationOptions.allEvents['commerce-orders'] ?? []),
     }) }}
 </div>
