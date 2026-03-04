@@ -12,7 +12,7 @@
 namespace doublesecretagency\notifier\helpers\events;
 
 use craft\commerce\elements\Order;
-use craft\events\ModelEvent;
+use yii\base\Event;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\NotifierPlugin;
 
@@ -26,12 +26,15 @@ class CommerceOrderEvents
     /**
      * When an order is completed (placed).
      *
-     * @param ModelEvent $event
+     * @param Event $event
      * @return void
      */
-    public static function afterCompleteOrder(ModelEvent $event): void
+    public static function afterCompleteOrder(Event $event): void
     {
-        /** @var Order $order */
+        if (!($event->sender instanceof Order)) {
+            return;
+        }
+
         $order = $event->sender;
 
         // Get all notifications for this event
@@ -52,12 +55,15 @@ class CommerceOrderEvents
     /**
      * When an order is fully paid.
      *
-     * @param ModelEvent $event
+     * @param Event $event
      * @return void
      */
-    public static function afterOrderPaid(ModelEvent $event): void
+    public static function afterOrderPaid(Event $event): void
     {
-        /** @var Order $order */
+        if (!($event->sender instanceof Order)) {
+            return;
+        }
+
         $order = $event->sender;
 
         // Get all notifications for this event

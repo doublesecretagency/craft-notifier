@@ -54,12 +54,21 @@ class Extension extends AbstractExtension implements GlobalsInterface
         // Generate available field options
         $fieldOptions = $this->_fieldOptions();
 
+        // Configure available events by installed plugins
+        $eventTypes = Options::EVENT_TYPE;
+        $allEvents = Options::ALL_EVENTS;
+
+        // Hide Commerce events if Craft Commerce is not installed
+        if (!class_exists('craft\\commerce\\elements\\Order')) {
+            unset($eventTypes['commerce-orders'], $allEvents['commerce-orders']);
+        }
+
         // Return globally accessible variables
         return [
             'notifier' => new Notifier(),
             'notificationOptions' => [
-                'eventType'      => Options::EVENT_TYPE,
-                'allEvents'      => Options::ALL_EVENTS,
+                'eventType'      => $eventTypes,
+                'allEvents'      => $allEvents,
                 'messageType'    => Options::MESSAGE_TYPE,
                 'emailField'     => $fieldOptions['email'],
                 'smsField'       => $fieldOptions['sms'],
