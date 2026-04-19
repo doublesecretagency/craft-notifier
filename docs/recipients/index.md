@@ -12,7 +12,7 @@ Some examples of recipient types are:
 - **All Users in Group(s)**
 - **Only a specific User**
 
-[//]: # (If the provided recipient types don't meet your needs, it's also possible to write a [custom Twig snippet]&#40;/recipients/types/dynamic-recipients&#41; to generate a dynamic list of recipients at runtime.)
+If the provided recipient types don't meet your needs, it's also possible to write a [custom Twig snippet](/recipients/types/dynamic-recipients) to generate a dynamic list of recipients at runtime.
 
 :::warning List of Recipient Types
 For more information, see the [complete list of recipient types...](/recipients/types/)

@@ -61,6 +61,16 @@ class Dispatch extends Model
     public array $envelopes = [];
 
     /**
+     * @var array Raw items collected from the Dynamic Recipients Twig snippet.
+     */
+    public array $collectedDynamicRecipients = [];
+
+    /**
+     * @var bool Whether the `{% setRecipients %}` tag was invoked during the snippet parse.
+     */
+    public bool $setRecipientsInvoked = false;
+
+    /**
      * @var SandboxView|null Secure Twig sandbox environment.
      */
     private ?SandboxView $_sandboxView = null;
@@ -88,6 +98,8 @@ class Dispatch extends Model
 
     /**
      * Find and correct any deprecated settings.
+     *
+     * @return void
      */
     private function _checkDeprecatedSettings(): void
     {
@@ -291,7 +303,7 @@ class Dispatch extends Model
     private function _compileEmail(): array
     {
         // Get email addresses for all recipients
-        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification);
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
 
         // Initialize outbound messages
         $outbound = [];
@@ -308,6 +320,15 @@ class Dispatch extends Model
 
         // Loop through all recipients
         foreach ($recipients as $recipient) {
+
+            // If the recipient has no email address, log and skip
+            if (!$recipient->emailAddress) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no email address.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
 
             // Set job info
             $jobInfo = [
@@ -371,8 +392,8 @@ class Dispatch extends Model
      */
     private function _compileSms(): array
     {
-        // Get email addresses for all recipients
-        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification);
+        // Get phone numbers for all recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
 
         // Initialize outbound messages
         $outbound = [];
@@ -389,6 +410,15 @@ class Dispatch extends Model
 
         // Loop through all recipients
         foreach ($recipients as $recipient) {
+
+            // If the recipient has no phone number, log and skip
+            if (!$recipient->phoneNumber) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no phone number.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
 
             // Set job info
             $jobInfo = [
@@ -574,6 +604,56 @@ class Dispatch extends Model
     // ========================================================================= //
 
     /**
+     * Run the Dynamic Recipients Twig snippet authored on the Notification.
+     *
+     * @param Notification $notification
+     * @return bool Whether the snippet was successfully parsed.
+     */
+    public function parseDynamicRecipientSnippet(Notification $notification): bool
+    {
+        // Reset the collector and invocation flag for a fresh parse
+        $this->collectedDynamicRecipients = [];
+        $this->setRecipientsInvoked = false;
+
+        // Get the raw snippet
+        $snippet = ($notification->recipientsConfig['dynamicRecipients'] ?? '');
+
+        // Build the parse context (same shape as announcement/flash compilers)
+        $config = [
+            'recipient' => null,
+            'notification' => $notification,
+            'event' => $this->event,
+            'data' => $this->data,
+        ];
+
+        // Remember the previously active dispatch (nesting safety)
+        $previouslyActive = NotifierPlugin::$plugin->activeDispatchForRecipients;
+
+        try {
+            // Point the plugin at this Dispatch for the duration of the parse
+            NotifierPlugin::$plugin->activeDispatchForRecipients = $this;
+
+            // Run the snippet; render result is ignored (side effects only)
+            $this->_parseTwig($config, $snippet);
+        } catch (Exception|Throwable $e) {
+            // Reset the collector so partial items from a failed parse don't leak
+            $this->collectedDynamicRecipients = [];
+            // Log the parse error and bail
+            $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
+            $notification->log->error($message);
+            return false;
+        } finally {
+            // Restore the previously active dispatch (supports re-entrant parses)
+            NotifierPlugin::$plugin->activeDispatchForRecipients = $previouslyActive;
+        }
+
+        // Parse succeeded
+        return true;
+    }
+
+    // ========================================================================= //
+
+    /**
      * Parse all Twig tags embedded within text.
      *
      * @param array $config
@@ -661,13 +741,13 @@ class Dispatch extends Model
     // ========================================================================= //
 
     /**
-     * Renders an object template via the Twig sandbox.
+     * Render an object template via the Twig sandbox.
      *
-     * @param string $template the source template string
-     * @param mixed $object the object that should be passed into the template
-     * @param array $variables any additional variables that should be available to the template
+     * @param string $template The source template string.
+     * @param mixed $object The object that should be passed into the template.
+     * @param array $variables Any additional variables that should be available to the template.
      * @return string The rendered template.
-     * @throws Throwable in case of failure
+     * @throws Throwable in case of failure.
      */
     private function _renderObjectTemplate(string $template, mixed $object, array $variables = []): string
     {

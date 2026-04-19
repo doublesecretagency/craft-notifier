@@ -18,18 +18,21 @@ use craft\events\DefineAttributeHtmlEvent;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use craft\services\Plugins;
+use craft\services\UserPermissions;
 use craft\services\Utilities;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Options;
-use doublesecretagency\notifier\utilities\NotificationLog;
+use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\Events;
 use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
+use doublesecretagency\notifier\utilities\NotificationLog;
 use doublesecretagency\notifier\web\twig\Extension;
 use yii\base\Event;
 
@@ -70,6 +73,19 @@ class NotifierPlugin extends Plugin
     public array $sent = [];
 
     /**
+     * @var Dispatch|null Transient pointer to the Dispatch currently resolving Dynamic Recipients.
+     *
+     * Set by `Dispatch::parseDynamicRecipientSnippet()` immediately before the
+     * Twig parse and cleared in its `finally` clause. The `{% setRecipients %}`
+     * Twig tag reads this pointer (via its compiled node output) to know where
+     * to deposit items; if null, the tag's compiled code silently no-ops.
+     * Keeping the collector on the active Dispatch (rather than globally on the
+     * plugin) isolates queue-worker reuse, re-entrant notifications, and
+     * accidental tag invocations from message bodies.
+     */
+    public ?Dispatch $activeDispatchForRecipients = null;
+
+    /**
      * @inheritdoc
      */
     public function init(): void
@@ -94,6 +110,9 @@ class NotifierPlugin extends Plugin
 
         // Register components
         $this->_registerElementTypes();
+
+        // Register user permissions
+        $this->_registerUserPermissions();
 
         // Register enhancements for the control panel
         if (Craft::$app->getRequest()->getIsCpRequest()) {
@@ -180,6 +199,8 @@ class NotifierPlugin extends Plugin
 
     /**
      * Register element types.
+     *
+     * @return void
      */
     private function _registerElementTypes(): void
     {
@@ -193,7 +214,52 @@ class NotifierPlugin extends Plugin
     }
 
     /**
+     * Register user permissions for the plugin.
+     *
+     * Exposes a "Notifier" heading in the CP user-group permissions screen
+     * containing a top-level "View notifications" permission with "Save
+     * notifications" and "Delete notifications" as siblings beneath it, plus
+     * the dedicated permission nested under "Save notifications" that gates
+     * authoring Dynamic Recipients Twig snippets.
+     *
+     * @return void
+     */
+    private function _registerUserPermissions(): void
+    {
+        Event::on(
+            UserPermissions::class,
+            UserPermissions::EVENT_REGISTER_PERMISSIONS,
+            static function (RegisterUserPermissionsEvent $event) {
+                // Register the plugin's permissions under a "Notifier" heading
+                $event->permissions[] = [
+                    'heading' => Craft::t('notifier', 'Notifier'),
+                    'permissions' => [
+                        'notifier-viewNotifications' => [
+                            'label' => Craft::t('notifier', 'View notifications'),
+                            'nested' => [
+                                'notifier-saveNotifications' => [
+                                    'label' => Craft::t('notifier', 'Save notifications'),
+                                    'nested' => [
+                                        'notifier-editDynamicRecipients' => [
+                                            'label' => Craft::t('notifier', 'Use the Dynamic Recipients type'),
+                                        ],
+                                    ],
+                                ],
+                                'notifier-deleteNotifications' => [
+                                    'label' => Craft::t('notifier', 'Delete notifications'),
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+            }
+        );
+    }
+
+    /**
      * Register control panel routes.
+     *
+     * @return void
      */
     private function _registerCpRoutes(): void
     {

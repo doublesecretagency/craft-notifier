@@ -16,8 +16,10 @@ use craft\base\Component;
 use craft\elements\User;
 use craft\helpers\ArrayHelper;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\models\Recipient;
 use Throwable;
+use yii\validators\EmailValidator;
 
 /**
  * Class Recipients
@@ -40,9 +42,10 @@ class Recipients extends Component
      * Get all selected recipients.
      *
      * @param Notification|null $notification
+     * @param Dispatch|null $dispatch Dispatch currently driving recipient resolution. Only consulted by the `dynamic-recipients` branch.
      * @return array
      */
-    public function getRecipients(?Notification $notification = null): array
+    public function getRecipients(?Notification $notification = null, ?Dispatch $dispatch = null): array
     {
         // Set field handles of User contact info
         $this->_emailField = ($notification->messageConfig['emailField'] ?? null);
@@ -55,7 +58,7 @@ class Recipients extends Component
             case 'all-admins':         return $this->_allAdmins();
             case 'selected-groups':    return ($notification ? $this->_selectedGroups($notification)    : []);
             case 'selected-users':     return ($notification ? $this->_selectedUsers($notification)     : []);
-            case 'dynamic-recipients': return ($notification ? $this->_dynamicRecipients($notification) : []);
+            case 'dynamic-recipients': return ($notification ? $this->_dynamicRecipients($notification, $dispatch) : []);
         }
 
         // Invalid recipients type
@@ -171,14 +174,101 @@ class Recipients extends Component
     }
 
     /**
-     * Get dynamic recipients.
+     * Get dynamic recipients by running the Notification's authored Twig snippet.
+     *
+     * The Dispatch drives the actual Twig parse (since it owns the sandbox
+     * lifecycle); this method orchestrates: pre-flight checks, post-parse
+     * type-sniffing of the collected items, and logging of empty results
+     * or unrecognized entries.
      *
      * @param Notification $notification
-     * @return array
+     * @param Dispatch|null $dispatch
+     * @return Recipient[]
      */
-    private function _dynamicRecipients(Notification $notification): array
+    private function _dynamicRecipients(Notification $notification, ?Dispatch $dispatch = null): array
     {
-        return [];
+        // If no dispatch was passed, bail (defensive)
+        if (!$dispatch) {
+            return [];
+        }
+
+        // Parse the snippet; if parsing failed, bail
+        if (!$dispatch->parseDynamicRecipientSnippet($notification)) {
+            return [];
+        }
+
+        // If setRecipients was never invoked, log a warning and bail
+        if (!$dispatch->setRecipientsInvoked) {
+            $notification->log->warning(
+                Craft::t('notifier', 'Dynamic recipients snippet did not call setRecipients.')
+            );
+            return [];
+        }
+
+        // Get the items collected by the `{% setRecipients %}` calls
+        $items = $dispatch->collectedDynamicRecipients;
+
+        // If setRecipients was called with an empty value, log a warning and bail
+        if (!$items) {
+            $notification->log->warning(
+                Craft::t('notifier', 'setRecipients was called with an empty value.')
+            );
+            return [];
+        }
+
+        // Initialize the resolved recipients
+        $recipients = [];
+
+        // Initialize the email validator
+        $emailValidator = new EmailValidator();
+
+        // Loop through all collected items
+        foreach ($items as $item) {
+
+            // If item is a User, build a User-derived Recipient
+            if ($item instanceof User) {
+                $recipients[] = new Recipient([
+                    'user'       => $item,
+                    'emailField' => $this->_emailField,
+                    'smsField'   => $this->_smsField,
+                ]);
+                continue;
+            }
+
+            // If item is not a string, log a warning and skip it
+            if (!is_string($item)) {
+                $notification->log->warning(Craft::t('notifier',
+                    'Unrecognized recipient of type "{type}".',
+                    ['type' => get_debug_type($item)]
+                ));
+                continue;
+            }
+
+            // If item validates as an email address, build an email Recipient
+            if ($emailValidator->validate($item)) {
+                $recipients[] = new Recipient([
+                    'emailAddress' => $item,
+                ]);
+                continue;
+            }
+
+            // If item matches a conservative phone-number shape, build a phone Recipient
+            if (preg_match('/^\+\d{8,15}$/', $item)) {
+                $recipients[] = new Recipient([
+                    'phoneNumber' => $item,
+                ]);
+                continue;
+            }
+
+            // Otherwise, log a warning and skip
+            $notification->log->warning(Craft::t('notifier',
+                'Unrecognized recipient "{value}".',
+                ['value' => $item]
+            ));
+        }
+
+        // Return the resolved recipients
+        return $recipients;
     }
 
     // ========================================================================= //

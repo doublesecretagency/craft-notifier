@@ -113,7 +113,7 @@ abstract class Options
         'all-admins'         => 'All Admins',
         'selected-groups'    => 'All Users in selected User Group(s)',
         'selected-users'     => 'Only selected User(s)',
-        // 'dynamic-recipients' => 'Dynamic Recipients',
+        'dynamic-recipients' => 'Dynamic Recipients',
     ];
 
 }

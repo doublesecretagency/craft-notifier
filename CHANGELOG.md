@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Added the [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) recipient type.
+- Added a `{% setRecipients %}` Twig tag for use inside Dynamic Recipients snippets.
+- Added user permissions for viewing, saving, and deleting notifications.
+- Added user permissions for authoring Dynamic Recipients snippets.
+
 ## 2.1.0 - 2025-02-25
 
 ### Added

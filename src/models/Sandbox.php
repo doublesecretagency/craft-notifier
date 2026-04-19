@@ -14,6 +14,7 @@ namespace doublesecretagency\notifier\models;
 use Craft;
 use craft\base\Model;
 use craft\helpers\StringHelper;
+use doublesecretagency\notifier\web\twig\Extension;
 use nystudio107\crafttwigsandbox\twig\BaseSecurityPolicy;
 use nystudio107\crafttwigsandbox\twig\BlacklistSecurityPolicy;
 use nystudio107\crafttwigsandbox\twig\WhitelistSecurityPolicy;
@@ -103,9 +104,15 @@ class Sandbox extends Model
         // Configure the security policy
         $this->_configurePolicy();
 
-        // Set configured sandbox view
+        // Set configured sandbox view,
+        // registering the Notifier Twig extension so that plugin-registered
+        // tags (e.g. `{% skipMessage %}` and `{% setRecipients %}`)
+        // are available inside the sandbox, not only under the DISABLE mode.
         $this->view = new SandboxView([
-            'securityPolicy' => $this->securityPolicy
+            'securityPolicy' => $this->securityPolicy,
+            'twigExtensionClasses' => [
+                Extension::class,
+            ],
         ]);
     }
 

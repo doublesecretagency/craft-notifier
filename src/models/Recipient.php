@@ -60,8 +60,11 @@ class Recipient extends Model
     {
         parent::init();
 
-        // Extract relevant data from User
+        // Extract relevant data from User (when a User is attached)
         $this->_extractUserData();
+
+        // Derive name from raw contact info (when no User is attached)
+        $this->_deriveNameFromContact();
     }
 
     /**
@@ -99,6 +102,26 @@ class Recipient extends Model
             // Get from User's custom phone number
             $this->phoneNumber = $this->user->{$this->smsField};
         }
+    }
+
+    /**
+     * Derive a display name from raw contact info when no User is attached.
+     *
+     * Keeps log rows for Dynamic Recipients-authored recipients legible by
+     * falling back to the email address, then the phone number, rather than
+     * surfacing the generic "dynamic recipients" task label.
+     *
+     * @return void
+     */
+    private function _deriveNameFromContact(): void
+    {
+        // If a name is already set, bail
+        if ($this->name) {
+            return;
+        }
+
+        // Fall back to the raw email address, then the raw phone number
+        $this->name = ($this->emailAddress ?? $this->phoneNumber);
     }
 
     // ========================================================================= //

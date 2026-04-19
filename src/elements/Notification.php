@@ -218,49 +218,114 @@ class Notification extends Element
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
-            // ...
+            ['recipientsType', 'validateDynamicRecipientsPermission'],
         ]);
     }
 
+    /**
+     * Ensure the saving user holds the `notifier-editDynamicRecipients` permission
+     * when the Notification uses the Dynamic Recipients recipient type.
+     *
+     * The CP template hides the dropdown option from unpermitted users; this
+     * server-side check catches crafted POSTs that bypass the UI gate.
+     *
+     * Skipped for non-CP requests (console commands, queue workers, programmatic
+     * saves from other plugins) since those contexts have no user identity to
+     * check against and are assumed trusted.
+     *
+     * @return void
+     */
+    public function validateDynamicRecipientsPermission(): void
+    {
+        // If this Notification doesn't use Dynamic Recipients, bail
+        if ('dynamic-recipients' !== $this->recipientsType) {
+            return;
+        }
+
+        // If this isn't a CP request, bail (console / queue / programmatic saves are trusted)
+        if (!Craft::$app->getRequest()->getIsCpRequest()) {
+            return;
+        }
+
+        // Get the current user
+        $user = Craft::$app->getUser()->getIdentity();
+
+        // If there's a user and they hold the required permission, bail
+        if ($user && $user->can('notifier-editDynamicRecipients')) {
+            return;
+        }
+
+        // Otherwise, attach a validation error
+        $this->addError('recipientsType', Craft::t('notifier',
+            'You do not have permission to use the Dynamic Recipients type.'
+        ));
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function canView(User $user): bool
     {
+        // Defer to parent (admins bypass permissions)
         if (parent::canView($user)) {
             return true;
         }
-        // todo: implement user permissions
-        return $user->can('viewNotifications');
+
+        // Otherwise require the view permission
+        return $user->can('notifier-viewNotifications');
     }
 
+    /**
+     * @inheritdoc
+     */
     public function canSave(User $user): bool
     {
+        // Defer to parent (admins bypass permissions)
         if (parent::canSave($user)) {
             return true;
         }
-        // todo: implement user permissions
-        return $user->can('saveNotifications');
+
+        // Otherwise require the save permission
+        return $user->can('notifier-saveNotifications');
     }
 
+    /**
+     * @inheritdoc
+     */
     public function canDuplicate(User $user): bool
     {
+        // Defer to parent (admins bypass permissions)
         if (parent::canDuplicate($user)) {
             return true;
         }
-        // todo: implement user permissions
-        return $user->can('saveNotifications');
+
+        // Otherwise require the save permission
+        return $user->can('notifier-saveNotifications');
     }
 
+    /**
+     * @inheritdoc
+     */
     public function canDelete(User $user): bool
     {
-        if (parent::canSave($user)) {
+        // Defer to parent (admins bypass permissions)
+        if (parent::canDelete($user)) {
             return true;
         }
-        // todo: implement user permissions
-        return $user->can('deleteNotifications');
+
+        // Otherwise require the delete permission
+        return $user->can('notifier-deleteNotifications');
     }
 
+    /**
+     * @inheritdoc
+     */
     public function canCreateDrafts(User $user): bool
     {
         return true;

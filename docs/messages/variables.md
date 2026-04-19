@@ -6,7 +6,7 @@ description:
 
 The following variables will be **automatically available** within your [message template](/messages/templating).
 
-[//]: # (They can also be used to determine [dynamic recipients]&#40;/recipients/types/dynamic-recipients&#41;, with **one notable exception.** For obvious reasons, the `recipient` variable cannot be available while determining the recipient.)
+They can also be used to determine [dynamic recipients](/recipients/types/dynamic-recipients), with **one notable exception.** For obvious reasons, the `recipient` variable cannot be available while determining the recipient.
 
 ### Event Variables
 

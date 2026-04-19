@@ -12,17 +12,18 @@
 namespace doublesecretagency\notifier\web\twig;
 
 use Craft;
-use doublesecretagency\notifier\helpers\Notifier;
 use craft\elements\User;
-use doublesecretagency\notifier\enums\Options;
-use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
-use Twig\Extension\AbstractExtension;
-use Twig\Extension\GlobalsInterface;
 use craft\fields\Dropdown;
+use craft\fields\Email;
 use craft\fields\PlainText;
 use craft\fields\RadioButtons;
 use craft\fields\Url;
-use craft\fields\Email;
+use doublesecretagency\notifier\enums\Options;
+use doublesecretagency\notifier\helpers\Notifier;
+use doublesecretagency\notifier\web\twig\tokenparsers\SetRecipientsTokenParser;
+use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
+use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 use Twig\TwigFunction;
 
 /**
@@ -39,6 +40,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
     {
         return [
             new SkipMessageTokenParser(),
+            new SetRecipientsTokenParser(),
         ];
     }
 

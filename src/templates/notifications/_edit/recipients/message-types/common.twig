@@ -1,5 +1,14 @@
 {% import '_includes/forms' as forms %}
 
+{# Gate the Dynamic Recipients option by the dedicated permission #}
+{% set canEditDynamicRecipients = currentUser.can('notifier-editDynamicRecipients') %}
+
+{# Build the dropdown options, omitting Dynamic Recipients for users lacking the permission #}
+{% set recipientsTypeOptions = notificationOptions.recipientsType %}
+{% if not canEditDynamicRecipients %}
+    {% set recipientsTypeOptions = recipientsTypeOptions|filter((label, value) => value != 'dynamic-recipients') %}
+{% endif %}
+
 <div class="message-type-email message-type-sms hidden">
     {{ forms.selectField({
         label: 'Recipients Type'|t('notifier'),
@@ -7,7 +16,7 @@
         id: 'recipientsType',
         name: 'recipientsType',
         value: notification.recipientsType,
-        options: {'':''}|merge(notificationOptions.recipientsType),
+        options: {'':''}|merge(recipientsTypeOptions),
         toggle: true,
         targetPrefix: '.recipients-type-',
     }) }}
@@ -16,5 +25,7 @@
     {% include 'notifier/notifications/_edit/recipients/all-admins' %}
     {% include 'notifier/notifications/_edit/recipients/selected-groups' %}
     {% include 'notifier/notifications/_edit/recipients/selected-users' %}
-    {% include 'notifier/notifications/_edit/recipients/dynamic-recipients' %}
+    {% if canEditDynamicRecipients %}
+        {% include 'notifier/notifications/_edit/recipients/dynamic-recipients' %}
+    {% endif %}
 </div>

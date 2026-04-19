@@ -34,6 +34,6 @@ Sends the message to **all Users in selected User Groups.**
 
 Sends the message to **only selected Users.**
 
-## [Dynamic Recipients](/recipients/types/dynamic-recipients) <Badge type="warning" text="Coming Soon" />
+## [Dynamic Recipients](/recipients/types/dynamic-recipients)
 
 Sends the message to **a dynamically-compiled set of recipients, as defined by a Twig snippet.**
