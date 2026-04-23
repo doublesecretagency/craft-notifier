@@ -6,7 +6,7 @@ description:
 
 Send the message to **a dynamic set of recipients, as defined by a Twig snippet.**
 
-<img class="dropshadow" src="/images/recipients/dynamic-recipients.png" alt="" style="width:635px; margin-top:10px">
+<img class="dropshadow" src="/images/recipients/dynamic-recipients.png" alt="" style="width:632px; margin-top:10px">
 
 Write a short Twig snippet which passes one or more Users, email addresses, or phone numbers (or any combination) into the `{% setRecipients %}` tag. The tag will then parse out which email addresses (or phone numbers) will be sent the notification.
 

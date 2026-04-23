@@ -5,6 +5,8 @@
 
 {% set instructions %}
 Enter a custom Twig snippet to determine who will receive the message.
+
+{{ 'The snippet **must** include a `{% setRecipients %}` tag to specify the message recipients.'|md }}
 {% endset %}
 
 <div class="recipients-type-dynamic-recipients hidden">
