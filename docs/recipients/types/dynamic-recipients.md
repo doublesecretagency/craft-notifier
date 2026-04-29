@@ -13,7 +13,7 @@ Write a short Twig snippet which passes one or more Users, email addresses, or p
 :::warning ⚠️ Security Warning - Permission Required
 Users without the "[Use the Dynamic Recipients type](/getting-started/permissions#use-the-dynamic-recipients-type)" permission will not have the option to select the "Dynamic Recipients" type.
 
-Since authoring Dynamic Recipients snippets involves **executing custom Twig at dispatch time**, it is first necessary to enable this permission for users who require it. Grant it only to highly-trusted users.
+Since authoring Dynamic Recipients snippets involves **executing custom Twig at send time**, it is first necessary to enable this permission for users who require it. Grant it only to highly-trusted users.
 :::
 
 ## Special Variables

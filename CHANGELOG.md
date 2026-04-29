@@ -9,6 +9,9 @@
 - Added user permissions for authoring Dynamic Recipients snippets.
 - Added user permissions for viewing and deleting the notification log.
 - Added a read-only edit screen for users with view-only access to notifications.
+- Added [`loggingEnabled`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to disable writing to the notification log.
+- Added [`logRetentionDays`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by age.
+- Added [`logRetentionRecords`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by event count.
 - Added comprehensive unit tests.
 
 ### Changed

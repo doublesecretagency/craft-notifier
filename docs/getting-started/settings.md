@@ -1,10 +1,20 @@
 ---
-description: As an alternative to using the plugin's PHP config file, you can manage the Twilio API credentials via the plugin's Settings page.
+description: Configure the notification log and manage the Twilio API credentials via the plugin's Settings page.
 ---
 
 # Settings Page
 
 To access the plugin settings, log into your control panel and visit **Settings > Notifier**.
+
+### Logging
+
+By default, Notifier writes a [log event](/logging) every time a message is sent.
+
+These settings control whether and how long those events remain in the database.
+
+<img src="/images/settings/logging-settings.png" alt="Screenshot of the Logging settings panel" style="width:690px; margin-top:8px">
+
+Learn more about [restricting log size](/logging#restricting-log-size).
 
 ### Twilio API Credentials
 

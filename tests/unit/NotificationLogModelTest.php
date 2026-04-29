@@ -153,4 +153,76 @@ class NotificationLogModelTest extends TestCase
         // arbitrary structured payloads.
         $this->assertStringContainsString('Json::encode($details)', $this->logSource);
     }
+
+    // ========================================================================= //
+    // Logging disable check
+    // ========================================================================= //
+
+    public function testLogShortCircuitsWhenLoggingDisabled(): void
+    {
+        // _log() must read the loggingEnabled setting and bail before any
+        // record is constructed when the user has turned logging off.
+        $this->assertMatchesRegularExpression(
+            '/private function _log[\s\S]*?loggingEnabled[\s\S]*?return null/',
+            $this->logSource
+        );
+    }
+
+    public function testEnvelopeShortCircuitsWhenLoggingDisabled(): void
+    {
+        // envelope() must also bail early when logging is disabled — without
+        // this guard, _prune() would still run on every dispatch even though
+        // there's nothing to prune toward.
+        $this->assertMatchesRegularExpression(
+            '/public function envelope[\s\S]*?loggingEnabled[\s\S]*?return null/',
+            $this->logSource
+        );
+    }
+
+    // ========================================================================= //
+    // Pruning logic
+    // ========================================================================= //
+
+    public function testInternalPruneIsPrivate(): void
+    {
+        // Pruning is an internal concern of the log model — never called
+        // directly from outside.
+        $this->assertTrue($this->reflection->hasMethod('_prune'));
+        $this->assertTrue($this->reflection->getMethod('_prune')->isPrivate());
+    }
+
+    public function testEnvelopeTriggersPrune(): void
+    {
+        // Pruning is wired to fire once per dispatch, at the start of each
+        // new envelope. There is no cron — the per-envelope hook is the
+        // entire enforcement mechanism.
+        $this->assertMatchesRegularExpression(
+            '/public function envelope[\s\S]*?\$this->_prune\(\)/',
+            $this->logSource
+        );
+    }
+
+    public function testPruneReadsBothRetentionCaps(): void
+    {
+        // Both cap settings must be consulted independently in _prune().
+        $this->assertMatchesRegularExpression(
+            '/_prune[\s\S]*?logRetentionDays/',
+            $this->logSource
+        );
+        $this->assertMatchesRegularExpression(
+            '/_prune[\s\S]*?logRetentionRecords/',
+            $this->logSource
+        );
+    }
+
+    public function testPruneDeletesEnvelopesAndChildrenTogether(): void
+    {
+        // Pruning must remove both the envelope rows AND every row whose
+        // envelopeId points at them, otherwise child events get stranded
+        // when their parent is deleted.
+        $this->assertMatchesRegularExpression(
+            "/_prune[\s\S]*?'id' => \\\$expiredEnvelopeIds[\s\S]*?'envelopeId' => \\\$expiredEnvelopeIds/",
+            $this->logSource
+        );
+    }
 }

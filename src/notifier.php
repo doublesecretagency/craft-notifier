@@ -12,12 +12,17 @@
 
 return [
 
+    // Logging (all optional)
+    //'loggingEnabled'      => true,
+    //'logRetentionDays'    => 30,
+    //'logRetentionRecords' => 1000,
+
     // Twilio (only needed if using Twilio to send SMS messages)
-    'twilioAccountSid'  => getenv('TWILIO_ACCOUNT_SID'),
-    'twilioAuthToken'   => getenv('TWILIO_AUTH_TOKEN'),
-    'twilioPhoneNumber' => getenv('TWILIO_PHONE_NUMBER'),
+    //'twilioAccountSid'  => getenv('TWILIO_ACCOUNT_SID'),
+    //'twilioAuthToken'   => getenv('TWILIO_AUTH_TOKEN'),
+    //'twilioPhoneNumber' => getenv('TWILIO_PHONE_NUMBER'),
 
     // Phone number to use for SMS testing purposes
-    'testToPhoneNumber' => getenv('TEST_TO_PHONE_NUMBER'),
+    //'testToPhoneNumber' => getenv('TEST_TO_PHONE_NUMBER'),
 
 ];

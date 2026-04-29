@@ -253,6 +253,19 @@ class NotifierPluginRegistrationTest extends TestCase
         );
     }
 
+    public function testNotificationLogUtilityHiddenWhenLoggingDisabled(): void
+    {
+        // _registerUtilities() must short-circuit before the permission check
+        // when loggingEnabled is false. Without this, disabling logging would
+        // leave the utility visible (and empty) for anyone with the view
+        // permission, contradicting the public docs which promise the
+        // utility "will be unavailable" when logging is disabled.
+        $this->assertMatchesRegularExpression(
+            '/_registerUtilities[\s\S]*?loggingEnabled[\s\S]*?notifier-viewNotificationLog[\s\S]*?NotificationLog::class/',
+            $this->pluginSource
+        );
+    }
+
     // ========================================================================= //
     // Twig extension
     // ========================================================================= //
@@ -293,4 +306,5 @@ class NotifierPluginRegistrationTest extends TestCase
             $this->pluginSource
         );
     }
+
 }

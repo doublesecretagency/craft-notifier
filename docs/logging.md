@@ -1,5 +1,5 @@
 ---
-description:
+description: Notifier records every sent message in a detailed log utility.
 ---
 
 # Notification Log
@@ -7,6 +7,38 @@ description:
 To see a detailed notification log, visit **Utilities > Notification Log** in the control panel:
 
 <img class="dropshadow" src="/images/logs/notification-log.png" alt="" style="width:1184px; margin-top:10px">
+
+## Restricting log size
+
+By default, the log will accumulate events indefinitely, until/unless they are manually cleared. The following settings manage whether and how long those log events remain in the database.
+
+These settings can be managed via either the plugin's [Settings page](/getting-started/settings) or the plugin's [PHP config file](/getting-started/config).
+
+### `loggingEnabled`
+
+_bool_ - Defaults to `true`.
+
+When disabled, Notifier writes nothing to the notification log, and the "Notification Log" utility will be unavailable.
+
+### `logRetentionDays`
+
+_int_|_null_ - Defaults to `null` (no limit).
+
+Maximum age, in days, of log events to retain. Older events will be pruned automatically. Leave blank for no limit.
+
+### `logRetentionRecords`
+
+_int_|_null_ - Defaults to `null` (no limit).
+
+Maximum number of log events to retain. When this limit is exceeded, the oldest events will be dropped. Leave blank for no limit.
+
+:::tip No cron required
+If either retention maximum is set, older log events will be pruned automatically as new ones are written.
+:::
+
+:::tip Both Rules Apply
+If both `logRetentionDays` and `logRetentionRecords` are set, both rules will apply. Any log event that exceeds either maximum will be pruned.
+:::
 
 ## Individual log events
 

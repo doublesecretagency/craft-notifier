@@ -295,7 +295,8 @@ class NotifierPlugin extends Plugin
     /**
      * Register utilities.
      *
-     * The Notification Log utility is gated behind the
+     * The Notification Log utility is hidden entirely when `loggingEnabled`
+     * is false. When enabled, it is gated behind the
      * `notifier-viewNotificationLog` permission. Unpermissioned users (and
      * users with no current identity) won't see the utility appear in the
      * CP utilities listing at all. Admins always see it via the parent
@@ -309,6 +310,10 @@ class NotifierPlugin extends Plugin
             Utilities::class,
             Compat::utilitiesEventName(),
             static function (RegisterComponentTypesEvent $event) {
+                // If logging is disabled, hide the utility entirely
+                if (!NotifierPlugin::$plugin->getSettings()->loggingEnabled) {
+                    return;
+                }
                 // Get the current user
                 $user = Craft::$app->getUser()->getIdentity();
                 // If no current user, bail

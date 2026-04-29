@@ -13,7 +13,13 @@ namespace doublesecretagency\notifier\models;
 
 use Craft;
 use craft\base\Model;
+use craft\db\Query;
+use craft\helpers\Db;
 use craft\helpers\Json;
+use DateInterval;
+use DateTime;
+use DateTimeZone;
+use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\records\Log;
 
 /**
@@ -44,6 +50,14 @@ class NotificationLog extends Model
      */
     public function envelope(array $jobInfo, array $details): ?int
     {
+        // If logging disabled, bail
+        if (!NotifierPlugin::$plugin->getSettings()->loggingEnabled) {
+            return null;
+        }
+
+        // Prune expired log entries before adding a new envelope
+        $this->_prune();
+
         // Set envelope creation message
         $message = Craft::t('notifier', 'Sending {messageType} to {recipient}.', $jobInfo);
 
@@ -118,6 +132,11 @@ class NotificationLog extends Model
      */
     private function _log(string $type, string $message, ?int $envelopeId = null, array $details = []): ?int
     {
+        // If logging disabled, bail
+        if (!NotifierPlugin::$plugin->getSettings()->loggingEnabled) {
+            return null;
+        }
+
         // Create a new log record
         $record = new Log();
 
@@ -133,6 +152,97 @@ class NotificationLog extends Model
 
         // Return the log ID
         return $record->id;
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Prune expired envelope groups from the log table.
+     *
+     * Runs once per dispatch (called from `envelope()`). Two retention rules
+     * may be configured independently and both are applied:
+     *
+     *  - `logRetentionDays`: deletes envelopes (and their child rows) whose
+     *    `dateCreated` is older than the cutoff.
+     *  - `logRetentionRecords`: deletes envelopes (and their child rows)
+     *    beyond the most recent N envelopes.
+     *
+     * Both modes operate on envelope IDs, then delete the envelope rows
+     * plus every child row whose `envelopeId` matches, so we never strand
+     * orphaned children.
+     *
+     * @return void
+     */
+    private function _prune(): void
+    {
+        // Get plugin settings
+        /** @var Settings $settings */
+        $settings = NotifierPlugin::$plugin->getSettings();
+
+        // Track every envelope ID flagged for removal
+        $expiredEnvelopeIds = [];
+
+        // Limit by age (days)
+        if ($settings->logRetentionDays > 0) {
+
+            // Calculate the cutoff date
+            $cutoff = (new DateTime('now', new DateTimeZone('UTC')))
+                ->sub(new DateInterval("P{$settings->logRetentionDays}D"));
+
+            // Find envelopes older than the cutoff
+            $tooOld = (new Query())
+                ->select('id')
+                ->from(Log::tableName())
+                ->where(['type' => 'envelope'])
+                ->andWhere(['<', 'dateCreated', Db::prepareDateForDb($cutoff)])
+                ->column();
+
+            // Append to the expired list
+            $expiredEnvelopeIds = array_merge($expiredEnvelopeIds, $tooOld);
+        }
+
+        // Limit by count (dispatches)
+        if ($settings->logRetentionRecords > 0) {
+
+            // Find the most recent N envelope IDs to keep
+            $keepIds = (new Query())
+                ->select('id')
+                ->from(Log::tableName())
+                ->where(['type' => 'envelope'])
+                ->orderBy(['id' => SORT_DESC])
+                ->limit($settings->logRetentionRecords)
+                ->column();
+
+            // If anything to keep, find everything else
+            if ($keepIds) {
+                $tooMany = (new Query())
+                    ->select('id')
+                    ->from(Log::tableName())
+                    ->where(['type' => 'envelope'])
+                    ->andWhere(['not in', 'id', $keepIds])
+                    ->column();
+
+                // Append to the expired list
+                $expiredEnvelopeIds = array_merge($expiredEnvelopeIds, $tooMany);
+            }
+        }
+
+        // If nothing expired, bail
+        if (!$expiredEnvelopeIds) {
+            return;
+        }
+
+        // Deduplicate the expired list
+        $expiredEnvelopeIds = array_unique($expiredEnvelopeIds);
+
+        // Delete the envelope rows AND every child row pointing at them
+        Craft::$app->getDb()->createCommand()
+            ->delete(Log::tableName(), [
+                'or',
+                ['id' => $expiredEnvelopeIds],
+                ['envelopeId' => $expiredEnvelopeIds],
+            ])
+            ->execute();
     }
 
 }

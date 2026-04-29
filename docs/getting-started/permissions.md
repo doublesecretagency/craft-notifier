@@ -30,7 +30,7 @@ Allows users to delete notifications.
 
 ##### `Use the Dynamic Recipients type`
 
-Allows users to select and configure the [Dynamic Recipients](/recipients/types/dynamic-recipients) recipient type, which executes custom Twig snippets at dispatch time. Nested beneath "Save notifications" because authoring those snippets is a privileged action.
+Allows users to select and configure the [Dynamic Recipients](/recipients/types/dynamic-recipients) recipient type, which executes custom Twig snippets at send time. Nested beneath "Save notifications" because authoring those snippets is a privileged action.
 
 :::warning ⚠️ Security Warning - For Highly Trusted Users Only!
 Do not grant "Use the Dynamic Recipients type" permission to untrusted users, because it will allow them to execute arbitrary Twig code at runtime.
@@ -54,6 +54,6 @@ A few useful configurations for common user types:
 
 - **Read-only editor** - `View notifications` only. The user can browse and inspect notifications, but every field on the edit screen is disabled and no save actions are available.
 - **Standard editor** - `View notifications`, `Save notifications`, `Delete notifications`. For full notification authoring.
-- **Trusted editor** - Same as standard editor, plus `Use the Dynamic Recipients type`. Granted to authors who are trusted to write Twig that runs at dispatch time.
+- **Trusted editor** - Same as standard editor, plus `Use the Dynamic Recipients type`. Granted to authors who are trusted to write Twig that runs at send time.
 - **Log auditor** - `View notification log` for read-only access to the audit trail.
 - **Log auditor with cleanup** - `View notification log` and `Delete notification log`. Useful for users responsible for keeping the log tidy.
