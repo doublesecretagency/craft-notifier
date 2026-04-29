@@ -17,6 +17,7 @@ use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\records\Log;
 use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 /**
@@ -26,10 +27,20 @@ use yii\web\Response;
 class LogController extends Controller
 {
 
+    /**
+     * Look up a Notification by ID for the log utility.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
+     */
     public function actionGetNotification(): Response
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
+
+        // Make sure the user is allowed to view the notification log
+        $this->requirePermission('notifier-viewNotificationLog');
 
         // Get specified ID
         $notificationId = $this->request->getRequiredBodyParam('notificationId');
@@ -69,11 +80,15 @@ class LogController extends Controller
      *
      * @return Response
      * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
      */
     public function actionDelete(): Response
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
+
+        // Make sure the user is allowed to delete from the notification log
+        $this->requirePermission('notifier-deleteNotificationLog');
 
         // Get specified ID
         $envelopeId = $this->request->getRequiredBodyParam('envelopeId');
@@ -106,11 +121,15 @@ class LogController extends Controller
      *
      * @return Response
      * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
      */
     public function actionDeleteDay(): Response
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
+
+        // Make sure the user is allowed to delete from the notification log
+        $this->requirePermission('notifier-deleteNotificationLog');
 
         // Get specified date
         $date = $this->request->getRequiredBodyParam('date');

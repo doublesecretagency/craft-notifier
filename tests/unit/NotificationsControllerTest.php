@@ -89,10 +89,62 @@ class NotificationsControllerTest extends TestCase
         );
     }
 
-    public function testEditActionEnforcesCanSave(): void
+    public function testEditActionConsultsCanSave(): void
     {
+        // Edit action must call canSave() on the elements service so it can
+        // decide whether to render write-side affordances.
         $this->assertMatchesRegularExpression(
             '/actionEdit[\s\S]*?canSave\(\$notification\)/',
+            $this->controllerSource
+        );
+    }
+
+    public function testEditActionDoesNotThrowOnViewOnlyAccess(): void
+    {
+        // The legacy implementation threw ForbiddenHttpException when canSave
+        // returned false. The current behavior is read-only rendering. Verify
+        // the action does not raise Forbidden purely on the basis of !canSave;
+        // the only Forbidden path is when the user can neither view nor save.
+        $this->assertMatchesRegularExpression(
+            '/actionEdit[\s\S]*?!\$canSave\s*&&\s*!\$elementsService->canView/',
+            $this->controllerSource
+        );
+    }
+
+    public function testEditActionRendersReadOnlyForViewOnlyUsers(): void
+    {
+        // The action must compute a $readOnly flag and pass it into the
+        // content template so the form can render inside a disabled fieldset.
+        $this->assertMatchesRegularExpression(
+            '/actionEdit[\s\S]*?\$readOnly\s*=\s*!\$canSave/',
+            $this->controllerSource
+        );
+        $this->assertMatchesRegularExpression(
+            "/contentTemplate[\s\S]*?'readOnly'\s*=>\s*\\\$readOnly/",
+            $this->controllerSource
+        );
+    }
+
+    public function testEditActionHidesSubmitAndAltActionsWhenReadOnly(): void
+    {
+        // The submitButtonLabel and the save-and-X alt actions should only
+        // attach when the user has save permission.
+        $this->assertMatchesRegularExpression(
+            '/if\s*\(!\$readOnly\)[\s\S]*?submitButtonLabel/',
+            $this->controllerSource
+        );
+        $this->assertMatchesRegularExpression(
+            "/if\s*\(!\\\$readOnly\)[\s\S]*?addAltAction\(Craft::t\('app', 'Save and continue editing'/",
+            $this->controllerSource
+        );
+    }
+
+    public function testEditActionHidesDeleteAltActionWhenUserCannotDelete(): void
+    {
+        // The destructive Delete {type} alt-action must only attach when the
+        // user holds notifier-deleteNotifications.
+        $this->assertMatchesRegularExpression(
+            "/if\s*\(\\\$canDelete\)[\s\S]*?addAltAction\(Craft::t\('app', 'Delete \{type\}'/",
             $this->controllerSource
         );
     }

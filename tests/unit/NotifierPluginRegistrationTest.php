@@ -139,6 +139,39 @@ class NotifierPluginRegistrationTest extends TestCase
         );
     }
 
+    public function testViewNotificationLogIsRootPermission(): void
+    {
+        // The Log subtree is intentionally a sibling of the Notifications
+        // subtree, not a child — auditors can be granted log access without
+        // also gaining the ability to view notification configuration.
+        $this->assertStringContainsString(
+            "'notifier-viewNotificationLog'",
+            $this->pluginSource
+        );
+    }
+
+    public function testDeleteNotificationLogIsNestedUnderViewLog(): void
+    {
+        // Deleting log envelopes requires viewing them.
+        $this->assertMatchesRegularExpression(
+            "/notifier-viewNotificationLog.*?nested.*?notifier-deleteNotificationLog/s",
+            $this->pluginSource
+        );
+    }
+
+    public function testLogPermissionsAreSiblingsOfNotificationsSubtree(): void
+    {
+        // Log permissions sit at the top level of the heading's permissions
+        // array — same indentation depth as notifier-viewNotifications.
+        // Whatever indentation viewNotifications uses, viewNotificationLog
+        // must use exactly the same prefix.
+        $this->assertMatchesRegularExpression(
+            '/(\n {16,40})\'notifier-viewNotifications\' =>[\s\S]*?\1\'notifier-viewNotificationLog\' =>/',
+            $this->pluginSource,
+            'notifier-viewNotificationLog must appear at the same indent depth as notifier-viewNotifications, not nested under it'
+        );
+    }
+
     // ========================================================================= //
     // CP route registration
     // ========================================================================= //
@@ -203,6 +236,18 @@ class NotifierPluginRegistrationTest extends TestCase
             $this->pluginSource
         );
         $this->assertStringContainsString('NotificationLog::class', $this->pluginSource);
+    }
+
+    public function testNotificationLogUtilityIsGatedByViewLogPermission(): void
+    {
+        // Within _registerUtilities(), the registration must be guarded by a
+        // notifier-viewNotificationLog permission check. Without this, any
+        // user with utilities access could see the log through Craft's
+        // built-in `utility:notification-log` permission.
+        $this->assertMatchesRegularExpression(
+            '/_registerUtilities[\s\S]*?notifier-viewNotificationLog[\s\S]*?NotificationLog::class/',
+            $this->pluginSource
+        );
     }
 
     // ========================================================================= //

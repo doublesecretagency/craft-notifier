@@ -328,7 +328,13 @@ class Notification extends Element
      */
     public function canCreateDrafts(User $user): bool
     {
-        return true;
+        // Defer to parent (admins bypass permissions)
+        if (parent::canCreateDrafts($user)) {
+            return true;
+        }
+
+        // Otherwise require the save permission — drafts are an edit affordance
+        return $user->can('notifier-saveNotifications');
     }
 
     protected function cpEditUrl(): ?string

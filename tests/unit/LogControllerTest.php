@@ -104,6 +104,40 @@ class LogControllerTest extends TestCase
     }
 
     // ========================================================================= //
+    // Permission guards
+    // ========================================================================= //
+
+    public function testGetNotificationRequiresViewLogPermission(): void
+    {
+        // Reading log details about a notification is gated behind the view
+        // permission so non-auditors can't enumerate event traffic via the
+        // utility's lookup endpoint.
+        $this->assertMatchesRegularExpression(
+            '/actionGetNotification[\s\S]*?requirePermission\([\'"]notifier-viewNotificationLog[\'"]\)/',
+            $this->controllerSource
+        );
+    }
+
+    public function testDeleteRequiresDeleteLogPermission(): void
+    {
+        // Wiping a single envelope row requires the delete permission, not
+        // the view permission — viewing and clearing must be distinct.
+        $this->assertMatchesRegularExpression(
+            '/actionDelete\(\)[\s\S]*?requirePermission\([\'"]notifier-deleteNotificationLog[\'"]\)/',
+            $this->controllerSource
+        );
+    }
+
+    public function testDeleteDayRequiresDeleteLogPermission(): void
+    {
+        // Day-wide delete is a bulk destructive op; same gate as single delete.
+        $this->assertMatchesRegularExpression(
+            '/actionDeleteDay[\s\S]*?requirePermission\([\'"]notifier-deleteNotificationLog[\'"]\)/',
+            $this->controllerSource
+        );
+    }
+
+    // ========================================================================= //
     // Input validation
     // ========================================================================= //
 

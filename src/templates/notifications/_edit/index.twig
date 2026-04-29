@@ -1,9 +1,16 @@
 {% import '_includes/forms' as forms %}
 
+{# When the user lacks notifier-saveNotifications, the entire form renders inside
+   a disabled <fieldset>. The HTML5 disabled attribute cascades to every native
+   form control inside (inputs, selects, textareas, buttons), giving us a
+   read-only rendering without per-field disabled flags. #}
+{% set readOnly = (readOnly ?? false) %}
+
 {# Render hidden inputs #}
 {{ notification.id ? hiddenInput('elementId', notification.id) }}
 {{ notification.siteId ? hiddenInput('siteId', notification.siteId) }}
 
+<fieldset class="notifier-edit-fieldset{{ readOnly ? ' notifier-edit-fieldset--readonly' : '' }}"{{ readOnly ? ' disabled' : '' }}>
 <div id="meta" class="flex-fields">
     {% include 'notifier/notifications/_edit/meta' %}
 </div>
@@ -16,6 +23,46 @@
 <div id="recipients" class="flex-fields hidden">
     {% include 'notifier/notifications/_edit/recipients' %}
 </div>
+</fieldset>
+
+{% if readOnly %}
+{% css %}
+/* Strip native fieldset chrome so the disabled wrapper is invisible to layout */
+.notifier-edit-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+}
+/* Read-only visual hint: dim disabled controls slightly without making them
+   unreadable. Native disabled styling already varies by browser, so we lean
+   on opacity rather than color overrides. */
+.notifier-edit-fieldset--readonly :is(input, select, textarea, button):disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+{% endcss %}
+{% js %}
+(function() {
+    // Monaco editors are JS-driven and don't honor the parent fieldset's
+    // disabled attribute, so flip them to read-only mode explicitly.
+    function flipMonacoToReadOnly() {
+        if (!window.monacoEditorInstances) {
+            return;
+        }
+        Object.keys(window.monacoEditorInstances).forEach(function(editorId) {
+            var instance = window.monacoEditorInstances[editorId];
+            if (instance && typeof instance.updateOptions === 'function') {
+                instance.updateOptions({readOnly: true});
+            }
+        });
+    }
+    // First pass after page load, second pass after Monaco's deferred init
+    window.setTimeout(flipMonacoToReadOnly, 100);
+    window.setTimeout(flipMonacoToReadOnly, 600);
+})();
+{% endjs %}
+{% endif %}
 
 {% css %}
 /* Clip Monaco's overflow so the right border isn't covered */

@@ -5,9 +5,16 @@
 ### Added
 - Added the [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) recipient type.
 - Added a `{% setRecipients %}` Twig tag for use inside Dynamic Recipients snippets.
-- Added user permissions for viewing, saving, and deleting notifications.
+- Added user permissions for viewing, saving, and deleting notifications. ([#28](https://github.com/doublesecretagency/craft-notifier/issues/28))
 - Added user permissions for authoring Dynamic Recipients snippets.
+- Added user permissions for viewing and deleting the notification log.
+- Added a read-only edit screen for users with view-only access to notifications.
 - Added comprehensive unit tests.
+
+### Changed
+- The Notification Log utility is now hidden from users without the "View notification log" permission.
+- The "Delete notification" action is now hidden from users without the "Delete notifications" permission.
+- Creating a notification draft now requires the "Save notifications" permission.
 
 ## 2.1.0 - 2025-02-25
 

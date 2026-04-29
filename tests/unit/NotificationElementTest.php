@@ -165,6 +165,17 @@ class NotificationElementTest extends TestCase
         );
     }
 
+    public function testCanCreateDraftsRequiresSavePermission(): void
+    {
+        // Creating a draft is an edit affordance — historically returned true
+        // unconditionally, which let view-only users author drafts. Drafts
+        // must now require notifier-saveNotifications, same as a fresh save.
+        $this->assertMatchesRegularExpression(
+            "/canCreateDrafts[\s\S]*?'notifier-saveNotifications'/",
+            $this->notificationSource
+        );
+    }
+
     // ========================================================================= //
     // Dynamic Recipients server-side gate
     // ========================================================================= //

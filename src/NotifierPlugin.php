@@ -217,10 +217,17 @@ class NotifierPlugin extends Plugin
      * Register user permissions for the plugin.
      *
      * Exposes a "Notifier" heading in the CP user-group permissions screen
-     * containing a top-level "View notifications" permission with "Save
-     * notifications" and "Delete notifications" as siblings beneath it, plus
-     * the dedicated permission nested under "Save notifications" that gates
-     * authoring Dynamic Recipients Twig snippets.
+     * with two sibling subtrees:
+     *
+     * - "View notifications" (root) governing the Notification element type:
+     *   "Save notifications" nests beneath it, with "Use the Dynamic
+     *   Recipients type" nested even deeper since authoring arbitrary Twig
+     *   snippets is a privileged action. "Delete notifications" sits at the
+     *   same level as "Save notifications".
+     * - "View notification log" (root) governing the audit-trail surface:
+     *   "Delete notification log" nests beneath it. Kept separate from the
+     *   notification subtree so site auditors can read the log without being
+     *   able to alter notification configuration, and vice versa.
      *
      * @return void
      */
@@ -247,6 +254,14 @@ class NotifierPlugin extends Plugin
                                 ],
                                 'notifier-deleteNotifications' => [
                                     'label' => Craft::t('notifier', 'Delete notifications'),
+                                ],
+                            ],
+                        ],
+                        'notifier-viewNotificationLog' => [
+                            'label' => Craft::t('notifier', 'View notification log'),
+                            'nested' => [
+                                'notifier-deleteNotificationLog' => [
+                                    'label' => Craft::t('notifier', 'Delete notification log'),
                                 ],
                             ],
                         ],
@@ -279,6 +294,12 @@ class NotifierPlugin extends Plugin
 
     /**
      * Register utilities.
+     *
+     * The Notification Log utility is gated behind the
+     * `notifier-viewNotificationLog` permission. Unpermissioned users (and
+     * users with no current identity) won't see the utility appear in the
+     * CP utilities listing at all. Admins always see it via the parent
+     * canView() bypass on the user model.
      */
     private function _registerUtilities(): void
     {
@@ -286,6 +307,16 @@ class NotifierPlugin extends Plugin
             Utilities::class,
             Utilities::EVENT_REGISTER_UTILITIES,
             static function (RegisterComponentTypesEvent $event) {
+                // Get the current user
+                $user = Craft::$app->getUser()->getIdentity();
+                // If no current user, bail
+                if (!$user) {
+                    return;
+                }
+                // If the user can't view the log, bail
+                if (!$user->admin && !$user->can('notifier-viewNotificationLog')) {
+                    return;
+                }
                 // Add logging utility
                 $event->types[] = NotificationLog::class;
             }

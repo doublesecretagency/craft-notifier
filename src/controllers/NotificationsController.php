@@ -79,6 +79,16 @@ class NotificationsController extends Controller
     /**
      * Edit a Notification.
      *
+     * View-only users (those who hold `notifier-viewNotifications` but not
+     * `notifier-saveNotifications`) land on a read-only rendering of the
+     * edit screen rather than a 403. The submit button, all save-and-X alt
+     * actions, and the delete action are suppressed; the content template
+     * wraps its form in a disabled fieldset to neutralize every input.
+     *
+     * The element-level `canSave()` gate still enforces server-side write
+     * protection on the actual elements/save POST endpoint, so a read-only
+     * user who crafts a manual POST is still rejected.
+     *
      * @param Notification|null $notification
      * @param int|null $notificationId
      * @return Response
@@ -93,10 +103,20 @@ class NotificationsController extends Controller
             $notification = $this->_getNotificationModel($notificationId);
         }
 
-        // Make sure the user is allowed to save this notification
-        if (!Craft::$app->getElements()->canSave($notification)) {
-            throw new ForbiddenHttpException('User not authorized to save this notification.');
+        // Get the elements service
+        $elementsService = Craft::$app->getElements();
+
+        // Whether the user can save / delete this notification
+        $canSave = $elementsService->canSave($notification);
+        $canDelete = $elementsService->canDelete($notification);
+
+        // If the user can neither view nor save, bail
+        if (!$canSave && !$elementsService->canView($notification)) {
+            throw new ForbiddenHttpException('User not authorized to view this notification.');
         }
+
+        // If the user cannot save, render the screen in read-only mode
+        $readOnly = !$canSave;
 
         // Set page title
         $title = ($notification->title ?? Craft::t('notifier', 'Add a New Notification'));
@@ -129,9 +149,8 @@ class NotificationsController extends Controller
             ],
         ];
 
-        // If slug doesn't yet exist
-        if (!$notification->slug) {
-            // Initialize the slug generator
+        // If slug doesn't yet exist and the user can edit, initialize the slug generator
+        if (!$notification->slug && !$readOnly) {
             $this->_slugGenerator($notification);
         }
 
@@ -152,24 +171,43 @@ class NotificationsController extends Controller
             $buttonLabel = 'Save {type}';
         }
 
-        // Returns a CP screen response
-        return $this->asCpScreen()
+        // Build the CP screen response
+        $response = $this->asCpScreen()
             ->title($title)
             ->crumbs($crumbs)
             ->tabs($tabs)
-            ->action($action)
-            ->submitButtonLabel(Craft::t('app', $buttonLabel, [
-                'type' => $type,
-            ]))
-            ->addAltAction(Craft::t('app', 'Save and continue editing'), [
-                'redirect' => 'notifications/{id}',
-                'shortcut' => true,
-                'retainScroll' => true,
+            ->redirectUrl('notifications')
+            ->editUrl($notification->getCpEditUrl())
+            ->contentTemplate('notifier/notifications/_edit', [
+                'notification' => $notification,
+                'readOnly' => $readOnly,
             ])
-            ->addAltAction(Craft::t('app', 'Save and add another'), [
-                'redirect' => 'notifications/new',
-            ])
-            ->addAltAction(Craft::t('app', 'Delete {type}', [
+            ->metaSidebarTemplate('notifier/notifications/_edit/details', [
+                'notification' => $notification,
+                'readOnly' => $readOnly,
+            ]);
+
+        // If the user can save, attach all of the save-side affordances
+        if (!$readOnly) {
+            $response
+                ->action($action)
+                ->submitButtonLabel(Craft::t('app', $buttonLabel, [
+                    'type' => $type,
+                ]))
+                ->addAltAction(Craft::t('app', 'Save and continue editing'), [
+                    'redirect' => 'notifications/{id}',
+                    'shortcut' => true,
+                    'retainScroll' => true,
+                ])
+                ->addAltAction(Craft::t('app', 'Save and add another'), [
+                    'redirect' => 'notifications/new',
+                ])
+                ->saveShortcutRedirectUrl('notifications/{id}');
+        }
+
+        // If the user can delete, attach the destructive Delete alt-action
+        if ($canDelete) {
+            $response->addAltAction(Craft::t('app', 'Delete {type}', [
                 'type' => $type,
             ]), [
                 'destructive' => true,
@@ -178,16 +216,10 @@ class NotificationsController extends Controller
                 'confirm' => Craft::t('app', 'Are you sure you want to delete this {type}?', [
                     'type' => $type,
                 ]),
-            ])
-            ->redirectUrl('notifications')
-            ->saveShortcutRedirectUrl('notifications/{id}')
-            ->editUrl($notification->getCpEditUrl())
-            ->contentTemplate('notifier/notifications/_edit', [
-                'notification' => $notification,
-            ])
-            ->metaSidebarTemplate('notifier/notifications/_edit/details', [
-                'notification' => $notification,
             ]);
+        }
+
+        return $response;
     }
 
     /**
