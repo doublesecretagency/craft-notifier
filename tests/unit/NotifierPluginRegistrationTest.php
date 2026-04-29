@@ -231,8 +231,11 @@ class NotifierPluginRegistrationTest extends TestCase
     public function testRegistersNotificationLogUtility(): void
     {
         // The NotificationLog utility surfaces the audit trail in the CP.
+        // Event name is resolved via Compat::utilitiesEventName() to support
+        // both Craft 5's EVENT_REGISTER_UTILITIES and Craft 4's
+        // EVENT_REGISTER_UTILITY_TYPES from a single codebase.
         $this->assertStringContainsString(
-            'EVENT_REGISTER_UTILITIES',
+            'Compat::utilitiesEventName()',
             $this->pluginSource
         );
         $this->assertStringContainsString('NotificationLog::class', $this->pluginSource);

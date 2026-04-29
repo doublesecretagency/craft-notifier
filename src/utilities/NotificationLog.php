@@ -42,19 +42,26 @@ class NotificationLog extends Utility
 
     /**
      * @inheritdoc
+     *
+     * Craft 4 hook. Craft 5 ignores this method in favor of `icon()`.
+     *
+     * @return string|null
+     */
+    public static function iconPath(): ?string
+    {
+        return static::_iconPath();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * Craft 5 hook. Craft 4 ignores this method in favor of `iconPath()`.
+     *
+     * @return string|null
      */
     public static function icon(): ?string
     {
-        // Set the icon mask path
-        $iconPath = Craft::getAlias('@vendor/doublesecretagency/craft-notifier/src/icon-mask.svg');
-
-        // If not a string, bail
-        if (!is_string($iconPath)) {
-            return null;
-        }
-
-        // Return the icon mask path
-        return $iconPath;
+        return static::_iconPath();
     }
 
     /**
@@ -118,6 +125,25 @@ class NotificationLog extends Utility
     }
 
     // ========================================================================= //
+
+    /**
+     * Resolve the absolute path to the utility's icon mask SVG.
+     *
+     * @return string|null
+     */
+    private static function _iconPath(): ?string
+    {
+        // Set the icon mask path
+        $iconPath = Craft::getAlias('@vendor/doublesecretagency/craft-notifier/src/icon-mask.svg');
+
+        // If not a string, bail
+        if (!is_string($iconPath)) {
+            return null;
+        }
+
+        // Return the icon mask path
+        return $iconPath;
+    }
 
     /**
      * Get logs for a single day.

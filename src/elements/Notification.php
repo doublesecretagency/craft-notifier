@@ -20,6 +20,7 @@ use craft\models\FieldLayout;
 use craft\web\CpScreenResponseBehavior;
 use doublesecretagency\notifier\elements\conditions\NotificationCondition;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
+use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\fieldlayoutelements\notifications\EventFieldLayoutTab;
 use doublesecretagency\notifier\fieldlayoutelements\notifications\MessageFieldLayoutTab;
 use doublesecretagency\notifier\fieldlayoutelements\notifications\MetaFieldLayoutTab;
@@ -350,16 +351,19 @@ class Notification extends Element
     public function prepareEditScreen(Response $response, string $containerId): void
     {
         /** @var Response|CpScreenResponseBehavior $response */
-        $response
-            ->crumbs([
-                [
-                    'label' => self::pluralDisplayName(),
-                    'url' => UrlHelper::cpUrl('notifications'),
-                ],
-            ])
-            ->metaSidebarTemplate('notifier/notifications/_edit/details', [
-                'notification' => $this,
-            ]);
+        $response->crumbs([
+            [
+                'label' => self::pluralDisplayName(),
+                'url' => UrlHelper::cpUrl('notifications'),
+            ],
+        ]);
+
+        // Pick the correct sidebar method for the active Craft version
+        // (Craft 5: metaSidebarTemplate(), Craft 4: sidebarTemplate())
+        $sidebarMethod = Compat::metaSidebarMethodName();
+        $response->{$sidebarMethod}('notifier/notifications/_edit/details', [
+            'notification' => $this,
+        ]);
     }
 
     public function getFieldLayout(): ?FieldLayout

@@ -18,7 +18,7 @@ use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * Class SetRecipientsTokenParser
- * @since 2.2.0
+ * @since 3.0.0
  */
 class SetRecipientsTokenParser extends AbstractTokenParser
 {

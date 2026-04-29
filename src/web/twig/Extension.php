@@ -19,6 +19,7 @@ use craft\fields\PlainText;
 use craft\fields\RadioButtons;
 use craft\fields\Url;
 use doublesecretagency\notifier\enums\Options;
+use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\web\twig\tokenparsers\SetRecipientsTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
@@ -198,7 +199,10 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $sections = [];
 
         // Get entries services
-        $entriesService = Craft::$app->getEntries();
+        // (Craft 5: Craft::$app->getEntries(), Craft 4: Craft::$app->getSections())
+        $entriesService = Compat::isCraft5()
+            ? Craft::$app->getEntries()
+            : Craft::$app->getSections();
 
         // Loop through all sections
         foreach ($entriesService->getAllSections() as $section) {

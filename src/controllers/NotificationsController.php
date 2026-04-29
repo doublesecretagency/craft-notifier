@@ -18,6 +18,7 @@ use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\helpers\Notifier;
 use Throwable;
 use yii\base\InvalidConfigException;
@@ -181,11 +182,15 @@ class NotificationsController extends Controller
             ->contentTemplate('notifier/notifications/_edit', [
                 'notification' => $notification,
                 'readOnly' => $readOnly,
-            ])
-            ->metaSidebarTemplate('notifier/notifications/_edit/details', [
-                'notification' => $notification,
-                'readOnly' => $readOnly,
             ]);
+
+        // Pick the correct sidebar method for the active Craft version
+        // (Craft 5: metaSidebarTemplate(), Craft 4: sidebarTemplate())
+        $sidebarMethod = Compat::metaSidebarMethodName();
+        $response->{$sidebarMethod}('notifier/notifications/_edit/details', [
+            'notification' => $notification,
+            'readOnly' => $readOnly,
+        ]);
 
         // If the user can save, attach all of the save-side affordances
         if (!$readOnly) {

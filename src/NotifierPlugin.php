@@ -14,7 +14,6 @@ namespace doublesecretagency\notifier;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
-use craft\events\DefineAttributeHtmlEvent;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
@@ -27,6 +26,7 @@ use craft\services\Utilities;
 use craft\web\UrlManager;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Options;
+use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\Events;
@@ -303,9 +303,11 @@ class NotifierPlugin extends Plugin
      */
     private function _registerUtilities(): void
     {
+        // Pick the correct event name for the active Craft version
+        // (Craft 5: 'registerUtilities', Craft 4: 'registerUtilityTypes')
         Event::on(
             Utilities::class,
-            Utilities::EVENT_REGISTER_UTILITIES,
+            Compat::utilitiesEventName(),
             static function (RegisterComponentTypesEvent $event) {
                 // Get the current user
                 $user = Craft::$app->getUser()->getIdentity();
@@ -328,10 +330,15 @@ class NotifierPlugin extends Plugin
      */
     private function _registerTableAttributes(): void
     {
+        // Pick the correct event name for the active Craft version
+        // (Craft 5: 'defineAttributeHtml', Craft 4: 'setTableAttributeHtml')
+        // Closure parameter is untyped because the event class itself was
+        // renamed (DefineAttributeHtmlEvent vs SetElementTableAttributeHtmlEvent).
+        // Both expose the same `$event->html`, `$event->attribute`, `$event->sender` shape.
         Event::on(
             Notification::class,
-            Notification::EVENT_DEFINE_ATTRIBUTE_HTML,
-            static function (DefineAttributeHtmlEvent $event) {
+            Compat::defineAttributeHtmlEventName(),
+            static function ($event) {
 
                 /** @var Notification $notification */
                 $notification = $event->sender;
