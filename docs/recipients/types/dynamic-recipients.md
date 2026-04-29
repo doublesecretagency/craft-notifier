@@ -10,6 +10,12 @@ Send the message to **a dynamic set of recipients, as defined by a Twig snippet.
 
 Write a short Twig snippet which passes one or more Users, email addresses, or phone numbers (or any combination) into the `{% setRecipients %}` tag. The tag will then parse out which email addresses (or phone numbers) will be sent the notification.
 
+:::warning ⚠️ Security Warning - Permission Required
+Users without the "[Use the Dynamic Recipients type](/getting-started/permissions#use-the-dynamic-recipients-type)" permission will not have the option to select the "Dynamic Recipients" type.
+
+Since authoring Dynamic Recipients snippets involves **executing custom Twig at dispatch time**, it is first necessary to enable this permission for users who require it. Grant it only to highly-trusted users.
+:::
+
 ## Special Variables
 
 All the [special variables](/messages/variables) available in message templates are also available in this snippet, **with one exception:** the `recipient` variable is unavailable. _This snippet_ is what will determine each recipient, so it cannot reference itself.

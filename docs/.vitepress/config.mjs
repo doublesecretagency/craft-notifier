@@ -139,6 +139,7 @@ export default defineConfig({
             {text: 'Twilio',          link: '/getting-started/twilio'},
             {text: 'Settings Page',   link: '/getting-started/settings'},
             {text: 'PHP Config File', link: '/getting-started/config'},
+            {text: 'User Permissions', link: '/getting-started/permissions'},
           ]
         }
       ],
