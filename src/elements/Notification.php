@@ -368,8 +368,13 @@ class Notification extends Element
 
     public function getFieldLayout(): ?FieldLayout
     {
+        // Build the field layout for the Notification element
         $fieldLayout = new FieldLayout();
 
+        // Bind the layout to this element type so card-view rendering can resolve it
+        $fieldLayout->type = static::class;
+
+        // Attach the four standard tabs
         $fieldLayout->setTabs([
             new MetaFieldLayoutTab(),
             new EventFieldLayoutTab(),

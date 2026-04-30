@@ -62,6 +62,21 @@ class NotificationElementTest extends TestCase
     }
 
     // ========================================================================= //
+    // Field layout
+    // ========================================================================= //
+
+    public function testGetFieldLayoutSetsType(): void
+    {
+        // Card View rendering calls $fieldLayout->type::cardAttributes(),
+        // which triggers "Class name must be a valid object or a string"
+        // when type is null. Regression test for issue #25.
+        $this->assertMatchesRegularExpression(
+            '/getFieldLayout\(\)[\s\S]*?\$fieldLayout->type\s*=\s*(static|self|Notification)::class/',
+            $this->notificationSource
+        );
+    }
+
+    // ========================================================================= //
     // Persisted attributes
     // ========================================================================= //
 

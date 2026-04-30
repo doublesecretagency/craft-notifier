@@ -19,6 +19,9 @@
 - The "Delete notification" action is now hidden from users without the "Delete notifications" permission.
 - Creating a notification draft now requires the "Save notifications" permission.
 
+### Fixed
+- Fixed a fatal error when viewing the Notifications index in Card View. ([#25](https://github.com/doublesecretagency/craft-notifier/issues/25))
+
 ## 2.1.0 - 2025-02-25
 
 ### Added
