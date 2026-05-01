@@ -17,3 +17,7 @@ Sends a notification for certain **Entry** events.
 ## [Assets](/events/types/assets)
 
 Sends a notification for certain **Asset** events.
+
+## [Commerce Orders](/events/types/commerce-orders)
+
+Sends a notification for certain **Commerce Order** events. Available when [Craft Commerce](https://plugins.craftcms.com/commerce) is installed.

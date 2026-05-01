@@ -674,8 +674,7 @@ class Dispatch extends Model
         $vars = [
             // Event Variables
             'event' => $this->event,
-            // Unique case for User Activated events
-            'object' => $this->event->user ?? $this->event->sender,
+            'object' => ($this->data['object'] ?? $this->event->sender),
             // People Variables
             'recipient' => $recipient,
             // Element Variables

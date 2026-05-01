@@ -2,6 +2,7 @@
 namespace doublesecretagency\notifier\tests\unit;
 
 use craft\base\Component;
+use craft\commerce\elements\Order;
 use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
@@ -97,6 +98,14 @@ class EventsServiceTest extends TestCase
         $this->assertTrue($this->reflection->getMethod('_registerUserEvents')->isPrivate());
     }
 
+    public function testHasPrivateCommerceOrderEventRegistrar(): void
+    {
+        // PR #33 introduced the helper for Commerce orders; it must be
+        // present and private (only registerNotificationEvents() invokes it).
+        $this->assertTrue($this->reflection->hasMethod('_registerCommerceOrderEvents'));
+        $this->assertTrue($this->reflection->getMethod('_registerCommerceOrderEvents')->isPrivate());
+    }
+
     // ========================================================================= //
     // Entry event coverage (source-level)
     // ========================================================================= //
@@ -175,6 +184,52 @@ class EventsServiceTest extends TestCase
     }
 
     // ========================================================================= //
+    // Commerce order event coverage (PR #33)
+    // ========================================================================= //
+
+    public function testGuardsCommerceRegistrationOnOrderClassExists(): void
+    {
+        // Commerce is optional; the registrar must only fire when the Order
+        // element class is present, otherwise installs without Commerce
+        // would fatal at boot.
+        $this->assertMatchesRegularExpression(
+            '/class_exists\(Order::class\)[\s\S]*?_registerCommerceOrderEvents/',
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersCommerceAfterCompleteOrder(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/Order::class[\s\S]*?Order::EVENT_AFTER_COMPLETE_ORDER/',
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersCommerceAfterOrderPaid(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/Order::class[\s\S]*?Order::EVENT_AFTER_ORDER_PAID/',
+            $this->eventsSource
+        );
+    }
+
+    public function testCommerceEventsDelegateToHelper(): void
+    {
+        // Both Commerce listeners must dispatch through the
+        // CommerceOrderEvents helper rather than inlining handler logic
+        // — keeps the service shape uniform with Entry/Asset/User.
+        $this->assertStringContainsString(
+            "[CommerceOrderEvents::class, 'afterCompleteOrder']",
+            $this->eventsSource
+        );
+        $this->assertStringContainsString(
+            "[CommerceOrderEvents::class, 'afterOrderPaid']",
+            $this->eventsSource
+        );
+    }
+
+    // ========================================================================= //
     // Filter list integrity
     // ========================================================================= //
 
@@ -210,5 +265,17 @@ class EventsServiceTest extends TestCase
         $this->assertStringContainsString('use ' . Entry::class, $this->eventsSource);
         $this->assertStringContainsString('use ' . Asset::class, $this->eventsSource);
         $this->assertStringContainsString('use ' . User::class, $this->eventsSource);
+    }
+
+    public function testImportsOrderAndCommerceHelper(): void
+    {
+        // The Commerce element class is referenced unguarded in the use
+        // statement (PHP autoload only resolves the class on demand), and
+        // the helper must be imported so the listener callback compiles.
+        $this->assertStringContainsString('use ' . Order::class, $this->eventsSource);
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\helpers\\events\\CommerceOrderEvents',
+            $this->eventsSource
+        );
     }
 }

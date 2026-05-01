@@ -103,8 +103,8 @@ class DispatchModelTest extends TestCase
 
     public function testFilterByEventTypeHandlesAllEventTypes(): void
     {
-        // The eventType switch must cover entries / users / assets — the
-        // three element types Notifier supports.
+        // The eventType switch must cover entries / users / assets / commerce-orders
+        // — the four event-type families Notifier supports.
         $this->assertMatchesRegularExpression(
             "/case\s+'entries'/",
             $this->dispatchSource
@@ -115,6 +115,10 @@ class DispatchModelTest extends TestCase
         );
         $this->assertMatchesRegularExpression(
             "/case\s+'assets'/",
+            $this->dispatchSource
+        );
+        $this->assertMatchesRegularExpression(
+            "/case\s+'commerce-orders'/",
             $this->dispatchSource
         );
     }
@@ -261,6 +265,31 @@ class DispatchModelTest extends TestCase
     {
         // The non-queued path calls $envelope->send() directly.
         $this->assertStringContainsString('$envelope->send()', $this->dispatchSource);
+    }
+
+    // ========================================================================= //
+    // Twig variable seeding
+    // ========================================================================= //
+
+    public function testParseTwigUsesDataObjectWithSenderFallback(): void
+    {
+        // PR #32 cleanup: every event type seeds `object` from the dispatch's
+        // own data array, falling back to the raw event sender. The earlier
+        // form special-cased User Activated events with a separate alias —
+        // the cleanup pass collapsed both paths into this single line.
+        $this->assertStringContainsString(
+            "'object' => (\$this->data['object'] ?? \$this->event->sender)",
+            $this->dispatchSource
+        );
+    }
+
+    public function testNoLegacyUniqueCaseCommentForUserActivated(): void
+    {
+        // The pre-cleanup source carried a "Unique case for User Activated
+        // events" comment above the special-case alias. The cleanup removed
+        // both the alias and the comment; pinning the comment's absence
+        // catches accidental reintroduction of the special case.
+        $this->assertStringNotContainsString('Unique case', $this->dispatchSource);
     }
 
     // ========================================================================= //

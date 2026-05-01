@@ -18,7 +18,7 @@ use doublesecretagency\notifier\NotifierPlugin;
 
 /**
  * Class CommerceOrderEvents
- * @since 2.2.0
+ * @since 3.0.0
  */
 class CommerceOrderEvents
 {
@@ -31,11 +31,10 @@ class CommerceOrderEvents
      */
     public static function afterCompleteOrder(Event $event): void
     {
+        // If sender isn't an Order, bail
         if (!($event->sender instanceof Order)) {
             return;
         }
-
-        $order = $event->sender;
 
         // Get all notifications for this event
         $notifications = Notification::find()
@@ -46,10 +45,7 @@ class CommerceOrderEvents
             ->all();
 
         // Send all matching notifications
-        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event, [
-            'object' => $order,
-            'order' => $order,
-        ]);
+        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
     }
 
     /**
@@ -60,11 +56,10 @@ class CommerceOrderEvents
      */
     public static function afterOrderPaid(Event $event): void
     {
+        // If sender isn't an Order, bail
         if (!($event->sender instanceof Order)) {
             return;
         }
-
-        $order = $event->sender;
 
         // Get all notifications for this event
         $notifications = Notification::find()
@@ -75,10 +70,7 @@ class CommerceOrderEvents
             ->all();
 
         // Send all matching notifications
-        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event, [
-            'object' => $order,
-            'order' => $order,
-        ]);
+        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
     }
 
 }

@@ -138,4 +138,30 @@ class SandboxPolicyTest extends TestCase
             $this->sandboxSource
         );
     }
+
+    // ========================================================================= //
+    // Notifier Twig extension registration (issue #29)
+    // ========================================================================= //
+
+    public function testSandboxViewRegistersTheNotifierTwigExtension(): void
+    {
+        // Without this registration, plugin-defined tags (skipMessage,
+        // setRecipients) are unknown to the sandbox's Twig parser and
+        // every message body using them throws "Unexpected '<tag>' tag".
+        // Regression guard for issue #29.
+        $this->assertMatchesRegularExpression(
+            '/new SandboxView\([\s\S]*?\'twigExtensionClasses\'\s*=>\s*\[[\s\S]*?Extension::class[\s\S]*?\][\s\S]*?\]\)/',
+            $this->sandboxSource
+        );
+    }
+
+    public function testExtensionClassIsImported(): void
+    {
+        // The Extension::class reference above only resolves to the
+        // Notifier extension if the use statement is present.
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\web\\twig\\Extension;',
+            $this->sandboxSource
+        );
+    }
 }

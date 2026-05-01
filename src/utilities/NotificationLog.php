@@ -157,18 +157,25 @@ class NotificationLog extends Utility
         // Initialize log for specified day
         $dayLog = [];
 
-        // Get system timezone
-        $systemTimeZone = new DateTimeZone(Craft::$app->timeZone);
-        $dateObj = new DateTime($date, $systemTimeZone);
+        // Get system and UTC timezones
+        $systemTz = new DateTimeZone(Craft::$app->timeZone);
+        $utc      = new DateTimeZone('UTC');
 
-        // Start and end of the day in system timezone
-        $startOfDay = (clone $dateObj)->setTime(0, 0, 0)->format('Y-m-d H:i:s');
-        $endOfDay = (clone $dateObj)->setTime(23, 59, 59)->format('Y-m-d H:i:s');
+        // Day boundaries in system timezone, converted to UTC for the query
+        $startOfDay = (new DateTime("{$date} 00:00:00", $systemTz))
+            ->setTimezone($utc)
+            ->format('Y-m-d H:i:s');
+
+        $startOfNextDay = (new DateTime("{$date} 00:00:00", $systemTz))
+            ->modify('+1 day')
+            ->setTimezone($utc)
+            ->format('Y-m-d H:i:s');
 
         // Get all envelopes on selected day
         $envelopes = Log::find()
             ->where(['type' => 'envelope'])
-            ->andWhere(['between', 'dateCreated', $startOfDay, $endOfDay])
+            ->andWhere(['>=', 'dateCreated', $startOfDay])
+            ->andWhere(['<',  'dateCreated', $startOfNextDay])
             ->orderBy('id')
             ->all();
 

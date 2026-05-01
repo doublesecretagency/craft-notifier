@@ -152,9 +152,10 @@ export default defineConfig({
             {text: 'Overview',        link: '/events/'},
             {text: 'All Event Types', link: '/events/types/',
               items: [
-                {text: 'Users',   link: '/events/types/users'},
-                {text: 'Entries', link: '/events/types/entries'},
-                {text: 'Assets',  link: '/events/types/assets'},
+                {text: 'Users',           link: '/events/types/users'},
+                {text: 'Entries',         link: '/events/types/entries'},
+                {text: 'Assets',          link: '/events/types/assets'},
+                {text: 'Commerce Orders', link: '/events/types/commerce-orders'},
               ]
             },
           ]

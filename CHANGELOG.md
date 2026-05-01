@@ -13,6 +13,8 @@
 - Added [`logRetentionDays`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by age.
 - Added [`logRetentionRecords`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by event count.
 - Added comprehensive unit tests.
+- Added trigger event ["When an order is completed (placed)"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
+- Added trigger event ["When an order is fully paid"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
 
 ### Changed
 - The Notification Log utility is now hidden from users without the "View notification log" permission.
@@ -21,6 +23,9 @@
 
 ### Fixed
 - Fixed a fatal error when viewing the Notifications index in Card View. ([#25](https://github.com/doublesecretagency/craft-notifier/issues/25))
+- Fixed bug where the Notification Log appeared empty on databases missing timezone tables. ([#30](https://github.com/doublesecretagency/craft-notifier/pull/30)) (thanks @chasegiunta)
+- Fixed bug where the `user` template alias was not set for the User Activated trigger. ([#31](https://github.com/doublesecretagency/craft-notifier/issues/31)) (thanks @chasegiunta)
+- Fixed `{% skipMessage %}` not being recognized inside the Twig sandbox. ([#29](https://github.com/doublesecretagency/craft-notifier/issues/29))
 
 ## 2.1.0 - 2025-02-25
 
