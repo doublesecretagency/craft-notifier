@@ -1,10 +1,10 @@
 ---
-description:
+description: Notifier supports four message types (Email, SMS text, control panel Announcement, and Flash Message).
 ---
 
 # All Message Types
 
-<img class="dropshadow" src="/images/messages/message-types.png" alt="" style="width:650px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/message-types.png" alt="" style="width:422px; margin-top:10px">
 
 ## [Email](/messages/types/email)
 

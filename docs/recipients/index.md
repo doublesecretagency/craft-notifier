@@ -1,5 +1,5 @@
 ---
-description:
+description: Each notification is sent to one or more recipients. Pick a recipient type to decide who receives the message.
 ---
 
 # Recipients

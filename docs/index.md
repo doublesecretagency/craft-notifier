@@ -1,4 +1,5 @@
 ---
+description: Send custom Twig messages when Craft events are triggered.
 # meta:
 # - property: og:type
 #   content: website

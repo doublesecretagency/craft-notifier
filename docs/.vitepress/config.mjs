@@ -37,18 +37,45 @@ export default defineConfig({
 
       {text: 'Getting Started', link: '/getting-started/'},
       {
-        text: 'How It Works',
+        text: 'Events',
+        activeMatch: '/events/',
         items: [
           {
             items: [
-              {text: 'Events',          link: '/events/'},
+              {text: 'Overview',        link: '/events/'},
               {text: 'All Event Types', link: '/events/types/'},
             ]
           },
           {
             items: [
-              {text: 'Messages',               link: '/messages/'},
-              {text: 'All Message Types',      link: '/messages/types/'},
+              {text: 'Users',           link: '/events/types/users'},
+              {text: 'Entries',         link: '/events/types/entries'},
+              {text: 'Assets',          link: '/events/types/assets'},
+              {text: 'Commerce Orders', link: '/events/types/commerce-orders'},
+            ]
+          },
+        ]
+      },
+      {
+        text: 'Messages',
+        activeMatch: '/messages/',
+        items: [
+          {
+            items: [
+              {text: 'Overview',          link: '/messages/'},
+              {text: 'All Message Types', link: '/messages/types/'},
+            ]
+          },
+          {
+            items: [
+              {text: 'Email',              link: '/messages/types/email'},
+              {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
+              {text: 'Announcement',       link: '/messages/types/announcement'},
+              {text: 'Flash Message',      link: '/messages/types/flash'},
+            ]
+          },
+          {
+            items: [
               {text: 'Message Templating',     link: '/messages/templating'},
               {text: 'Special Variables',      link: '/messages/variables'},
               {text: 'Skip Sending a Message', link: '/messages/skip'},
@@ -56,12 +83,28 @@ export default defineConfig({
               {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
             ]
           },
+        ]
+      },
+      {
+        text: 'Recipients',
+        activeMatch: '/recipients/',
+        items: [
           {
             items: [
-              {text: 'Recipients',          link: '/recipients/'},
-              {text: 'All Recipient Types', link: '/recipients/types/'}
+              {text: 'Overview',            link: '/recipients/'},
+              {text: 'All Recipient Types', link: '/recipients/types/'},
             ]
-          }
+          },
+          {
+            items: [
+              {text: 'Current User',       link: '/recipients/types/current-user'},
+              {text: 'All Users',          link: '/recipients/types/all-users'},
+              {text: 'All Admins',         link: '/recipients/types/all-admins'},
+              {text: 'Selected Groups',    link: '/recipients/types/selected-groups'},
+              {text: 'Selected Users',     link: '/recipients/types/selected-users'},
+              {text: 'Dynamic Recipients', link: '/recipients/types/dynamic-recipients'},
+            ]
+          },
         ]
       },
       {
@@ -136,9 +179,9 @@ export default defineConfig({
                 {text: 'Install via CLI',          link: '/getting-started/#installation-via-console-commands'}
               ]
             },
-            {text: 'Twilio',          link: '/getting-started/twilio'},
-            {text: 'Settings Page',   link: '/getting-started/settings'},
-            {text: 'PHP Config File', link: '/getting-started/config'},
+            {text: 'Twilio',           link: '/getting-started/twilio'},
+            {text: 'Settings Page',    link: '/getting-started/settings'},
+            {text: 'PHP Config File',  link: '/getting-started/config'},
             {text: 'User Permissions', link: '/getting-started/permissions'},
           ]
         }
@@ -152,10 +195,29 @@ export default defineConfig({
             {text: 'Overview',        link: '/events/'},
             {text: 'All Event Types', link: '/events/types/',
               items: [
-                {text: 'Users',           link: '/events/types/users'},
-                {text: 'Entries',         link: '/events/types/entries'},
-                {text: 'Assets',          link: '/events/types/assets'},
-                {text: 'Commerce Orders', link: '/events/types/commerce-orders'},
+                {text: 'Users', link: '/events/types/users', collapsed: true,
+                  items: [
+                    {text: 'New user is created', link: '/events/types/users/new-user-created'},
+                    {text: 'User is activated',   link: '/events/types/users/user-activated'},
+                  ]
+                },
+                {text: 'Entries', link: '/events/types/entries', collapsed: true,
+                  items: [
+                    {text: 'Entry is saved',      link: '/events/types/entries/entry-saved-per-site'},
+                    {text: 'Entry is propagated', link: '/events/types/entries/entry-saved-and-propagated'},
+                  ]
+                },
+                {text: 'Assets', link: '/events/types/assets', collapsed: true,
+                  items: [
+                    {text: 'New file is uploaded', link: '/events/types/assets/file-uploaded'},
+                  ]
+                },
+                {text: 'Commerce Orders', link: '/events/types/commerce-orders', collapsed: true,
+                  items: [
+                    {text: 'Order is completed',  link: '/events/types/commerce-orders/order-completed'},
+                    {text: 'Order is fully paid', link: '/events/types/commerce-orders/order-fully-paid'},
+                  ]
+                },
               ]
             },
           ]

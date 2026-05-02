@@ -1,5 +1,5 @@
 ---
-description:
+description: Send an SMS text message when the notification event is triggered. Requires a configured Twilio account.
 ---
 
 # SMS (Text Message)
@@ -16,8 +16,8 @@ In order to send SMS messages, you must have a fully configured [Twilio](/gettin
 
 <img class="dropshadow" src="/images/messages/sms-config.png" alt="" style="width:650px; margin-top:10px">
 
-<!--@include: @/messages/types/docs-links.md-->
-<!--@include: @/messages/types/queue-link.md-->
+<!--@include: @/messages/types/_docs-links.md-->
+<!--@include: @/messages/types/_queue-link.md-->
 
 ## SMS Recipients
 

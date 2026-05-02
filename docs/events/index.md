@@ -1,5 +1,5 @@
 ---
-description:
+description: Each notification is triggered by a Craft event. Browse the available trigger points and how they fit into the notification pipeline.
 ---
 
 # Events

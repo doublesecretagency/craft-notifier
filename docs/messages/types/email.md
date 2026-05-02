@@ -1,5 +1,5 @@
 ---
-description:
+description: Send a traditional email when the notification event is triggered. Configure subject, body, and recipients.
 ---
 
 # Email
@@ -12,8 +12,8 @@ Sends **an email** when the notification event is triggered.
 
 <img class="dropshadow" src="/images/messages/email-config.png" alt="" style="width:659px; margin-top:10px">
 
-<!--@include: @/messages/types/docs-links.md-->
-<!--@include: @/messages/types/queue-link.md-->
+<!--@include: @/messages/types/_docs-links.md-->
+<!--@include: @/messages/types/_queue-link.md-->
 
 ## Email Recipients
 

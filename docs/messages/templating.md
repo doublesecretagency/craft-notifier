@@ -1,5 +1,5 @@
 ---
-description:
+description: Compose message bodies with Twig. Notifier supports both standard tag syntax and a shorter object-syntax shortcut for common variables.
 ---
 
 # Message Templating
@@ -8,7 +8,7 @@ description:
 
 When composing Twig snippets for outgoing messages, most tags, filters, and functions will be available to you. It's worth noting, however, that messages are parsed in a secure [Twig Sandbox](/messages/twig-sandbox).
 
-There are two different ways to specify variables:
+There are two different ways to specify variables, **standard syntax (long)** and **object syntax (short)**:
 
 ```twig
 {# Standard syntax (long) #}

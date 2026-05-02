@@ -1,5 +1,5 @@
 ---
-description: 
+description: Send certain message types via Craft's job queue, or bypass the queue and dispatch immediately. The default behavior is recommended for most cases.
 ---
 
 # Optional Queue

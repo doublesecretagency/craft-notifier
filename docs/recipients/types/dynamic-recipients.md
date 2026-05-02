@@ -1,5 +1,5 @@
 ---
-description:
+description: Define recipients with a Twig snippet. Pass Users, email addresses, or phone numbers into the `setRecipients` tag and Notifier handles the rest.
 ---
 
 # Dynamic Recipients
@@ -36,31 +36,49 @@ If the `{% setRecipients %}` tag is run more than once, the results will be _add
 
 ## Basic Examples
 
+**Send to a specific email address**
+
 ```twig
-{# Send to a specific email address #}
 {% setRecipients 'bob@example.com' %}
 ```
+
+**Send to multiple recipients**
+
 ```twig
-{# Send to multiple recipients #}
 {% setRecipients ['alice@example.com', 'bob@example.com'] %}
 ```
+
+**Send to the person who saved the entry**
+
 ```twig
-{# Send to person who saved the entry #}
 {% setRecipients currentUser %}
 ```
+
+**Send to the author of the saved entry**
+
 ```twig
-{# Send to author of the saved entry #}
 {% setRecipients entry.author %}
 ```
+
+**Send to the person stored in a Users field**
+
 ```twig
-{# Send to person stored in a Users field #}
 {% setRecipients entry.assignedTo.one() %}
 ```
 
-## Advanced Examples
+**Send to the customer of a completed Commerce Order**
 
 ```twig
-{# Send to mixed recipient types (users & email addresses) #}
+{% setRecipients order.customer %}
+```
+
+For more on the Commerce Order pattern, see [When an order is completed](/events/types/commerce-orders/order-completed#notifying-the-customer).
+
+## Advanced Examples
+
+**Send to mixed recipient types (users and email addresses)**
+
+```twig
 {% setRecipients [
     currentUser,
     entry.author,
@@ -68,8 +86,10 @@ If the `{% setRecipients %}` tag is run more than once, the results will be _add
     'bob@example.com'
 ] %}
 ```
+
+**Build a list of recipients with custom logic**
+
 ```twig
-{# Build an array of recipients #}
 {% set allRecipients = [] %}
 
 {# Loop over all users watching this entry #}
@@ -77,12 +97,12 @@ If the `{% setRecipients %}` tag is run more than once, the results will be _add
 
     {# If the watcher has logged in within the past 30 days #}
     {% if user.lastLoginDate and user.lastLoginDate >= now|date_modify('-30 days') %}
-    
+
         {# Add watcher to the recipients array #}
         {% set allRecipients = allRecipients | merge([user]) %}
-        
+
     {% endif %}
-    
+
 {% endfor %}
 
 {# Send to compiled list of recipients #}

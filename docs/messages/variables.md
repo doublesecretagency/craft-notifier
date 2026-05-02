@@ -1,5 +1,5 @@
 ---
-description:
+description: Reference for the special Twig variables that Notifier exposes inside message templates and dynamic recipient snippets.
 ---
 
 # Special Variables
@@ -72,3 +72,31 @@ This can be very useful when comparing the `original` (pre-save) values to the `
 :::tip Optionally Skip Messages
 One major reason to compare `original` with `element` is to [optionally skip messages](/messages/skip) based on your own custom Twig logic.
 :::
+
+## Examples
+
+**Greet the recipient by name**
+
+```twig
+Hi {{ recipient.name }},
+```
+
+**Show what changed in the entry**
+
+```twig
+The title changed from "{{ original.title }}" to "{{ entry.title }}".
+```
+
+**Identify who triggered the notification**
+
+```twig
+{{ currentUser.fullName }} just updated "{{ entry.title }}".
+```
+
+**Skip the message when the recipient is the user who triggered it**
+
+```twig
+{% if currentUser.id == recipient.user.id %}
+    {% skipMessage "Don't notify the user who triggered the event." %}
+{% endif %}
+```

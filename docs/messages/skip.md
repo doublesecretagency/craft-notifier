@@ -1,5 +1,5 @@
 ---
-description:
+description: Use the `skipMessage` tag to conditionally skip sending a single message to an individual recipient.
 ---
 
 # Skip Sending a Message
@@ -30,13 +30,13 @@ Please note that this will skip **only a single recipient**, and will continue a
 Ultimately, if `skipMessage` is encountered for all recipients, no messages will be sent out.
 :::
 
-## Practical Examples
-
-Here are a few arbitrary examples of how you might skip a message...
-
 :::warning Use the Special Variables
 There are a wide variety of [special variables](/messages/variables) available in your Twig template, which can be used to help determine whether a particular message or recipient should be skipped.
 :::
+
+## Examples
+
+A few arbitrary examples of how you might skip a message...
 
 **Only send a message when the field value changes**
 

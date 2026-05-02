@@ -1,10 +1,10 @@
 ---
-description:
+description: Browse all available event categories (Users, Entries, Assets, and Commerce Orders) and their specific triggers.
 ---
 
 # All Event Types
 
-<img class="dropshadow" src="/images/events/event-types.png" alt="" style="width:433px; margin-top:10px">
+<img class="dropshadow" src="/images/events/event-types.png" alt="" style="width:422px; margin-top:10px">
 
 ## [Users](/events/types/users)
 

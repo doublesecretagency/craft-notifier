@@ -1,5 +1,5 @@
 ---
-description:
+description: Each notification carries a dynamic message you compose in Twig. Pick a message type and write what recipients will see.
 ---
 
 # Messages

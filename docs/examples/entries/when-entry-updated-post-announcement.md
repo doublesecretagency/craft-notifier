@@ -1,5 +1,5 @@
 ---
-description:
+description: Example notification setup that posts a control panel announcement whenever an Entry is updated.
 ---
 
 # When an Entry is updated, post CP announcement

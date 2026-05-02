@@ -1,5 +1,5 @@
 ---
-description: 
+description: Notifications are third-party elements within Craft, organized into Meta, Trigger, Message, and Recipients tabs for easy editing.
 ---
 
 # Notification Elements

@@ -1,5 +1,5 @@
 ---
-description: 
+description: Set up a Twilio account and connect it to Notifier so the plugin can send SMS text messages.
 ---
 
 # Configuring Twilio
