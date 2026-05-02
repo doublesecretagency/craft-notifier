@@ -17,6 +17,8 @@ use craft\elements\Entry;
 use craft\elements\User;
 use craft\commerce\elements\Order;
 use craft\events\RegisterComponentTypesEvent;
+use craft\services\Drafts;
+use craft\services\Elements;
 use craft\services\Users;
 use doublesecretagency\notifier\filters\DraftFilter;
 use doublesecretagency\notifier\filters\ElementEnabledFilter;
@@ -95,17 +97,24 @@ class Events extends Component
             Entry::EVENT_BEFORE_SAVE,
             [EntryEvents::class, 'beforeSave']
         );
-        // When an entry is saved (per each site)
+        // When an entry is saved (send one message per each site)
         Event::on(
             Entry::class,
             Entry::EVENT_AFTER_SAVE,
             [EntryEvents::class, 'afterSave']
         );
-        // When an entry is fully saved and propagated
+        // When an entry is saved and propagated (send one message)
         Event::on(
-            Entry::class,
-            Entry::EVENT_AFTER_PROPAGATE,
-            [EntryEvents::class, 'afterPropagate']
+            Elements::class,
+            Elements::EVENT_AFTER_SAVE_ELEMENT,
+            [EntryEvents::class, 'afterSaveElement']
+        );
+        // When a provisional draft is applied
+        // (the bridge above defers to here so the new revision is queryable)
+        Event::on(
+            Drafts::class,
+            Drafts::EVENT_AFTER_APPLY_DRAFT,
+            [EntryEvents::class, 'afterApplyDraft']
         );
     }
 

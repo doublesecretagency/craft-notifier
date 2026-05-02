@@ -18,7 +18,7 @@ Enter a custom Twig snippet to determine who will receive the message.
         name: 'recipientsConfig[dynamicRecipients]',
         value: (notification.recipientsConfig.dynamicRecipients ?? ''),
         rows: 4,
-    }, 'CodeEditor', {}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
     <div class="readable">
         <blockquote class="note tip">

@@ -776,32 +776,59 @@ class Dispatch extends Model
             ];
         }
 
-        // If sandbox is explicitly disabled
-        if (Sandbox::DISABLE === ($config['mode'] ?? null)) {
+        // Get the Sites service
+        $sitesService = Craft::$app->getSites();
 
-            /** @var View $view */
-            $view = Craft::$app->getView();
+        // Remember the request's current site
+        $previousSite = $sitesService->getCurrentSite();
 
-            // Ensure template is in "site" mode
-            $view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+        // Whether to render in the element's site context
+        $shouldSwitchSite = ($object instanceof Element && $object->siteId);
 
-            // If the Closure module is installed
-            if (Craft::$app->hasModule('closure')) {
-                // Add it to the default Craft Twig environment
-                \nystudio107\closure\Closure::getInstance()?->addClosure($view->getTwig());
+        // If so, switch to the element's site
+        if ($shouldSwitchSite) {
+            $sitesService->setCurrentSite($object->getSite());
+        }
+
+        try {
+            // If sandbox is explicitly disabled
+            if (Sandbox::DISABLE === ($config['mode'] ?? null)) {
+
+                /** @var View $view */
+                $view = Craft::$app->getView();
+
+                // Ensure template is in "site" mode
+                $view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+
+                // If the Closure module is installed
+                if (Craft::$app->hasModule('closure')) {
+                    // Add it to the default Craft Twig environment
+                    \nystudio107\closure\Closure::getInstance()?->addClosure($view->getTwig());
+                }
+
+                // Invalidate cached Twig globals so currentSite picks up the swapped site
+                $view->getTwig()->resetGlobals();
+
+                // Parse text via default Craft Twig environment
+                return $view->renderObjectTemplate($template, $object, $variables);
             }
 
-            // Parse text via default Craft Twig environment
-            return $view->renderObjectTemplate($template, $object, $variables);
-        }
+            // If sandboxed Twig environment doesn't exist, create it
+            if (!$this->_sandboxView) {
+                $this->_sandboxView = (new Sandbox(['config' => $config]))->view;
+            }
 
-        // If sandboxed Twig environment doesn't exist, create it
-        if (!$this->_sandboxView) {
-            $this->_sandboxView = (new Sandbox(['config' => $config]))->view;
-        }
+            // Invalidate cached Twig globals so currentSite picks up the swapped site
+            $this->_sandboxView->getTwig()->resetGlobals();
 
-        // Parse text via sandbox environment
-        return $this->_sandboxView->renderObjectTemplate($template, $object, $variables);
+            // Parse text via sandbox environment
+            return $this->_sandboxView->renderObjectTemplate($template, $object, $variables);
+        } finally {
+            // Restore the request's original current site
+            if ($shouldSwitchSite) {
+                $sitesService->setCurrentSite($previousSite);
+            }
+        }
     }
 
     // ========================================================================= //

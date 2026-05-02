@@ -251,6 +251,52 @@ class DispatchModelTest extends TestCase
     }
 
     // ========================================================================= //
+    // Site-aware rendering
+    // ========================================================================= //
+
+    public function testRenderSwitchesToElementSite(): void
+    {
+        // The per-site trigger fires once per site, but the request's current
+        // site stays constant across firings — without an explicit switch,
+        // currentSite, entry.url, and other site-aware globals all resolve
+        // against the request's site instead of the entry's. _renderObjectTemplate
+        // must call setCurrentSite($object->getSite()) when the object is an
+        // Element with a siteId.
+        $this->assertMatchesRegularExpression(
+            '/\$object\s+instanceof\s+Element[\s\S]*?->setCurrentSite\(\$object->getSite\(\)\)/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testRenderRestoresPreviousSiteAfterRender(): void
+    {
+        // Whatever site the request started on must be restored once the
+        // render completes, otherwise the rest of the request (and any
+        // subsequent envelope rendered in the same Dispatch) would inherit
+        // the swapped site.
+        $this->assertMatchesRegularExpression(
+            '/finally\s*\{[\s\S]*?->setCurrentSite\(\$previousSite\)/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testRenderResetsTwigGlobalsCacheBeforeEachRender(): void
+    {
+        // Twig caches resolvedGlobals on first access (Environment.php:898-903).
+        // Without resetGlobals(), the second render in the same request reads a
+        // stale currentSite from the cache even though setCurrentSite() was
+        // called. Both branches (Craft View and SandboxView) must reset.
+        $this->assertMatchesRegularExpression(
+            '/\$view->getTwig\(\)->resetGlobals\(\)[\s\S]*?\$view->renderObjectTemplate/',
+            $this->dispatchSource
+        );
+        $this->assertMatchesRegularExpression(
+            '/\$this->_sandboxView->getTwig\(\)->resetGlobals\(\)[\s\S]*?\$this->_sandboxView->renderObjectTemplate/',
+            $this->dispatchSource
+        );
+    }
+
+    // ========================================================================= //
     // Queue dispatch
     // ========================================================================= //
 

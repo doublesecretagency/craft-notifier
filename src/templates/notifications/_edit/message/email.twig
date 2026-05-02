@@ -33,7 +33,7 @@
         name: 'messageConfig[emailMessage]',
         value: (notification.messageConfig.emailMessage ?? null),
         errors: notification.getErrors('messageConfig[emailMessage]'),
-    }, 'CodeEditor', {}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
     <hr>
 

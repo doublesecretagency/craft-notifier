@@ -52,14 +52,14 @@ abstract class Options
         ],
         'entries' => [
             [
-                'label' => 'When an entry is saved (per each site)',
+                'label' => 'When an entry is saved (send one message per each site)',
                 'value' => 'after-save',
                 'class' => 'craft\elements\Entry::EVENT_AFTER_SAVE'
             ],
             [
-                'label' => 'When an entry is fully saved and propagated',
+                'label' => 'When an entry is saved and propagated (send one message)',
                 'value' => 'after-propagate',
-                'class' => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE'
+                'class' => 'craft\services\Elements::EVENT_AFTER_SAVE_ELEMENT'
             ],
 //            [
 //                'label' => 'When an entry is deleted',

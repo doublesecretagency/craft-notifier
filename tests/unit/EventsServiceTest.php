@@ -6,6 +6,8 @@ use craft\commerce\elements\Order;
 use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
+use craft\services\Drafts;
+use craft\services\Elements;
 use doublesecretagency\notifier\filters\DraftFilter;
 use doublesecretagency\notifier\filters\ElementEnabledFilter;
 use doublesecretagency\notifier\filters\FirstSaveFilter;
@@ -126,12 +128,64 @@ class EventsServiceTest extends TestCase
         );
     }
 
-    public function testRegistersEntryAfterPropagate(): void
+    public function testRegistersEntryAfterSaveElement(): void
     {
+        // The "saved and propagated" trigger listens on the service-level
+        // EVENT_AFTER_SAVE_ELEMENT (post-commit, post-revision-creation) so that
+        // notification templates can resolve {{ entry.currentRevision }}. Issue #7.
         $this->assertMatchesRegularExpression(
+            '/Elements::class[\s\S]*?Elements::EVENT_AFTER_SAVE_ELEMENT/',
+            $this->eventsSource
+        );
+    }
+
+    public function testEntryAfterSaveElementDelegatesToBridgeHelper(): void
+    {
+        // Must dispatch through the EntryEvents::afterSaveElement bridge so the
+        // propagating-flag guard runs and the ElementEvent gets translated to
+        // the ModelEvent shape expected by the rest of the dispatch pipeline.
+        $this->assertStringContainsString(
+            "[EntryEvents::class, 'afterSaveElement']",
+            $this->eventsSource
+        );
+    }
+
+    public function testEntryAfterSaveElementNoLongerListensOnEntryClass(): void
+    {
+        // The replaced listener must not still be registered on the Entry
+        // class, otherwise the propagate event would fire twice — once at the
+        // pre-commit per-element layer and again at the post-commit service
+        // layer.
+        $this->assertDoesNotMatchRegularExpression(
             '/Entry::class[\s\S]*?Entry::EVENT_AFTER_PROPAGATE/',
             $this->eventsSource
         );
+    }
+
+    public function testRegistersDraftsAfterApplyDraft(): void
+    {
+        // Apply-draft fires EVENT_AFTER_SAVE_ELEMENT *before* createRevision()
+        // has run on the duplicated canonical (Craft defers afterPropagate via
+        // the duplicateOf guard). The afterSaveElement handler skips that case
+        // and defers to this listener, which fires after applyDraft completes
+        // and the revision is queryable.
+        $this->assertMatchesRegularExpression(
+            '/Drafts::class[\s\S]*?Drafts::EVENT_AFTER_APPLY_DRAFT/',
+            $this->eventsSource
+        );
+    }
+
+    public function testDraftsAfterApplyDraftDelegatesToBridgeHelper(): void
+    {
+        $this->assertStringContainsString(
+            "[EntryEvents::class, 'afterApplyDraft']",
+            $this->eventsSource
+        );
+    }
+
+    public function testImportsDraftsService(): void
+    {
+        $this->assertStringContainsString('use ' . Drafts::class, $this->eventsSource);
     }
 
     // ========================================================================= //
@@ -265,6 +319,13 @@ class EventsServiceTest extends TestCase
         $this->assertStringContainsString('use ' . Entry::class, $this->eventsSource);
         $this->assertStringContainsString('use ' . Asset::class, $this->eventsSource);
         $this->assertStringContainsString('use ' . User::class, $this->eventsSource);
+    }
+
+    public function testImportsElementsService(): void
+    {
+        // The Elements service is needed for the Elements::EVENT_AFTER_SAVE_ELEMENT
+        // listener that drives the "saved and propagated" trigger.
+        $this->assertStringContainsString('use ' . Elements::class, $this->eventsSource);
     }
 
     public function testImportsOrderAndCommerceHelper(): void

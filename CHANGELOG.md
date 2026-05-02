@@ -20,8 +20,12 @@
 - The Notification Log utility is now hidden from users without the "View notification log" permission.
 - The "Delete notification" action is now hidden from users without the "Delete notifications" permission.
 - Creating a notification draft now requires the "Save notifications" permission.
+- Renamed the entry trigger labels for clarity.
+- The "saved and propagated" trigger now fires after the entry-save transaction commits.
 
 ### Fixed
+- Fixed `{{ entry.currentRevision }}` returning `null` in notification templates. ([#7](https://github.com/doublesecretagency/craft-notifier/issues/7))
+- Fixed per-site notifications rendering with the request's current site, instead of the entry's site.
 - Fixed a fatal error when viewing the Notifications index in Card View. ([#25](https://github.com/doublesecretagency/craft-notifier/issues/25))
 - Fixed bug where the Notification Log appeared empty on databases missing timezone tables. ([#30](https://github.com/doublesecretagency/craft-notifier/pull/30)) (thanks @chasegiunta)
 - Fixed bug where the `user` template alias was not set for the User Activated trigger. ([#31](https://github.com/doublesecretagency/craft-notifier/issues/31)) (thanks @chasegiunta)
