@@ -5,6 +5,9 @@
 ### Added
 - Added the [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) recipient type.
 - Added a `{% setRecipients %}` Twig tag for use inside Dynamic Recipients snippets.
+- Added field-level [conditions](https://craftcms.com/docs/5.x/extend/conditions.html) to all element events.
+- Added trigger event ["When an order is completed (placed)"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
+- Added trigger event ["When an order is fully paid"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
 - Added user permissions for viewing, saving, and deleting notifications. ([#28](https://github.com/doublesecretagency/craft-notifier/issues/28))
 - Added user permissions for authoring Dynamic Recipients snippets.
 - Added user permissions for viewing and deleting the notification log.
@@ -13,8 +16,6 @@
 - Added [`logRetentionDays`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by age.
 - Added [`logRetentionRecords`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by event count.
 - Added comprehensive unit tests.
-- Added trigger event ["When an order is completed (placed)"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
-- Added trigger event ["When an order is fully paid"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
 
 ### Changed
 - The Notification Log utility is now hidden from users without the "View notification log" permission.

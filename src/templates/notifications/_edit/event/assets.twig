@@ -8,5 +8,11 @@
         name: 'event[assets]',
         value: notification.event,
         options: {'':''}|merge(notificationOptions.allEvents['assets']),
+        toggle: true,
+        targetPrefix: '.assets-event-',
     }) }}
+    {# Hidden until an Assets Event is selected #}
+    <div class="assets-event-after-propagate hidden">
+        {% include 'notifier/notifications/_edit/event/_condition' with { eventType: 'assets' } %}
+    </div>
 </div>

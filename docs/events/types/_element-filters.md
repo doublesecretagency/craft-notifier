@@ -1,11 +1,5 @@
-## Element filters
+## Element Filters
 
-The standard element filters apply to this trigger. Each filter can be set to require the condition to be true, false, or ignored:
+Element filters gate the notification on **lifecycle-state checks** against the saved element. Each filter is tri-state: require it to be `true`, require it to be `false`, or ignore it. Useful for firing only on first saves, or for skipping drafts and revisions.
 
-- **Element is enabled**
-- **Element is being saved for the first time**
-- **Element is a draft**
-- **Element is a provisional draft**
-- **Element is a revision**
-
-<img class="dropshadow" src="/images/events/entry-event-filters.png" alt="" style="width:571px; margin-top:10px">
+<img class="dropshadow" src="/images/events/entry-event-filters.png" alt="" style="width:584px; margin-top:10px">

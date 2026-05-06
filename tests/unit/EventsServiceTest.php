@@ -3,9 +3,13 @@ namespace doublesecretagency\notifier\tests\unit;
 
 use craft\base\Component;
 use craft\commerce\elements\Order;
+use craft\commerce\elements\conditions\orders\OrderCondition;
 use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
+use craft\elements\conditions\assets\AssetCondition;
+use craft\elements\conditions\entries\EntryCondition;
+use craft\elements\conditions\users\UserCondition;
 use craft\services\Drafts;
 use craft\services\Elements;
 use doublesecretagency\notifier\filters\DraftFilter;
@@ -338,5 +342,177 @@ class EventsServiceTest extends TestCase
             'use doublesecretagency\\notifier\\helpers\\events\\CommerceOrderEvents',
             $this->eventsSource
         );
+    }
+
+    // ========================================================================= //
+    // Element-condition class resolution
+    // ========================================================================= //
+
+    public function testHasGetConditionClassForEventTypeMethod(): void
+    {
+        // Notifier exposes Craft's element-conditions framework on a per-event-type
+        // basis. The resolver maps an event type string to the matching condition
+        // class so Notification::getEventCondition() can hydrate the right shape.
+        $this->assertTrue($this->reflection->hasMethod('getConditionClassForEventType'));
+        $this->assertTrue(
+            $this->reflection->getMethod('getConditionClassForEventType')->isPublic()
+        );
+    }
+
+    public function testGetConditionClassForEventTypeReturnsEntryConditionForEntries(): void
+    {
+        // Pure unit: the resolver is a string-to-string match with no Craft
+        // boot required. The 'entries' branch must wire to EntryCondition.
+        $service = new Events();
+        $this->assertSame(
+            EntryCondition::class,
+            $service->getConditionClassForEventType('entries')
+        );
+    }
+
+    public function testGetConditionClassForEventTypeReturnsAssetConditionForAssets(): void
+    {
+        $service = new Events();
+        $this->assertSame(
+            AssetCondition::class,
+            $service->getConditionClassForEventType('assets')
+        );
+    }
+
+    public function testGetConditionClassForEventTypeReturnsUserConditionForUsers(): void
+    {
+        $service = new Events();
+        $this->assertSame(
+            UserCondition::class,
+            $service->getConditionClassForEventType('users')
+        );
+    }
+
+    public function testGetConditionClassForEventTypeReturnsOrderConditionWhenCommerceInstalled(): void
+    {
+        // Commerce is optional. In this sandbox it's installed, so the resolver
+        // must return OrderCondition. Installs without Commerce would see null —
+        // that branch is regression-protected by the class_exists guard below.
+        $service = new Events();
+        $this->assertSame(
+            OrderCondition::class,
+            $service->getConditionClassForEventType('commerce-orders')
+        );
+    }
+
+    public function testGetConditionClassForEventTypeGuardsCommerceMappingOnClassExists(): void
+    {
+        // The commerce-orders branch must be guarded so installs without
+        // Commerce do not trigger an autoload error when the resolver runs.
+        $this->assertMatchesRegularExpression(
+            "/'commerce-orders'[\s\S]*?class_exists\(OrderCondition::class\)/",
+            $this->eventsSource
+        );
+    }
+
+    public function testGetConditionClassForEventTypeReturnsNullForUnknownTypes(): void
+    {
+        // Defensive default — every other string falls through to null so
+        // callers can cleanly short-circuit when no condition is configured.
+        $service = new Events();
+        $this->assertNull($service->getConditionClassForEventType('not-a-real-type'));
+        $this->assertNull($service->getConditionClassForEventType(''));
+    }
+
+    public function testImportsEntryConditionClass(): void
+    {
+        $this->assertStringContainsString('use ' . EntryCondition::class, $this->eventsSource);
+    }
+
+    public function testImportsAssetConditionClass(): void
+    {
+        $this->assertStringContainsString('use ' . AssetCondition::class, $this->eventsSource);
+    }
+
+    public function testImportsUserConditionClass(): void
+    {
+        $this->assertStringContainsString('use ' . UserCondition::class, $this->eventsSource);
+    }
+
+    public function testImportsOrderConditionClass(): void
+    {
+        // Commerce is optional, but PHP autoload only resolves the class on
+        // demand, so unguarded use statements are safe.
+        $this->assertStringContainsString('use ' . OrderCondition::class, $this->eventsSource);
+    }
+
+    // ========================================================================= //
+    // Element class resolution (seeds ElementCondition::$elementType)
+    // ========================================================================= //
+
+    public function testHasGetElementClassForEventTypeMethod(): void
+    {
+        // The condition slot must seed `elementType` on the hydrated condition,
+        // otherwise `ElementCondition::selectableConditionRules()` skips both
+        // the per-field rule loop and the element-type-aware base rules
+        // (Status, Title, Uri, HasUrl). The resolver lives next to its
+        // condition-class sibling on the Events service.
+        $this->assertTrue($this->reflection->hasMethod('getElementClassForEventType'));
+        $this->assertTrue(
+            $this->reflection->getMethod('getElementClassForEventType')->isPublic()
+        );
+    }
+
+    public function testGetElementClassForEventTypeReturnsEntryForEntries(): void
+    {
+        $service = new Events();
+        $this->assertSame(
+            Entry::class,
+            $service->getElementClassForEventType('entries')
+        );
+    }
+
+    public function testGetElementClassForEventTypeReturnsAssetForAssets(): void
+    {
+        $service = new Events();
+        $this->assertSame(
+            Asset::class,
+            $service->getElementClassForEventType('assets')
+        );
+    }
+
+    public function testGetElementClassForEventTypeReturnsUserForUsers(): void
+    {
+        $service = new Events();
+        $this->assertSame(
+            User::class,
+            $service->getElementClassForEventType('users')
+        );
+    }
+
+    public function testGetElementClassForEventTypeReturnsOrderWhenCommerceInstalled(): void
+    {
+        // Commerce is optional. In this sandbox it's installed, so the resolver
+        // must return Order. Installs without Commerce would see null — that
+        // branch is regression-protected by the class_exists guard below.
+        $service = new Events();
+        $this->assertSame(
+            Order::class,
+            $service->getElementClassForEventType('commerce-orders')
+        );
+    }
+
+    public function testGetElementClassForEventTypeGuardsCommerceMappingOnClassExists(): void
+    {
+        // The commerce-orders branch must be guarded so installs without
+        // Commerce do not trigger an autoload error when the resolver runs.
+        $this->assertMatchesRegularExpression(
+            "/'commerce-orders'[\s\S]*?class_exists\(Order::class\)/",
+            $this->eventsSource
+        );
+    }
+
+    public function testGetElementClassForEventTypeReturnsNullForUnknownTypes(): void
+    {
+        // Defensive default — every other string falls through to null so
+        // callers can cleanly short-circuit when no element type is configured.
+        $service = new Events();
+        $this->assertNull($service->getElementClassForEventType('not-a-real-type'));
+        $this->assertNull($service->getElementClassForEventType(''));
     }
 }

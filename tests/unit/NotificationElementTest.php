@@ -2,11 +2,13 @@
 namespace doublesecretagency\notifier\tests\unit;
 
 use craft\base\Element;
+use craft\elements\conditions\ElementConditionInterface;
 use doublesecretagency\notifier\elements\conditions\NotificationCondition;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
 use doublesecretagency\notifier\elements\Notification;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionNamedType;
 
 /**
  * Structural tests for the Notification element type.
@@ -279,6 +281,177 @@ class NotificationElementTest extends TestCase
         // re-fire a notification; it must hand off to the Messages service.
         $this->assertStringContainsString(
             '->messages->send($this, $event)',
+            $this->notificationSource
+        );
+    }
+
+    // ========================================================================= //
+    // Craft element-condition slot
+    // ========================================================================= //
+
+    public function testHasGetEventConditionMethod(): void
+    {
+        // The condition slot is the entry point used by both the builder
+        // template (CP rendering) and Dispatch (dispatch-time match check).
+        // Renaming or removing it would break both surfaces.
+        $this->assertTrue($this->reflection->hasMethod('getEventCondition'));
+        $this->assertTrue($this->reflection->getMethod('getEventCondition')->isPublic());
+    }
+
+    public function testGetEventConditionReturnsNullableElementCondition(): void
+    {
+        // Returns ?ElementConditionInterface so callers can short-circuit when
+        // the event type has no first-party condition support.
+        $returnType = $this->reflection->getMethod('getEventCondition')->getReturnType();
+        $this->assertInstanceOf(ReflectionNamedType::class, $returnType);
+        $this->assertSame(ElementConditionInterface::class, $returnType->getName());
+        $this->assertTrue($returnType->allowsNull());
+    }
+
+    public function testGetEventConditionAcceptsOptionalForEventTypeParam(): void
+    {
+        // The notification edit screen renders a builder per event-type tab,
+        // so getEventCondition() must accept an explicit event-type override.
+        // Dispatch-time callers omit the arg and fall back to $this->eventType.
+        $params = $this->reflection->getMethod('getEventCondition')->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertSame('forEventType', $params[0]->getName());
+        $this->assertTrue($params[0]->isOptional());
+        $this->assertNull($params[0]->getDefaultValue());
+
+        // Type must be ?string (nullable string)
+        $type = $params[0]->getType();
+        $this->assertInstanceOf(ReflectionNamedType::class, $type);
+        $this->assertSame('string', $type->getName());
+        $this->assertTrue($type->allowsNull());
+    }
+
+    public function testGetEventConditionRebindsClassFromResolver(): void
+    {
+        // The hydrated config must always re-bind 'class' to whatever the
+        // events service resolves, so a stale persisted config (e.g. swapped
+        // condition class between releases) doesn't blow up at hydrate time.
+        $this->assertStringContainsString(
+            "\$config['class'] = \$class;",
+            $this->notificationSource
+        );
+    }
+
+    public function testGetEventConditionUsesConditionsService(): void
+    {
+        // Single hydration call — Craft's Conditions service knows how to
+        // unwrap the {config: "<json>"} shape produced by the builder POST
+        // and reconstruct the rule list.
+        $this->assertStringContainsString(
+            'getConditions()->createCondition(',
+            $this->notificationSource
+        );
+    }
+
+    public function testGetEventConditionSeedsElementType(): void
+    {
+        // Without an `elementType` on the config, ElementCondition's rule
+        // loop short-circuits at line 180 — every per-field rule and every
+        // element-type-aware base rule (Status, Title, Uri, HasUrl) drops
+        // out, leaving only the misleadingly-named nested-entry "Field" rule
+        // and a handful of generic rules. Hydration must call into the
+        // events service's element-class resolver and assign the result
+        // before passing the config to Conditions::createCondition().
+        $this->assertMatchesRegularExpression(
+            "/getElementClassForEventType\([\s\S]*?\\\$config\['elementType'\]\s*=/",
+            $this->notificationSource
+        );
+    }
+
+    public function testGetEventConditionPinsPerTypeBuilderInputName(): void
+    {
+        // Per-event-type form name and DOM id let all four event-type tabs
+        // render their builders simultaneously without colliding. The active
+        // tab's POST is relocated into $eventConfig['condition'] in afterSave().
+        // Plain (non-bracketed) names are still required because the builder's
+        // htmx selectors break when bracketed names get encoded into CSS targets.
+        $this->assertStringContainsString(
+            "\$condition->name = \"eventCondition_{\$forEventType}\"",
+            $this->notificationSource
+        );
+        $this->assertStringContainsString(
+            "\$condition->id = \"event-condition-{\$forEventType}\"",
+            $this->notificationSource
+        );
+    }
+
+    public function testGetEventConditionOnlySeedsPersistedConfigForActiveEventType(): void
+    {
+        // When a builder is rendered for an event type other than the saved
+        // one, the persisted eventConfig['condition'] (whose rule classes
+        // belong to a different ElementCondition class) must be ignored, or
+        // hydration will throw. Inactive tabs always start fresh.
+        $this->assertMatchesRegularExpression(
+            "/\\\$forEventType\s*===\s*\\(string\\)\s*\\\$this->eventType[\s\S]*?\\\$this->eventConfig\\['condition'\\][\s\S]*?'class'\s*=>\s*\\\$class/",
+            $this->notificationSource
+        );
+    }
+
+    public function testGetEventConditionUsesDivMainTag(): void
+    {
+        // BaseCondition defaults mainTag to <form>, but the notification edit
+        // screen is already a <form>. Nested forms silently break the htmx
+        // rule-swap behavior (the request fires but never re-renders). Pinning
+        // mainTag to 'div' matches Craft's inline usage in FieldLayoutComponent.
+        $this->assertStringContainsString(
+            "\$condition->mainTag = 'div'",
+            $this->notificationSource
+        );
+    }
+
+    public function testAfterSaveMergesEventConditionIntoEventConfig(): void
+    {
+        // Each event-type tab posts its condition under a per-type key
+        // (eventCondition_entries, eventCondition_assets, etc.). afterSave
+        // must read only the one matching the selected event type, then
+        // relocate it into $eventConfig['condition'] so persistence and
+        // hydration land at the canonical key.
+        $this->assertMatchesRegularExpression(
+            '/getBodyParam\\("eventCondition_\\{\\$selectedEventType\\}"\\)[\s\S]*?\\$eventConfig\\[\'condition\'\\]\s*=\s*\\$eventCondition/',
+            $this->notificationSource
+        );
+    }
+
+    public function testResolveConditionFieldLayoutsIsScopedToEntries(): void
+    {
+        // v1 only attaches field layouts for entry events. Asset / user
+        // event types fall back to the condition's default getFieldLayouts().
+        // Now keyed off the per-type override so the scope check applies to
+        // whichever tab is being rendered, not just the saved event type.
+        $this->assertMatchesRegularExpression(
+            "/_resolveConditionFieldLayouts[\s\S]*?'entries'\s*!==\s*\\\$forEventType/",
+            $this->notificationSource
+        );
+    }
+
+    public function testResolveConditionFieldLayoutsAcceptsOptionalForEventTypeParam(): void
+    {
+        // Same per-type override pattern as getEventCondition(): an explicit
+        // event-type override for builder rendering, falling back to the
+        // saved event type for evaluation-time callers.
+        $params = $this->reflection->getMethod('_resolveConditionFieldLayouts')->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertSame('forEventType', $params[0]->getName());
+        $this->assertTrue($params[0]->isOptional());
+        $this->assertNull($params[0]->getDefaultValue());
+
+        $type = $params[0]->getType();
+        $this->assertInstanceOf(ReflectionNamedType::class, $type);
+        $this->assertSame('string', $type->getName());
+        $this->assertTrue($type->allowsNull());
+    }
+
+    public function testResolveConditionFieldLayoutsBranchesOnCraftVersion(): void
+    {
+        // Craft 5 uses getEntries(); Craft 4 uses getSections(). The Compat
+        // helper toggles the call site so the helper compiles on both.
+        $this->assertMatchesRegularExpression(
+            '/Compat::isCraft5\(\)[\s\S]*?getEntries\(\)[\s\S]*?getSections\(\)/',
             $this->notificationSource
         );
     }

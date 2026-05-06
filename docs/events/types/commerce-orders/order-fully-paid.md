@@ -12,6 +12,8 @@ If an order is refunded, and returns to zero once again, another notification wi
 This trigger is only available when [Craft Commerce](https://plugins.craftcms.com/commerce) is installed. The event type is hidden from the dropdown otherwise.
 :::
 
+<!--@include: @/events/types/_field-conditions.md-->
+
 ## Twig variables
 
 The `object` variable (and its `order` alias) is the paid [Order](https://docs.craftcms.com/commerce/api/v5/craft-commerce-elements-order.html).

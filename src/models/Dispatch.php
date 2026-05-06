@@ -13,6 +13,7 @@ namespace doublesecretagency\notifier\models;
 
 use Craft;
 use craft\base\Element;
+use craft\base\ElementInterface;
 use craft\base\Model;
 use craft\helpers\Queue;
 use craft\helpers\StringHelper;
@@ -182,17 +183,47 @@ class Dispatch extends Model
         // Filter further by event type
         switch ($this->notification->eventType) {
             case 'entries':
-                // Check entries filters
-                return $this->_filterEntries();
+                if (!$this->_filterEntries()) {
+                    return false;
+                }
+                break;
             case 'users':
             case 'assets':
             case 'commerce-orders':
-                // No further filters
-                return true;
+                // No event-type-specific filters; condition gate runs below
+                break;
+            default:
+                // Invalid event type
+                return false;
         }
 
-        // Invalid event type
-        return false;
+        // Apply the optional Craft element condition
+        return $this->_matchEventCondition();
+    }
+
+    /**
+     * Match the saved element against the optional Craft element condition.
+     *
+     * @return bool
+     */
+    private function _matchEventCondition(): bool
+    {
+        $condition = $this->notification->getEventCondition();
+
+        // If no condition is configured, dispatch is unaffected
+        if (!$condition) {
+            return true;
+        }
+
+        // Match Twig variable seeding precedence (object covers bridged events like User Activated)
+        $element = ($this->data['object'] ?? $this->event->sender);
+
+        // If the subject is not an element, the condition can't evaluate
+        if (!($element instanceof ElementInterface)) {
+            return true;
+        }
+
+        return $condition->matchElement($element);
     }
 
     /**

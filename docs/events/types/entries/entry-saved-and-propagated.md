@@ -12,9 +12,11 @@ The event fires after the save transaction has committed and after the new revis
 
 This trigger is filterable by **sections and entry types** and the [standard element filters](#element-filters).
 
-<img class="dropshadow" src="/images/events/section-filters.png" alt="" style="width:570px; margin-top:10px">
+<img class="dropshadow" src="/images/events/section-filters.png" alt="" style="width:632px; margin-top:10px">
 
 <!--@include: @/events/types/_element-filters.md-->
+
+<!--@include: @/events/types/_field-conditions.md-->
 
 ## Twig variables
 

@@ -15,7 +15,11 @@ use craft\base\Component;
 use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
+use craft\elements\conditions\assets\AssetCondition;
+use craft\elements\conditions\entries\EntryCondition;
+use craft\elements\conditions\users\UserCondition;
 use craft\commerce\elements\Order;
+use craft\commerce\elements\conditions\orders\OrderCondition;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Drafts;
 use craft\services\Elements;
@@ -215,6 +219,46 @@ class Events extends Component
         $this->trigger(self::EVENT_REGISTER_FILTER_TYPES, $event);
 
         return $event->types;
+    }
+
+    /**
+     * Get the Craft element-condition class for a given event type.
+     *
+     * @param string $eventType
+     * @return string|null Fully-qualified ElementConditionInterface class, or null when unsupported.
+     */
+    public function getConditionClassForEventType(string $eventType): ?string
+    {
+        return match ($eventType) {
+            // Native
+            'entries' => EntryCondition::class,
+            'assets'  => AssetCondition::class,
+            'users'   => UserCondition::class,
+            // Plugins
+            'commerce-orders' => class_exists(OrderCondition::class) ? OrderCondition::class : null,
+            default => null,
+        };
+    }
+
+    /**
+     * Get the Craft element class for a given event type.
+     *
+     * Seeds `ElementCondition::$elementType` so per-field rules register at hydrate time.
+     *
+     * @param string $eventType
+     * @return string|null Fully-qualified ElementInterface class, or null when unsupported.
+     */
+    public function getElementClassForEventType(string $eventType): ?string
+    {
+        return match ($eventType) {
+            // Native
+            'entries' => Entry::class,
+            'assets'  => Asset::class,
+            'users'   => User::class,
+            // Plugins
+            'commerce-orders' => class_exists(Order::class) ? Order::class : null,
+            default => null,
+        };
     }
 
 

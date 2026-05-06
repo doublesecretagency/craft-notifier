@@ -8,5 +8,11 @@
         name: 'event[commerce-orders]',
         value: notification.event,
         options: {'':''}|merge(notificationOptions.allEvents['commerce-orders'] ?? []),
+        toggle: true,
+        targetPrefix: '.commerce-orders-event-',
     }) }}
+    {# Hidden until a Commerce Orders Event is selected #}
+    <div class="commerce-orders-event-after-complete-order commerce-orders-event-after-order-paid hidden">
+        {% include 'notifier/notifications/_edit/event/_condition' with { eventType: 'commerce-orders' } %}
+    </div>
 </div>

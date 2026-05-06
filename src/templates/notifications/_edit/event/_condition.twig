@@ -1,0 +1,27 @@
+{% import '_includes/forms' as forms %}
+
+{# Shared condition builder, included once per event-type tab #}
+{% set condition = notification.getEventCondition(eventType) %}
+
+{% if condition %}
+    {# Per-type field id avoids collisions across multiple tabs #}
+    {% set fieldId = "eventCondition_#{eventType}" %}
+
+    {% set conditionInput %}
+        <div class="pane">
+            {{ condition.getBuilderHtml()|raw }}
+        </div>
+    {% endset %}
+
+    {{ forms.field({
+        id: fieldId,
+        label: 'Field Conditions'|t('notifier'),
+        instructions: 'Send the message only when the saved element matches the following conditions.'|t('notifier')
+    }, conditionInput) }}
+
+    {% css %}
+        #{{ fieldId }}-field {
+            margin-top: 27px !important;
+        }
+    {% endcss %}
+{% endif %}

@@ -6,6 +6,8 @@ description: Trigger a notification when a User account becomes active, whether 
 
 Sends a notification when **a User account becomes active**. The trigger fires whenever Craft transitions a User into the `active` status. Most commonly that happens when the User clicks an email verification link, when an administrator activates a pending account, or when an admin re-enables a previously suspended User.
 
+<!--@include: @/events/types/_field-conditions.md-->
+
 ## Twig variables
 
 The `object` variable (and its `user` alias) is the activated [User](https://docs.craftcms.com/api/v5/craft-elements-user.html).

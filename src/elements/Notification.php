@@ -388,6 +388,105 @@ class Notification extends Element
     // ========================================================================= //
 
     /**
+     * Get the Craft element condition for a given event type.
+     *
+     * Defaults to this notification's saved event type. Pass an explicit
+     * `$forEventType` to render builders for the inactive tabs.
+     *
+     * @param string|null $forEventType Event type to build the condition for.
+     * @return ElementConditionInterface|null
+     */
+    public function getEventCondition(?string $forEventType = null): ?ElementConditionInterface
+    {
+        $forEventType = ($forEventType ?? (string) $this->eventType);
+
+        // Resolve the condition class for the requested event type
+        $class = NotifierPlugin::$plugin->events->getConditionClassForEventType($forEventType);
+
+        // If no condition class is registered for this event type, bail
+        if (!$class) {
+            return null;
+        }
+
+        // Only seed persisted config on the active tab; inactive tabs start fresh
+        $config = (
+            $forEventType === (string) $this->eventType
+                ? ($this->eventConfig['condition'] ?? ['class' => $class])
+                : ['class' => $class]
+        );
+
+        // Re-bind class to defend against stale persisted configs
+        $config['class'] = $class;
+
+        // Seed elementType so per-field rules (Lightswitch, Categories, etc.) register
+        $elementClass = NotifierPlugin::$plugin->events->getElementClassForEventType($forEventType);
+        if ($elementClass) {
+            $config['elementType'] = $elementClass;
+        }
+
+        // Hydrate via Craft's Conditions service
+        /** @var ElementConditionInterface $condition */
+        $condition = Craft::$app->getConditions()->createCondition($config);
+
+        // Per-type name and id so all four tab builders coexist in the DOM
+        $condition->name = "eventCondition_{$forEventType}";
+        $condition->id = "event-condition-{$forEventType}";
+
+        // Render as a <div>; the edit page is already a <form> and nested forms break htmx
+        $condition->mainTag = 'div';
+
+        // Scope to selected entry types when present, otherwise fall back to all layouts
+        $layouts = $this->_resolveConditionFieldLayouts($forEventType);
+        if ($layouts) {
+            $condition->setFieldLayouts($layouts);
+        }
+
+        return $condition;
+    }
+
+    /**
+     * Resolve field layouts to attach to the condition builder, based on the
+     * notification's selected entry types.
+     *
+     * @param string|null $forEventType Event type the builder is being rendered for.
+     * @return FieldLayout[]
+     */
+    private function _resolveConditionFieldLayouts(?string $forEventType = null): array
+    {
+        $forEventType = ($forEventType ?? (string) $this->eventType);
+
+        // Only the entries event type supports field-layout filtering for now
+        if ('entries' !== $forEventType) {
+            return [];
+        }
+
+        // Get configured entry types
+        $entryTypeIds = ($this->eventConfig['entryTypes'] ?? []);
+
+        // If no entry types are scoped, fall back to Craft's default
+        if (!$entryTypeIds) {
+            return [];
+        }
+
+        // Load the entries service (Craft 5: getEntries(), Craft 4: getSections())
+        $entriesService = Compat::isCraft5()
+            ? Craft::$app->getEntries()
+            : Craft::$app->getSections();
+
+        // Collect each selected entry type's field layout
+        $layouts = [];
+        foreach ($entryTypeIds as $typeId) {
+            $entryType = $entriesService->getEntryTypeById((int) $typeId);
+            if ($entryType) {
+                $layouts[] = $entryType->getFieldLayout();
+            }
+        }
+
+        // Return the resolved layouts
+        return $layouts;
+    }
+
+    /**
      * Get all event filters for Notification.
      *
      * @return array
@@ -488,8 +587,20 @@ class Notification extends Element
             $recipientsType   = $request->getBodyParam('recipientsType');
             $recipientsConfig = $request->getBodyParam('recipientsConfig');
 
+            // Read only the active tab's condition (each tab posts its own per-type key)
+            $selectedEventType = ($eventType ?? (string) $this->eventType);
+            $eventCondition    = $request->getBodyParam("eventCondition_{$selectedEventType}");
+
             // Extract specific event
             $event = ($event[$eventType] ?? null);
+
+            // Relocate the condition payload into eventConfig under the canonical key
+            if ($eventCondition !== null) {
+                if (!is_array($eventConfig)) {
+                    $eventConfig = [];
+                }
+                $eventConfig['condition'] = $eventCondition;
+            }
 
             // Save to the `notifier_notifications` table
             $record->description      = $description      ?? $this->description;

@@ -8,6 +8,8 @@ Sends a notification when **a new file has been uploaded and saved** to any Craf
 
 The trigger only fires once per Asset. Replacing a file, renaming it, moving it between folders, or saving an Asset's metadata does not re-fire it.
 
+<!--@include: @/events/types/_field-conditions.md-->
+
 ## Twig variables
 
 The `object` variable (and its `asset` alias) is the new [Asset](https://docs.craftcms.com/api/v5/craft-elements-asset.html).

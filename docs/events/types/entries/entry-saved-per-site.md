@@ -12,9 +12,11 @@ Each message renders with `currentSite`, `entry.url`, and other site-aware value
 
 This trigger is filterable by **sites**, **sections and entry types**, and the [standard element filters](#element-filters).
 
-<img class="dropshadow" src="/images/events/site-and-section-filters.png" alt="" style="width:650px; margin-top:10px">
+<img class="dropshadow" src="/images/events/site-and-section-filters.png" alt="" style="width:632px; margin-top:10px">
 
 <!--@include: @/events/types/_element-filters.md-->
+
+<!--@include: @/events/types/_field-conditions.md-->
 
 ## Twig variables
 

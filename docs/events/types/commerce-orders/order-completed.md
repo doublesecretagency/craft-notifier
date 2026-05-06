@@ -12,6 +12,8 @@ Use this event for customer receipts ("Thanks for your order") and internal aler
 This trigger is only available when [Craft Commerce](https://plugins.craftcms.com/commerce) is installed. The event type is hidden from the dropdown otherwise.
 :::
 
+<!--@include: @/events/types/_field-conditions.md-->
+
 ## Twig variables
 
 The `object` variable (and its `order` alias) is the completed [Order](https://docs.craftcms.com/commerce/api/v5/craft-commerce-elements-order.html).

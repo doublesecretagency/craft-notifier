@@ -227,6 +227,90 @@ class DispatchModelTest extends TestCase
     }
 
     // ========================================================================= //
+    // Element-condition gate (applies to all event types)
+    // ========================================================================= //
+
+    public function testHasMatchEventConditionHelper(): void
+    {
+        // Centralizing the condition match in one helper lets every event-type
+        // branch in filterByEventType() share the same evaluation path.
+        $this->assertTrue($this->reflection->hasMethod('_matchEventCondition'));
+        $this->assertTrue($this->reflection->getMethod('_matchEventCondition')->isPrivate());
+    }
+
+    public function testFilterByEventTypeRunsConditionMatchAfterEventTypeBranches(): void
+    {
+        // After each event-type branch (entries / users / assets / commerce-orders)
+        // resolves, the shared condition gate runs once before returning.
+        $this->assertMatchesRegularExpression(
+            '/case\s+\'commerce-orders\'[\s\S]*?break;[\s\S]*?_matchEventCondition\(\)/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testEntriesBranchInvokesEntriesFilterBeforeCondition(): void
+    {
+        // Entries-specific filters (section / entry type / site / FilterInterface
+        // classes) must short-circuit first — the heavier condition match only
+        // runs once those cheap checks pass.
+        $this->assertMatchesRegularExpression(
+            "/case\s+'entries'[\s\S]*?_filterEntries\(\)[\s\S]*?_matchEventCondition\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testMatchEventConditionResolvesElementWithSenderFallback(): void
+    {
+        // Same precedence as Twig variable seeding: data['object'] takes priority
+        // (covers bridged events like User Activated where sender is a service),
+        // and event sender is the default fallback for everything else.
+        $this->assertMatchesRegularExpression(
+            "/_matchEventCondition[\s\S]*?\\\$this->data\\['object'\\]\s*\?\?\s*\\\$this->event->sender/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testMatchEventConditionGuardsOnElementInterface(): void
+    {
+        // matchElement requires an ElementInterface; the helper must type-guard
+        // so a non-element subject doesn't reach the call.
+        $this->assertStringContainsString(
+            '$element instanceof ElementInterface',
+            $this->dispatchSource
+        );
+    }
+
+    public function testMatchEventConditionShortCircuitsWhenNoConditionConfigured(): void
+    {
+        // Notifications without a configured condition must dispatch unchanged.
+        // The early-return on `!$condition` prevents the helper from forcing
+        // an unnecessary instanceof check or matchElement call.
+        $this->assertMatchesRegularExpression(
+            '/_matchEventCondition[\s\S]*?if\s*\(!\$condition\)\s*\{[\s\S]*?return\s+true/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testMatchEventConditionDelegatesToMatchElement(): void
+    {
+        // Final return delegates the AND-across-rules evaluation to Craft's
+        // ElementCondition::matchElement().
+        $this->assertStringContainsString(
+            '$condition->matchElement($element)',
+            $this->dispatchSource
+        );
+    }
+
+    public function testImportsElementInterface(): void
+    {
+        // The instanceof guard above requires the interface to be imported.
+        $this->assertStringContainsString(
+            'use craft\\base\\ElementInterface',
+            $this->dispatchSource
+        );
+    }
+
+    // ========================================================================= //
     // Sandbox configuration
     // ========================================================================= //
 
