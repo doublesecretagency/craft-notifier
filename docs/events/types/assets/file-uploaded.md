@@ -8,24 +8,26 @@ Sends a notification when **a new file has been uploaded and saved** to any Craf
 
 The trigger only fires once per Asset. Replacing a file, renaming it, moving it between folders, or saving an Asset's metadata does not re-fire it.
 
+<!--@include: @/events/types/_volume-filters.md-->
+
 <!--@include: @/events/types/_field-conditions.md-->
+
+## Filtering by folder
+
+If you need to filter by folder, use [`{% skipMessage %}`](/messages/skip) inside the message body:
+
+```twig
+{% if asset.folder.name != 'Hero Images' %}
+    {% skipMessage %}
+{% endif %}
+```
 
 ## Twig variables
 
-The `object` variable (and its `asset` alias) is the new [Asset](https://docs.craftcms.com/api/v5/craft-elements-asset.html).
+The `object` variable (and its `asset` alias) is the newly uploaded [Asset](https://docs.craftcms.com/api/v5/craft-elements-asset.html).
 
 ```twig
 {{ asset.filename }} was uploaded to "{{ asset.volume.name }}".
-```
-
-## Filtering by volume
-
-The notification configuration screen does not include a volume selector. To target a specific volume (or a specific folder within a volume), use [`{% skipMessage %}`](/messages/skip) inside the message body:
-
-```twig
-{% if asset.volume.handle != 'productPhotos' %}
-    {% skipMessage %}
-{% endif %}
 ```
 
 ## Examples

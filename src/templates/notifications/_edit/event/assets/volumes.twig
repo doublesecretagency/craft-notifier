@@ -1,0 +1,41 @@
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NestedCheckboxesAsset') %}
+
+{% js on ready %}
+window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-volumes');
+{% endjs %}
+
+<div class="assets-event-after-propagate hidden">
+    <div class="nested-checkboxes nested-checkboxes-volumes">
+
+        <h3>Volumes</h3>
+        <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-volumes')"></div>
+
+        <div class="instructions">
+            <p>Only send notifications for selected volumes.</p>
+        </div>
+
+        <ul>
+
+            {# Get selected Volumes #}
+            {% set volumes = (notification.eventConfig.volumes ?? []) %}
+
+            {# Loop over available volumes #}
+            {% for volumeId,volumeName in availableVolumes() %}
+                <li>
+                    <input type="checkbox"
+                        class="checkbox"
+                        id="volume-{{ volumeId }}"
+                        name="eventConfig[volumes][]"
+                        value="{{ volumeId }}"
+                        {{ volumeId in volumes ? 'checked=""'|raw }}
+                        onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-volumes')"
+                    >
+                    <label for="volume-{{ volumeId }}">
+                        {{ volumeName }}
+                    </label>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+</div>

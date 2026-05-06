@@ -66,10 +66,10 @@ class TwigExtensionTest extends TestCase
     // Function registration
     // ========================================================================= //
 
-    public function testRegistersBothCpHelperFunctions(): void
+    public function testRegistersAllCpHelperFunctions(): void
     {
-        // Two helper functions consumed by the notification edit screen
-        // when populating the Sites and Sections checkbox groupings.
+        // Helper functions consumed by the notification edit screen when
+        // populating the Sites, Sections, Volumes, and User Groups checkboxes.
         $extension = new Extension();
         $functions = $extension->getFunctions();
 
@@ -80,6 +80,8 @@ class TwigExtensionTest extends TestCase
 
         $this->assertContains('availableSiteGroupsAndSites', $functionNames);
         $this->assertContains('availableSectionAndEntryTypes', $functionNames);
+        $this->assertContains('availableVolumes', $functionNames);
+        $this->assertContains('availableUserGroups', $functionNames);
     }
 
     public function testFunctionMethodsExist(): void
@@ -94,6 +96,16 @@ class TwigExtensionTest extends TestCase
         $this->assertTrue($this->reflection->hasMethod('availableSectionAndEntryTypes'));
         $this->assertTrue(
             $this->reflection->getMethod('availableSectionAndEntryTypes')->isPublic()
+        );
+
+        $this->assertTrue($this->reflection->hasMethod('availableVolumes'));
+        $this->assertTrue(
+            $this->reflection->getMethod('availableVolumes')->isPublic()
+        );
+
+        $this->assertTrue($this->reflection->hasMethod('availableUserGroups'));
+        $this->assertTrue(
+            $this->reflection->getMethod('availableUserGroups')->isPublic()
         );
     }
 

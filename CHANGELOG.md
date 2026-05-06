@@ -6,6 +6,8 @@
 - Added the [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) recipient type.
 - Added a `{% setRecipients %}` Twig tag for use inside Dynamic Recipients snippets.
 - Added field-level [conditions](https://craftcms.com/docs/5.x/extend/conditions.html) to all element events.
+- Added [Volume filtering](https://plugins.doublesecretagency.com/notifier/events/types/assets) for Asset events.
+- Added [User Group filtering](https://plugins.doublesecretagency.com/notifier/events/types/users) for User events.
 - Added trigger event ["When an order is completed (placed)"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
 - Added trigger event ["When an order is fully paid"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
 - Added user permissions for viewing, saving, and deleting notifications. ([#28](https://github.com/doublesecretagency/craft-notifier/issues/28))

@@ -74,7 +74,9 @@ class ConditionTemplateGuardsTest extends TestCase
 
     public function testUsersTabIncludesConditionWithUsersEventType(): void
     {
-        $source = self::read('users.twig');
+        // The Users tab moved into a folder layout, so the condition wrapper
+        // lives in users/condition.twig.
+        $source = self::read('users/condition.twig');
         $this->assertStringContainsString(
             "{% include 'notifier/notifications/_edit/event/_condition' with { eventType: 'users' } %}",
             $source
@@ -89,20 +91,25 @@ class ConditionTemplateGuardsTest extends TestCase
     {
         // The condition slot stays hidden until the Users Event sub-dropdown
         // is set, mirroring the entries pattern. The sub-dropdown carries
-        // toggle:true + targetPrefix '.users-event-', and the wrapper holds
-        // one toggle class per available event value (after-propagate when
-        // a user is created, after-activate-user when a user is activated).
-        $source = self::read('users.twig');
-        $this->assertStringContainsString("targetPrefix: '.users-event-'", $source);
+        // toggle:true + targetPrefix '.users-event-' (in users/index.twig),
+        // and the condition wrapper carries one toggle class per available
+        // event value (after-propagate when a user is created,
+        // after-activate-user when a user is activated).
+        $index = self::read('users/index.twig');
+        $this->assertStringContainsString("targetPrefix: '.users-event-'", $index);
+
+        $condition = self::read('users/condition.twig');
         $this->assertMatchesRegularExpression(
             '/<div class="users-event-after-propagate users-event-after-activate-user hidden">/',
-            $source
+            $condition
         );
     }
 
     public function testAssetsTabIncludesConditionWithAssetsEventType(): void
     {
-        $source = self::read('assets.twig');
+        // The Assets tab moved into a folder layout, so the condition wrapper
+        // lives in assets/condition.twig.
+        $source = self::read('assets/condition.twig');
         $this->assertStringContainsString(
             "{% include 'notifier/notifications/_edit/event/_condition' with { eventType: 'assets' } %}",
             $source
@@ -116,12 +123,15 @@ class ConditionTemplateGuardsTest extends TestCase
     public function testAssetsTabHidesConditionUntilSubEventIsSet(): void
     {
         // Same pattern as users: toggle:true + targetPrefix '.assets-event-'
-        // and a wrapper class for each available assets event value.
-        $source = self::read('assets.twig');
-        $this->assertStringContainsString("targetPrefix: '.assets-event-'", $source);
+        // (in assets/index.twig) and a wrapper class per event value
+        // on assets/condition.twig.
+        $index = self::read('assets/index.twig');
+        $this->assertStringContainsString("targetPrefix: '.assets-event-'", $index);
+
+        $condition = self::read('assets/condition.twig');
         $this->assertMatchesRegularExpression(
             '/<div class="assets-event-after-propagate hidden">/',
-            $source
+            $condition
         );
     }
 

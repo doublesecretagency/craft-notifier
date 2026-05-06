@@ -187,8 +187,16 @@ class Dispatch extends Model
                     return false;
                 }
                 break;
-            case 'users':
             case 'assets':
+                if (!$this->_filterAssets()) {
+                    return false;
+                }
+                break;
+            case 'users':
+                if (!$this->_filterUsers()) {
+                    return false;
+                }
+                break;
             case 'commerce-orders':
                 // No event-type-specific filters; condition gate runs below
                 break;
@@ -289,6 +297,66 @@ class Dispatch extends Model
                 return false;
             }
 
+        }
+
+        // All filters are valid
+        return true;
+    }
+
+    /**
+     * Additional filters for asset events.
+     *
+     * @return bool
+     */
+    private function _filterAssets(): bool
+    {
+        // Get event element
+        $element = $this->event->sender;
+
+        // Get configured Volumes
+        $volumes = ($this->notification->eventConfig['volumes'] ?? []);
+
+        // If not in a valid Volume, return false
+        if (!in_array($element->volumeId, $volumes, false)) {
+            return false;
+        }
+
+        // Volume gate passed
+        return true;
+    }
+
+    /**
+     * Additional filters for user events.
+     *
+     * @return bool
+     */
+    private function _filterUsers(): bool
+    {
+        // Get the user being saved or activated
+        $element = ($this->data['object'] ?? $this->event->sender);
+
+        // Get configured User Groups (the value `0` means "Ungrouped Users")
+        $userGroups = array_map('intval', ($this->notification->eventConfig['userGroups'] ?? []));
+
+        // If no User Groups are selected, return false
+        if (empty($userGroups)) {
+            return false;
+        }
+
+        // Get IDs of the User Groups this user belongs to
+        $userGroupIds = array_map(
+            static fn($g) => (int) $g->id,
+            $element->getGroups()
+        );
+
+        // If the user has no Groups, only "Ungrouped Users" can match
+        if (empty($userGroupIds)) {
+            return in_array(0, $userGroups, true);
+        }
+
+        // If the user is not in any selected Group, return false
+        if (!array_intersect($userGroupIds, $userGroups)) {
+            return false;
         }
 
         // All filters are valid

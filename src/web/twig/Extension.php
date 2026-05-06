@@ -155,6 +155,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return [
             new TwigFunction('availableSiteGroupsAndSites', [$this, 'availableSiteGroupsAndSites']),
             new TwigFunction('availableSectionAndEntryTypes', [$this, 'availableSectionAndEntryTypes']),
+            new TwigFunction('availableVolumes', [$this, 'availableVolumes']),
+            new TwigFunction('availableUserGroups', [$this, 'availableUserGroups']),
         ];
     }
 
@@ -237,6 +239,46 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
         // Return compiled options
         return $sections;
+    }
+
+    /**
+     * Get all available asset volumes.
+     *
+     * @return array
+     */
+    public function availableVolumes(): array
+    {
+        // Initialize volumes
+        $volumes = [];
+
+        // Loop through all volumes
+        foreach (Craft::$app->getVolumes()->getAllVolumes() as $volume) {
+            // Append each volume
+            $volumes[$volume->id] = $volume->name;
+        }
+
+        // Return compiled options
+        return $volumes;
+    }
+
+    /**
+     * Get all available user groups.
+     *
+     * @return array
+     */
+    public function availableUserGroups(): array
+    {
+        // Initialize user groups
+        $userGroups = [];
+
+        // Loop through all user groups
+        foreach (Craft::$app->getUserGroups()->getAllGroups() as $group) {
+            // Append each user group
+            $userGroups[$group->id] = $group->name;
+        }
+
+        // Return compiled options
+        return $userGroups;
     }
 
 }

@@ -1,0 +1,63 @@
+{# If no real user groups exist, the only available row would be #}
+{# the Ungrouped sentinel - which collapses to "every user matches" #}
+{% if availableUserGroups()|length %}
+
+    {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NestedCheckboxesAsset') %}
+
+    {% js on ready %}
+    window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-user-groups');
+    {% endjs %}
+
+    <div class="users-event-after-propagate users-event-after-activate-user hidden">
+        <div class="nested-checkboxes nested-checkboxes-user-groups">
+
+            <h3>User Groups</h3>
+            <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-user-groups')"></div>
+
+            <div class="instructions">
+                <p>Only send notifications for users in selected groups.</p>
+            </div>
+
+            <ul>
+
+                {# Get selected User Groups #}
+                {# Sentinel value 0 represents users with no group assignment #}
+                {% set userGroups = (notification.eventConfig.userGroups ?? []) %}
+
+                {# Ungrouped Users pseudo-row, always first #}
+                <li>
+                    <input type="checkbox"
+                        class="checkbox"
+                        id="user-group-0"
+                        name="eventConfig[userGroups][]"
+                        value="0"
+                        {{ 0 in userGroups ? 'checked=""'|raw }}
+                        onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-user-groups')"
+                    >
+                    <label for="user-group-0">
+                        <em>{{ 'Ungrouped Users'|t('notifier') }}</em>
+                    </label>
+                </li>
+
+                {# Loop over available user groups #}
+                {% for groupId,groupName in availableUserGroups() %}
+                    <li>
+                        <input type="checkbox"
+                            class="checkbox"
+                            id="user-group-{{ groupId }}"
+                            name="eventConfig[userGroups][]"
+                            value="{{ groupId }}"
+                            {{ groupId in userGroups ? 'checked=""'|raw }}
+                            onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-user-groups')"
+                        >
+                        <label for="user-group-{{ groupId }}">
+                            {{ groupName }}
+                        </label>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+
+{% endif %}

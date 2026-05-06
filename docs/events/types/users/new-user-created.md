@@ -8,6 +8,8 @@ Sends a notification when **a new User is created**. This trigger fires the firs
 
 The trigger only fires once per User. Re-saving an existing User (profile updates, password changes, group reassignment) does not re-fire it.
 
+<!--@include: @/events/types/_user-group-filters.md-->
+
 <!--@include: @/events/types/_field-conditions.md-->
 
 ## Twig variables

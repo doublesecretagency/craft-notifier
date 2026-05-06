@@ -227,6 +227,83 @@ class DispatchModelTest extends TestCase
     }
 
     // ========================================================================= //
+    // Asset-event filtering
+    // ========================================================================= //
+
+    public function testHasFilterAssetsHelper(): void
+    {
+        // Mandatory volume gate lives in its own private helper, mirroring
+        // the structure of _filterEntries / _filterUsers.
+        $this->assertTrue($this->reflection->hasMethod('_filterAssets'));
+        $this->assertTrue($this->reflection->getMethod('_filterAssets')->isPrivate());
+    }
+
+    public function testAssetFilterChecksVolume(): void
+    {
+        // The volume gate is the single short-circuit for Asset notifications,
+        // mirroring how sectionId gates Entry notifications.
+        $this->assertStringContainsString('->volumeId', $this->dispatchSource);
+    }
+
+    public function testAssetsBranchInvokesAssetsFilterBeforeCondition(): void
+    {
+        // Asset-specific filters short-circuit first; the heavier condition
+        // match only runs once the cheap volume check passes.
+        $this->assertMatchesRegularExpression(
+            "/case\s+'assets'[\s\S]*?_filterAssets\(\)[\s\S]*?_matchEventCondition\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    // ========================================================================= //
+    // User-event filtering
+    // ========================================================================= //
+
+    public function testHasFilterUsersHelper(): void
+    {
+        // Mandatory user-group gate lives in its own private helper.
+        $this->assertTrue($this->reflection->hasMethod('_filterUsers'));
+        $this->assertTrue($this->reflection->getMethod('_filterUsers')->isPrivate());
+    }
+
+    public function testUserFilterChecksGroups(): void
+    {
+        // The user-group gate compares the user's actual groups against
+        // the configured list. Both calls must appear in the source.
+        $this->assertStringContainsString('->getGroups()', $this->dispatchSource);
+        $this->assertStringContainsString("'userGroups'", $this->dispatchSource);
+    }
+
+    public function testUserFilterHonorsUngroupedSentinel(): void
+    {
+        // The Ungrouped Users pseudo-row stores a `0` ID. Users with no
+        // assigned groups can only match through this sentinel.
+        $this->assertMatchesRegularExpression(
+            '/in_array\(0,\s*\$userGroups,\s*true\)/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testUserFilterMandatoryGateOnEmptyConfig(): void
+    {
+        // Zero selected = no users match. Mirror of the entry filter's
+        // section gate; an unconfigured user-group list must short-circuit.
+        $this->assertMatchesRegularExpression(
+            '/empty\(\$userGroups\)[\s\S]*?return\s+false/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testUsersBranchInvokesUsersFilterBeforeCondition(): void
+    {
+        // User-specific filters short-circuit first; condition match runs after.
+        $this->assertMatchesRegularExpression(
+            "/case\s+'users'[\s\S]*?_filterUsers\(\)[\s\S]*?_matchEventCondition\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    // ========================================================================= //
     // Element-condition gate (applies to all event types)
     // ========================================================================= //
 
