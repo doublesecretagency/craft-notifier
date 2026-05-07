@@ -110,8 +110,9 @@ export default defineConfig({
       {
         text: 'More',
         items: [
-          {text: 'Elements', link: '/elements'},
-          {text: 'Logging',  link: '/logging'}
+          {text: 'Elements',     link: '/elements'},
+          {text: 'Logging',      link: '/logging'},
+          {text: 'Translations', link: '/translations'}
         ]
       },
       // {
@@ -270,8 +271,9 @@ export default defineConfig({
         {
           text: 'More',
           items: [
-            {text: 'Elements', link: '/elements'},
-            {text: 'Logging',  link: '/logging'}
+            {text: 'Elements',     link: '/elements'},
+            {text: 'Logging',      link: '/logging'},
+            {text: 'Translations', link: '/translations'}
           ]
         }
       ]

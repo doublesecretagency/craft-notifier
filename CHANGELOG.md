@@ -19,6 +19,7 @@
 - Added [`logRetentionDays`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by age.
 - Added [`logRetentionRecords`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by event count.
 - Added comprehensive unit tests.
+- Added [translations](https://plugins.doublesecretagency.com/notifier/translations) for eighteen locales.
 
 ### Changed
 - The Notification Log utility is now hidden from users without the "View notification log" permission.
