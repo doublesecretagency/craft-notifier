@@ -226,6 +226,7 @@ class Notification extends Element
     {
         return array_merge(parent::defineRules(), [
             ['recipientsType', 'validateDynamicRecipientsPermission'],
+            ['messageConfig', 'validateEmailMessageMode'],
         ]);
     }
 
@@ -266,6 +267,31 @@ class Notification extends Element
         $this->addError('recipientsType', Craft::t('notifier',
             'You do not have permission to use the Dynamic Recipients type.'
         ));
+    }
+
+    /**
+     * Validate the email message editor mode.
+     *
+     * Accepts only 'code' (Monaco source editor) or 'rich' (Trix WYSIWYG).
+     * A missing value normalizes to 'rich' (the default for new notifications).
+     *
+     * @return void
+     */
+    public function validateEmailMessageMode(): void
+    {
+        // Pull the saved mode, defaulting to 'rich' when absent
+        $mode = $this->messageConfig['emailMessageMode'] ?? 'rich';
+
+        // If the value isn't one of the allowed strings, attach an error
+        if (!in_array($mode, ['code', 'rich'], true)) {
+            $this->addError('messageConfig', Craft::t('notifier',
+                'Invalid email message mode.'
+            ));
+            return;
+        }
+
+        // Normalize so persistence is stable even when the value was missing
+        $this->messageConfig['emailMessageMode'] = $mode;
     }
 
     /**

@@ -1,0 +1,90 @@
+/* ==========================================================================
+   Notifier message body editor
+   ========================================================================== */
+
+/* Field heading: label on the left, mode control on the right */
+#email-message-field > .heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+#email-message-field > .heading > label {
+    margin-bottom: 0;
+}
+
+/* Active toggle button */
+#email-message-mode-toggle .btn.active {
+    background-color: var(--gray-500);
+    color: var(--white);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Rich text editor body */
+#email-message-editor-rich trix-editor {
+    background-color: var(--white, #fff);
+    border: 1px solid var(--hairline-color, #cdd8e4);
+    border-radius: var(--small-border-radius, 3px);
+    padding: 8px 10px;
+    min-height: 144px;
+    box-shadow: var(--input-inner-box-shadow, inset 0 1px 4px -1px rgba(96, 125, 159, 0.25));
+}
+
+/* List rendering inside the editor body. Craft's CP CSS resets list-style
+   on ul/ol, which strips Trix's bullets and numbers. Restore them here so
+   bulleted and numbered lists render the way users expect. */
+#email-message-editor-rich trix-editor ul,
+#email-message-editor-rich trix-editor ol {
+    margin: 0;
+    padding-left: 1.5em;
+}
+
+#email-message-editor-rich trix-editor ul {
+    list-style: disc outside;
+}
+
+#email-message-editor-rich trix-editor ol {
+    list-style: decimal outside;
+}
+
+#email-message-editor-rich trix-editor:focus {
+    border-color: var(--focus-color, #127fbf);
+    outline: none;
+    box-shadow: 0 0 0 1px var(--focus-color, #127fbf), inset 0 1px 4px -1px rgba(96, 125, 159, 0.25);
+}
+
+/* Rich text toolbar */
+#email-message-editor-rich trix-toolbar {
+    margin-bottom: 4px;
+}
+
+#email-message-editor-rich trix-toolbar .trix-button-row {
+    background-color: var(--gray-050, #f3f7fc);
+    border: 1px solid var(--hairline-color, #cdd8e4);
+    border-radius: var(--small-border-radius, 3px);
+    padding: 4px;
+}
+
+/* Trix ships .trix-button-group with margin-bottom: 10px (intended for when
+   button-groups wrap to multiple lines). On a single-line toolbar that margin
+   just inflates the row's height. Zero it so the grey container collapses
+   to fit the buttons comfortably. */
+#email-message-editor-rich trix-toolbar .trix-button-group {
+    margin-bottom: 0;
+}
+
+#email-message-editor-rich trix-toolbar .trix-button {
+    border-color: transparent;
+    color: var(--text-color, #3f4d5a);
+}
+
+#email-message-editor-rich trix-toolbar .trix-button.trix-active,
+#email-message-editor-rich trix-toolbar .trix-button:not(:disabled):hover {
+    background-color: var(--gray-200, #cdd8e4);
+}
+
+/* Underline icon */
+#email-message-editor-rich trix-toolbar .trix-button--icon-underline::before {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><path stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' fill='none' d='M11 6v12a7 7 0 0 0 14 0V6M9 30h18'/></svg>");
+}

@@ -1,6 +1,10 @@
 {% import '_includes/forms' as forms %}
 {% import 'codeeditor/codeEditor' as codeEditor %}
 
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\MessageEditorAsset') %}
+
+{% set mode = (notification.messageConfig.emailMessageMode ?? 'rich') %}
+
 <div class="message-type-email hidden">
     {{ forms.selectField({
         label: "User's Email Address Field"|t('notifier'),
@@ -24,16 +28,72 @@
         errors: notification.getErrors('messageConfig[emailSubject]'),
     }) }}
 
-    {{ codeEditor.textAreaField({
-        label: "Email Body"|t('notifier'),
-        instructions: "Body of outgoing email.",
-        placeholder: commonPlaceholder,
-        rows: 6,
-        id: 'messageConfig-emailMessage',
-        name: 'messageConfig[emailMessage]',
-        value: (notification.messageConfig.emailMessage ?? null),
-        errors: notification.getErrors('messageConfig[emailMessage]'),
-    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+    {# Email Body field with Rich Text / Code toggle #}
+    <div id="email-message-field" class="field" data-mode="{{ mode }}">
+        <div class="heading">
+            <label for="messageConfig-emailMessage">{{ "Email Body"|t('notifier') }}</label>
+            <div class="btngroup small" id="email-message-mode-toggle" role="group">
+                <button type="button" class="btn small{% if mode == 'rich' %} active{% endif %}" data-mode="rich">{{ "Rich Text"|t('notifier') }}</button>
+                <button type="button" class="btn small{% if mode == 'code' %} active{% endif %}" data-mode="code">{{ "Code"|t('notifier') }}</button>
+            </div>
+        </div>
+        <div class="instructions"><p>{{ "Body of outgoing email. You can use <a href=\"https://plugins.doublesecretagency.com/notifier/messages/variables\" target=\"_blank\">special variables</a>, or even <a href=\"https://plugins.doublesecretagency.com/notifier/messages/skip\" target=\"_blank\">skip recipients</a>."|t('notifier')|raw }}</p></div>
+        <div class="input ltr">
+
+            {# Mode persistence #}
+            <input type="hidden" id="messageConfig-emailMessageMode" name="messageConfig[emailMessageMode]" value="{{ mode }}">
+
+            {# Code editor (Monaco) #}
+            <div id="email-message-editor-code"{% if mode != 'code' %} class="hidden"{% endif %}>
+                {{ forms.textarea({
+                    id: 'messageConfig-emailMessage',
+                    name: 'messageConfig[emailMessage]',
+                    value: (notification.messageConfig.emailMessage ?? null),
+                    placeholder: commonPlaceholder,
+                    rows: 6,
+                }) }}
+                {{ codeEditor.includeJs('messageConfig-emailMessage', 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+            </div>
+
+            {# Rich text editor (Trix) with a custom streamlined toolbar #}
+            <div id="email-message-editor-rich"{% if mode != 'rich' %} class="hidden"{% endif %}>
+                <trix-toolbar id="email-message-trix-toolbar">
+                    <div class="trix-button-row">
+                        <span class="trix-button-group trix-button-group--text-tools" data-trix-button-group="text-tools">
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-bold" data-trix-attribute="bold" data-trix-key="b" title="{{ 'Bold'|t('notifier') }}" tabindex="-1">{{ "Bold"|t('notifier') }}</button>
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-italic" data-trix-attribute="italic" data-trix-key="i" title="{{ 'Italic'|t('notifier') }}" tabindex="-1">{{ "Italic"|t('notifier') }}</button>
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-underline" data-trix-attribute="underline" data-trix-key="u" title="{{ 'Underline'|t('notifier') }}" tabindex="-1">{{ "Underline"|t('notifier') }}</button>
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-strike" data-trix-attribute="strike" title="{{ 'Strikethrough'|t('notifier') }}" tabindex="-1">{{ "Strikethrough"|t('notifier') }}</button>
+                        </span>
+                        <span class="trix-button-group trix-button-group--block-tools" data-trix-button-group="block-tools">
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-bullet-list" data-trix-attribute="bullet" title="{{ 'Bullets'|t('notifier') }}" tabindex="-1">{{ "Bullets"|t('notifier') }}</button>
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-number-list" data-trix-attribute="number" title="{{ 'Numbers'|t('notifier') }}" tabindex="-1">{{ "Numbers"|t('notifier') }}</button>
+                        </span>
+                        <span class="trix-button-group trix-button-group--block-tools" data-trix-button-group="block-tools">
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-heading-1" data-trix-attribute="heading1" title="{{ 'Heading'|t('notifier') }}" tabindex="-1">{{ "Heading"|t('notifier') }}</button>
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-code" data-trix-attribute="code" title="{{ 'Code'|t('notifier') }}" tabindex="-1">{{ "Code"|t('notifier') }}</button>
+                        </span>
+                        <span class="trix-button-group-spacer"></span>
+                        <span class="trix-button-group trix-button-group--history-tools" data-trix-button-group="history-tools">
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-undo" data-trix-action="undo" data-trix-key="z" title="{{ 'Undo'|t('notifier') }}" tabindex="-1">{{ "Undo"|t('notifier') }}</button>
+                            <button type="button" class="trix-button trix-button--icon trix-button--icon-redo" data-trix-action="redo" data-trix-key="shift+z" title="{{ 'Redo'|t('notifier') }}" tabindex="-1">{{ "Redo"|t('notifier') }}</button>
+                        </span>
+                    </div>
+                </trix-toolbar>
+                <input id="email-message-rich-input" type="hidden" value="{{ notification.messageConfig.emailMessage ?? '' }}">
+                <trix-editor toolbar="email-message-trix-toolbar" input="email-message-rich-input"></trix-editor>
+            </div>
+
+            {% if notification.getErrors('messageConfig[emailMessage]') %}
+                <ul class="errors">
+                    {% for error in notification.getErrors('messageConfig[emailMessage]') %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+        </div>
+    </div>
 
     <hr>
 
@@ -47,3 +107,9 @@
         on: (notification.messageConfig.emailQueue ?? true),
     }) }}
 </div>
+
+{% js %}
+if (window.notifierMessageEditor) {
+    window.notifierMessageEditor.init('email-message-field');
+}
+{% endjs %}

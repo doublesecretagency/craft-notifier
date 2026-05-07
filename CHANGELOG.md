@@ -14,6 +14,7 @@
 - Added user permissions for authoring Dynamic Recipients snippets.
 - Added user permissions for viewing and deleting the notification log.
 - Added a read-only edit screen for users with view-only access to notifications.
+- Added a [Rich Text editor](https://plugins.doublesecretagency.com/notifier/messages/types/email#body-editor) option for the email message body. ([#12](https://github.com/doublesecretagency/craft-notifier/issues/12))
 - Added [`loggingEnabled`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to disable writing to the notification log.
 - Added [`logRetentionDays`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by age.
 - Added [`logRetentionRecords`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by event count.

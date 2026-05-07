@@ -239,6 +239,52 @@ class NotificationElementTest extends TestCase
     }
 
     // ========================================================================= //
+    // Email message editor mode (Code / Rich Text toggle)
+    // ========================================================================= //
+
+    public function testValidateEmailMessageModeExists(): void
+    {
+        // Validator backs the rule that gates messageConfig[emailMessageMode]
+        // to 'code' or 'rich' and normalizes missing values to 'code' for
+        // backward compatibility with notifications saved before the toggle.
+        $this->assertTrue(
+            $this->reflection->hasMethod('validateEmailMessageMode')
+        );
+        $this->assertTrue(
+            $this->reflection->getMethod('validateEmailMessageMode')->isPublic()
+        );
+    }
+
+    public function testValidateRulesIncludeEmailMessageModeCheck(): void
+    {
+        // The validator must be wired into defineRules() so it actually runs.
+        $this->assertStringContainsString(
+            "'validateEmailMessageMode'",
+            $this->notificationSource
+        );
+    }
+
+    public function testValidateEmailMessageModeAllowsCodeAndRichOnly(): void
+    {
+        // Only 'code' (Monaco source) and 'rich' (Trix WYSIWYG) are valid;
+        // anything else attaches a validation error.
+        $this->assertMatchesRegularExpression(
+            "/validateEmailMessageMode[\s\S]*?\['code',\s*'rich'\]/",
+            $this->notificationSource
+        );
+    }
+
+    public function testValidateEmailMessageModeNormalizesMissingToRich(): void
+    {
+        // Rich Text is the default for new notifications. Programmatic saves
+        // that omit the key are normalized to 'rich' on validate().
+        $this->assertMatchesRegularExpression(
+            "/validateEmailMessageMode[\s\S]*?\?\?\s*'rich'/",
+            $this->notificationSource
+        );
+    }
+
+    // ========================================================================= //
     // afterSave persistence
     // ========================================================================= //
 
