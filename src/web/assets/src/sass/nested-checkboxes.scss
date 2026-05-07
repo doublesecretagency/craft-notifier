@@ -2,10 +2,23 @@
   position: relative;
   margin-bottom: 10px;
 
+  // Hide the native input completely. The visible checkbox is the label's
+  // ::before pseudo drawn by Craft's CP CSS; the native input is just a
+  // form-value backing store. Standard "visually hidden but accessible"
+  // pattern so screen readers still see it and clicking the label still
+  // toggles it via the for= association.
   .checkbox {
     position: absolute;
-    right: 0;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
+
   .checkbox:disabled+label {
     opacity: .5;
   }

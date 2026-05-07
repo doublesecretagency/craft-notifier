@@ -41,6 +41,23 @@
     opacity: 0.75;
     cursor: not-allowed;
 }
+/* Block the tri-state filter button group from accepting clicks. The buttons
+   are <div>s with attached JS handlers, not native form controls, so the
+   <fieldset disabled> cascade does not neutralize them on its own. */
+.notifier-edit-fieldset--readonly .btngroup {
+    pointer-events: none;
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+/* The h3 in nested-checkbox panels carries a right border that visually
+   separates the heading from the "Select All" link. With the link guarded
+   out of the DOM in read-only mode, the border becomes a stray vertical
+   bar; drop it. */
+.notifier-edit-fieldset--readonly .nested-checkboxes h3 {
+    border-right: 0;
+    padding-right: 0;
+    margin-right: 0;
+}
 {% endcss %}
 {% js %}
 (function() {

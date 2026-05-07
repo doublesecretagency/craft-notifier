@@ -8,7 +8,9 @@ window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-volumes');
     <div class="nested-checkboxes nested-checkboxes-volumes">
 
         <h3>Volumes</h3>
-        <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-volumes')"></div>
+        {% if not (readOnly ?? false) %}
+            <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-volumes')"></div>
+        {% endif %}
 
         <div class="instructions">
             <p>Only send notifications for selected volumes.</p>

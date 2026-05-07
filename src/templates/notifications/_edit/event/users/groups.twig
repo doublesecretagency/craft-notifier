@@ -12,7 +12,9 @@
         <div class="nested-checkboxes nested-checkboxes-user-groups">
 
             <h3>User Groups</h3>
-            <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-user-groups')"></div>
+            {% if not (readOnly ?? false) %}
+                <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-user-groups')"></div>
+            {% endif %}
 
             <div class="instructions">
                 <p>Only send notifications for users in selected groups.</p>

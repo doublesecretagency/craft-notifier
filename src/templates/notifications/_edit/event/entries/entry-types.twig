@@ -8,7 +8,9 @@ window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-entry-types');
     <div class="nested-checkboxes nested-checkboxes-entry-types">
 
         <h3>Sections &amp; Entry Types</h3>
-        <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-entry-types')"></div>
+        {% if not (readOnly ?? false) %}
+            <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-entry-types')"></div>
+        {% endif %}
 
         <div class="instructions">
             <p>Only send notifications for selected sections and entry types.</p>

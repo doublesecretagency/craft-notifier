@@ -8,7 +8,9 @@ window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-sites');
     <div class="nested-checkboxes nested-checkboxes-sites">
 
         <h3>Sites</h3>
-        <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-sites')"></div>
+        {% if not (readOnly ?? false) %}
+            <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-sites')"></div>
+        {% endif %}
 
         <div class="instructions">
             <p>Send notifications for each selected copy of the entry (irrelevant of which version was saved).</p>
