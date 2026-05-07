@@ -74,9 +74,3 @@ Set the testing phone number in your local `.env` file, then load it via the PHP
 # Testing phone number in local environment
 TEST_TO_PHONE_NUMBER="888-555-4444"
 ```
-
-## Deprecated Settings
-
-### `twigSandbox` [DEPRECATED]
-
-This config setting is deprecated. For the new approach, see the [Twig Sandbox](/messages/twig-sandbox) documentation.

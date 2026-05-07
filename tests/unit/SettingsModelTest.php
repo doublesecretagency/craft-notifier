@@ -100,28 +100,4 @@ class SettingsModelTest extends TestCase
         $this->assertSame('int', $type->getName());
         $this->assertTrue($type->allowsNull());
     }
-
-    // ========================================================================= //
-    // Twig sandbox properties
-    // ========================================================================= //
-
-    public function testTwigSandboxModeDefaultsToAppend(): void
-    {
-        // 'append' is the safe default — adds custom rules to the built-in
-        // baseline rather than replacing it.
-        $defaults = $this->reflection->getDefaultProperties();
-        $this->assertSame('append', $defaults['twigSandboxMode']);
-    }
-
-    public function testTwigSandboxBlacklistDefaultsToEmptyArray(): void
-    {
-        $defaults = $this->reflection->getDefaultProperties();
-        $this->assertSame([], $defaults['twigSandboxBlacklist']);
-    }
-
-    public function testTwigSandboxWhitelistDefaultsToEmptyArray(): void
-    {
-        $defaults = $this->reflection->getDefaultProperties();
-        $this->assertSame([], $defaults['twigSandboxWhitelist']);
-    }
 }

@@ -498,25 +498,4 @@ class DispatchModelTest extends TestCase
         // catches accidental reintroduction of the special case.
         $this->assertStringNotContainsString('Unique case', $this->dispatchSource);
     }
-
-    // ========================================================================= //
-    // Deprecated-config migration
-    // ========================================================================= //
-
-    public function testDeprecatedTwigSandboxIsLogged(): void
-    {
-        // The deprecated `twigSandbox` setting must be migrated AND a
-        // deprecator log entry surfaced so users see the upgrade prompt.
-        $this->assertStringContainsString('getDeprecator()->log', $this->dispatchSource);
-    }
-
-    public function testDeprecatedConfigKnowsAboutSandboxConstants(): void
-    {
-        // The migration path maps deprecated allow/disallow/override into
-        // the new ADD/REMOVE/REPLACE modes — must reference each constant.
-        // Imported short-form references in the source.
-        $this->assertStringContainsString('Sandbox::ADD', $this->dispatchSource);
-        $this->assertStringContainsString('Sandbox::REMOVE', $this->dispatchSource);
-        $this->assertStringContainsString('Sandbox::REPLACE', $this->dispatchSource);
-    }
 }
