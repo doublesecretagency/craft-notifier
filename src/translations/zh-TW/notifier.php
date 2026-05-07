@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => '欄位條件',
     'Send the message only when the saved element matches the following conditions.' => '僅當儲存的元素符合以下條件時才傳送訊息。',
+    'has changed'                                                                    => '已變更',
     '#{elementType} Event Filters'                                                   => '#{elementType} 事件篩選器',
     'No filters match this event.'                                                   => '沒有篩選器符合此事件。',
     'Determine whether each message should be sent based on specified conditions.'   => '根據指定的條件決定是否傳送每則訊息。',

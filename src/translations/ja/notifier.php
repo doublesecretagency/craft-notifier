@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => 'フィールド条件',
     'Send the message only when the saved element matches the following conditions.' => '保存された要素が次の条件を満たした場合のみメッセージを送信します。',
+    'has changed'                                                                    => '変更されました',
     '#{elementType} Event Filters'                                                   => '#{elementType} イベントフィルター',
     'No filters match this event.'                                                   => 'このイベントに一致するフィルターはありません。',
     'Determine whether each message should be sent based on specified conditions.'   => '指定した条件に基づいて、各メッセージを送信するかどうかを決定します。',

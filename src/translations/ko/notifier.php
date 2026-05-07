@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => '필드 조건',
     'Send the message only when the saved element matches the following conditions.' => '저장된 요소가 다음 조건과 일치할 때만 메시지를 보냅니다.',
+    'has changed'                                                                    => '변경되었습니다',
     '#{elementType} Event Filters'                                                   => '#{elementType} 이벤트 필터',
     'No filters match this event.'                                                   => '이 이벤트와 일치하는 필터가 없습니다.',
     'Determine whether each message should be sent based on specified conditions.'   => '지정한 조건에 따라 각 메시지를 보낼지 결정합니다.',

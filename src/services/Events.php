@@ -16,7 +16,6 @@ use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
 use craft\elements\conditions\assets\AssetCondition;
-use craft\elements\conditions\entries\EntryCondition;
 use craft\elements\conditions\users\UserCondition;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\conditions\orders\OrderCondition;
@@ -24,6 +23,7 @@ use craft\events\RegisterComponentTypesEvent;
 use craft\services\Drafts;
 use craft\services\Elements;
 use craft\services\Users;
+use doublesecretagency\notifier\conditions\NotifierEntryCondition;
 use doublesecretagency\notifier\filters\DraftFilter;
 use doublesecretagency\notifier\filters\ElementEnabledFilter;
 use doublesecretagency\notifier\filters\FirstSaveFilter;
@@ -231,7 +231,7 @@ class Events extends Component
     {
         return match ($eventType) {
             // Native
-            'entries' => EntryCondition::class,
+            'entries' => NotifierEntryCondition::class,
             'assets'  => AssetCondition::class,
             'users'   => UserCondition::class,
             // Plugins

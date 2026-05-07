@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => 'Feltbetingelser',
     'Send the message only when the saved element matches the following conditions.' => 'Send kun beskeden, når det gemte element opfylder følgende betingelser.',
+    'has changed'                                                                    => 'har ændret sig',
     '#{elementType} Event Filters'                                                   => 'Hændelsesfiltre for #{elementType}',
     'No filters match this event.'                                                   => 'Ingen filtre matcher denne hændelse.',
     'Determine whether each message should be sent based on specified conditions.'   => 'Afgør, om hver besked skal sendes ud fra de angivne betingelser.',

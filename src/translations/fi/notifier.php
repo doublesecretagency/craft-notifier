@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => 'Kenttäehdot',
     'Send the message only when the saved element matches the following conditions.' => 'Lähetä viesti vain, kun tallennettu elementti täyttää seuraavat ehdot.',
+    'has changed'                                                                    => 'on muuttunut',
     '#{elementType} Event Filters'                                                   => '#{elementType}-tapahtumasuodattimet',
     'No filters match this event.'                                                   => 'Yksikään suodatin ei vastaa tätä tapahtumaa.',
     'Determine whether each message should be sent based on specified conditions.'   => 'Määritä, lähetetäänkö kukin viesti annettujen ehtojen perusteella.',

@@ -26,9 +26,21 @@ class EntryEvents
 {
 
     /**
-     * @var array Original elements prior to saving.
+     * @var array Original elements prior to saving, keyed by [entryId][siteId].
      */
     private static array $_originals = [];
+
+    /**
+     * Get the pre-save original captured at beforeSave for the given entry+site.
+     *
+     * @param int $entryId
+     * @param int $siteId
+     * @return Entry|null
+     */
+    public static function getCapturedOriginal(int $entryId, int $siteId): ?Entry
+    {
+        return (static::$_originals[$entryId][$siteId] ?? null);
+    }
 
     /**
      * Get original Entry prior to saving.
@@ -41,11 +53,31 @@ class EntryEvents
         /** @var Entry $entry */
         $entry = $event->sender;
 
-        // If entry has an existing ID
-        if ($entry->id) {
-            // Get the original element
-            static::$_originals[$entry->id] = Entry::find()->id($entry->id)->one();
+        // If entry has no existing ID, bail
+        if (!$entry->id) {
+            return;
         }
+
+        // Fresh DB read; ignorePlaceholders() bypasses the in-memory cache
+        $original = Entry::find()
+            ->id($entry->id)
+            ->siteId($entry->siteId)
+            ->status(null)
+            ->drafts(null)
+            ->revisions(null)
+            ->ignorePlaceholders()
+            ->one();
+
+        // If lookup failed, bail
+        if (!$original) {
+            return;
+        }
+
+        // Eagerly load field values; lazy reads later would pick up post-save content
+        $original->getFieldValues();
+
+        // Key by entryId+siteId so per-site propagation doesn't clobber the active site's capture
+        static::$_originals[$entry->id][$entry->siteId] = $original;
     }
 
     /**
@@ -67,9 +99,9 @@ class EntryEvents
             ])
             ->all();
 
-        // Configure data for parsing messages
+        // Get original for this entry+site
         $data = [
-            'original' => (static::$_originals[$entry->id] ?? null),
+            'original' => (static::$_originals[$entry->id][$entry->siteId] ?? null),
         ];
 
         // Send all matching notifications
@@ -150,9 +182,9 @@ class EntryEvents
             ])
             ->all();
 
-        // Configure data for parsing messages
+        // Get original for this entry+site
         $data = [
-            'original' => (static::$_originals[$entry->id] ?? null),
+            'original' => (static::$_originals[$entry->id][$entry->siteId] ?? null),
         ];
 
         // Send all matching notifications

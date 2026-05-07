@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => 'Condiciones de campo',
     'Send the message only when the saved element matches the following conditions.' => 'Enviar el mensaje solo cuando el elemento guardado cumpla las siguientes condiciones.',
+    'has changed'                                                                    => 'ha cambiado',
     '#{elementType} Event Filters'                                                   => 'Filtros de evento de #{elementType}',
     'No filters match this event.'                                                   => 'Ningún filtro coincide con este evento.',
     'Determine whether each message should be sent based on specified conditions.'   => 'Determinar si cada mensaje debe enviarse según las condiciones especificadas.',

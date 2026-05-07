@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => 'Условия поля',
     'Send the message only when the saved element matches the following conditions.' => 'Отправлять сообщение только при соответствии сохранённого элемента следующим условиям.',
+    'has changed'                                                                    => 'изменилось',
     '#{elementType} Event Filters'                                                   => 'Фильтры событий #{elementType}',
     'No filters match this event.'                                                   => 'Нет фильтров, соответствующих этому событию.',
     'Determine whether each message should be sent based on specified conditions.'   => 'Определите, нужно ли отправлять каждое сообщение, на основании заданных условий.',

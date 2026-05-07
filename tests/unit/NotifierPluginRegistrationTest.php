@@ -307,4 +307,111 @@ class NotifierPluginRegistrationTest extends TestCase
         );
     }
 
+    // ========================================================================= //
+    // Element-condition rule registration
+    // ========================================================================= //
+
+    public function testHasPrivateRegisterConditionRulesMethod(): void
+    {
+        // The condition-rules registrar must exist and be private. Only init()
+        // invokes it; nothing else should reach for it.
+        $this->assertTrue($this->reflection->hasMethod('_registerConditionRules'));
+        $this->assertTrue($this->reflection->getMethod('_registerConditionRules')->isPrivate());
+    }
+
+    public function testInitInvokesRegisterConditionRulesAfterRegisterNotificationEvents(): void
+    {
+        // The order matters loosely (services must be set first), but the
+        // explicit assertion is that registerConditionRules() runs as part of
+        // init(). Asserting "after registerNotificationEvents()" pins it to
+        // the established slot so future refactors do not silently drop it.
+        $this->assertMatchesRegularExpression(
+            '/events->registerNotificationEvents\(\)[\s\S]*?_registerConditionRules\(\)/',
+            $this->pluginSource
+        );
+    }
+
+    public function testRegisterConditionRulesScopesToNotifierEntryCondition(): void
+    {
+        // The handler body must listen on NotifierEntryCondition (not Craft's
+        // base EntryCondition), so the swap only fires inside Notifier's UI
+        // and never leaks the has_changed operator into Craft's CP entries-index
+        // filter or any other EntryCondition consumer.
+        $this->assertMatchesRegularExpression(
+            '/_registerConditionRules[\s\S]*?NotifierEntryCondition::class[\s\S]*?BaseCondition::EVENT_REGISTER_CONDITION_RULES/',
+            $this->pluginSource
+        );
+    }
+
+    /**
+     * @return array<string, array{0: string, 1: string}>
+     */
+    public static function fieldRuleSwapProvider(): array
+    {
+        // Every Craft built-in per-field + native attribute rule we replace
+        // with a Notifier subclass; data-provided so a forgotten swap fails
+        // its own test.
+        return [
+            // Per-field rules
+            'Text'         => ['TextFieldConditionRule',        'NotifierTextFieldConditionRule'],
+            'Lightswitch'  => ['LightswitchFieldConditionRule', 'NotifierLightswitchFieldConditionRule'],
+            'Number'       => ['NumberFieldConditionRule',      'NotifierNumberFieldConditionRule'],
+            'Money'        => ['MoneyFieldConditionRule',       'NotifierMoneyFieldConditionRule'],
+            'Date'         => ['DateFieldConditionRule',        'NotifierDateFieldConditionRule'],
+            'Options'      => ['OptionsFieldConditionRule',     'NotifierOptionsFieldConditionRule'],
+            'Country'      => ['CountryFieldConditionRule',     'NotifierCountryFieldConditionRule'],
+            'Link'         => ['LinkFieldConditionRule',        'NotifierLinkFieldConditionRule'],
+            'Relational'   => ['RelationalFieldConditionRule',  'NotifierRelationalFieldConditionRule'],
+            'Empty'        => ['EmptyFieldConditionRule',       'NotifierEmptyFieldConditionRule'],
+            'Generated'    => ['GeneratedFieldConditionRule',   'NotifierGeneratedFieldConditionRule'],
+            // Native attribute rules
+            'Title'        => ['TitleConditionRule',            'NotifierTitleConditionRule'],
+            'Slug'         => ['SlugConditionRule',             'NotifierSlugConditionRule'],
+            'Uri'          => ['UriConditionRule',              'NotifierUriConditionRule'],
+            'Status'       => ['StatusConditionRule',           'NotifierStatusConditionRule'],
+            'Level'        => ['LevelConditionRule',            'NotifierLevelConditionRule'],
+            'Language'     => ['LanguageConditionRule',         'NotifierLanguageConditionRule'],
+            'PostDate'     => ['PostDateConditionRule',         'NotifierPostDateConditionRule'],
+            'ExpiryDate'   => ['ExpiryDateConditionRule',       'NotifierExpiryDateConditionRule'],
+            'Section'      => ['SectionConditionRule',          'NotifierSectionConditionRule'],
+            'Type'         => ['TypeConditionRule',             'NotifierTypeConditionRule'],
+        ];
+    }
+
+    /**
+     * @dataProvider fieldRuleSwapProvider
+     */
+    public function testRegisterConditionRulesSwapsCraftRuleForNotifierSubclass(string $craftClass, string $notifierClass): void
+    {
+        // The swap map must contain the Craft source class as a key and the
+        // Notifier replacement class as the value. Without both, the field
+        // rule passes through unchanged and "has changed" never appears.
+        $this->assertMatchesRegularExpression(
+            '/' . preg_quote($craftClass, '/') . '::class[\s]*=>[\s]*' . preg_quote($notifierClass, '/') . '::class/',
+            $this->pluginSource
+        );
+    }
+
+    public function testImportsConditionRuleClasses(): void
+    {
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\conditions\\NotifierEntryCondition',
+            $this->pluginSource
+        );
+        $this->assertStringContainsString(
+            'use craft\\base\\conditions\\BaseCondition',
+            $this->pluginSource
+        );
+        // All 11 Notifier per-field subclasses must be imported, since the
+        // swap map references each by short name
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\conditions\\fields\\NotifierTextFieldConditionRule',
+            $this->pluginSource
+        );
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\conditions\\fields\\NotifierDateFieldConditionRule',
+            $this->pluginSource
+        );
+    }
+
 }

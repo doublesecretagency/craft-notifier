@@ -14,16 +14,61 @@ namespace doublesecretagency\notifier;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
+use craft\base\conditions\BaseCondition;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterConditionRulesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use craft\services\Plugins;
 use craft\services\UserPermissions;
+use craft\elements\conditions\LanguageConditionRule;
+use craft\elements\conditions\LevelConditionRule;
+use craft\elements\conditions\SlugConditionRule;
+use craft\elements\conditions\StatusConditionRule;
+use craft\elements\conditions\TitleConditionRule;
+use craft\elements\conditions\UriConditionRule;
+use craft\elements\conditions\entries\ExpiryDateConditionRule;
+use craft\elements\conditions\entries\PostDateConditionRule;
+use craft\elements\conditions\entries\SectionConditionRule;
+use craft\elements\conditions\entries\TypeConditionRule;
+use craft\fields\conditions\CountryFieldConditionRule;
+use craft\fields\conditions\DateFieldConditionRule;
+use craft\fields\conditions\EmptyFieldConditionRule;
+use craft\fields\conditions\GeneratedFieldConditionRule;
+use craft\fields\conditions\LightswitchFieldConditionRule;
+use craft\fields\conditions\LinkFieldConditionRule;
+use craft\fields\conditions\MoneyFieldConditionRule;
+use craft\fields\conditions\NumberFieldConditionRule;
+use craft\fields\conditions\OptionsFieldConditionRule;
+use craft\fields\conditions\RelationalFieldConditionRule;
+use craft\fields\conditions\TextFieldConditionRule;
 use craft\services\Utilities;
 use craft\web\UrlManager;
+use doublesecretagency\notifier\conditions\NotifierEntryCondition;
+use doublesecretagency\notifier\conditions\attributes\NotifierExpiryDateConditionRule;
+use doublesecretagency\notifier\conditions\attributes\NotifierLanguageConditionRule;
+use doublesecretagency\notifier\conditions\attributes\NotifierLevelConditionRule;
+use doublesecretagency\notifier\conditions\attributes\NotifierPostDateConditionRule;
+use doublesecretagency\notifier\conditions\attributes\NotifierSectionConditionRule;
+use doublesecretagency\notifier\conditions\attributes\NotifierSlugConditionRule;
+use doublesecretagency\notifier\conditions\attributes\NotifierStatusConditionRule;
+use doublesecretagency\notifier\conditions\attributes\NotifierTitleConditionRule;
+use doublesecretagency\notifier\conditions\attributes\NotifierTypeConditionRule;
+use doublesecretagency\notifier\conditions\attributes\NotifierUriConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierCountryFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierDateFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierEmptyFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierGeneratedFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierLightswitchFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierLinkFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierMoneyFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierNumberFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierOptionsFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierRelationalFieldConditionRule;
+use doublesecretagency\notifier\conditions\fields\NotifierTextFieldConditionRule;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Options;
 use doublesecretagency\notifier\helpers\Compat;
@@ -126,6 +171,9 @@ class NotifierPlugin extends Plugin
 
         // Register all notification events
         $this->events->registerNotificationEvents();
+
+        // Register Notifier-scoped condition rules
+        $this->_registerConditionRules();
     }
 
     /**
@@ -214,20 +262,7 @@ class NotifierPlugin extends Plugin
     }
 
     /**
-     * Register user permissions for the plugin.
-     *
-     * Exposes a "Notifier" heading in the CP user-group permissions screen
-     * with two sibling subtrees:
-     *
-     * - "View notifications" (root) governing the Notification element type:
-     *   "Save notifications" nests beneath it, with "Use the Dynamic
-     *   Recipients type" nested even deeper since authoring arbitrary Twig
-     *   snippets is a privileged action. "Delete notifications" sits at the
-     *   same level as "Save notifications".
-     * - "View notification log" (root) governing the audit-trail surface:
-     *   "Delete notification log" nests beneath it. Kept separate from the
-     *   notification subtree so site auditors can read the log without being
-     *   able to alter notification configuration, and vice versa.
+     * Register user permissions.
      *
      * @return void
      */
@@ -294,13 +329,6 @@ class NotifierPlugin extends Plugin
 
     /**
      * Register utilities.
-     *
-     * The Notification Log utility is hidden entirely when `loggingEnabled`
-     * is false. When enabled, it is gated behind the
-     * `notifier-viewNotificationLog` permission. Unpermissioned users (and
-     * users with no current identity) won't see the utility appear in the
-     * CP utilities listing at all. Admins always see it via the parent
-     * canView() bypass on the user model.
      */
     private function _registerUtilities(): void
     {
@@ -335,11 +363,8 @@ class NotifierPlugin extends Plugin
      */
     private function _registerTableAttributes(): void
     {
-        // Pick the correct event name for the active Craft version
-        // (Craft 5: 'defineAttributeHtml', Craft 4: 'setTableAttributeHtml')
-        // Closure parameter is untyped because the event class itself was
-        // renamed (DefineAttributeHtmlEvent vs SetElementTableAttributeHtmlEvent).
-        // Both expose the same `$event->html`, `$event->attribute`, `$event->sender` shape.
+        // Event name + class name both differ between Craft 4 and 5; closure stays untyped
+        // so the same handler covers DefineAttributeHtmlEvent and SetElementTableAttributeHtmlEvent
         Event::on(
             Notification::class,
             Compat::defineAttributeHtmlEventName(),
@@ -395,6 +420,65 @@ class NotifierPlugin extends Plugin
 
                 }
 
+            }
+        );
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Register Notifier-scoped element-condition rules.
+     *
+     * @return void
+     */
+    private function _registerConditionRules(): void
+    {
+        // Map every Craft per-field rule + supported native attribute rule
+        // to its Notifier subclass so the `has changed` operator appears
+        // in every applicable rule's dropdown
+        $swaps = [
+            // Per-field rules
+            TextFieldConditionRule::class        => NotifierTextFieldConditionRule::class,
+            LightswitchFieldConditionRule::class => NotifierLightswitchFieldConditionRule::class,
+            NumberFieldConditionRule::class      => NotifierNumberFieldConditionRule::class,
+            MoneyFieldConditionRule::class       => NotifierMoneyFieldConditionRule::class,
+            DateFieldConditionRule::class        => NotifierDateFieldConditionRule::class,
+            OptionsFieldConditionRule::class     => NotifierOptionsFieldConditionRule::class,
+            CountryFieldConditionRule::class     => NotifierCountryFieldConditionRule::class,
+            LinkFieldConditionRule::class        => NotifierLinkFieldConditionRule::class,
+            RelationalFieldConditionRule::class  => NotifierRelationalFieldConditionRule::class,
+            EmptyFieldConditionRule::class       => NotifierEmptyFieldConditionRule::class,
+            GeneratedFieldConditionRule::class   => NotifierGeneratedFieldConditionRule::class,
+            // Native attribute rules
+            TitleConditionRule::class            => NotifierTitleConditionRule::class,
+            SlugConditionRule::class             => NotifierSlugConditionRule::class,
+            UriConditionRule::class              => NotifierUriConditionRule::class,
+            StatusConditionRule::class           => NotifierStatusConditionRule::class,
+            LevelConditionRule::class            => NotifierLevelConditionRule::class,
+            LanguageConditionRule::class         => NotifierLanguageConditionRule::class,
+            PostDateConditionRule::class         => NotifierPostDateConditionRule::class,
+            ExpiryDateConditionRule::class       => NotifierExpiryDateConditionRule::class,
+            SectionConditionRule::class          => NotifierSectionConditionRule::class,
+            TypeConditionRule::class             => NotifierTypeConditionRule::class,
+        ];
+
+        Event::on(
+            NotifierEntryCondition::class,
+            BaseCondition::EVENT_REGISTER_CONDITION_RULES,
+            static function (RegisterConditionRulesEvent $event) use ($swaps) {
+                // Walk the rules array and rewrite each entry's `class` when it's
+                // a Craft per-field rule we have a Notifier subclass for
+                foreach ($event->conditionRules as $i => $rule) {
+                    $class = (is_array($rule) ? ($rule['class'] ?? null) : $rule);
+                    if (!$class || !isset($swaps[$class])) {
+                        continue;
+                    }
+                    if (is_array($rule)) {
+                        $event->conditionRules[$i]['class'] = $swaps[$class];
+                    } else {
+                        $event->conditionRules[$i] = $swaps[$class];
+                    }
+                }
             }
         );
     }

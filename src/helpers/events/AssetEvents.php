@@ -44,13 +44,24 @@ class AssetEvents
             return;
         }
 
-        // Get the original element
+        // Fresh DB read; ignorePlaceholders() bypasses the in-memory cache
         $original = Asset::find()
             ->id($asset->id)
+            ->siteId($asset->siteId)
+            ->status(null)
+            ->ignorePlaceholders()
             ->one();
 
-        // Set original element
-        static::$_originals[$asset->id] = $original;
+        // If lookup failed, bail
+        if (!$original) {
+            return;
+        }
+
+        // Eagerly load field values; lazy reads later would pick up post-save content
+        $original->getFieldValues();
+
+        // Key by assetId+siteId so per-site propagation doesn't clobber the active site's capture
+        static::$_originals[$asset->id][$asset->siteId] = $original;
     }
 
     /**
@@ -79,7 +90,7 @@ class AssetEvents
 
         // Pass data to message parser
         $data = [
-            'original' => (static::$_originals[$asset->id] ?? null),
+            'original' => (static::$_originals[$asset->id][$asset->siteId] ?? null),
         ];
 
         // Send all matching notifications

@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => '字段条件',
     'Send the message only when the saved element matches the following conditions.' => '仅当保存的元素满足以下条件时发送消息。',
+    'has changed'                                                                    => '已更改',
     '#{elementType} Event Filters'                                                   => '#{elementType} 事件筛选器',
     'No filters match this event.'                                                   => '没有筛选器匹配此事件。',
     'Determine whether each message should be sent based on specified conditions.'   => '根据指定的条件决定是否发送每条消息。',

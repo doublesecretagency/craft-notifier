@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => 'Alan koşulları',
     'Send the message only when the saved element matches the following conditions.' => 'Mesajı yalnızca kaydedilen öge aşağıdaki koşulları karşıladığında gönder.',
+    'has changed'                                                                    => 'değişti',
     '#{elementType} Event Filters'                                                   => '#{elementType} olay filtreleri',
     'No filters match this event.'                                                   => 'Bu olayla eşleşen filtre yok.',
     'Determine whether each message should be sent based on specified conditions.'   => 'Belirtilen koşullara göre her mesajın gönderilip gönderilmeyeceğini belirleyin.',

@@ -45,12 +45,21 @@ class UserEvents
             return;
         }
 
-        // Get the original element
+        // Fresh DB read; ignorePlaceholders() bypasses the in-memory cache
         $original = User::find()
             ->id($user->id)
+            ->status(null)
+            ->ignorePlaceholders()
             ->one();
 
-        // Set original element
+        // If lookup failed, bail
+        if (!$original) {
+            return;
+        }
+
+        // Eagerly load field values; lazy reads later would pick up post-save content
+        $original->getFieldValues();
+
         static::$_originals[$user->id] = $original;
     }
 

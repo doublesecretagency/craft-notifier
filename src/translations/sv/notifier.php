@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => 'Fältvillkor',
     'Send the message only when the saved element matches the following conditions.' => 'Skicka meddelandet endast när det sparade elementet uppfyller följande villkor.',
+    'has changed'                                                                    => 'har ändrats',
     '#{elementType} Event Filters'                                                   => 'Händelsefilter för #{elementType}',
     'No filters match this event.'                                                   => 'Inga filter matchar den här händelsen.',
     'Determine whether each message should be sent based on specified conditions.'   => 'Avgör om varje meddelande ska skickas baserat på angivna villkor.',

@@ -46,6 +46,7 @@ return [
     // Field and element conditions
     'Field Conditions'                                                               => 'Veldcondities',
     'Send the message only when the saved element matches the following conditions.' => 'Verstuur het bericht alleen wanneer het opgeslagen element aan de volgende condities voldoet.',
+    'has changed'                                                                    => 'is gewijzigd',
     '#{elementType} Event Filters'                                                   => 'Gebeurtenisfilters voor #{elementType}',
     'No filters match this event.'                                                   => 'Geen filters komen overeen met deze gebeurtenis.',
     'Determine whether each message should be sent based on specified conditions.'   => 'Bepaal of elk bericht verstuurd moet worden op basis van opgegeven condities.',

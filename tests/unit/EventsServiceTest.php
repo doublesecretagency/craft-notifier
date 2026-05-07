@@ -8,10 +8,10 @@ use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
 use craft\elements\conditions\assets\AssetCondition;
-use craft\elements\conditions\entries\EntryCondition;
 use craft\elements\conditions\users\UserCondition;
 use craft\services\Drafts;
 use craft\services\Elements;
+use doublesecretagency\notifier\conditions\NotifierEntryCondition;
 use doublesecretagency\notifier\filters\DraftFilter;
 use doublesecretagency\notifier\filters\ElementEnabledFilter;
 use doublesecretagency\notifier\filters\FirstSaveFilter;
@@ -359,13 +359,16 @@ class EventsServiceTest extends TestCase
         );
     }
 
-    public function testGetConditionClassForEventTypeReturnsEntryConditionForEntries(): void
+    public function testGetConditionClassForEventTypeReturnsNotifierEntryConditionForEntries(): void
     {
         // Pure unit: the resolver is a string-to-string match with no Craft
-        // boot required. The 'entries' branch must wire to EntryCondition.
+        // boot required. The 'entries' branch must wire to NotifierEntryCondition,
+        // a Notifier-scoped subclass of Craft's EntryCondition. Returning the
+        // base EntryCondition would leak Notifier-only condition rules into
+        // every other consumer (CP entries-index filter, etc.).
         $service = new Events();
         $this->assertSame(
-            EntryCondition::class,
+            NotifierEntryCondition::class,
             $service->getConditionClassForEventType('entries')
         );
     }
@@ -419,9 +422,14 @@ class EventsServiceTest extends TestCase
         $this->assertNull($service->getConditionClassForEventType(''));
     }
 
-    public function testImportsEntryConditionClass(): void
+    public function testImportsNotifierEntryConditionClass(): void
     {
-        $this->assertStringContainsString('use ' . EntryCondition::class, $this->eventsSource);
+        // The 'entries' branch wires to a Notifier-scoped subclass; the source
+        // must import that subclass instead of Craft's base EntryCondition.
+        $this->assertStringContainsString(
+            'use ' . NotifierEntryCondition::class,
+            $this->eventsSource
+        );
     }
 
     public function testImportsAssetConditionClass(): void

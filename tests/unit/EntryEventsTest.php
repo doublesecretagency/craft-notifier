@@ -108,6 +108,84 @@ class EntryEventsTest extends TestCase
     }
 
     // ========================================================================= //
+    // beforeSave: original-element capture
+    // ========================================================================= //
+
+    public function testBeforeSaveBypassesElementCacheWithIgnorePlaceholders(): void
+    {
+        // Without ignorePlaceholders(), Craft's request-level element cache can
+        // return the same in-memory entry that's currently being saved, so
+        // `original.summary` later resolves to the post-save value.
+        $this->assertMatchesRegularExpression(
+            '/beforeSave[\s\S]*?ignorePlaceholders\(\)/',
+            $this->helperSource
+        );
+    }
+
+    public function testBeforeSaveEagerLoadsFieldValues(): void
+    {
+        // Field values are loaded lazily on first access. If beforeSave caches
+        // the original entry but its field values are still pristine, a later
+        // template read of `original.summary` triggers a fresh content load
+        // that picks up the post-save values. Eagerly loading via
+        // getFieldValues() pins the pre-save state into the original's
+        // instance-local cache.
+        $this->assertMatchesRegularExpression(
+            '/beforeSave[\s\S]*?getFieldValues\(\)/',
+            $this->helperSource
+        );
+    }
+
+    public function testBeforeSaveScopesQueryToEntrySite(): void
+    {
+        // Per-site entries must be captured against the same site they were
+        // saved against, otherwise the original would silently shift to the
+        // primary site's content.
+        $this->assertMatchesRegularExpression(
+            '/beforeSave[\s\S]*?siteId\(\$entry->siteId\)/',
+            $this->helperSource
+        );
+    }
+
+    public function testOriginalsAreKeyedByEntryIdAndSiteId(): void
+    {
+        // beforeSave fires once per site during multi-site propagation. Without
+        // a composite key, the last-propagated site's capture overwrites the
+        // active editing site's capture before the dispatch handlers read it,
+        // and `original.summary` ends up locked to whichever site was processed
+        // last (typically untouched by the user's edit).
+        $this->assertMatchesRegularExpression(
+            '/\$_originals\[\$entry->id\]\[\$entry->siteId\]\s*=\s*\$original/',
+            $this->helperSource
+        );
+    }
+
+    public function testDispatchersReadOriginalsByEntryAndSite(): void
+    {
+        // afterSave / afterPropagate must look up the original by the same
+        // composite key that beforeSave wrote with.
+        $this->assertMatchesRegularExpression(
+            '/static::\$_originals\[\$entry->id\]\[\$entry->siteId\][\s\S]*?\?\?\s*null/',
+            $this->helperSource
+        );
+    }
+
+    public function testHasGetCapturedOriginalAccessor(): void
+    {
+        // The HasChangedOperator trait's diff fallback (used when Craft has
+        // already called markAsClean() before the propagated dispatch fires)
+        // depends on this accessor.
+        $this->assertTrue($this->reflection->hasMethod('getCapturedOriginal'));
+        $method = $this->reflection->getMethod('getCapturedOriginal');
+        $this->assertTrue($method->isPublic());
+        $this->assertTrue($method->isStatic());
+        $params = $method->getParameters();
+        $this->assertCount(2, $params);
+        $this->assertSame('entryId', $params[0]->getName());
+        $this->assertSame('siteId', $params[1]->getName());
+    }
+
+    // ========================================================================= //
     // afterSaveElement bridge logic (issue #7)
     // ========================================================================= //
 
