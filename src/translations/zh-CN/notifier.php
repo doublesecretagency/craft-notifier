@@ -24,6 +24,7 @@ return [
     'View notifications'              => '查看通知',
     'Save notifications'              => '保存通知',
     'Use the Dynamic Recipients type' => '使用动态收件人类型',
+    'Test notifications'              => '测试通知',
     'Delete notifications'            => '删除通知',
     'View notification log'           => '查看通知日志',
     'Delete notification log'         => '删除通知日志',
@@ -174,6 +175,13 @@ return [
     'At most, keep this many log events. Leave blank for no limit.'                                                                                   => '最多保留这么多日志事件。留空表示不限制。',
     'Number of days to retain log events'                                                                                                             => '保留日志事件的天数',
     'At most, keep log events for this many days. Leave blank for no limit.'                                                                          => '最多保留日志事件这么多天。留空表示不限制。',
+
+    // Test notification
+    'Send a test message'                                                                                                          => '发送测试消息',
+    'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).' => '确定要发送测试通知吗?\n\n配置的消息将发送给已配置的收件人。',
+    'Test'                                                                                                                         => '测试',
+    'Test notification dispatched.'                                                                                                => '测试通知已发送。',
+    'No messages were dispatched. Check the recipient configuration.'                                                              => '未发送任何消息。请检查收件人配置。',
 
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.' => '正在向 {recipient} 发送 {messageType}。',

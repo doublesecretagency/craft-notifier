@@ -125,4 +125,82 @@ class MessagesServiceTest extends TestCase
             $this->messagesSource
         );
     }
+
+    // ========================================================================= //
+    // sendTest, manual operator-triggered dispatch
+    // ========================================================================= //
+
+    public function testHasSendTestMethod(): void
+    {
+        $this->assertTrue($this->reflection->hasMethod('sendTest'));
+        $this->assertTrue($this->reflection->getMethod('sendTest')->isPublic());
+    }
+
+    public function testSendTestMethodSignature(): void
+    {
+        // sendTest(Notification $notification): Dispatch
+        $method = $this->reflection->getMethod('sendTest');
+        $params = $method->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertSame('notification', $params[0]->getName());
+
+        // Returns Dispatch so callers can introspect the compiled envelopes
+        $returnType = $method->getReturnType();
+        $this->assertNotNull($returnType);
+        $this->assertSame(
+            'doublesecretagency\\notifier\\models\\Dispatch',
+            (string) $returnType
+        );
+    }
+
+    public function testSendTestSkipsFilterByEventType(): void
+    {
+        // The whole point of the test path is to bypass event-type filters.
+        // Isolate sendTest's body and assert no invocation of filterByEventType().
+        // Match the call form `$dispatch->filterByEventType(` so an explanatory
+        // comment containing the method name does not falsely fail the test.
+        $body = $this->_extractMethodBody('sendTest');
+        $this->assertDoesNotMatchRegularExpression(
+            '/->filterByEventType\s*\(/',
+            $body
+        );
+    }
+
+    public function testSendTestFlagsDispatchAsTest(): void
+    {
+        // The Dispatch must be constructed with isTest = true so envelopes
+        // get tagged in the log.
+        $body = $this->_extractMethodBody('sendTest');
+        $this->assertMatchesRegularExpression(
+            "/'isTest'\s*=>\s*true/",
+            $body
+        );
+    }
+
+    public function testSendTestStillCompilesAndSendsEnvelopes(): void
+    {
+        // Skipping filters does not skip the rest of the pipeline; envelopes
+        // still get compiled and dispatched.
+        $body = $this->_extractMethodBody('sendTest');
+        $this->assertStringContainsString('$dispatch->configureByMessageType()', $body);
+        $this->assertStringContainsString('$dispatch->sendEnvelopes()', $body);
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Extract the body of a named method from the cached source for source-level
+     * regex assertions scoped to a single method.
+     *
+     * @param string $methodName
+     * @return string
+     */
+    private function _extractMethodBody(string $methodName): string
+    {
+        $method = $this->reflection->getMethod($methodName);
+        $start = $method->getStartLine();
+        $end = $method->getEndLine();
+        $lines = explode("\n", $this->messagesSource);
+        return implode("\n", array_slice($lines, $start - 1, $end - $start + 1));
+    }
 }

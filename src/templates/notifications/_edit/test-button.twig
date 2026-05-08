@@ -1,0 +1,9 @@
+{# Render the test-send button into the CP screen's additional-buttons slot #}
+{% if notification.id and currentUser.can('notifier-testNotifications') %}
+    {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\TestNotificationAsset') %}
+    <button type="button" class="btn"
+            data-notifier-test-id="{{ notification.id }}"
+            data-notifier-test-confirm="{{ 'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).'|t('notifier') }}">
+        {{ 'Send a test message'|t('notifier') }}
+    </button>
+{% endif %}

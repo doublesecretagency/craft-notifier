@@ -24,6 +24,7 @@ return [
     'View notifications'              => 'Meldingen bekijken',
     'Save notifications'              => 'Meldingen opslaan',
     'Use the Dynamic Recipients type' => 'Het type Dynamische ontvangers gebruiken',
+    'Test notifications'              => 'Notificaties testen',
     'Delete notifications'            => 'Meldingen verwijderen',
     'View notification log'           => 'Meldingenlogboek bekijken',
     'Delete notification log'         => 'Meldingenlogboek verwijderen',
@@ -174,6 +175,13 @@ return [
     'At most, keep this many log events. Leave blank for no limit.'                                                                                   => 'Bewaar maximaal dit aantal logboekgebeurtenissen. Laat leeg voor geen limiet.',
     'Number of days to retain log events'                                                                                                             => 'Aantal dagen dat logboekgebeurtenissen bewaard worden',
     'At most, keep log events for this many days. Leave blank for no limit.'                                                                          => 'Bewaar logboekgebeurtenissen maximaal dit aantal dagen. Laat leeg voor geen limiet.',
+
+    // Test notification
+    'Send a test message'                                                                                                          => 'Testbericht verzenden',
+    'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).' => 'Weet je zeker dat je een testmelding wilt verzenden?\n\nHet geconfigureerde bericht wordt naar de geconfigureerde ontvangers gestuurd.',
+    'Test'                                                                                                                         => 'Test',
+    'Test notification dispatched.'                                                                                                => 'Testmelding verzonden.',
+    'No messages were dispatched. Check the recipient configuration.'                                                              => 'Er zijn geen berichten verzonden. Controleer de ontvangersconfiguratie.',
 
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.' => '{messageType} versturen naar {recipient}.',

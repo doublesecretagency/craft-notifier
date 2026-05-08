@@ -97,6 +97,29 @@ class DispatchModelTest extends TestCase
         $this->assertFalse($defaults['setRecipientsInvoked']);
     }
 
+    public function testIsTestDefaultsToFalse(): void
+    {
+        // Real event-driven dispatches must never log as test rows. The flag
+        // is only flipped on by Messages::sendTest().
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertFalse($defaults['isTest']);
+    }
+
+    public function testIsTestThreadedIntoEnvelopeLogRows(): void
+    {
+        // Each compile branch must tag its log->envelope() call with isTest
+        // so the log row records the fact. The flag is intentionally NOT
+        // passed into the envelope constructor (envelopes are delivery-only).
+        // Pin all four occurrences of the log-side merge.
+        $this->assertSame(
+            4,
+            preg_match_all(
+                "/'isTest'\s*=>\s*\\\$this->isTest/",
+                $this->dispatchSource
+            )
+        );
+    }
+
     // ========================================================================= //
     // Pipeline branches (source-level)
     // ========================================================================= //

@@ -24,6 +24,7 @@ return [
     'View notifications'              => 'Näytä ilmoitukset',
     'Save notifications'              => 'Tallenna ilmoitukset',
     'Use the Dynamic Recipients type' => 'Käytä Dynaamiset vastaanottajat -tyyppiä',
+    'Test notifications'              => 'Testaa ilmoituksia',
     'Delete notifications'            => 'Poista ilmoitukset',
     'View notification log'           => 'Näytä ilmoitusloki',
     'Delete notification log'         => 'Poista ilmoitusloki',
@@ -174,6 +175,13 @@ return [
     'At most, keep this many log events. Leave blank for no limit.'                                                                                   => 'Säilytä enintään tämän verran lokitapahtumia. Jätä tyhjäksi, ettei rajaa ole.',
     'Number of days to retain log events'                                                                                                             => 'Päivien määrä, jotka lokitapahtumia säilytetään',
     'At most, keep log events for this many days. Leave blank for no limit.'                                                                          => 'Säilytä lokitapahtumia enintään tämän monen päivän ajan. Jätä tyhjäksi, ettei rajaa ole.',
+
+    // Test notification
+    'Send a test message'                                                                                                          => 'Lähetä testiviesti',
+    'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).' => 'Haluatko varmasti lähettää testi-ilmoituksen?\n\nMääritetty viesti lähetetään määritetyille vastaanottajille.',
+    'Test'                                                                                                                         => 'Testi',
+    'Test notification dispatched.'                                                                                                => 'Testi-ilmoitus lähetetty.',
+    'No messages were dispatched. Check the recipient configuration.'                                                              => 'Yhtään viestiä ei lähetetty. Tarkista vastaanottajien määritykset.',
 
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.' => 'Lähetetään {messageType} vastaanottajalle {recipient}.',

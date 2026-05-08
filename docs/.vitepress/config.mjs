@@ -111,6 +111,7 @@ export default defineConfig({
         text: 'More',
         items: [
           {text: 'Elements',     link: '/elements'},
+          {text: 'Testing',      link: '/testing'},
           {text: 'Logging',      link: '/logging'},
           {text: 'Translations', link: '/translations'}
         ]
@@ -272,6 +273,7 @@ export default defineConfig({
           text: 'More',
           items: [
             {text: 'Elements',     link: '/elements'},
+            {text: 'Testing',      link: '/testing'},
             {text: 'Logging',      link: '/logging'},
             {text: 'Translations', link: '/translations'}
           ]

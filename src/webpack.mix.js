@@ -22,6 +22,7 @@ mix
     .js(`${src}/js/filters.js`, `${dist}/js`)
     .js(`${src}/js/log.js`, `${dist}/js`)
     .js(`${src}/js/nested-checkboxes.js`, `${dist}/js`)
+    .js(`${src}/js/test-notification.js`, `${dist}/js`)
 
     // Compile all Sass
     .sass(`${src}/sass/filters.scss`, `${dist}/css`)

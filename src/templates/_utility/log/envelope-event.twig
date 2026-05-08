@@ -1,6 +1,14 @@
+{# Detect test-flagged envelopes for the inline badge #}
+{% set isTest = (envelope.envelope.details|json_decode).isTest|default(false) %}
+
 <div class="envelope-event">
     <div class="timestamp">{{ date("#{envelope.envelope.dateCreated} +00:00")|date(timeFormat) }}</div>
-    <div class="message">{{ envelope.envelope.message }}</div>
+    <div class="message">
+        {{ envelope.envelope.message }}
+        {% if isTest %}
+            <span class="test-badge">{{ 'Test'|t('notifier') }}</span>
+        {% endif %}
+    </div>
     <div class="flex-grow"></div>
     {% include 'notifier/_utility/log/envelope-buttons' %}
 </div>

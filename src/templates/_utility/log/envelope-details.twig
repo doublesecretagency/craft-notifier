@@ -10,16 +10,21 @@
             {% if details %}
                 <table>
                     {% for key,value in details %}
-                        {% if key == 'adminsOnly' %}
-                            {% set value = (value ? 'Yes' : 'No') %}
+                        {# isTest already surfaces as a badge on the envelope row #}
+                        {% if key == 'isTest' %}
+                            {# skip #}
+                        {% else %}
+                            {% if key == 'adminsOnly' %}
+                                {% set value = (value ? 'Yes' : 'No') %}
+                            {% endif %}
+                            {% if key == 'type' %}
+                                {% set value = value|title %}
+                            {% endif %}
+                            <tr>
+                                <th>{{ key|kebab|title|replace('-',' ') }}:</th>
+                                <td>{{ value }}</td>
+                            </tr>
                         {% endif %}
-                        {% if key == 'type' %}
-                            {% set value = value|title %}
-                        {% endif %}
-                        <tr>
-                            <th>{{ key|kebab|title|replace('-',' ') }}:</th>
-                            <td>{{ value }}</td>
-                        </tr>
                     {% endfor %}
                 </table>
             {% else %}

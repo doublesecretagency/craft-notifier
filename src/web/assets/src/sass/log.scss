@@ -113,6 +113,22 @@
   .message {
     font-weight: bold;
   }
+  .test-badge {
+    color: #7C5E22;
+    border-color: #7C5E22;
+    background-color: #F9F2E0;
+    display: inline-block;
+    margin-left: 8px;
+    padding: 0 8px;
+    font-size: 0.7em;
+    line-height: 1.6em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 6px;
+    border-width: 1px;
+    border-style: solid;
+    vertical-align: middle;
+  }
 }
 
 .envelope-button {

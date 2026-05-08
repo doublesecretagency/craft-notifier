@@ -287,6 +287,9 @@ class NotifierPlugin extends Plugin
                                         ],
                                     ],
                                 ],
+                                'notifier-testNotifications' => [
+                                    'label' => Craft::t('notifier', 'Test notifications'),
+                                ],
                                 'notifier-deleteNotifications' => [
                                     'label' => Craft::t('notifier', 'Delete notifications'),
                                 ],

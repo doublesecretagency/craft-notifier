@@ -20,6 +20,7 @@ use craft\web\Controller;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\helpers\Notifier;
+use doublesecretagency\notifier\NotifierPlugin;
 use Throwable;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidRouteException;
@@ -192,6 +193,11 @@ class NotificationsController extends Controller
             'readOnly' => $readOnly,
         ]);
 
+        // Render the "Send a test message" button into the CP screen header
+        $response->additionalButtonsTemplate('notifier/notifications/_edit/test-button', [
+            'notification' => $notification,
+        ]);
+
         // If the user can save, attach all of the save-side affordances
         if (!$readOnly) {
             $response
@@ -277,6 +283,63 @@ class NotificationsController extends Controller
 
         // Redirect to specified URL
         return $this->redirectToPostedUrl();
+    }
+
+    /**
+     * Send a test of a Notification.
+     *
+     * Bypasses event-type filters so the operator can verify the configured
+     * message body and recipient strategy without waiting for a real Craft
+     * event to fire. The message body, recipients, queue setting, and channel
+     * all use the live Notification configuration.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @since 3.0.0
+     */
+    public function actionTest(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Require the dedicated test permission
+        $this->requirePermission('notifier-testNotifications');
+
+        // Get the specified Notification ID
+        $notificationId = (int) $this->request->getRequiredBodyParam('notificationId');
+
+        // Load the Notification
+        /** @var Notification|null $notification */
+        $notification = Craft::$app->getElements()->getElementById($notificationId, Notification::class);
+
+        // If no matching Notification, 404
+        if (!$notification) {
+            throw new NotFoundHttpException('Notification not found');
+        }
+
+        // Dispatch the test
+        $dispatch = NotifierPlugin::getInstance()->messages->sendTest($notification);
+
+        // Count compiled envelopes
+        $envelopeCount = count(array_filter($dispatch->envelopes));
+
+        // If no envelopes were compiled, return a soft warning
+        if (0 === $envelopeCount) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'No messages were dispatched. Check the recipient configuration.'),
+                'envelopeCount' => 0,
+            ]);
+        }
+
+        // Otherwise, report success
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Test notification dispatched.'),
+            'envelopeCount' => $envelopeCount,
+        ]);
     }
 
     // ========================================================================= //

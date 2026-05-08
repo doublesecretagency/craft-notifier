@@ -129,6 +129,25 @@ class NotifierPluginRegistrationTest extends TestCase
         );
     }
 
+    public function testTestPermissionIsNestedUnderView(): void
+    {
+        // The dedicated permission for the "Send a test message" button is a
+        // sibling of save and delete under viewNotifications.
+        $this->assertMatchesRegularExpression(
+            "/notifier-viewNotifications.*?nested.*?notifier-testNotifications/s",
+            $this->pluginSource
+        );
+    }
+
+    public function testTestPermissionSitsBetweenSaveAndDelete(): void
+    {
+        // Curated ordering: save -> test -> delete
+        $this->assertMatchesRegularExpression(
+            "/notifier-saveNotifications[\s\S]*?notifier-testNotifications[\s\S]*?notifier-deleteNotifications/",
+            $this->pluginSource
+        );
+    }
+
     public function testDynamicRecipientsPermissionIsNestedUnderSave(): void
     {
         // Authoring Twig snippets is a privileged action — it should require

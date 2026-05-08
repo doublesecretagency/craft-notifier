@@ -68,6 +68,13 @@ class NotificationsControllerTest extends TestCase
         $this->assertTrue($this->reflection->getMethod('actionDelete')->isPublic());
     }
 
+    public function testHasTestAction(): void
+    {
+        // Operator-triggered "Send Test" dispatch
+        $this->assertTrue($this->reflection->hasMethod('actionTest'));
+        $this->assertTrue($this->reflection->getMethod('actionTest')->isPublic());
+    }
+
     // ========================================================================= //
     // Auth / permission guards
     // ========================================================================= //
@@ -161,6 +168,41 @@ class NotificationsControllerTest extends TestCase
     {
         $this->assertMatchesRegularExpression(
             '/actionDelete[\s\S]*?requirePostRequest\(\)/',
+            $this->controllerSource
+        );
+    }
+
+    public function testTestActionRequiresPostRequest(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/actionTest[\s\S]*?requirePostRequest\(\)/',
+            $this->controllerSource
+        );
+    }
+
+    public function testTestActionRequiresJson(): void
+    {
+        // Test endpoint is AJAX-only; reject non-JSON POSTs
+        $this->assertMatchesRegularExpression(
+            '/actionTest[\s\S]*?requireAcceptsJson\(\)/',
+            $this->controllerSource
+        );
+    }
+
+    public function testTestActionRequiresTestPermission(): void
+    {
+        // Dedicated permission, sibling to save / delete under viewNotifications
+        $this->assertMatchesRegularExpression(
+            "/actionTest[\s\S]*?requirePermission\('notifier-testNotifications'\)/",
+            $this->controllerSource
+        );
+    }
+
+    public function testTestActionDelegatesToMessagesSendTest(): void
+    {
+        // Don't reimplement the dispatch path; defer to Messages::sendTest
+        $this->assertMatchesRegularExpression(
+            '/actionTest[\s\S]*?messages->sendTest\(\$notification\)/',
             $this->controllerSource
         );
     }

@@ -57,6 +57,12 @@ class Dispatch extends Model
     public bool $useQueue = true;
 
     /**
+     * @var bool Whether this dispatch was triggered by a manual "Send Test" action.
+     * @since 3.0.0
+     */
+    public bool $isTest = false;
+
+    /**
      * @var array Set of outbound envelopes.
      */
     public array $envelopes = [];
@@ -368,8 +374,8 @@ class Dispatch extends Model
                 'body' => $body,
             ];
 
-            // Initialize logging for envelope
-            $envelopeId = $this->notification->log->envelope($jobInfo, $details);
+            // Initialize logging for envelope (with the test flag tagged on for the log row)
+            $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
 
             // If a parsing error occurred, log and skip it
             if ($parseError) {
@@ -455,8 +461,8 @@ class Dispatch extends Model
                 'message' => $message,
             ];
 
-            // Initialize logging for envelope
-            $envelopeId = $this->notification->log->envelope($jobInfo, $details);
+            // Initialize logging for envelope (with the test flag tagged on for the log row)
+            $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
 
             // If a parsing error occurred, log and skip it
             if ($parseError) {
@@ -523,8 +529,8 @@ class Dispatch extends Model
             'adminsOnly' => $adminsOnly,
         ];
 
-        // Initialize logging for envelope
-        $envelopeId = $this->notification->log->envelope($jobInfo, $details);
+        // Initialize logging for envelope (with the test flag tagged on for the log row)
+        $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
 
         // If a parsing error occurred, log and skip it
         if ($parseError) {
@@ -577,7 +583,7 @@ class Dispatch extends Model
         $details = [
             'type' => $type,
             'title' => $title,
-            'message' => $message
+            'message' => $message,
         ];
 
         // Attempt to get the currently active user
@@ -587,11 +593,11 @@ class Dispatch extends Model
             $currentUser = null;
         }
 
-        // Initialize logging for envelope
+        // Initialize logging for envelope (with the test flag tagged on for the log row)
         $envelopeId = $this->notification->log->envelope([
             'messageType' => 'a flash message',
             'recipient' => ($currentUser->name ?? 'the current user'),
-        ], $details);
+        ], $details + ['isTest' => $this->isTest]);
 
         // If a parsing error occurred, log and skip it
         if ($parseError) {

@@ -24,6 +24,7 @@ return [
     'View notifications'              => '通知の表示',
     'Save notifications'              => '通知の保存',
     'Use the Dynamic Recipients type' => '動的受信者タイプの使用',
+    'Test notifications'              => '通知をテスト',
     'Delete notifications'            => '通知の削除',
     'View notification log'           => '通知ログの表示',
     'Delete notification log'         => '通知ログの削除',
@@ -174,6 +175,13 @@ return [
     'At most, keep this many log events. Leave blank for no limit.'                                                                                   => '保持するログイベントの最大数です。制限なしにする場合は空のままにしてください。',
     'Number of days to retain log events'                                                                                                             => 'ログイベントを保持する日数',
     'At most, keep log events for this many days. Leave blank for no limit.'                                                                          => 'ログイベントを保持する最大日数です。制限なしにする場合は空のままにしてください。',
+
+    // Test notification
+    'Send a test message'                                                                                                          => 'テストメッセージを送信',
+    'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).' => 'テスト通知を送信してもよろしいですか?\n\n設定されたメッセージが、設定された受信者に送信されます。',
+    'Test'                                                                                                                         => 'テスト',
+    'Test notification dispatched.'                                                                                                => 'テスト通知を送信しました。',
+    'No messages were dispatched. Check the recipient configuration.'                                                              => 'メッセージは送信されませんでした。受信者の設定を確認してください。',
 
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.' => '{messageType} を {recipient} に送信中です。',

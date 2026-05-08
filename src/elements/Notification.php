@@ -390,6 +390,11 @@ class Notification extends Element
         $response->{$sidebarMethod}('notifier/notifications/_edit/details', [
             'notification' => $this,
         ]);
+
+        // Render the "Send a test message" button into the CP screen header
+        $response->additionalButtonsTemplate('notifier/notifications/_edit/test-button', [
+            'notification' => $this,
+        ]);
     }
 
     public function getFieldLayout(): ?FieldLayout

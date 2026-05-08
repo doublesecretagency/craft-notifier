@@ -24,6 +24,7 @@ return [
     'View notifications'              => 'Se notifikationer',
     'Save notifications'              => 'Gem notifikationer',
     'Use the Dynamic Recipients type' => 'Brug typen Dynamiske modtagere',
+    'Test notifications'              => 'Test notifikationer',
     'Delete notifications'            => 'Slet notifikationer',
     'View notification log'           => 'Se notifikationsloggen',
     'Delete notification log'         => 'Slet notifikationsloggen',
@@ -174,6 +175,13 @@ return [
     'At most, keep this many log events. Leave blank for no limit.'                                                                                   => 'Gem højst dette antal logposter. Lad feltet stå tomt for ingen grænse.',
     'Number of days to retain log events'                                                                                                             => 'Antal dage logposter skal gemmes',
     'At most, keep log events for this many days. Leave blank for no limit.'                                                                          => 'Gem logposter i højst dette antal dage. Lad feltet stå tomt for ingen grænse.',
+
+    // Test notification
+    'Send a test message'                                                                                                          => 'Send testbesked',
+    'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).' => 'Er du sikker på, at du vil sende en testnotifikation?\n\nDen konfigurerede besked sendes til de konfigurerede modtagere.',
+    'Test'                                                                                                                         => 'Test',
+    'Test notification dispatched.'                                                                                                => 'Testnotifikation sendt.',
+    'No messages were dispatched. Check the recipient configuration.'                                                              => 'Ingen beskeder blev sendt. Kontrollér modtagerkonfigurationen.',
 
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.' => 'Sender {messageType} til {recipient}.',

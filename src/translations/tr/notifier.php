@@ -24,6 +24,7 @@ return [
     'View notifications'              => 'Bildirimleri görüntüleme',
     'Save notifications'              => 'Bildirimleri kaydetme',
     'Use the Dynamic Recipients type' => 'Dinamik Alıcılar türünü kullanma',
+    'Test notifications'              => 'Bildirimleri test et',
     'Delete notifications'            => 'Bildirimleri silme',
     'View notification log'           => 'Bildirim günlüğünü görüntüleme',
     'Delete notification log'         => 'Bildirim günlüğünü silme',
@@ -174,6 +175,13 @@ return [
     'At most, keep this many log events. Leave blank for no limit.'                                                                                   => 'En fazla bu kadar günlük olayını saklayın. Sınır olmaması için boş bırakın.',
     'Number of days to retain log events'                                                                                                             => 'Günlük olaylarının saklanacağı gün sayısı',
     'At most, keep log events for this many days. Leave blank for no limit.'                                                                          => 'Günlük olaylarını en fazla bu kadar gün saklayın. Sınır olmaması için boş bırakın.',
+
+    // Test notification
+    'Send a test message'                                                                                                          => 'Test mesajı gönder',
+    'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).' => 'Test bildirimi göndermek istediğinizden emin misiniz?\n\nYapılandırılan mesaj, yapılandırılan alıcılara gönderilecek.',
+    'Test'                                                                                                                         => 'Test',
+    'Test notification dispatched.'                                                                                                => 'Test bildirimi gönderildi.',
+    'No messages were dispatched. Check the recipient configuration.'                                                              => 'Hiçbir mesaj gönderilmedi. Alıcı yapılandırmasını kontrol edin.',
 
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.' => '{messageType} {recipient} alıcısına gönderiliyor.',

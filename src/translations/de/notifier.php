@@ -24,6 +24,7 @@ return [
     'View notifications'              => 'Benachrichtigungen anzeigen',
     'Save notifications'              => 'Benachrichtigungen speichern',
     'Use the Dynamic Recipients type' => 'Den Typ Dynamische Empfänger verwenden',
+    'Test notifications'              => 'Benachrichtigungen testen',
     'Delete notifications'            => 'Benachrichtigungen löschen',
     'View notification log'           => 'Benachrichtigungsprotokoll anzeigen',
     'Delete notification log'         => 'Benachrichtigungsprotokoll löschen',
@@ -174,6 +175,13 @@ return [
     'At most, keep this many log events. Leave blank for no limit.'                                                                                   => 'Höchstens diese Anzahl an Protokollereignissen behalten. Leer lassen für kein Limit.',
     'Number of days to retain log events'                                                                                                             => 'Anzahl der Tage, an denen Protokollereignisse aufbewahrt werden',
     'At most, keep log events for this many days. Leave blank for no limit.'                                                                          => 'Protokollereignisse höchstens so viele Tage aufbewahren. Leer lassen für kein Limit.',
+
+    // Test notification
+    'Send a test message'                                                                                                          => 'Testnachricht senden',
+    'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).' => 'Möchten Sie wirklich eine Testbenachrichtigung senden?\n\nDie konfigurierte Nachricht wird an die konfigurierten Empfänger gesendet.',
+    'Test'                                                                                                                         => 'Test',
+    'Test notification dispatched.'                                                                                                => 'Testbenachrichtigung gesendet.',
+    'No messages were dispatched. Check the recipient configuration.'                                                              => 'Es wurden keine Nachrichten gesendet. Überprüfen Sie die Empfängerkonfiguration.',
 
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.' => 'Sende {messageType} an {recipient}.',

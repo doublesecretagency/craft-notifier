@@ -11,7 +11,7 @@
 - Added [User Group filtering](https://plugins.doublesecretagency.com/notifier/events/types/users) for User events.
 - Added trigger event ["When an order is completed (placed)"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
 - Added trigger event ["When an order is fully paid"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
-- Added user permissions for viewing, saving, and deleting notifications. ([#28](https://github.com/doublesecretagency/craft-notifier/issues/28))
+- Added user permissions for viewing, saving, testing, and deleting notifications. ([#28](https://github.com/doublesecretagency/craft-notifier/issues/28))
 - Added user permissions for authoring Dynamic Recipients snippets.
 - Added user permissions for viewing and deleting the notification log.
 - Added a read-only edit screen for users with view-only access to notifications.
@@ -19,6 +19,7 @@
 - Added [`loggingEnabled`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to disable writing to the notification log.
 - Added [`logRetentionDays`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by age.
 - Added [`logRetentionRecords`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by event count.
+- Added a ["Send a test message"](https://plugins.doublesecretagency.com/notifier/testing) button to each Notification's edit screen.
 - Added comprehensive unit tests.
 - Added [translations](https://plugins.doublesecretagency.com/notifier/translations) for eighteen locales.
 

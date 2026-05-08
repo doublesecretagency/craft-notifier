@@ -4,9 +4,9 @@ description: Via Craft user permissions, manage who can view, edit, and delete n
 
 # User Permissions
 
-Notifier registers six permissions under a **Notifier** heading. These are split into two groups: one for managing notifications themselves, and the other for managing the notification log.
+Notifier registers seven permissions under a **Notifier** heading. These are split into two groups: one for managing notifications themselves, and the other for managing the notification log.
 
-<img class="dropshadow" src="/images/permissions/permissions-tree.png" alt="Screenshot of the Notifier permissions tree" style="width:308px; margin-top:10px">
+<img class="dropshadow" src="/images/permissions/permissions-tree.png" alt="Screenshot of the Notifier permissions tree" style="width:329px; margin-top:10px">
 
 Permissions are managed at the user-group level via **Settings > Users > User Groups**, or at the user level by viewing an individual user's **Permissions**.
 
@@ -23,6 +23,10 @@ Users with "View notifications" but **not** "Save notifications" will see them a
 #### `Save notifications`
 
 Allows users to create, edit, duplicate, and draft notifications. Nests beneath "View notifications", because you cannot save what you cannot see.
+
+#### `Test notifications`
+
+Allows users to send a test message via the [**Send a test message**](/testing) button on the edit screen. Decoupled from "Save notifications" permission so trusted users can verify a notification's configuration without necessarily permitting them to make changes.
 
 #### `Delete notifications`
 
@@ -53,7 +57,7 @@ Allows users to delete individual log entries and/or entire days from the notifi
 A few useful configurations for common user types:
 
 - **Read-only editor** - `View notifications` only. The user can browse and inspect notifications, but every field on the edit screen is disabled and no save actions are available.
-- **Standard editor** - `View notifications`, `Save notifications`, `Delete notifications`. For full notification authoring.
+- **Standard editor** - `View notifications`, `Save notifications`, `Test notifications`, `Delete notifications`. For full notification authoring.
 - **Trusted editor** - Same as standard editor, plus `Use the Dynamic Recipients type`. Granted to authors who are trusted to write Twig that runs at send time.
 - **Log auditor** - `View notification log` for read-only access to the audit trail.
 - **Log auditor with cleanup** - `View notification log` and `Delete notification log`. Useful for users responsible for keeping the log tidy.

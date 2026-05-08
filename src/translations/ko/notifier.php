@@ -24,6 +24,7 @@ return [
     'View notifications'              => '알림 보기',
     'Save notifications'              => '알림 저장',
     'Use the Dynamic Recipients type' => '동적 수신자 유형 사용',
+    'Test notifications'              => '알림 테스트',
     'Delete notifications'            => '알림 삭제',
     'View notification log'           => '알림 로그 보기',
     'Delete notification log'         => '알림 로그 삭제',
@@ -174,6 +175,13 @@ return [
     'At most, keep this many log events. Leave blank for no limit.'                                                                                   => '최대 이만큼의 로그 이벤트를 보관합니다. 제한 없이 두려면 비워 두십시오.',
     'Number of days to retain log events'                                                                                                             => '로그 이벤트를 보관할 일수',
     'At most, keep log events for this many days. Leave blank for no limit.'                                                                          => '최대 이만큼의 일수 동안 로그 이벤트를 보관합니다. 제한 없이 두려면 비워 두십시오.',
+
+    // Test notification
+    'Send a test message'                                                                                                          => '테스트 메시지 보내기',
+    'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).' => '테스트 알림을 보내시겠습니까?\n\n구성된 메시지가 구성된 수신자에게 전송됩니다.',
+    'Test'                                                                                                                         => '테스트',
+    'Test notification dispatched.'                                                                                                => '테스트 알림을 보냈습니다.',
+    'No messages were dispatched. Check the recipient configuration.'                                                              => '전송된 메시지가 없습니다. 수신자 구성을 확인하세요.',
 
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.' => '{recipient}(으)로 {messageType}을(를) 보내고 있습니다.',

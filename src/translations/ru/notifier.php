@@ -24,6 +24,7 @@ return [
     'View notifications'              => 'Просмотр уведомлений',
     'Save notifications'              => 'Сохранение уведомлений',
     'Use the Dynamic Recipients type' => 'Использование типа «Динамические получатели»',
+    'Test notifications'              => 'Тестировать уведомления',
     'Delete notifications'            => 'Удаление уведомлений',
     'View notification log'           => 'Просмотр журнала уведомлений',
     'Delete notification log'         => 'Удаление журнала уведомлений',
@@ -174,6 +175,13 @@ return [
     'At most, keep this many log events. Leave blank for no limit.'                                                                                   => 'Хранить не более этого количества записей журнала. Оставьте пустым, чтобы не ограничивать.',
     'Number of days to retain log events'                                                                                                             => 'Количество дней хранения записей журнала',
     'At most, keep log events for this many days. Leave blank for no limit.'                                                                          => 'Хранить записи журнала не дольше этого количества дней. Оставьте пустым, чтобы не ограничивать.',
+
+    // Test notification
+    'Send a test message'                                                                                                          => 'Отправить тестовое сообщение',
+    'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).' => 'Вы уверены, что хотите отправить тестовое уведомление?\n\nНастроенное сообщение будет отправлено настроенным получателям.',
+    'Test'                                                                                                                         => 'Тест',
+    'Test notification dispatched.'                                                                                                => 'Тестовое уведомление отправлено.',
+    'No messages were dispatched. Check the recipient configuration.'                                                              => 'Сообщения не были отправлены. Проверьте конфигурацию получателей.',
 
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.' => 'Отправка {messageType} получателю {recipient}.',
