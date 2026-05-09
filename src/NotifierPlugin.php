@@ -408,11 +408,7 @@ class NotifierPlugin extends Plugin
                         break;
 
                     case 'recipientsType':
-                        if ('announcement' === $notification->messageType) {
-                            // For announcements
-                            $adminsOnly = ($notification->recipientsConfig['adminsOnly'] ?? false);
-                            $event->html = ($adminsOnly ? 'Admins Only' : 'All CP Users');
-                        } else if ('flash' === $notification->messageType) {
+                        if ('flash' === $notification->messageType) {
                             // For flash messages
                             $event->html = Options::RECIPIENTS_TYPE['current-user'];
                         } else {

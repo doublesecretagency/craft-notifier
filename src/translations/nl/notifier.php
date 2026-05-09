@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => 'Gebruiker(s) selecteren',
     'Which users will receive the message?'       => 'Welke gebruikers ontvangen het bericht?',
     'Which user groups will receive the message?' => 'Welke gebruikersgroepen ontvangen het bericht?',
-    'Restricted to Admins Only?'                  => 'Alleen voor beheerders?',
     'Ungrouped Users'                             => 'Gebruikers zonder groep',
     'Twig Snippet to Determine Recipients'        => 'Twig-snippet om ontvangers te bepalen',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => 'Onbekende ontvanger van type "{type}".',
     'Recipient "{name}" has no email address.'                       => 'Ontvanger "{name}" heeft geen e-mailadres.',
     'Recipient "{name}" has no phone number.'                        => 'Ontvanger "{name}" heeft geen telefoonnummer.',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => 'Ontvanger "{name}" heeft geen gekoppelde gebruiker; aankondiging kan niet worden verzonden.',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => 'Ontvanger "{name}" heeft geen toegang tot het Control Panel; aankondiging kan niet worden verzonden.',
     'You do not have permission to use the Dynamic Recipients type.' => 'Je hebt geen toestemming om het type Dynamische ontvangers te gebruiken.',
 
 ];

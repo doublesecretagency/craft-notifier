@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => 'Kullanıcı seçin',
     'Which users will receive the message?'       => 'Mesajı hangi kullanıcılar alacak?',
     'Which user groups will receive the message?' => 'Mesajı hangi kullanıcı grupları alacak?',
-    'Restricted to Admins Only?'                  => 'Yalnızca yöneticilere özel mi?',
     'Ungrouped Users'                             => 'Grupsuz kullanıcılar',
     'Twig Snippet to Determine Recipients'        => 'Alıcıları belirlemek için Twig parçası',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => '"{type}" türünde tanınmayan alıcı.',
     'Recipient "{name}" has no email address.'                       => '"{name}" alıcısının e-posta adresi yok.',
     'Recipient "{name}" has no phone number.'                        => '"{name}" alıcısının telefon numarası yok.',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => '"{name}" alıcısının ilişkili bir kullanıcısı yok; duyuru gönderilemiyor.',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => '"{name}" alıcısı kontrol paneline erişemiyor; duyuru gönderilemiyor.',
     'You do not have permission to use the Dynamic Recipients type.' => 'Dinamik Alıcılar türünü kullanma izniniz yok.',
 
 ];

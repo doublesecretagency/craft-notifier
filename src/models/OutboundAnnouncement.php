@@ -12,6 +12,9 @@
 namespace doublesecretagency\notifier\models;
 
 use Craft;
+use craft\db\Table;
+use craft\helpers\Db;
+use DateTime;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\helpers\Notifier;
 
@@ -23,6 +26,16 @@ class OutboundAnnouncement extends BaseEnvelope
 {
 
     /**
+     * @var int|null ID of the User who should receive this announcement.
+     */
+    public ?int $userId = null;
+
+    /**
+     * @var int|null ID of the Notifier plugin row, resolved once at compile time and carried per envelope so each queue job avoids re-querying.
+     */
+    public ?int $pluginId = null;
+
+    /**
      * @var string
      */
     public string $title = '';
@@ -31,11 +44,6 @@ class OutboundAnnouncement extends BaseEnvelope
      * @var string
      */
     public string $message = '';
-
-    /**
-     * @var bool
-     */
-    public bool $adminsOnly = false;
 
     /**
      * Send the announcement.
@@ -53,16 +61,25 @@ class OutboundAnnouncement extends BaseEnvelope
             return false;
         }
 
-        // Send the announcement
-        Craft::$app->getAnnouncements()->push(
-            $this->title,
-            $this->message,
-            'notifier',
-            $this->adminsOnly
-        );
+        // If no userId specified, log error and bail
+        if (!$this->userId) {
+            $notification->log->error("Unable to post announcement, no recipient userId specified.", $this->envelopeId);
+            return false;
+        }
+
+        // Insert one announcement row for the targeted user
+        Craft::$app->getDb()->createCommand()
+            ->insert(Table::ANNOUNCEMENTS, [
+                'userId'      => $this->userId,
+                'pluginId'    => $this->pluginId,
+                'heading'     => $this->title,
+                'body'        => $this->message,
+                'dateCreated' => Db::prepareDateForDb(new DateTime()),
+            ])
+            ->execute();
 
         // Log success message
-        $notification->log->success("Successfully sent announcement!", $this->envelopeId);
+        $notification->log->success("Successfully posted announcement!", $this->envelopeId);
 
         // Return successfully
         return true;

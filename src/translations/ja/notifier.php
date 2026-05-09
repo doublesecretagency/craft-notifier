@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => 'ユーザーを選択',
     'Which users will receive the message?'       => 'どのユーザーがメッセージを受信しますか?',
     'Which user groups will receive the message?' => 'どのユーザーグループがメッセージを受信しますか?',
-    'Restricted to Admins Only?'                  => '管理者のみに制限しますか?',
     'Ungrouped Users'                             => 'グループ未所属のユーザー',
     'Twig Snippet to Determine Recipients'        => '受信者を決定する Twig スニペット',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => '認識されないタイプ「{type}」の受信者です。',
     'Recipient "{name}" has no email address.'                       => '受信者「{name}」にはメールアドレスがありません。',
     'Recipient "{name}" has no phone number.'                        => '受信者「{name}」には電話番号がありません。',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => '受信者「{name}」に関連付けられたユーザーがいません。お知らせを送信できません。',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => '受信者「{name}」はコントロールパネルにアクセスできません。お知らせを送信できません。',
     'You do not have permission to use the Dynamic Recipients type.' => '動的受信者タイプを使用する権限がありません。',
 
 ];

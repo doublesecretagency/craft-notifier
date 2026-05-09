@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => 'Выберите пользователя или пользователей',
     'Which users will receive the message?'       => 'Какие пользователи получат сообщение?',
     'Which user groups will receive the message?' => 'Какие группы пользователей получат сообщение?',
-    'Restricted to Admins Only?'                  => 'Только для администраторов?',
     'Ungrouped Users'                             => 'Пользователи без группы',
     'Twig Snippet to Determine Recipients'        => 'Twig-фрагмент для определения получателей',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => 'Неизвестный получатель типа «{type}».',
     'Recipient "{name}" has no email address.'                       => 'У получателя «{name}» нет адреса электронной почты.',
     'Recipient "{name}" has no phone number.'                        => 'У получателя «{name}» нет номера телефона.',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => 'У получателя «{name}» нет связанного пользователя; объявление не может быть отправлено.',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => 'У получателя «{name}» нет доступа к панели управления; объявление не может быть отправлено.',
     'You do not have permission to use the Dynamic Recipients type.' => 'У вас нет прав на использование типа «Динамические получатели».',
 
 ];

@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => 'Velg bruker(e)',
     'Which users will receive the message?'       => 'Hvilke brukere skal motta meldingen?',
     'Which user groups will receive the message?' => 'Hvilke brukergrupper skal motta meldingen?',
-    'Restricted to Admins Only?'                  => 'Kun for administratorer?',
     'Ungrouped Users'                             => 'Brukere uten gruppe',
     'Twig Snippet to Determine Recipients'        => 'Twig-snutt for å bestemme mottakere',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => 'Ukjent mottaker av typen "{type}".',
     'Recipient "{name}" has no email address.'                       => 'Mottakeren "{name}" har ingen e-postadresse.',
     'Recipient "{name}" has no phone number.'                        => 'Mottakeren "{name}" har intet telefonnummer.',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => 'Mottakeren "{name}" har ingen tilknyttet bruker; kunngjøringen kan ikke sendes.',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => 'Mottakeren "{name}" har ikke tilgang til kontrollpanelet; kunngjøringen kan ikke sendes.',
     'You do not have permission to use the Dynamic Recipients type.' => 'Du har ikke tillatelse til å bruke typen Dynamiske mottakere.',
 
 ];

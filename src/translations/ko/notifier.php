@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => '사용자 선택',
     'Which users will receive the message?'       => '어떤 사용자가 메시지를 받습니까?',
     'Which user groups will receive the message?' => '어떤 사용자 그룹이 메시지를 받습니까?',
-    'Restricted to Admins Only?'                  => '관리자 전용으로 제한하시겠습니까?',
     'Ungrouped Users'                             => '그룹에 속하지 않은 사용자',
     'Twig Snippet to Determine Recipients'        => '수신자를 결정할 Twig 스니펫',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => '인식되지 않는 유형 "{type}"의 수신자입니다.',
     'Recipient "{name}" has no email address.'                       => '수신자 "{name}"에게 이메일 주소가 없습니다.',
     'Recipient "{name}" has no phone number.'                        => '수신자 "{name}"에게 전화번호가 없습니다.',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => '수신자 "{name}"에 연결된 사용자가 없어 공지를 보낼 수 없습니다.',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => '수신자 "{name}"이(가) 컨트롤 패널에 접근할 수 없어 공지를 보낼 수 없습니다.',
     'You do not have permission to use the Dynamic Recipients type.' => '동적 수신자 유형을 사용할 권한이 없습니다.',
 
 ];

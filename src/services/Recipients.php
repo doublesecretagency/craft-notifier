@@ -42,10 +42,12 @@ class Recipients extends Component
      * Get all selected recipients.
      *
      * @param Notification|null $notification
-     * @param Dispatch|null $dispatch Dispatch currently driving recipient resolution. Only consulted by the `dynamic-recipients` branch.
+     * @param Dispatch|null $dispatch Data for parsing Dynamic Recipients snippets.
+     * @param bool $cpAccessibleOnly Prevent sending Announcements to non-CP users.
+     *
      * @return array
      */
-    public function getRecipients(?Notification $notification = null, ?Dispatch $dispatch = null): array
+    public function getRecipients(?Notification $notification = null, ?Dispatch $dispatch = null, bool $cpAccessibleOnly = false): array
     {
         // Set field handles of User contact info
         $this->_emailField = ($notification->messageConfig['emailField'] ?? null);
@@ -54,7 +56,7 @@ class Recipients extends Component
         // Gather recipients based on type
         switch ($notification->recipientsType ?? null) {
             case 'current-user':       return $this->_currentUser();
-            case 'all-users':          return $this->_allUsers();
+            case 'all-users':          return $this->_allUsers($cpAccessibleOnly);
             case 'all-admins':         return $this->_allAdmins();
             case 'selected-groups':    return ($notification ? $this->_selectedGroups($notification)    : []);
             case 'selected-users':     return ($notification ? $this->_selectedUsers($notification)     : []);
@@ -94,12 +96,21 @@ class Recipients extends Component
     /**
      * Get all Users.
      *
+     * @param bool $cpAccessibleOnly Prevent sending Announcements to non-CP users.
      * @return array
      */
-    private function _allUsers(): array
+    private function _allUsers(bool $cpAccessibleOnly = false): array
     {
-        // Get all users
-        $users = User::find()->all();
+        // Build the User query
+        $query = User::find();
+
+        // Narrow to CP-accessible users when requested
+        if ($cpAccessibleOnly) {
+            $query->can('accessCp');
+        }
+
+        // Get all matching users
+        $users = $query->all();
 
         // Return the Users as Recipients
         return $this->_convertToRecipients($users);
@@ -182,7 +193,7 @@ class Recipients extends Component
      * or unrecognized entries.
      *
      * @param Notification $notification
-     * @param Dispatch|null $dispatch
+     * @param Dispatch|null $dispatch Data for parsing Dynamic Recipients snippets.
      * @return Recipient[]
      */
     private function _dynamicRecipients(Notification $notification, ?Dispatch $dispatch = null): array

@@ -9,7 +9,7 @@
     {% set recipientsTypeOptions = recipientsTypeOptions|filter((label, value) => value != 'dynamic-recipients') %}
 {% endif %}
 
-<div class="message-type-email message-type-sms hidden">
+<div class="message-type-email message-type-sms message-type-announcement hidden">
     {{ forms.selectField({
         label: 'Recipients Type'|t('notifier'),
         instructions: 'Who will receive this message?'|t('notifier'),

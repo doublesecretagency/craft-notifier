@@ -15,6 +15,7 @@ use Craft;
 use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\base\Model;
+use craft\errors\InvalidPluginException;
 use craft\helpers\Queue;
 use craft\helpers\StringHelper;
 use craft\web\View;
@@ -295,7 +296,7 @@ class Dispatch extends Model
                 break;
             case 'announcement':
                 $this->useQueue = true;
-                $this->envelopes = [$this->_compileAnnouncement()];
+                $this->envelopes = $this->_compileAnnouncement();
                 break;
             case 'flash':
                 $this->useQueue = false;
@@ -484,66 +485,108 @@ class Dispatch extends Model
     }
 
     /**
-     * Compile the message as an Announcement.
+     * Compile the message as one or more Announcements.
      *
-     * @return EnvelopeInterface|null
+     * @return array
+     * @throws InvalidPluginException
      */
-    private function _compileAnnouncement(): ?EnvelopeInterface
+    private function _compileAnnouncement(): array
     {
-        // Whether announcement is being sent only to Admins
-        $adminsOnly = ($this->notification->recipientsConfig['adminsOnly'] ?? false);
+        // Get recipients, limited to CP-accessible users
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this, true);
 
-        // Set job info
-        $jobInfo = [
-            'messageType' => 'an announcement',
-            'recipient' => ($adminsOnly ? 'system Admins only' : 'all control panel users'),
-        ];
+        // Get the Notifier plugin ID
+        $pluginInfo = Craft::$app->getPlugins()->getPluginInfo('notifier');
+        $pluginId = ($pluginInfo['id'] ?? null);
 
-        // Compress variables for Twig
-        $config = [
-            'recipient' => null,
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
             'notification' => $this->notification,
             'event' => $this->event,
             'data' => $this->data,
         ];
 
-        // Attempt to parse message body and title
-        try {
-            // Parse text
-            $title   = $this->_parseTwig($config, $this->notification->messageConfig['announcementTitle'] ?? null);
-            $message = $this->_parseTwig($config, $this->notification->messageConfig['announcementMessage'] ?? null);
-            // No parse error by default
-            $parseError = null;
-        } catch (Exception|Throwable $e) {
-            // Unable to parse text
-            $title   = ($this->notification->messageConfig['announcementTitle'] ?? null);
-            $message = ($this->notification->messageConfig['announcementMessage'] ?? null);
-            // Get parse error
-            $parseError = $e;
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient has no associated User, log and skip
+            if (!$recipient->user) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no associated User; cannot send announcement.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // If the User cannot access the control panel, log and skip
+            if (!$recipient->user->can('accessCp')) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" cannot access the control panel; cannot send announcement.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $jobInfo = [
+                'messageType' => 'an announcement',
+                'recipient' => ($recipient->name ?? $genericRecipient),
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse message body and title
+            try {
+                // Parse text
+                $title   = $this->_parseTwig($config, $this->notification->messageConfig['announcementTitle'] ?? null);
+                $message = $this->_parseTwig($config, $this->notification->messageConfig['announcementMessage'] ?? null);
+                // No parse error by default
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                // Unable to parse text
+                $title   = ($this->notification->messageConfig['announcementTitle'] ?? null);
+                $message = ($this->notification->messageConfig['announcementMessage'] ?? null);
+                // Get parse error
+                $parseError = $e;
+            }
+
+            // Get message details
+            $details = [
+                'userId' => $recipient->user->id,
+                'pluginId' => $pluginId,
+                'title' => $title,
+                'message' => $message,
+            ];
+
+            // Initialize logging for envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
+
+            // If a parsing error occurred, log and skip it
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound announcement into envelope
+            $outbound[] = new OutboundAnnouncement(array_merge([
+                'notificationId' => $this->notification->id,
+                'envelopeId' => $envelopeId,
+                'jobInfo' => $jobInfo
+            ], $details));
+
         }
 
-        // Get message details
-        $details = [
-            'title' => $title,
-            'message' => $message,
-            'adminsOnly' => $adminsOnly,
-        ];
-
-        // Initialize logging for envelope (with the test flag tagged on for the log row)
-        $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
-
-        // If a parsing error occurred, log and skip it
-        if ($parseError) {
-            $this->_logError($parseError, $envelopeId);
-            return null;
-        }
-
-        // Put outbound announcement into envelope
-        return new OutboundAnnouncement(array_merge([
-            'notificationId' => $this->notification->id,
-            'envelopeId' => $envelopeId,
-            'jobInfo' => $jobInfo
-        ], $details));
+        // Return all outbound messages
+        return $outbound;
     }
 
     /**

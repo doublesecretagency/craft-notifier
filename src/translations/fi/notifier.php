@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => 'Valitse käyttäjä(t)',
     'Which users will receive the message?'       => 'Mitkä käyttäjät vastaanottavat viestin?',
     'Which user groups will receive the message?' => 'Mitkä käyttäjäryhmät vastaanottavat viestin?',
-    'Restricted to Admins Only?'                  => 'Vain järjestelmänvalvojille?',
     'Ungrouped Users'                             => 'Ryhmättömät käyttäjät',
     'Twig Snippet to Determine Recipients'        => 'Twig-katkelma vastaanottajien määrittämiseen',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => 'Tuntematon vastaanottaja, tyyppi "{type}".',
     'Recipient "{name}" has no email address.'                       => 'Vastaanottajalla "{name}" ei ole sähköpostiosoitetta.',
     'Recipient "{name}" has no phone number.'                        => 'Vastaanottajalla "{name}" ei ole puhelinnumeroa.',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => 'Vastaanottajalla "{name}" ei ole liitettyä käyttäjää; ilmoitusta ei voida lähettää.',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => 'Vastaanottajalla "{name}" ei ole pääsyä hallintapaneeliin; ilmoitusta ei voida lähettää.',
     'You do not have permission to use the Dynamic Recipients type.' => 'Sinulla ei ole oikeutta käyttää Dynaamiset vastaanottajat -tyyppiä.',
 
 ];

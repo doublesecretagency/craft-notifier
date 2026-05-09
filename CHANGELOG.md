@@ -22,6 +22,7 @@
 - Added a ["Send a test message"](https://plugins.doublesecretagency.com/notifier/testing) button to each Notification's edit screen.
 - Added comprehensive unit tests.
 - Added [translations](https://plugins.doublesecretagency.com/notifier/translations) for eighteen locales.
+- Announcement notifications now support every standard [recipient type](https://plugins.doublesecretagency.com/notifier/recipients/types/).
 
 ### Changed
 - The Notification Log utility is now hidden from users without the "View notification log" permission.

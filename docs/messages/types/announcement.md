@@ -8,6 +8,8 @@ Posts **an announcement** to the Craft control panel when the notification event
 
 <img class="dropshadow" src="/images/messages/announcement-example.png" alt="" style="width:396px; margin-top:10px">
 
+Announcements are posted in the upper-right corner of the control panel for each user (marked by the gift icon).
+
 ## Config
 
 <img class="dropshadow" src="/images/messages/announcement-config.png" alt="" style="width:650px; margin-top:10px">
@@ -16,9 +18,7 @@ Posts **an announcement** to the Craft control panel when the notification event
 
 ## Announcement Recipients
 
-Announcements can be shown to all control panel users, or restricted to only Admins.
-
-<img class="dropshadow" src="/images/messages/announcement-recipients.png" alt="" style="width:650px; margin-top:10px">
+Announcements are only visible within the control panel. All [recipient types](/recipients/types/) are supported, but recipients without control panel access will be skipped.
 
 ## Examples
 

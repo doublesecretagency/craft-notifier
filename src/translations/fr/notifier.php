@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => 'Sélectionner un ou plusieurs utilisateurs',
     'Which users will receive the message?'       => 'Quels utilisateurs recevront le message ?',
     'Which user groups will receive the message?' => 'Quels groupes d’utilisateurs recevront le message ?',
-    'Restricted to Admins Only?'                  => 'Réservé aux administrateurs ?',
     'Ungrouped Users'                             => 'Utilisateurs sans groupe',
     'Twig Snippet to Determine Recipients'        => 'Extrait Twig pour déterminer les destinataires',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => 'Destinataire de type "{type}" non reconnu.',
     'Recipient "{name}" has no email address.'                       => 'Le destinataire "{name}" n’a pas d’adresse e-mail.',
     'Recipient "{name}" has no phone number.'                        => 'Le destinataire "{name}" n’a pas de numéro de téléphone.',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => 'Le destinataire "{name}" n’a pas d’utilisateur associé ; impossible d’envoyer l’annonce.',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => 'Le destinataire "{name}" ne peut pas accéder au panneau de configuration ; impossible d’envoyer l’annonce.',
     'You do not have permission to use the Dynamic Recipients type.' => 'Vous n’avez pas la permission d’utiliser le type Destinataires dynamiques.',
 
 ];

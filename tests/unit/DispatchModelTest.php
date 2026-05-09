@@ -204,6 +204,75 @@ class DispatchModelTest extends TestCase
     }
 
     // ========================================================================= //
+    // Announcement compile pipeline
+    // ========================================================================= //
+
+    public function testAnnouncementCompilerResolvesRecipientsViaService(): void
+    {
+        // Announcements now flow through the standard Recipients service
+        // (same as email and SMS). The compile region must call getRecipients.
+        $this->assertMatchesRegularExpression(
+            '/_compileAnnouncement[\s\S]*?recipients->getRecipients\(/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testAnnouncementCompilerPassesCpAccessibleFlag(): void
+    {
+        // The announcement compile passes cpAccessibleOnly=true so the bulk
+        // all-users branch narrows to CP-accessible users at query time.
+        $this->assertMatchesRegularExpression(
+            '/_compileAnnouncement[\s\S]*?->getRecipients\([^)]*,\s*\$this,\s*true\)/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testAnnouncementCompilerSkipsRecipientsWithoutUser(): void
+    {
+        // Announcements require a userId; recipients without an associated
+        // User must be skipped with a warning rather than crashing.
+        $this->assertMatchesRegularExpression(
+            '/_compileAnnouncement[\s\S]*?if\s*\(!\$recipient->user\)/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testAnnouncementCompilerSkipsNonCpAccessibleRecipients(): void
+    {
+        // Front-end-only users wouldn't be able to see the announcement;
+        // the compile region must guard with can('accessCp') and skip them.
+        $this->assertMatchesRegularExpression(
+            "/_compileAnnouncement[\s\S]*?\\\$recipient->user->can\('accessCp'\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testAnnouncementCompilerEmitsUserIdInEnvelopeDetails(): void
+    {
+        // Each emitted envelope must carry the recipient's userId so the
+        // OutboundAnnouncement::send() insert has the right target.
+        $this->assertMatchesRegularExpression(
+            "/_compileAnnouncement[\s\S]*?'userId'\s*=>\s*\\\$recipient->user->id/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testAnnouncementCompilerResolvesPluginIdOnce(): void
+    {
+        // The plugin id is the same for every recipient in a dispatch, so
+        // it's resolved once at the top of _compileAnnouncement() and baked
+        // into each envelope. Avoids a per-recipient query at send time.
+        $this->assertMatchesRegularExpression(
+            "/_compileAnnouncement[\s\S]*?getPlugins\(\)->getPluginInfo\('notifier'\)/",
+            $this->dispatchSource
+        );
+        $this->assertMatchesRegularExpression(
+            "/_compileAnnouncement[\s\S]*?'pluginId'\s*=>\s*\\\$pluginId/",
+            $this->dispatchSource
+        );
+    }
+
+    // ========================================================================= //
     // Entry-event filtering
     // ========================================================================= //
 

@@ -9,9 +9,9 @@ use ReflectionClass;
 /**
  * Pure-unit tests for the OutboundAnnouncement envelope.
  *
- * Announcements are pushed into Craft's CP announcement service. These
- * tests cover the envelope's state and verify that the send() path
- * dispatches through the announcements API.
+ * Announcements are written directly into Craft's announcements table
+ * (one row per recipient). These tests cover the envelope's state and
+ * verify that the send() path inserts a properly-shaped row.
  */
 class OutboundAnnouncementTest extends TestCase
 {
@@ -51,8 +51,8 @@ class OutboundAnnouncementTest extends TestCase
 
         $this->assertSame('', $announcement->title);
         $this->assertSame('', $announcement->message);
-        // adminsOnly defaults to false — broadcasts to all CP users by default.
-        $this->assertFalse($announcement->adminsOnly);
+        // userId defaults to null until the dispatch sets it from the resolved Recipient.
+        $this->assertNull($announcement->userId);
     }
 
     // ========================================================================= //
@@ -64,42 +64,68 @@ class OutboundAnnouncementTest extends TestCase
         $announcement = new OutboundAnnouncement([
             'notificationId' => 3,
             'envelopeId'     => 11,
+            'userId'         => 42,
+            'pluginId'       => 7,
             'title'          => 'New release',
             'message'        => 'Notifier 3.0 is live.',
-            'adminsOnly'     => true,
         ]);
 
         $this->assertSame(3, $announcement->notificationId);
         $this->assertSame(11, $announcement->envelopeId);
+        $this->assertSame(42, $announcement->userId);
+        $this->assertSame(7, $announcement->pluginId);
         $this->assertSame('New release', $announcement->title);
         $this->assertSame('Notifier 3.0 is live.', $announcement->message);
-        $this->assertTrue($announcement->adminsOnly);
     }
 
     // ========================================================================= //
     // Source-level guards
     // ========================================================================= //
 
-    public function testSendDispatchesViaCraftAnnouncements(): void
+    public function testSendInsertsIntoAnnouncementsTable(): void
     {
-        // Announcement delivery rides on Craft's CP announcements API.
-        $this->assertStringContainsString(
-            'Craft::$app->getAnnouncements()->push',
-            $this->announcementSource
-        );
+        // Announcement delivery now writes one row per recipient directly into
+        // Craft's announcements table, bypassing the binary admins-only API.
+        $this->assertStringContainsString('Table::ANNOUNCEMENTS', $this->announcementSource);
+        $this->assertStringContainsString('createCommand()', $this->announcementSource);
+        $this->assertStringContainsString('->insert(', $this->announcementSource);
     }
 
-    public function testSendPassesAdminsOnlyToAnnouncementService(): void
+    public function testSendPersistsUserIdHeadingAndBody(): void
     {
-        // The adminsOnly flag must reach Craft's announcement push call so
-        // that the audience is honored at the announcement-service layer too.
-        $this->assertStringContainsString('$this->adminsOnly', $this->announcementSource);
+        // The inserted row must carry the recipient userId plus the rendered
+        // heading and body. Match on the array keys; values are bound by reference.
+        $this->assertStringContainsString("'userId'", $this->announcementSource);
+        $this->assertStringContainsString("'heading'", $this->announcementSource);
+        $this->assertStringContainsString("'body'", $this->announcementSource);
+        $this->assertStringContainsString('$this->userId', $this->announcementSource);
+        $this->assertStringContainsString('$this->title', $this->announcementSource);
+        $this->assertStringContainsString('$this->message', $this->announcementSource);
     }
 
-    public function testSendUsesNotifierAsAnnouncementSource(): void
+    public function testSendUsesCarriedPluginIdWithoutQuerying(): void
     {
-        // The push call tags the announcement with the 'notifier' source so
-        // the CP can attribute / filter it appropriately.
-        $this->assertStringContainsString("'notifier'", $this->announcementSource);
+        // The pluginId rides along on the envelope (resolved once at compile
+        // time in Dispatch). send() must use the carried value rather than
+        // re-querying for every recipient. A 2000-recipient announcement
+        // would otherwise issue 2000 redundant lookups.
+        $this->assertStringContainsString("'pluginId'", $this->announcementSource);
+        $this->assertStringContainsString('$this->pluginId', $this->announcementSource);
+        $this->assertStringNotContainsString('Table::PLUGINS', $this->announcementSource);
+    }
+
+    public function testSendNoLongerCallsAnnouncementsServicePush(): void
+    {
+        // Bypassing the admins-only API is the whole point of the refactor;
+        // any leftover call here would re-introduce the binary toggle behavior.
+        $this->assertStringNotContainsString('getAnnouncements()->push', $this->announcementSource);
+    }
+
+    public function testSendBailsWithoutUserId(): void
+    {
+        // The announcements table requires a userId. Without one, the envelope
+        // logs an error and bails rather than inserting a malformed row.
+        $this->assertStringContainsString('!$this->userId', $this->announcementSource);
+        $this->assertStringContainsString('log->error', $this->announcementSource);
     }
 }

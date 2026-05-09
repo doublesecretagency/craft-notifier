@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => 'Välj användare',
     'Which users will receive the message?'       => 'Vilka användare ska ta emot meddelandet?',
     'Which user groups will receive the message?' => 'Vilka användargrupper ska ta emot meddelandet?',
-    'Restricted to Admins Only?'                  => 'Endast för administratörer?',
     'Ungrouped Users'                             => 'Användare utan grupp',
     'Twig Snippet to Determine Recipients'        => 'Twig-snutt för att bestämma mottagare',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => 'Okänd mottagare av typen "{type}".',
     'Recipient "{name}" has no email address.'                       => 'Mottagaren "{name}" har ingen e-postadress.',
     'Recipient "{name}" has no phone number.'                        => 'Mottagaren "{name}" har inget telefonnummer.',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => 'Mottagaren "{name}" har ingen kopplad användare; meddelandet kan inte skickas.',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => 'Mottagaren "{name}" har inte åtkomst till kontrollpanelen; meddelandet kan inte skickas.',
     'You do not have permission to use the Dynamic Recipients type.' => 'Du har inte behörighet att använda typen Dynamiska mottagare.',
 
 ];

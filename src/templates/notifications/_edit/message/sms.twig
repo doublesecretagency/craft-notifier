@@ -17,7 +17,7 @@
 
     {{ codeEditor.textAreaField({
         label: "SMS Message Body"|t('notifier'),
-        instructions: "Message to be sent via SMS (text message).",
+        instructions: "Message to send via SMS (text message). Plain text only. Markdown and HTML are not supported.",
         placeholder: commonPlaceholder,
         rows: 3,
         id: 'messageConfig-smsMessage',

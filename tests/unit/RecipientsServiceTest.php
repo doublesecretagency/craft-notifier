@@ -46,14 +46,38 @@ class RecipientsServiceTest extends TestCase
         $this->assertTrue($this->reflection->getMethod('getRecipients')->isPublic());
     }
 
-    public function testGetRecipientsAcceptsNotificationAndDispatch(): void
+    public function testGetRecipientsAcceptsNotificationDispatchAndCpFlag(): void
     {
         // Dispatch is required for the dynamic-recipients branch to drive
-        // the Twig sandbox; both parameters must be present.
+        // the Twig sandbox. The cpAccessibleOnly flag is consumed by the
+        // announcement channel to narrow the bulk all-users branch at query time.
         $params = $this->reflection->getMethod('getRecipients')->getParameters();
-        $this->assertCount(2, $params);
+        $this->assertCount(3, $params);
         $this->assertSame('notification', $params[0]->getName());
         $this->assertSame('dispatch', $params[1]->getName());
+        $this->assertSame('cpAccessibleOnly', $params[2]->getName());
+
+        // The flag defaults to false so existing email/SMS callers are unaffected.
+        $this->assertTrue($params[2]->isDefaultValueAvailable());
+        $this->assertFalse($params[2]->getDefaultValue());
+    }
+
+    public function testCpAccessibleFlagThreadsIntoAllUsersBranch(): void
+    {
+        // The flag must reach _allUsers() so the User query can narrow at
+        // query time. Other strategy branches ignore it on purpose.
+        $this->assertMatchesRegularExpression(
+            "/'all-users':\s*return\s+\\\$this->_allUsers\(\\\$cpAccessibleOnly\)/",
+            $this->recipientsSource
+        );
+    }
+
+    public function testAllUsersAppliesCpAccessFilterWhenRequested(): void
+    {
+        // _allUsers must apply ->can('accessCp') on the User query when the
+        // flag is true, so front-end-only users are skipped at query time
+        // (rather than triggering one warning per skipped user downstream).
+        $this->assertStringContainsString("can('accessCp')", $this->recipientsSource);
     }
 
     // ========================================================================= //

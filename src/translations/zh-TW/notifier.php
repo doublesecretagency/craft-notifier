@@ -156,7 +156,6 @@ return [
     'Select User(s)'                              => '選取使用者',
     'Which users will receive the message?'       => '哪些使用者會收到訊息?',
     'Which user groups will receive the message?' => '哪些使用者群組會收到訊息?',
-    'Restricted to Admins Only?'                  => '僅限管理員嗎?',
     'Ungrouped Users'                             => '未分組的使用者',
     'Twig Snippet to Determine Recipients'        => '用於決定收件者的 Twig 程式片段',
 
@@ -196,6 +195,8 @@ return [
     'Unrecognized recipient of type "{type}".'                       => '無法辨識的「{type}」類型收件者。',
     'Recipient "{name}" has no email address.'                       => '收件者「{name}」沒有電子郵件地址。',
     'Recipient "{name}" has no phone number.'                        => '收件者「{name}」沒有電話號碼。',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => '收件者「{name}」沒有關聯的使用者，無法傳送公告。',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => '收件者「{name}」無法存取控制面板，無法傳送公告。',
     'You do not have permission to use the Dynamic Recipients type.' => '您沒有使用動態收件者類型的權限。',
 
 ];

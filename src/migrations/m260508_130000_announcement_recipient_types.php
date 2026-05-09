@@ -1,0 +1,90 @@
+<?php
+/**
+ * Notifier plugin for Craft CMS
+ *
+ * Send custom Twig messages when Craft events are triggered.
+ *
+ * @author    Double Secret Agency
+ * @link      https://plugins.doublesecretagency.com/
+ * @copyright Copyright (c) 2021 Double Secret Agency
+ */
+
+namespace doublesecretagency\notifier\migrations;
+
+use craft\db\Migration;
+use craft\db\Query;
+use craft\helpers\Json;
+
+/**
+ * m260508_130000_announcement_recipient_types migration
+ *
+ * Migrates Announcement notifications from the legacy binary
+ * `recipientsConfig.adminsOnly` toggle to the standard `recipientsType`
+ * field used by every other message type. The legacy `adminsOnly`
+ * value maps to either `all-admins` (true) or `all-users` (false).
+ * The `adminsOnly` key is dropped from `recipientsConfig`.
+ *
+ * Idempotent: rows that already carry a non-empty `recipientsType`
+ * are skipped.
+ *
+ * @since 3.0.0
+ */
+class m260508_130000_announcement_recipient_types extends Migration
+{
+
+    /**
+     * @inheritdoc
+     */
+    public function safeUp(): bool
+    {
+        // Get every existing Announcement notification
+        $rows = (new Query())
+            ->select(['id', 'recipientsType', 'recipientsConfig'])
+            ->from('{{%notifier_notifications}}')
+            ->where(['messageType' => 'announcement'])
+            ->all();
+
+        // Loop through each Announcement notification
+        foreach ($rows as $row) {
+
+            // If recipientsType is already set, skip (already migrated)
+            if (!empty($row['recipientsType'])) {
+                continue;
+            }
+
+            // Decode the existing recipientsConfig
+            $recipientsConfig = Json::decode($row['recipientsConfig']) ?? [];
+
+            // Map the legacy adminsOnly value to the standard recipientsType
+            $adminsOnly = (bool)($recipientsConfig['adminsOnly'] ?? true);
+            $recipientsType = ($adminsOnly ? 'all-admins' : 'all-users');
+
+            // Drop the legacy key from recipientsConfig
+            unset($recipientsConfig['adminsOnly']);
+
+            // Save updated row
+            $this->update(
+                '{{%notifier_notifications}}',
+                [
+                    'recipientsType' => $recipientsType,
+                    'recipientsConfig' => Json::encode($recipientsConfig),
+                ],
+                ['id' => $row['id']],
+                [],
+                false
+            );
+        }
+
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function safeDown(): bool
+    {
+        echo "m260508_130000_announcement_recipient_types cannot be reverted.\n";
+        return false;
+    }
+
+}
