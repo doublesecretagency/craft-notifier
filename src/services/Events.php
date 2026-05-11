@@ -120,6 +120,18 @@ class Events extends Component
             Drafts::EVENT_AFTER_APPLY_DRAFT,
             [EntryEvents::class, 'afterApplyDraft']
         );
+        // When an entry is deleted
+        Event::on(
+            Entry::class,
+            Entry::EVENT_AFTER_DELETE,
+            [EntryEvents::class, 'afterDelete']
+        );
+        // When an entry is restored
+        Event::on(
+            Entry::class,
+            Entry::EVENT_AFTER_RESTORE,
+            [EntryEvents::class, 'afterRestore']
+        );
     }
 
     /**
@@ -140,6 +152,30 @@ class Events extends Component
             Asset::class,
             Asset::EVENT_AFTER_PROPAGATE,
             [AssetEvents::class, 'afterPropagate']
+        );
+        // When an asset is moved between folders or volumes
+        Event::on(
+            Asset::class,
+            Asset::EVENT_AFTER_PROPAGATE,
+            [AssetEvents::class, 'afterMove']
+        );
+        // When an existing asset is updated (anything other than a move)
+        Event::on(
+            Asset::class,
+            Asset::EVENT_AFTER_PROPAGATE,
+            [AssetEvents::class, 'afterUpdate']
+        );
+        // When an asset is deleted
+        Event::on(
+            Asset::class,
+            Asset::EVENT_AFTER_DELETE,
+            [AssetEvents::class, 'afterDelete']
+        );
+        // When an asset is restored
+        Event::on(
+            Asset::class,
+            Asset::EVENT_AFTER_RESTORE,
+            [AssetEvents::class, 'afterRestore']
         );
     }
 
@@ -167,6 +203,24 @@ class Events extends Component
             Users::class,
             Users::EVENT_AFTER_ACTIVATE_USER,
             [UserEvents::class, 'afterActivateUser']
+        );
+        // When an existing user is updated
+        Event::on(
+            User::class,
+            User::EVENT_AFTER_PROPAGATE,
+            [UserEvents::class, 'afterUpdate']
+        );
+        // When a user is deleted
+        Event::on(
+            User::class,
+            User::EVENT_AFTER_DELETE,
+            [UserEvents::class, 'afterDelete']
+        );
+        // When a user is restored
+        Event::on(
+            User::class,
+            User::EVENT_AFTER_RESTORE,
+            [UserEvents::class, 'afterRestore']
         );
     }
 

@@ -62,10 +62,13 @@ class ConditionTemplateGuardsTest extends TestCase
             "{% include 'notifier/notifications/_edit/event/_condition' with { eventType: 'entries' } %}",
             $source
         );
-        $this->assertStringContainsString(
-            'entries-event-after-save entries-event-after-propagate hidden',
-            $source
-        );
+        // Wrapper must carry a toggle class for every entries event value so
+        // the condition builder stays visible across save, propagate, delete,
+        // and restore.
+        $this->assertStringContainsString('entries-event-after-save', $source);
+        $this->assertStringContainsString('entries-event-after-propagate', $source);
+        $this->assertStringContainsString('entries-event-after-delete', $source);
+        $this->assertStringContainsString('entries-event-after-restore', $source);
         $this->assertDoesNotMatchRegularExpression(
             "/notification\.eventType\s*==\s*'entries'/",
             $source
@@ -93,16 +96,18 @@ class ConditionTemplateGuardsTest extends TestCase
         // is set, mirroring the entries pattern. The sub-dropdown carries
         // toggle:true + targetPrefix '.users-event-' (in users/index.twig),
         // and the condition wrapper carries one toggle class per available
-        // event value (after-propagate when a user is created,
-        // after-activate-user when a user is activated).
+        // event value: after-propagate (user created), after-activate-user
+        // (user activated), after-update (user updated), after-delete,
+        // after-restore.
         $index = self::read('users/index.twig');
         $this->assertStringContainsString("targetPrefix: '.users-event-'", $index);
 
         $condition = self::read('users/condition.twig');
-        $this->assertMatchesRegularExpression(
-            '/<div class="users-event-after-propagate users-event-after-activate-user hidden">/',
-            $condition
-        );
+        $this->assertStringContainsString('users-event-after-propagate', $condition);
+        $this->assertStringContainsString('users-event-after-activate-user', $condition);
+        $this->assertStringContainsString('users-event-after-update', $condition);
+        $this->assertStringContainsString('users-event-after-delete', $condition);
+        $this->assertStringContainsString('users-event-after-restore', $condition);
     }
 
     public function testAssetsTabIncludesConditionWithAssetsEventType(): void
@@ -124,15 +129,17 @@ class ConditionTemplateGuardsTest extends TestCase
     {
         // Same pattern as users: toggle:true + targetPrefix '.assets-event-'
         // (in assets/index.twig) and a wrapper class per event value
-        // on assets/condition.twig.
+        // on assets/condition.twig (after-propagate, after-move, after-update,
+        // after-delete, after-restore).
         $index = self::read('assets/index.twig');
         $this->assertStringContainsString("targetPrefix: '.assets-event-'", $index);
 
         $condition = self::read('assets/condition.twig');
-        $this->assertMatchesRegularExpression(
-            '/<div class="assets-event-after-propagate hidden">/',
-            $condition
-        );
+        $this->assertStringContainsString('assets-event-after-propagate', $condition);
+        $this->assertStringContainsString('assets-event-after-move', $condition);
+        $this->assertStringContainsString('assets-event-after-update', $condition);
+        $this->assertStringContainsString('assets-event-after-delete', $condition);
+        $this->assertStringContainsString('assets-event-after-restore', $condition);
     }
 
     public function testCommerceOrdersTabIncludesConditionWithCommerceOrdersEventType(): void

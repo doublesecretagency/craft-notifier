@@ -18,6 +18,10 @@ This trigger is filterable by **sites**, **sections and entry types**, and the [
 
 <!--@include: @/events/types/_field-conditions.md-->
 
+<img class="dropshadow" src="/images/events/field-conditions-has-changed.png" alt="" style="width:600px; margin-top:10px">
+
+<!--@include: @/events/types/_has-changed-operator.md-->
+
 ## Twig variables
 
 The `object` variable (and its `entry` alias) is the saved [Entry](https://docs.craftcms.com/api/v5/craft-elements-entry.html). The pre-save copy is available as [`original`](/messages/variables#fetching-the-original-element).

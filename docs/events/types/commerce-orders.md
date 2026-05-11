@@ -6,7 +6,7 @@ description: Send a notification when a Craft Commerce Order event is triggered.
 
 Sends a notification when a **Commerce Order** event is triggered.
 
-<img class="dropshadow" src="/images/events/event-commerce-orders.png" alt="" style="width:422px; margin-top:10px">
+<img class="dropshadow" src="/images/events/event-commerce-orders.png" alt="" style="width:416px; margin-top:10px">
 
 :::tip Requires Craft Commerce
 These triggers are only available when [Craft Commerce](https://plugins.craftcms.com/commerce) is installed. The event type is hidden from the dropdown otherwise.

@@ -9,8 +9,17 @@
 - Added a ["has changed" operator](https://plugins.doublesecretagency.com/notifier/events/types/entries/entry-saved-per-site#has-changed-operator) to field condition rules.
 - Added [Volume filtering](https://plugins.doublesecretagency.com/notifier/events/types/assets) for Asset events.
 - Added [User Group filtering](https://plugins.doublesecretagency.com/notifier/events/types/users) for User events.
-- Added trigger event ["When an order is completed (placed)"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
-- Added trigger event ["When an order is fully paid"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
+- Added trigger event ["When an entry is deleted"](https://plugins.doublesecretagency.com/notifier/events/types/entries/entry-deleted). ([#2](https://github.com/doublesecretagency/craft-notifier/issues/2))
+- Added trigger event ["When an entry is restored"](https://plugins.doublesecretagency.com/notifier/events/types/entries/entry-restored).
+- Added trigger event ["When a user is updated"](https://plugins.doublesecretagency.com/notifier/events/types/users/user-updated). ([#2](https://github.com/doublesecretagency/craft-notifier/issues/2))
+- Added trigger event ["When a user is deleted"](https://plugins.doublesecretagency.com/notifier/events/types/users/user-deleted). ([#2](https://github.com/doublesecretagency/craft-notifier/issues/2))
+- Added trigger event ["When a user is restored"](https://plugins.doublesecretagency.com/notifier/events/types/users/user-restored).
+- Added trigger event ["When an asset is moved"](https://plugins.doublesecretagency.com/notifier/events/types/assets/asset-moved).
+- Added trigger event ["When an asset is updated"](https://plugins.doublesecretagency.com/notifier/events/types/assets/asset-updated).
+- Added trigger event ["When an asset is deleted"](https://plugins.doublesecretagency.com/notifier/events/types/assets/asset-deleted). ([#2](https://github.com/doublesecretagency/craft-notifier/issues/2))
+- Added trigger event ["When an asset is restored"](https://plugins.doublesecretagency.com/notifier/events/types/assets/asset-restored).
+- Added trigger event ["When an order is completed (placed)"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders/order-completed) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
+- Added trigger event ["When an order is fully paid"](https://plugins.doublesecretagency.com/notifier/events/types/commerce-orders/order-fully-paid) for [Craft Commerce](https://plugins.craftcms.com/commerce). ([#33](https://github.com/doublesecretagency/craft-notifier/pull/33)) (thanks @chasegiunta)
 - Added user permissions for viewing, saving, testing, and deleting notifications. ([#28](https://github.com/doublesecretagency/craft-notifier/issues/28))
 - Added user permissions for authoring Dynamic Recipients snippets.
 - Added user permissions for viewing and deleting the notification log.

@@ -10,6 +10,8 @@ Sends a notification when **a User account becomes active**. The trigger fires w
 
 <!--@include: @/events/types/_field-conditions.md-->
 
+<img class="dropshadow" src="/images/events/field-conditions-generic.png" alt="" style="width:600px; margin-top:10px">
+
 ## Twig variables
 
 The `object` variable (and its `user` alias) is the activated [User](https://docs.craftcms.com/api/v5/craft-elements-user.html).

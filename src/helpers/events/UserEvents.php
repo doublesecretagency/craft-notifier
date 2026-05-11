@@ -16,6 +16,7 @@ use craft\events\ModelEvent;
 use craft\events\UserEvent;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\NotifierPlugin;
+use yii\base\Event;
 
 /**
  * Class UserEvents
@@ -118,6 +119,90 @@ class UserEvents
         NotifierPlugin::getInstance()->messages->sendAll($notifications, $event, [
             'object' => $event->user,
         ]);
+    }
+
+    /**
+     * When an existing user is updated.
+     *
+     * @param ModelEvent $event
+     * @return void
+     */
+    public static function afterUpdate(ModelEvent $event): void
+    {
+        /** @var User $user */
+        $user = $event->sender;
+
+        // If first time being saved, this is a new user; skip it
+        if ($user->firstSave) {
+            return;
+        }
+
+        // Get captured pre-save original for this user
+        $original = (static::$_originals[$user->id] ?? null);
+
+        // If the pending status just transitioned from true to false, this
+        // save is part of the activation flow; let after-activate-user own it
+        if ($original && $original->pending && !$user->pending) {
+            return;
+        }
+
+        // Get all notifications for this event
+        $notifications = Notification::find()
+            ->where([
+                'eventType' => 'users',
+                'event' => 'after-update',
+            ])
+            ->all();
+
+        // Pass captured original for change-detection use in templates
+        $data = [
+            'original' => $original,
+        ];
+
+        // Send all matching notifications
+        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event, $data);
+    }
+
+    // ========================================================================= //
+
+    /**
+     * When a user is deleted.
+     *
+     * @param Event $event
+     * @return void
+     */
+    public static function afterDelete(Event $event): void
+    {
+        // Get all notifications for this event
+        $notifications = Notification::find()
+            ->where([
+                'eventType' => 'users',
+                'event' => 'after-delete',
+            ])
+            ->all();
+
+        // Send all matching notifications
+        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
+    }
+
+    /**
+     * When a user is restored.
+     *
+     * @param Event $event
+     * @return void
+     */
+    public static function afterRestore(Event $event): void
+    {
+        // Get all notifications for this event
+        $notifications = Notification::find()
+            ->where([
+                'eventType' => 'users',
+                'event' => 'after-restore',
+            ])
+            ->all();
+
+        // Send all matching notifications
+        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
     }
 
 }

@@ -109,6 +109,122 @@ class OptionsTest extends TestCase
     }
 
     // ========================================================================= //
+    // ALL_EVENTS coverage: Entry events (Tier 1 expansion)
+    // ========================================================================= //
+
+    public function testEntriesAppearsInAllEvents(): void
+    {
+        $this->assertArrayHasKey('entries', Options::ALL_EVENTS);
+    }
+
+    public function testEntriesListsAllFourEventValues(): void
+    {
+        // Save and propagate were the original two; delete and restore arrived
+        // in the Tier 1 expansion. All four must be addressable by their value
+        // strings so the CP form posts them back unambiguously.
+        $values = array_column(Options::ALL_EVENTS['entries'], 'value');
+        $this->assertContains('after-save', $values);
+        $this->assertContains('after-propagate', $values);
+        $this->assertContains('after-delete', $values);
+        $this->assertContains('after-restore', $values);
+    }
+
+    public function testEntriesDeleteAndRestoreReferenceEntryEventConstants(): void
+    {
+        // Delete and restore wire directly to the Element-level event constants
+        // on the Entry class. Drift between these strings and the actual
+        // constants would silently break dispatch.
+        $classes = array_column(Options::ALL_EVENTS['entries'], 'class');
+        $this->assertContains('craft\elements\Entry::EVENT_AFTER_DELETE', $classes);
+        $this->assertContains('craft\elements\Entry::EVENT_AFTER_RESTORE', $classes);
+    }
+
+    // ========================================================================= //
+    // ALL_EVENTS coverage: User events (Tier 1 expansion)
+    // ========================================================================= //
+
+    public function testUsersListsAllFiveEventValues(): void
+    {
+        // Propagate (new user) was the original; activate-user was second.
+        // Tier 1 added update, delete, and restore. The two propagate-shaped
+        // values (after-propagate, after-update) share the same Craft constant
+        // but distinguish on firstSave at handler level.
+        $values = array_column(Options::ALL_EVENTS['users'], 'value');
+        $this->assertContains('after-propagate', $values);
+        $this->assertContains('after-update', $values);
+        $this->assertContains('after-activate-user', $values);
+        $this->assertContains('after-delete', $values);
+        $this->assertContains('after-restore', $values);
+    }
+
+    public function testUsersUpdateReusesPropagateConstant(): void
+    {
+        // after-update and after-propagate both ride EVENT_AFTER_PROPAGATE.
+        // The handler-level firstSave guard splits "new user" from "updated user".
+        $updateEntry = null;
+        foreach (Options::ALL_EVENTS['users'] as $event) {
+            if ($event['value'] === 'after-update') {
+                $updateEntry = $event;
+                break;
+            }
+        }
+        $this->assertNotNull($updateEntry, 'after-update entry must exist under users');
+        $this->assertSame(
+            'craft\elements\User::EVENT_AFTER_PROPAGATE',
+            $updateEntry['class']
+        );
+    }
+
+    public function testUsersDeleteAndRestoreReferenceUserEventConstants(): void
+    {
+        $classes = array_column(Options::ALL_EVENTS['users'], 'class');
+        $this->assertContains('craft\elements\User::EVENT_AFTER_DELETE', $classes);
+        $this->assertContains('craft\elements\User::EVENT_AFTER_RESTORE', $classes);
+    }
+
+    // ========================================================================= //
+    // ALL_EVENTS coverage: Asset events (Tier 1 expansion)
+    // ========================================================================= //
+
+    public function testAssetsListsAllFiveEventValues(): void
+    {
+        // Propagate (new upload) was the original. Tier 1 added move, update,
+        // delete, and restore. Propagate, move, and update all share
+        // EVENT_AFTER_PROPAGATE; the handler-level firstSave + folder/volume
+        // diff splits them into three mutually-exclusive paths.
+        $values = array_column(Options::ALL_EVENTS['assets'], 'value');
+        $this->assertContains('after-propagate', $values);
+        $this->assertContains('after-move', $values);
+        $this->assertContains('after-update', $values);
+        $this->assertContains('after-delete', $values);
+        $this->assertContains('after-restore', $values);
+    }
+
+    public function testAssetsMoveAndUpdateReusePropagateConstant(): void
+    {
+        // after-move and after-update both ride EVENT_AFTER_PROPAGATE; only
+        // after-propagate (the new-upload path) was originally wired there.
+        // The handler-level guards keep all three from overlapping at runtime.
+        $classes = [];
+        foreach (Options::ALL_EVENTS['assets'] as $event) {
+            if (in_array($event['value'], ['after-move', 'after-update'], true)) {
+                $classes[$event['value']] = $event['class'];
+            }
+        }
+        $this->assertArrayHasKey('after-move', $classes);
+        $this->assertArrayHasKey('after-update', $classes);
+        $this->assertSame('craft\elements\Asset::EVENT_AFTER_PROPAGATE', $classes['after-move']);
+        $this->assertSame('craft\elements\Asset::EVENT_AFTER_PROPAGATE', $classes['after-update']);
+    }
+
+    public function testAssetsDeleteAndRestoreReferenceAssetEventConstants(): void
+    {
+        $classes = array_column(Options::ALL_EVENTS['assets'], 'class');
+        $this->assertContains('craft\elements\Asset::EVENT_AFTER_DELETE', $classes);
+        $this->assertContains('craft\elements\Asset::EVENT_AFTER_RESTORE', $classes);
+    }
+
+    // ========================================================================= //
     // Other channel/recipient maps (regression coverage)
     // ========================================================================= //
 

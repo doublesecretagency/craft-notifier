@@ -17,6 +17,7 @@ use craft\events\ElementEvent;
 use craft\events\ModelEvent;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\NotifierPlugin;
+use yii\base\Event;
 
 /**
  * Class EntryEvents
@@ -189,6 +190,48 @@ class EntryEvents
 
         // Send all matching notifications
         NotifierPlugin::getInstance()->messages->sendAll($notifications, $event, $data);
+    }
+
+    // ========================================================================= //
+
+    /**
+     * When an entry is deleted.
+     *
+     * @param Event $event
+     * @return void
+     */
+    public static function afterDelete(Event $event): void
+    {
+        // Get all notifications for this event
+        $notifications = Notification::find()
+            ->where([
+                'eventType' => 'entries',
+                'event' => 'after-delete',
+            ])
+            ->all();
+
+        // Send all matching notifications
+        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
+    }
+
+    /**
+     * When an entry is restored.
+     *
+     * @param Event $event
+     * @return void
+     */
+    public static function afterRestore(Event $event): void
+    {
+        // Get all notifications for this event
+        $notifications = Notification::find()
+            ->where([
+                'eventType' => 'entries',
+                'event' => 'after-restore',
+            ])
+            ->all();
+
+        // Send all matching notifications
+        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event);
     }
 
 }

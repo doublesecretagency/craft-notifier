@@ -166,6 +166,24 @@ class EventsServiceTest extends TestCase
         );
     }
 
+    public function testRegistersEntryAfterDelete(): void
+    {
+        // Tier 1 expansion. The handler must be wired to Entry::EVENT_AFTER_DELETE
+        // and dispatched through the EntryEvents helper.
+        $this->assertMatchesRegularExpression(
+            '/Entry::class[\s\S]*?Entry::EVENT_AFTER_DELETE[\s\S]*?EntryEvents::class[\s\S]*?afterDelete/',
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersEntryAfterRestore(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/Entry::class[\s\S]*?Entry::EVENT_AFTER_RESTORE[\s\S]*?EntryEvents::class[\s\S]*?afterRestore/',
+            $this->eventsSource
+        );
+    }
+
     public function testRegistersDraftsAfterApplyDraft(): void
     {
         // Apply-draft fires EVENT_AFTER_SAVE_ELEMENT *before* createRevision()
@@ -212,6 +230,44 @@ class EventsServiceTest extends TestCase
         );
     }
 
+    public function testRegistersAssetAfterMove(): void
+    {
+        // Move and propagate share EVENT_AFTER_PROPAGATE; the handler-level
+        // firstSave plus folder/volume diff splits them. The service-level
+        // wiring must point a distinct listener at the same constant.
+        $this->assertStringContainsString(
+            "[AssetEvents::class, 'afterMove']",
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersAssetAfterUpdate(): void
+    {
+        // afterUpdate is the third listener on EVENT_AFTER_PROPAGATE; the
+        // handler-level guards (!firstSave, no folder/volume diff) keep it
+        // mutually exclusive with afterPropagate and afterMove.
+        $this->assertStringContainsString(
+            "[AssetEvents::class, 'afterUpdate']",
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersAssetAfterDelete(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/Asset::class[\s\S]*?Asset::EVENT_AFTER_DELETE[\s\S]*?AssetEvents::class[\s\S]*?afterDelete/',
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersAssetAfterRestore(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/Asset::class[\s\S]*?Asset::EVENT_AFTER_RESTORE[\s\S]*?AssetEvents::class[\s\S]*?afterRestore/',
+            $this->eventsSource
+        );
+    }
+
     // ========================================================================= //
     // User event coverage
     // ========================================================================= //
@@ -237,6 +293,33 @@ class EventsServiceTest extends TestCase
         // Activation is fired by the Users service, not the User element.
         $this->assertMatchesRegularExpression(
             '/Users::class[\s\S]*?Users::EVENT_AFTER_ACTIVATE_USER/',
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersUserAfterUpdate(): void
+    {
+        // Update and propagate share EVENT_AFTER_PROPAGATE; the handler-level
+        // firstSave guard splits them. The service-level wiring must point a
+        // distinct listener at the same constant.
+        $this->assertStringContainsString(
+            "[UserEvents::class, 'afterUpdate']",
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersUserAfterDelete(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/User::class[\s\S]*?User::EVENT_AFTER_DELETE[\s\S]*?UserEvents::class[\s\S]*?afterDelete/',
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersUserAfterRestore(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/User::class[\s\S]*?User::EVENT_AFTER_RESTORE[\s\S]*?UserEvents::class[\s\S]*?afterRestore/',
             $this->eventsSource
         );
     }

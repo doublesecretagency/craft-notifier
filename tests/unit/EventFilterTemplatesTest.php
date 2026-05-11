@@ -60,14 +60,16 @@ class EventFilterTemplatesTest extends TestCase
 
     public function testVolumesTemplateHidesUntilAssetsEventIsSelected(): void
     {
-        // The wrapper carries the .assets-event-after-propagate toggle class
-        // so Craft's native event-toggle hides the section until the user
-        // picks an Assets event from the dropdown.
+        // The wrapper carries a toggle class for every Assets event value
+        // so the section stays visible across propagate, move, update, delete,
+        // and restore. Craft's native event-toggle then hides it for any tab
+        // that isn't one of those.
         $source = self::read('assets/volumes.twig');
-        $this->assertMatchesRegularExpression(
-            '/<div class="assets-event-after-propagate hidden">/',
-            $source
-        );
+        $this->assertStringContainsString('assets-event-after-propagate', $source);
+        $this->assertStringContainsString('assets-event-after-move', $source);
+        $this->assertStringContainsString('assets-event-after-update', $source);
+        $this->assertStringContainsString('assets-event-after-delete', $source);
+        $this->assertStringContainsString('assets-event-after-restore', $source);
     }
 
     public function testVolumesTemplateReadsExistingSelections(): void
@@ -138,13 +140,15 @@ class EventFilterTemplatesTest extends TestCase
 
     public function testUserGroupsTemplateHidesUntilUsersEventIsSelected(): void
     {
-        // Wrapper carries both Users event-toggle classes so the section
-        // is visible for new-user-created and user-activated alike.
+        // Wrapper carries one Users event-toggle class per event value so the
+        // section stays visible across propagate (user created), activate-user,
+        // update, delete, and restore.
         $source = self::read('users/groups.twig');
-        $this->assertMatchesRegularExpression(
-            '/<div class="users-event-after-propagate users-event-after-activate-user hidden">/',
-            $source
-        );
+        $this->assertStringContainsString('users-event-after-propagate', $source);
+        $this->assertStringContainsString('users-event-after-activate-user', $source);
+        $this->assertStringContainsString('users-event-after-update', $source);
+        $this->assertStringContainsString('users-event-after-delete', $source);
+        $this->assertStringContainsString('users-event-after-restore', $source);
     }
 
     public function testUserGroupsTemplateReadsExistingSelections(): void

@@ -8,6 +8,7 @@ use craft\events\ModelEvent;
 use doublesecretagency\notifier\helpers\events\EntryEvents;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use yii\base\Event;
 
 /**
  * Structural tests for the EntryEvents helper.
@@ -74,6 +75,8 @@ class EntryEventsTest extends TestCase
             ['afterSaveElement', ElementEvent::class],
             ['afterApplyDraft',  DraftEvent::class],
             ['afterPropagate',   ModelEvent::class],
+            ['afterDelete',      Event::class],
+            ['afterRestore',     Event::class],
         ];
     }
 
@@ -291,6 +294,8 @@ class EntryEventsTest extends TestCase
         return [
             ['afterSave',      'after-save'],
             ['afterPropagate', 'after-propagate'],
+            ['afterDelete',    'after-delete'],
+            ['afterRestore',   'after-restore'],
         ];
     }
 

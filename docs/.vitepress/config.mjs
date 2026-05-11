@@ -201,17 +201,26 @@ export default defineConfig({
                   items: [
                     {text: 'New user is created', link: '/events/types/users/new-user-created'},
                     {text: 'User is activated',   link: '/events/types/users/user-activated'},
+                    {text: 'User is updated',     link: '/events/types/users/user-updated'},
+                    {text: 'User is deleted',     link: '/events/types/users/user-deleted'},
+                    {text: 'User is restored',    link: '/events/types/users/user-restored'},
                   ]
                 },
                 {text: 'Entries', link: '/events/types/entries', collapsed: true,
                   items: [
                     {text: 'Entry is saved',      link: '/events/types/entries/entry-saved-per-site'},
                     {text: 'Entry is propagated', link: '/events/types/entries/entry-saved-and-propagated'},
+                    {text: 'Entry is deleted',    link: '/events/types/entries/entry-deleted'},
+                    {text: 'Entry is restored',   link: '/events/types/entries/entry-restored'},
                   ]
                 },
                 {text: 'Assets', link: '/events/types/assets', collapsed: true,
                   items: [
                     {text: 'New file is uploaded', link: '/events/types/assets/file-uploaded'},
+                    {text: 'Asset is moved',       link: '/events/types/assets/asset-moved'},
+                    {text: 'Asset is updated',     link: '/events/types/assets/asset-updated'},
+                    {text: 'Asset is deleted',     link: '/events/types/assets/asset-deleted'},
+                    {text: 'Asset is restored',    link: '/events/types/assets/asset-restored'},
                   ]
                 },
                 {text: 'Commerce Orders', link: '/events/types/commerce-orders', collapsed: true,

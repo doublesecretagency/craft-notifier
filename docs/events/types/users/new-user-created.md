@@ -12,6 +12,8 @@ The trigger only fires once per User. Re-saving an existing User (profile update
 
 <!--@include: @/events/types/_field-conditions.md-->
 
+<img class="dropshadow" src="/images/events/field-conditions-generic.png" alt="" style="width:600px; margin-top:10px">
+
 ## Twig variables
 
 The `object` variable (and its `user` alias) is the new [User](https://docs.craftcms.com/api/v5/craft-elements-user.html).

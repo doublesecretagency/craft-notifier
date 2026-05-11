@@ -44,11 +44,21 @@ abstract class Options
                 'value' => 'after-activate-user',
                 'class' => 'craft\services\Users::EVENT_AFTER_ACTIVATE_USER'
             ],
-//            [
-//                'label' => 'When a user is deleted',
-//                'value' => 'after-delete-user',
-////                'class' => 'craft\services\Users::EVENT_AFTER_ACTIVATE_USER'
-//            ]
+            [
+                'label' => 'When a user is updated',
+                'value' => 'after-update',
+                'class' => 'craft\elements\User::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When a user is deleted',
+                'value' => 'after-delete',
+                'class' => 'craft\elements\User::EVENT_AFTER_DELETE'
+            ],
+            [
+                'label' => 'When a user is restored',
+                'value' => 'after-restore',
+                'class' => 'craft\elements\User::EVENT_AFTER_RESTORE'
+            ],
         ],
         'entries' => [
             [
@@ -61,11 +71,16 @@ abstract class Options
                 'value' => 'after-propagate',
                 'class' => 'craft\services\Elements::EVENT_AFTER_SAVE_ELEMENT'
             ],
-//            [
-//                'label' => 'When an entry is deleted',
-//                'value' => 'after-delete-entry',
-////                'class' => 'craft\elements\Entry::EVENT_AFTER_PROPAGATE'
-//            ]
+            [
+                'label' => 'When an entry is deleted',
+                'value' => 'after-delete',
+                'class' => 'craft\elements\Entry::EVENT_AFTER_DELETE'
+            ],
+            [
+                'label' => 'When an entry is restored',
+                'value' => 'after-restore',
+                'class' => 'craft\elements\Entry::EVENT_AFTER_RESTORE'
+            ],
         ],
         'assets' => [
             [
@@ -73,16 +88,26 @@ abstract class Options
                 'value' => 'after-propagate',
                 'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
             ],
-//            [
-//                'label' => 'When an asset is moved',
-//                'value' => 'after-move-asset',
-////                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
-//            ],
-//            [
-//                'label' => 'When an asset is deleted',
-//                'value' => 'after-delete-asset',
-////                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
-//            ]
+            [
+                'label' => 'When an asset is moved',
+                'value' => 'after-move',
+                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When an asset is updated',
+                'value' => 'after-update',
+                'class' => 'craft\elements\Asset::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When an asset is deleted',
+                'value' => 'after-delete',
+                'class' => 'craft\elements\Asset::EVENT_AFTER_DELETE'
+            ],
+            [
+                'label' => 'When an asset is restored',
+                'value' => 'after-restore',
+                'class' => 'craft\elements\Asset::EVENT_AFTER_RESTORE'
+            ],
         ],
         'commerce-orders' => [
             [

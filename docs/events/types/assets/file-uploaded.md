@@ -12,6 +12,8 @@ The trigger only fires once per Asset. Replacing a file, renaming it, moving it 
 
 <!--@include: @/events/types/_field-conditions.md-->
 
+<img class="dropshadow" src="/images/events/field-conditions-generic.png" alt="" style="width:600px; margin-top:10px">
+
 ## Filtering by folder
 
 If you need to filter by folder, use [`{% skipMessage %}`](/messages/skip) inside the message body:

@@ -14,6 +14,10 @@ This trigger is only available when [Craft Commerce](https://plugins.craftcms.co
 
 <!--@include: @/events/types/_field-conditions.md-->
 
+<img class="dropshadow" src="/images/events/field-conditions-has-changed.png" alt="" style="width:600px; margin-top:10px">
+
+<!--@include: @/events/types/_has-changed-operator.md-->
+
 ## Twig variables
 
 The `object` variable (and its `order` alias) is the completed [Order](https://docs.craftcms.com/commerce/api/v5/craft-commerce-elements-order.html).
