@@ -62,7 +62,7 @@ class AssetVolumeBackfillMigrationTest extends TestCase
     public function testOnlyTargetsAssetEventType(): void
     {
         // The query must scope to eventType = 'assets' so we never touch
-        // entries / users / commerce-orders rows.
+        // entries / users / craft-commerce-orders rows.
         $this->assertMatchesRegularExpression(
             "/'eventType'\s*=>\s*'assets'/",
             $this->migrationSource

@@ -51,7 +51,11 @@ class OptionsTest extends TestCase
             ['users'],
             ['entries'],
             ['assets'],
-            ['commerce-orders'],
+            ['craft-commerce-orders'],
+            ['craft-commerce-products'],
+            ['digital-products-products'],
+            ['digital-products-licenses'],
+            ['solspace-calendar-events'],
         ];
     }
 
@@ -69,25 +73,109 @@ class OptionsTest extends TestCase
     {
         // Drift between the key and the label would render an empty option
         // in the dropdown.
-        $this->assertSame('Commerce Orders', Options::EVENT_TYPE['commerce-orders']);
+        $this->assertSame('Commerce Orders', Options::EVENT_TYPE['craft-commerce-orders']);
+    }
+
+    public function testTier2CategoryLabels(): void
+    {
+        // Pin the canonical dropdown labels for the four new Tier 2 categories.
+        // Drift here would render misleading or empty options in the CP.
+        $this->assertSame('Commerce Products', Options::EVENT_TYPE['craft-commerce-products']);
+        $this->assertSame('Digital Products', Options::EVENT_TYPE['digital-products-products']);
+        $this->assertSame('Digital Product Licenses', Options::EVENT_TYPE['digital-products-licenses']);
+        $this->assertSame('Solspace Calendar', Options::EVENT_TYPE['solspace-calendar-events']);
+    }
+
+    public function testEventTypeOrderMatchesCanonicalSequence(): void
+    {
+        // The order is load-bearing - the CP dropdown renders options in
+        // source order. The canonical sequence is documented in the
+        // events-bundle-tier-2 plan; this assertion is the enforcement.
+        $this->assertSame(
+            [
+                'entries',
+                'assets',
+                'users',
+                'craft-commerce-orders',
+                'craft-commerce-products',
+                'digital-products-products',
+                'digital-products-licenses',
+                'solspace-calendar-events',
+            ],
+            array_keys(Options::EVENT_TYPE)
+        );
+    }
+
+    public function testAllEventsOrderMatchesEventTypeOrder(): void
+    {
+        // ALL_EVENTS top-level key order must match EVENT_TYPE so any consumer
+        // that iterates them side-by-side stays consistent.
+        $this->assertSame(
+            array_keys(Options::EVENT_TYPE),
+            array_keys(Options::ALL_EVENTS)
+        );
     }
 
     // ========================================================================= //
-    // ALL_EVENTS coverage — Commerce orders branch (PR #33)
+    // EVENT_TYPE_GROUPED, dropdown shape with plugin optgroups
+    // ========================================================================= //
+
+    public function testEventTypeGroupedCoversEverySlug(): void
+    {
+        // Every flat EVENT_TYPE slug must appear in the grouped variant; the
+        // dropdown is the consumer and must be able to render every category.
+        foreach (array_keys(Options::EVENT_TYPE) as $slug) {
+            $this->assertArrayHasKey(
+                $slug,
+                Options::EVENT_TYPE_GROUPED,
+                "Slug '{$slug}' missing from EVENT_TYPE_GROUPED"
+            );
+        }
+    }
+
+    public function testEventTypeGroupedDeclaresThreePluginOptgroups(): void
+    {
+        // Pin the optgroup labels - native trio sits flat at top, then one
+        // optgroup per plugin (Craft Commerce, Digital Products, Solspace
+        // Calendar). Drift here would re-shape the CP dropdown.
+        $optgroups = [];
+        foreach (Options::EVENT_TYPE_GROUPED as $key => $value) {
+            if (is_int($key) && is_array($value) && isset($value['optgroup'])) {
+                $optgroups[] = $value['optgroup'];
+            }
+        }
+        $this->assertSame(
+            ['Craft Commerce', 'Digital Products', 'Solspace Calendar'],
+            $optgroups
+        );
+    }
+
+    public function testEventTypeGroupedInnerLabelsAreShortenedWhereParentDisambiguates(): void
+    {
+        // Inside the Digital Products optgroup, the inner labels drop the
+        // "Digital" prefix because the optgroup heading already supplies it.
+        // Inside the Solspace Calendar optgroup, "Calendar Events" stays full.
+        $this->assertSame('Products',       Options::EVENT_TYPE_GROUPED['digital-products-products']);
+        $this->assertSame('Licenses',       Options::EVENT_TYPE_GROUPED['digital-products-licenses']);
+        $this->assertSame('Calendar Events', Options::EVENT_TYPE_GROUPED['solspace-calendar-events']);
+    }
+
+    // ========================================================================= //
+    // ALL_EVENTS coverage, Commerce orders branch (PR #33)
     // ========================================================================= //
 
     public function testCommerceOrdersAppearsInAllEvents(): void
     {
         // The dispatch table for the Commerce branch lives under the same
-        // 'commerce-orders' key as the EVENT_TYPE entry.
-        $this->assertArrayHasKey('commerce-orders', Options::ALL_EVENTS);
+        // 'craft-commerce-orders' key as the EVENT_TYPE entry.
+        $this->assertArrayHasKey('craft-commerce-orders', Options::ALL_EVENTS);
     }
 
     public function testCommerceOrdersListsBothEventValues(): void
     {
         // Both events must be present and addressable by the value strings
         // the CP form posts back.
-        $values = array_column(Options::ALL_EVENTS['commerce-orders'], 'value');
+        $values = array_column(Options::ALL_EVENTS['craft-commerce-orders'], 'value');
         $this->assertContains('after-complete-order', $values);
         $this->assertContains('after-order-paid', $values);
     }
@@ -97,7 +185,7 @@ class OptionsTest extends TestCase
         // The 'class' entry is stored as a fully-qualified string (not as
         // a constant reference) so installs without Commerce don't blow up
         // at parse time. Pin the literal form so the strings stay correct.
-        $classes = array_column(Options::ALL_EVENTS['commerce-orders'], 'class');
+        $classes = array_column(Options::ALL_EVENTS['craft-commerce-orders'], 'class');
         $this->assertContains(
             'craft\commerce\elements\Order::EVENT_AFTER_COMPLETE_ORDER',
             $classes
@@ -155,6 +243,21 @@ class OptionsTest extends TestCase
         $this->assertContains('after-activate-user', $values);
         $this->assertContains('after-delete', $values);
         $this->assertContains('after-restore', $values);
+    }
+
+    public function testUsersIncludesAfterAssignToGroups(): void
+    {
+        // Tier 2 added the assignment event, slotted under the existing
+        // users category. It rides the Users service event (not the User
+        // element event), so its class string points at Users::EVENT_...
+        $values = array_column(Options::ALL_EVENTS['users'], 'value');
+        $this->assertContains('after-assign-to-groups', $values);
+
+        $classes = array_column(Options::ALL_EVENTS['users'], 'class');
+        $this->assertContains(
+            'craft\services\Users::EVENT_AFTER_ASSIGN_USER_TO_GROUPS',
+            $classes
+        );
     }
 
     public function testUsersUpdateReusesPropagateConstant(): void
@@ -222,6 +325,52 @@ class OptionsTest extends TestCase
         $classes = array_column(Options::ALL_EVENTS['assets'], 'class');
         $this->assertContains('craft\elements\Asset::EVENT_AFTER_DELETE', $classes);
         $this->assertContains('craft\elements\Asset::EVENT_AFTER_RESTORE', $classes);
+    }
+
+    // ========================================================================= //
+    // ALL_EVENTS coverage: Tier 2 categories
+    // ========================================================================= //
+
+    /**
+     * @return string[][]
+     */
+    public static function tier2CategoryProvider(): array
+    {
+        return [
+            ['craft-commerce-products', 'craft\commerce\elements\Product'],
+            ['digital-products-products', 'craft\digitalproducts\elements\Product'],
+            ['digital-products-licenses', 'craft\digitalproducts\elements\License'],
+            ['solspace-calendar-events', 'Solspace\Calendar\Elements\Event'],
+        ];
+    }
+
+    /**
+     * @dataProvider tier2CategoryProvider
+     */
+    public function testTier2CategoryListsSavedDeletedRestored(string $category): void
+    {
+        // Every Tier 2 category ships save / delete / restore as a triplet,
+        // matching the symmetric-parity precedent from Tier 1.
+        // The save event rides EVENT_AFTER_PROPAGATE (once per element) rather
+        // than EVENT_AFTER_SAVE (once per site), so its value is 'after-propagate'.
+        $values = array_column(Options::ALL_EVENTS[$category], 'value');
+        $this->assertContains('after-propagate', $values);
+        $this->assertContains('after-delete', $values);
+        $this->assertContains('after-restore', $values);
+    }
+
+    /**
+     * @dataProvider tier2CategoryProvider
+     */
+    public function testTier2CategoryReferencesElementEventConstants(string $category, string $elementClass): void
+    {
+        // The class strings are stored as fully-qualified literal strings so
+        // installs without the source plugin don't blow up at parse time.
+        // Pin all three constants per category.
+        $classes = array_column(Options::ALL_EVENTS[$category], 'class');
+        $this->assertContains("{$elementClass}::EVENT_AFTER_PROPAGATE", $classes);
+        $this->assertContains("{$elementClass}::EVENT_AFTER_DELETE", $classes);
+        $this->assertContains("{$elementClass}::EVENT_AFTER_RESTORE", $classes);
     }
 
     // ========================================================================= //

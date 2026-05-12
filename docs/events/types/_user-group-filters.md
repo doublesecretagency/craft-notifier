@@ -1,15 +1,15 @@
 ## User Group Filters
 
-User Group filters limit the notification to users in a chosen set of [user groups](https://craftcms.com/docs/5.x/system/user-management.html#user-groups). The user must belong to at least one selected group for the message to be sent. If a user belongs to more than one group, they will only receive a single notification.
+Choose which [user groups](https://craftcms.com/docs/5.x/system/user-management.html#user-groups) should fire this notification. Only users belonging to one of the selected groups will trigger it, and a user in multiple selected groups still receives only a single notification.
 
 **Ungrouped Users** are users who belong to no group at all.
 
 <img class="dropshadow" src="/images/events/user-group-filters.png" alt="" style="width:395px; margin-top:10px">
 
 :::warning Selection is required
-At least one group (or _Ungrouped_) must be checked. If no options are selected, nothing will be sent out.
+Check at least one group (or _Ungrouped_), or the notification won't fire.
 :::
 
 :::tip Hidden if no groups exist
-If no user groups exist, this filter will be hidden and notifications are sent to every valid user.
+If no user groups are set up, this filter is skipped and every valid user will receive the notification.
 :::

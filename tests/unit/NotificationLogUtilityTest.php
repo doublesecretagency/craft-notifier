@@ -10,7 +10,7 @@ use ReflectionClass;
  * Structural tests for the Notification Log CP utility.
  *
  * The utility renders one calendar day of envelope/log rows, so the
- * day-boundary query is the load-bearing piece — it must convert the
+ * day-boundary query is the load-bearing piece, it must convert the
  * user's selected date from the system timezone into UTC before hitting
  * the database, otherwise late-evening events get filed under the wrong
  * day on the user's screen. These tests pin the post-PR-#30 timezone
@@ -42,7 +42,7 @@ class NotificationLogUtilityTest extends TestCase
 
     public function testIdMatchesUtilityHandle(): void
     {
-        // The id() return must stay 'notification-log' — the permission
+        // The id() return must stay 'notification-log', the permission
         // gating in NotifierPlugin reads it to scope visibility.
         $this->assertSame('notification-log', NotificationLog::id());
     }
@@ -62,7 +62,7 @@ class NotificationLogUtilityTest extends TestCase
 
     public function testImportsDateTimeZone(): void
     {
-        // The day-boundary code must use DateTimeZone — the PR #30 refactor
+        // The day-boundary code must use DateTimeZone, the PR #30 refactor
         // replaced the previous CONVERT_TZ SQL with PHP-side conversion.
         $this->assertStringContainsString('use DateTimeZone;', $this->utilitySource);
     }
@@ -104,7 +104,7 @@ class NotificationLogUtilityTest extends TestCase
 
     public function testHalfOpenUpperBoundOnDateCreated(): void
     {
-        // Exclusive upper bound on dateCreated — using `<` against the next
+        // Exclusive upper bound on dateCreated, using `<` against the next
         // day's start avoids the off-by-one millisecond gap that a `<=`
         // against end-of-day would leak.
         $this->assertStringContainsString(
@@ -116,7 +116,7 @@ class NotificationLogUtilityTest extends TestCase
     public function testNextDayBoundUsesPlusOneDayModifier(): void
     {
         // The upper bound is derived by adding one day to the lower bound,
-        // not by computing it independently — keeps the two bounds exactly
+        // not by computing it independently, keeps the two bounds exactly
         // 24h apart even across DST transitions.
         $this->assertMatchesRegularExpression(
             "/\\\$startOfNextDay[\s\S]*?->modify\\('\\+1 day'\\)/",
@@ -139,7 +139,7 @@ class NotificationLogUtilityTest extends TestCase
     public function testIconPathIsPrivateStaticHelper(): void
     {
         // Both Craft 4 (iconPath) and Craft 5 (icon) hooks delegate to a
-        // single private resolver — keeps the dual-hook surface honest.
+        // single private resolver, keeps the dual-hook surface honest.
         $this->assertTrue($this->reflection->hasMethod('_iconPath'));
         $method = $this->reflection->getMethod('_iconPath');
         $this->assertTrue($method->isPrivate());

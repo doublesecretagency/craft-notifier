@@ -49,7 +49,7 @@ class OutboundFlashTest extends TestCase
     {
         $flash = new OutboundFlash();
 
-        // Default flash type is 'notice' — the CP renders this with a neutral icon.
+        // Default flash type is 'notice', the CP renders this with a neutral icon.
         $this->assertSame('notice', $flash->type);
         $this->assertSame('', $flash->title);
         $this->assertSame('', $flash->message);

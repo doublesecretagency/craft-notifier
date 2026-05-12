@@ -12,7 +12,7 @@ use ReflectionClass;
  * applies one of four ADD/REMOVE/REPLACE/DISABLE modes. The policy
  * lifecycle itself depends on `nystudio107/craft-twig-sandbox`, so
  * these tests verify the constants, the apply-mode dispatch, and the
- * Twig-type list — the parts that govern what the rest of the model
+ * Twig-type list, the parts that govern what the rest of the model
  * does without actually rendering Twig.
  */
 class SandboxPolicyTest extends TestCase
@@ -61,7 +61,7 @@ class SandboxPolicyTest extends TestCase
         // ever needs to exist (e.g. globals), this list must be updated and
         // an Add/Remove/Replace handler added too.
         //
-        // Read the property default via reflection — instantiating Sandbox
+        // Read the property default via reflection, instantiating Sandbox
         // boots BlacklistSecurityPolicy, which needs Craft's container.
         $defaults = $this->reflection->getDefaultProperties();
         $this->assertSame(
@@ -95,7 +95,7 @@ class SandboxPolicyTest extends TestCase
 
     public function testAddIsTheDefaultBranch(): void
     {
-        // ADD is the most permissive mode and must remain the default — any
+        // ADD is the most permissive mode and must remain the default, any
         // unrecognized mode value should fall through to ADD rather than
         // silently disabling the sandbox.
         $this->assertMatchesRegularExpression(
@@ -110,7 +110,7 @@ class SandboxPolicyTest extends TestCase
         $this->assertTrue($this->reflection->hasMethod('_remove'));
         $this->assertTrue($this->reflection->hasMethod('_replace'));
 
-        // All three are private — they're internal helpers of the public init().
+        // All three are private, they're internal helpers of the public init().
         $this->assertTrue($this->reflection->getMethod('_add')->isPrivate());
         $this->assertTrue($this->reflection->getMethod('_remove')->isPrivate());
         $this->assertTrue($this->reflection->getMethod('_replace')->isPrivate());
@@ -131,7 +131,7 @@ class SandboxPolicyTest extends TestCase
 
     public function testBlacklistIsTheDefaultPolicy(): void
     {
-        // The else branch instantiates the Blacklist policy — i.e. when
+        // The else branch instantiates the Blacklist policy, i.e. when
         // 'list' is unset or anything other than WHITELIST, blacklist wins.
         $this->assertMatchesRegularExpression(
             '/} else \{[\s\S]*?new BlacklistSecurityPolicy/',

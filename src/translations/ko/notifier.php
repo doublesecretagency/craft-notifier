@@ -41,6 +41,10 @@ return [
     'Which specific event will activate the notification?' => '어떤 구체적인 이벤트로 알림을 활성화하시겠습니까?',
     'Assets Event'                                         => '에셋 이벤트',
     'Commerce Orders Event'                                => 'Commerce 주문 이벤트',
+    'Commerce Products Event'                              => 'Commerce 제품 이벤트',
+    'Digital Products Event'                               => 'Digital Products 이벤트',
+    'Digital Product Licenses Event'                       => 'Digital Products 라이선스 이벤트',
+    'Solspace Calendar Event'                              => 'Solspace Calendar 이벤트',
     'Entries Event'                                        => '엔트리 이벤트',
     'Users Event'                                          => '사용자 이벤트',
 

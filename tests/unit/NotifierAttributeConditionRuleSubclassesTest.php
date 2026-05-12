@@ -27,7 +27,7 @@ use ReflectionClass;
  *
  * Sibling of NotifierFieldConditionRuleSubclassesTest. PostDate and ExpiryDate
  * are excluded because they extend BaseDateRangeConditionRule and use the
- * rangeType pattern instead of the operator dropdown — they have their own
+ * rangeType pattern instead of the operator dropdown, they have their own
  * dedicated test files (mirroring the per-field Date subclass split).
  */
 class NotifierAttributeConditionRuleSubclassesTest extends TestCase

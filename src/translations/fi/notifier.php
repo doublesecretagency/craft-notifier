@@ -41,6 +41,10 @@ return [
     'Which specific event will activate the notification?' => 'Mikä yksittäinen tapahtuma laukaisee ilmoituksen?',
     'Assets Event'                                         => 'Asset-tapahtuma',
     'Commerce Orders Event'                                => 'Commerce-tilaustapahtuma',
+    'Commerce Products Event'                              => 'Commerce-tuotetapahtuma',
+    'Digital Products Event'                               => 'Digital Products-tapahtuma',
+    'Digital Product Licenses Event'                       => 'Digital Products-lisenssitapahtuma',
+    'Solspace Calendar Event'                              => 'Solspace Calendar-tapahtuma',
     'Entries Event'                                        => 'Merkintätapahtuma',
     'Users Event'                                          => 'Käyttäjätapahtuma',
 

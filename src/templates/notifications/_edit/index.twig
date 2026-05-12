@@ -132,7 +132,7 @@
             instance.layout();
 
             // The CodeEditor package's internal updateHeight() is wired only to
-            // Monaco's `onDidContentSizeChange` — a viewport-only layout() call
+            // Monaco's `onDidContentSizeChange`, a viewport-only layout() call
             // doesn't fire it, so the inflated height from the hidden-init pass
             // (~rows+2) would stick until the user's first keystroke. Normalize
             // it manually: cap to max(textarea.rows × lineHeight, contentHeight).

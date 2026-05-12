@@ -1,0 +1,17 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-craft-commerce-products hidden">
+    {{ forms.selectField({
+        label: 'Commerce Products Event'|t('notifier'),
+        instructions: commonInstructions,
+        id: 'event-craft-commerce-products',
+        name: 'event[craft-commerce-products]',
+        value: notification.event,
+        options: {'':''}|merge(notificationOptions.allEvents['craft-commerce-products'] ?? []),
+        toggle: true,
+        targetPrefix: '.craft-commerce-products-event-',
+    }) }}
+    <hr class="craft-commerce-products-event-after-propagate craft-commerce-products-event-after-delete craft-commerce-products-event-after-restore hidden">
+    {% include 'notifier/notifications/_edit/event/craft-commerce-products/productTypes' %}
+    {% include 'notifier/notifications/_edit/event/craft-commerce-products/condition' %}
+</div>

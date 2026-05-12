@@ -14,7 +14,7 @@ namespace doublesecretagency\notifier\conditions\fields;
 use Craft;
 use craft\base\ElementInterface;
 use craft\fields\conditions\DateFieldConditionRule;
-use doublesecretagency\notifier\helpers\events\EntryEvents;
+use doublesecretagency\notifier\helpers\events\Originals;
 
 /**
  * Class NotifierDateFieldConditionRule
@@ -66,11 +66,8 @@ class NotifierDateFieldConditionRule extends DateFieldConditionRule
             }
         }
 
-        // After-propagate runs after `markAsClean()`; diff against captured original
-        if (empty($element->id) || empty($element->siteId)) {
-            return false;
-        }
-        $original = EntryEvents::getCapturedOriginal($element->id, $element->siteId);
+        // Once Craft has called `markAsClean()`, diff against captured original
+        $original = Originals::get($element);
         if (!$original) {
             return false;
         }

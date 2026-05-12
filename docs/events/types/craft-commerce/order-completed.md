@@ -8,9 +8,7 @@ Sends a notification when **a Commerce Order has been completed**. Fires when th
 
 Use this event for customer receipts ("Thanks for your order") and internal alerts ("A new order has been placed").
 
-:::tip Requires Craft Commerce
-This trigger is only available when [Craft Commerce](https://plugins.craftcms.com/commerce) is installed. The event type is hidden from the dropdown otherwise.
-:::
+<!--@include: @/events/types/_requires-craft-commerce.md-->
 
 <!--@include: @/events/types/_field-conditions.md-->
 
@@ -27,7 +25,7 @@ Order {{ order.shortNumber }} was placed by {{ order.email }}.
 Total: {{ order.totalPrice|currency }}
 ```
 
-<!--@include: @/events/types/commerce-orders/_notifying-the-customer.md-->
+<!--@include: @/events/types/craft-commerce/_notifying-the-customer.md-->
 
 ## Examples
 

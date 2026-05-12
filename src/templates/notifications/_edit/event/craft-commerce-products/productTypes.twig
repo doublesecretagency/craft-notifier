@@ -1,0 +1,47 @@
+{% if availableProductTypes()|length %}
+
+    {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NestedCheckboxesAsset') %}
+
+    {% js on ready %}
+    window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-product-types');
+    {% endjs %}
+
+    <div class="craft-commerce-products-event-after-propagate craft-commerce-products-event-after-delete craft-commerce-products-event-after-restore hidden">
+        <div class="nested-checkboxes nested-checkboxes-product-types">
+
+            <h3>Product Types</h3>
+            {% if not (readOnly ?? false) %}
+                <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-product-types')"></div>
+            {% endif %}
+
+            <div class="instructions">
+                <p>Only send notifications for selected product types.</p>
+            </div>
+
+            <ul>
+
+                {# Get selected Product Types #}
+                {% set productTypes = (notification.eventConfig.productTypes ?? []) %}
+
+                {# Loop over available product types #}
+                {% for typeId,typeName in availableProductTypes() %}
+                    <li>
+                        <input type="checkbox"
+                            class="checkbox"
+                            id="product-type-{{ typeId }}"
+                            name="eventConfig[productTypes][]"
+                            value="{{ typeId }}"
+                            {{ typeId in productTypes ? 'checked=""'|raw }}
+                            onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-product-types')"
+                        >
+                        <label for="product-type-{{ typeId }}">
+                            {{ typeName }}
+                        </label>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+
+{% endif %}

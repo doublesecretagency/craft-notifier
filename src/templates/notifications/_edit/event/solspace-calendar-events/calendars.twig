@@ -1,0 +1,47 @@
+{% if availableCalendars()|length %}
+
+    {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NestedCheckboxesAsset') %}
+
+    {% js on ready %}
+    window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-calendars');
+    {% endjs %}
+
+    <div class="solspace-calendar-events-event-after-propagate solspace-calendar-events-event-after-delete solspace-calendar-events-event-after-restore hidden">
+        <div class="nested-checkboxes nested-checkboxes-calendars">
+
+            <h3>Calendars</h3>
+            {% if not (readOnly ?? false) %}
+                <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-calendars')"></div>
+            {% endif %}
+
+            <div class="instructions">
+                <p>Only send notifications for selected calendars.</p>
+            </div>
+
+            <ul>
+
+                {# Get selected Calendars #}
+                {% set calendars = (notification.eventConfig.calendars ?? []) %}
+
+                {# Loop over available calendars #}
+                {% for calendarId,calendarName in availableCalendars() %}
+                    <li>
+                        <input type="checkbox"
+                            class="checkbox"
+                            id="calendar-{{ calendarId }}"
+                            name="eventConfig[calendars][]"
+                            value="{{ calendarId }}"
+                            {{ calendarId in calendars ? 'checked=""'|raw }}
+                            onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-calendars')"
+                        >
+                        <label for="calendar-{{ calendarId }}">
+                            {{ calendarName }}
+                        </label>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+
+{% endif %}

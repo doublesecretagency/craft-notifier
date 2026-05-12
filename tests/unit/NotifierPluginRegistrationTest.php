@@ -150,7 +150,7 @@ class NotifierPluginRegistrationTest extends TestCase
 
     public function testDynamicRecipientsPermissionIsNestedUnderSave(): void
     {
-        // Authoring Twig snippets is a privileged action — it should require
+        // Authoring Twig snippets is a privileged action, it should require
         // the save permission AND its own dedicated nested permission.
         $this->assertMatchesRegularExpression(
             "/notifier-saveNotifications.*?nested.*?notifier-editDynamicRecipients/s",
@@ -161,7 +161,7 @@ class NotifierPluginRegistrationTest extends TestCase
     public function testViewNotificationLogIsRootPermission(): void
     {
         // The Log subtree is intentionally a sibling of the Notifications
-        // subtree, not a child — auditors can be granted log access without
+        // subtree, not a child, auditors can be granted log access without
         // also gaining the ability to view notification configuration.
         $this->assertStringContainsString(
             "'notifier-viewNotificationLog'",
@@ -181,7 +181,7 @@ class NotifierPluginRegistrationTest extends TestCase
     public function testLogPermissionsAreSiblingsOfNotificationsSubtree(): void
     {
         // Log permissions sit at the top level of the heading's permissions
-        // array — same indentation depth as notifier-viewNotifications.
+        // array, same indentation depth as notifier-viewNotifications.
         // Whatever indentation viewNotifications uses, viewNotificationLog
         // must use exactly the same prefix.
         $this->assertMatchesRegularExpression(
@@ -317,7 +317,7 @@ class NotifierPluginRegistrationTest extends TestCase
 
     public function testCpOnlyRegistrationsAreGated(): void
     {
-        // Routes / utilities / table attributes are CP-only — they should be
+        // Routes / utilities / table attributes are CP-only, they should be
         // wrapped in a getIsCpRequest() check so console / queue requests
         // don't pay the registration cost.
         $this->assertMatchesRegularExpression(

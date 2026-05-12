@@ -1,0 +1,47 @@
+{% if availableDigitalProductTypes()|length %}
+
+    {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NestedCheckboxesAsset') %}
+
+    {% js on ready %}
+    window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-license-product-types');
+    {% endjs %}
+
+    <div class="digital-products-licenses-event-after-propagate digital-products-licenses-event-after-delete digital-products-licenses-event-after-restore hidden">
+        <div class="nested-checkboxes nested-checkboxes-license-product-types">
+
+            <h3>Product Types</h3>
+            {% if not (readOnly ?? false) %}
+                <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-license-product-types')"></div>
+            {% endif %}
+
+            <div class="instructions">
+                <p>Only send notifications for licenses tied to selected product types.</p>
+            </div>
+
+            <ul>
+
+                {# Get selected Digital Product Types (shared filter source with digital-products-products) #}
+                {% set productTypes = (notification.eventConfig.digitalProductTypes ?? []) %}
+
+                {# Loop over available digital product types #}
+                {% for typeId,typeName in availableDigitalProductTypes() %}
+                    <li>
+                        <input type="checkbox"
+                            class="checkbox"
+                            id="license-product-type-{{ typeId }}"
+                            name="eventConfig[digitalProductTypes][]"
+                            value="{{ typeId }}"
+                            {{ typeId in productTypes ? 'checked=""'|raw }}
+                            onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-license-product-types')"
+                        >
+                        <label for="license-product-type-{{ typeId }}">
+                            {{ typeName }}
+                        </label>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+
+{% endif %}

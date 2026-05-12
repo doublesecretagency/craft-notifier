@@ -41,6 +41,10 @@ return [
     'Which specific event will activate the notification?' => '哪個具體事件會觸發通知?',
     'Assets Event'                                         => 'Asset 事件',
     'Commerce Orders Event'                                => 'Commerce 訂單事件',
+    'Commerce Products Event'                              => 'Commerce 產品事件',
+    'Digital Products Event'                               => 'Digital Products 事件',
+    'Digital Product Licenses Event'                       => 'Digital Products 授權事件',
+    'Solspace Calendar Event'                              => 'Solspace Calendar 事件',
     'Entries Event'                                        => '項目事件',
     'Users Event'                                          => '使用者事件',
 

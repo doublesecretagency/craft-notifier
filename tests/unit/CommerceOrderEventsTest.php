@@ -36,7 +36,7 @@ class CommerceOrderEventsTest extends TestCase
     public function testLivesInHelpersEventsNamespace(): void
     {
         // Sibling of EntryEvents / AssetEvents / UserEvents under the same
-        // namespace — keeps the on-disk shape uniform.
+        // namespace, keeps the on-disk shape uniform.
         $this->assertSame(
             'doublesecretagency\notifier\helpers\events',
             $this->reflection->getNamespaceName()
@@ -86,7 +86,7 @@ class CommerceOrderEventsTest extends TestCase
      */
     public function testMethodAcceptsSingleEventParam(string $method): void
     {
-        // (Event $event) — a single typed param keeps the callable
+        // (Event $event), a single typed param keeps the callable
         // compatible with Yii's listener invocation.
         $params = $this->reflection->getMethod($method)->getParameters();
         $this->assertCount(1, $params, "$method() should accept exactly one parameter");
@@ -118,20 +118,66 @@ class CommerceOrderEventsTest extends TestCase
     public function testMethodFiltersNotificationsByCommerceEventType(string $method, string $eventValue): void
     {
         // The Notification::find() call in each body must scope by the
-        // 'commerce-orders' eventType plus the per-method event value.
-        $this->assertStringContainsString("'eventType' => 'commerce-orders'", $this->helperSource);
+        // 'craft-commerce-orders' eventType plus the per-method event value.
+        $this->assertStringContainsString("'eventType' => 'craft-commerce-orders'", $this->helperSource);
         $this->assertStringContainsString("'event' => '{$eventValue}'", $this->helperSource);
     }
 
     public function testBothMethodsDelegateToMessagesService(): void
     {
         // Each method ends by handing the matched notifications and the
-        // event off to the messages service. Two occurrences must exist —
+        // event off to the messages service. Two occurrences must exist,
         // one per method.
         $this->assertSame(
             2,
-            substr_count($this->helperSource, 'messages->sendAll($notifications, $event)'),
+            substr_count($this->helperSource, 'messages->sendAll($notifications, $event'),
             'Both Commerce helpers must delegate to messages->sendAll(...)'
         );
     }
+
+    // ========================================================================= //
+    // beforeSave + Originals registry integration (added in v3.0.0)
+    // ========================================================================= //
+
+    public function testHasBeforeSaveHandler(): void
+    {
+        // The plugin captures a pre-save snapshot via beforeSave so the after-*
+        // handlers and the has-changed condition operators can diff against it.
+        // Without this method the has-changed operator silently degrades to
+        // always-false for this element type.
+        $this->assertTrue($this->reflection->hasMethod('beforeSave'));
+        $m = $this->reflection->getMethod('beforeSave');
+        $this->assertTrue($m->isPublic());
+        $this->assertTrue($m->isStatic());
+        $this->assertSame('void', (string) $m->getReturnType());
+        $params = $m->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertSame('event', $params[0]->getName());
+    }
+
+    public function testBeforeSaveCapturesViaCentralRegistry(): void
+    {
+        // The captured snapshot must go into the central Originals registry
+        // so the polymorphic has-changed operators can find it. A local
+        // $_originals static array (the pre-v3.0.0 pattern) wouldn't be
+        // reachable from the operator namespace.
+        $this->assertMatchesRegularExpression(
+            '/Originals::capture\(\$original\)/',
+            $this->helperSource
+        );
+    }
+
+    public function testSaveHandlerLooksUpOriginalViaRegistry(): void
+    {
+        // The save handler(s) read the captured snapshot back out and pass
+        // it via dispatch data as `original`, so Twig message bodies can
+        // reference {{ original.* }} for change-detection rendering.
+        $this->assertMatchesRegularExpression(
+            "/Originals::find\(Order::class/",
+            $this->helperSource
+        );
+    }
+
+    // __BEFORE_SAVE_TESTS_INSERTED__
+
 }

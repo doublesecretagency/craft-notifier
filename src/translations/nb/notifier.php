@@ -41,6 +41,10 @@ return [
     'Which specific event will activate the notification?' => 'Hvilken spesifikk hendelse skal aktivere varselet?',
     'Assets Event'                                         => 'Asset-hendelse',
     'Commerce Orders Event'                                => 'Commerce-ordrehendelse',
+    'Commerce Products Event'                              => 'Commerce-produkthendelse',
+    'Digital Products Event'                               => 'Digital Products-hendelse',
+    'Digital Product Licenses Event'                       => 'Digital Products-lisenshendelse',
+    'Solspace Calendar Event'                              => 'Solspace Calendar-hendelse',
     'Entries Event'                                        => 'Innleggshendelse',
     'Users Event'                                          => 'Brukerhendelse',
 

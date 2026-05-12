@@ -67,7 +67,7 @@ class LogControllerTest extends TestCase
 
     public function testGetNotificationRequiresPostAndJson(): void
     {
-        // CSRF protection + clear API contract — both POST + accept-JSON guards
+        // CSRF protection + clear API contract, both POST + accept-JSON guards
         // must be present.
         $this->assertMatchesRegularExpression(
             '/actionGetNotification[\s\S]*?requirePostRequest/',
@@ -121,7 +121,7 @@ class LogControllerTest extends TestCase
     public function testDeleteRequiresDeleteLogPermission(): void
     {
         // Wiping a single envelope row requires the delete permission, not
-        // the view permission — viewing and clearing must be distinct.
+        // the view permission, viewing and clearing must be distinct.
         $this->assertMatchesRegularExpression(
             '/actionDelete\(\)[\s\S]*?requirePermission\([\'"]notifier-deleteNotificationLog[\'"]\)/',
             $this->controllerSource
@@ -143,7 +143,7 @@ class LogControllerTest extends TestCase
 
     public function testGetNotificationValidatesIdIsNumeric(): void
     {
-        // Guard against non-numeric input — Notification IDs are always ints.
+        // Guard against non-numeric input, Notification IDs are always ints.
         $this->assertMatchesRegularExpression(
             '/actionGetNotification[\s\S]*?is_numeric\(\$notificationId\)/',
             $this->controllerSource
@@ -164,8 +164,8 @@ class LogControllerTest extends TestCase
 
     public function testDeleteDayConvertsTimeZone(): void
     {
-        // The delete-day action must compare dates in the project's timezone
-        // — dateCreated is stored in UTC, so we CONVERT_TZ before matching.
+        // The delete-day action must compare dates in the project's timezone.
+        // dateCreated is stored in UTC, so we CONVERT_TZ before matching.
         $this->assertStringContainsString(
             'CONVERT_TZ',
             $this->controllerSource

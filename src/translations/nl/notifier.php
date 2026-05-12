@@ -41,6 +41,10 @@ return [
     'Which specific event will activate the notification?' => 'Welke specifieke gebeurtenis activeert de melding?',
     'Assets Event'                                         => 'Asset-gebeurtenis',
     'Commerce Orders Event'                                => 'Commerce-bestellingsgebeurtenis',
+    'Commerce Products Event'                              => 'Commerce-productgebeurtenis',
+    'Digital Products Event'                               => 'Digital Products-gebeurtenis',
+    'Digital Product Licenses Event'                       => 'Digital Products-licentiegebeurtenis',
+    'Solspace Calendar Event'                              => 'Solspace Calendar-gebeurtenis',
     'Entries Event'                                        => 'Entry-gebeurtenis',
     'Users Event'                                          => 'Gebruikersgebeurtenis',
 

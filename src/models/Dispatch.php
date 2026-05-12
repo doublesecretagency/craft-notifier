@@ -109,8 +109,28 @@ class Dispatch extends Model
                     return false;
                 }
                 break;
-            case 'commerce-orders':
+            case 'craft-commerce-orders':
                 // No event-type-specific filters; condition gate runs below
+                break;
+            case 'craft-commerce-products':
+                if (!$this->_filterCommerceProducts()) {
+                    return false;
+                }
+                break;
+            case 'digital-products-products':
+                if (!$this->_filterDigitalProducts()) {
+                    return false;
+                }
+                break;
+            case 'digital-products-licenses':
+                if (!$this->_filterDigitalProductLicenses()) {
+                    return false;
+                }
+                break;
+            case 'solspace-calendar-events':
+                if (!$this->_filterCalendarEvents()) {
+                    return false;
+                }
                 break;
             default:
                 // Invalid event type
@@ -255,6 +275,14 @@ class Dispatch extends Model
             return false;
         }
 
+        // If this is the assignment event, gate on the newly-assigned groups
+        if ('after-assign-to-groups' === $this->notification->event) {
+            // Get the newly-assigned group IDs
+            $newGroupIds = array_map('intval', ($this->data['newGroupIds'] ?? []));
+            // Bail unless one of the new assignments matches a configured group
+            return !empty(array_intersect($newGroupIds, $userGroups));
+        }
+
         // Get IDs of the User Groups this user belongs to
         $userGroupIds = array_map(
             static fn($g) => (int) $g->id,
@@ -272,6 +300,138 @@ class Dispatch extends Model
         }
 
         // All filters are valid
+        return true;
+    }
+
+    /**
+     * Additional filters for Craft Commerce product events.
+     *
+     * @return bool
+     */
+    private function _filterCommerceProducts(): bool
+    {
+        // Get event element
+        $element = ($this->data['object'] ?? $this->event->sender);
+
+        // Get configured Product Types
+        $productTypes = array_map('intval', ($this->notification->eventConfig['productTypes'] ?? []));
+
+        // If no Product Types are selected, return false
+        if (empty($productTypes)) {
+            return false;
+        }
+
+        // If element has no typeId, return false
+        if (empty($element->typeId)) {
+            return false;
+        }
+
+        // If not in a valid Product Type, return false
+        if (!in_array((int) $element->typeId, $productTypes, true)) {
+            return false;
+        }
+
+        // Product Type gate passed
+        return true;
+    }
+
+    /**
+     * Additional filters for Digital Products product events.
+     *
+     * @return bool
+     */
+    private function _filterDigitalProducts(): bool
+    {
+        // Get event element
+        $element = ($this->data['object'] ?? $this->event->sender);
+
+        // Get configured Digital Product Types
+        $productTypes = array_map('intval', ($this->notification->eventConfig['digitalProductTypes'] ?? []));
+
+        // If no Digital Product Types are selected, return false
+        if (empty($productTypes)) {
+            return false;
+        }
+
+        // If element has no typeId, return false
+        if (empty($element->typeId)) {
+            return false;
+        }
+
+        // If not in a valid Digital Product Type, return false
+        if (!in_array((int) $element->typeId, $productTypes, true)) {
+            return false;
+        }
+
+        // Digital Product Type gate passed
+        return true;
+    }
+
+    /**
+     * Additional filters for Digital Products license events.
+     * Gates on the parent product's type.
+     *
+     * @return bool
+     */
+    private function _filterDigitalProductLicenses(): bool
+    {
+        // Get event element
+        $element = ($this->data['object'] ?? $this->event->sender);
+
+        // Get configured Digital Product Types (shared filter with digital-products-products)
+        $productTypes = array_map('intval', ($this->notification->eventConfig['digitalProductTypes'] ?? []));
+
+        // If no Digital Product Types are selected, return false
+        if (empty($productTypes)) {
+            return false;
+        }
+
+        // Load the parent product
+        $product = (method_exists($element, 'getProduct') ? $element->getProduct() : null);
+
+        // If parent product can't be resolved, return false
+        if (!$product) {
+            return false;
+        }
+
+        // If not in a valid Digital Product Type, return false
+        if (!in_array((int) $product->typeId, $productTypes, true)) {
+            return false;
+        }
+
+        // Digital Product Type gate passed
+        return true;
+    }
+
+    /**
+     * Additional filters for Solspace Calendar event events.
+     *
+     * @return bool
+     */
+    private function _filterCalendarEvents(): bool
+    {
+        // Get event element
+        $element = ($this->data['object'] ?? $this->event->sender);
+
+        // Get configured Calendars
+        $calendars = array_map('intval', ($this->notification->eventConfig['calendars'] ?? []));
+
+        // If no Calendars are selected, return false
+        if (empty($calendars)) {
+            return false;
+        }
+
+        // If element has no calendarId, return false
+        if (empty($element->calendarId)) {
+            return false;
+        }
+
+        // If not in a valid Calendar, return false
+        if (!in_array((int) $element->calendarId, $calendars, true)) {
+            return false;
+        }
+
+        // Calendar gate passed
         return true;
     }
 
@@ -496,7 +656,7 @@ class Dispatch extends Model
         $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this, true);
 
         // Get the Notifier plugin ID
-        $pluginInfo = Craft::$app->getPlugins()->getPluginInfo('notifier');
+        $pluginInfo = Craft::$app->getPlugins()->getStoredPluginInfo('notifier');
         $pluginId = ($pluginInfo['id'] ?? null);
 
         // Initialize outbound messages

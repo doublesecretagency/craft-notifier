@@ -25,11 +25,6 @@ class AssetEvents
 {
 
     /**
-     * @var array Original elements prior to saving.
-     */
-    private static array $_originals = [];
-
-    /**
      * Get original Asset prior to saving.
      *
      * @param ModelEvent $event
@@ -61,8 +56,8 @@ class AssetEvents
         // Eagerly load field values; lazy reads later would pick up post-save content
         $original->getFieldValues();
 
-        // Key by assetId+siteId so per-site propagation doesn't clobber the active site's capture
-        static::$_originals[$asset->id][$asset->siteId] = $original;
+        // Stash for the after-* handlers and the condition operators
+        Originals::capture($original);
     }
 
     /**
@@ -91,7 +86,7 @@ class AssetEvents
 
         // Pass data to message parser
         $data = [
-            'original' => (static::$_originals[$asset->id][$asset->siteId] ?? null),
+            'original' => Originals::find(Asset::class, $asset->id, $asset->siteId),
         ];
 
         // Send all matching notifications
@@ -115,7 +110,7 @@ class AssetEvents
         }
 
         // Get the captured pre-save original for this asset+site
-        $original = (static::$_originals[$asset->id][$asset->siteId] ?? null);
+        $original = Originals::find(Asset::class, $asset->id, $asset->siteId);
 
         // If no original captured, can't detect the move; bail
         if (!$original) {
@@ -161,7 +156,7 @@ class AssetEvents
         }
 
         // Get the captured pre-save original for this asset+site
-        $original = (static::$_originals[$asset->id][$asset->siteId] ?? null);
+        $original = Originals::find(Asset::class, $asset->id, $asset->siteId);
 
         // If no original captured, can't verify changes; bail
         if (!$original) {

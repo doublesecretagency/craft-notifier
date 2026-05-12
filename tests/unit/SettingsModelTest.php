@@ -9,7 +9,7 @@ use ReflectionClass;
 /**
  * Pure-unit tests for the Settings model.
  *
- * The Settings model is a flat property bag — no validation rules, no
+ * The Settings model is a flat property bag, no validation rules, no
  * derived state. These tests pin the property surface (names, types,
  * defaults) so silent renames or default changes can't ship without a
  * test failure to flag them.

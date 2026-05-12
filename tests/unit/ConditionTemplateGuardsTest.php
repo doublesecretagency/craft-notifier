@@ -144,13 +144,13 @@ class ConditionTemplateGuardsTest extends TestCase
 
     public function testCommerceOrdersTabIncludesConditionWithCommerceOrdersEventType(): void
     {
-        $source = self::read('commerce-orders.twig');
+        $source = self::read('craft-commerce-orders.twig');
         $this->assertStringContainsString(
-            "{% include 'notifier/notifications/_edit/event/_condition' with { eventType: 'commerce-orders' } %}",
+            "{% include 'notifier/notifications/_edit/event/_condition' with { eventType: 'craft-commerce-orders' } %}",
             $source
         );
         $this->assertDoesNotMatchRegularExpression(
-            "/notification\.eventType\s*==\s*'commerce-orders'/",
+            "/notification\.eventType\s*==\s*'craft-commerce-orders'/",
             $source
         );
     }
@@ -158,12 +158,12 @@ class ConditionTemplateGuardsTest extends TestCase
     public function testCommerceOrdersTabHidesConditionUntilSubEventIsSet(): void
     {
         // Same pattern as users / assets: toggle:true + targetPrefix
-        // '.commerce-orders-event-' and a wrapper class per event value
+        // '.craft-commerce-orders-event-' and a wrapper class per event value
         // (after-complete-order, after-order-paid).
-        $source = self::read('commerce-orders.twig');
-        $this->assertStringContainsString("targetPrefix: '.commerce-orders-event-'", $source);
+        $source = self::read('craft-commerce-orders.twig');
+        $this->assertStringContainsString("targetPrefix: '.craft-commerce-orders-event-'", $source);
         $this->assertMatchesRegularExpression(
-            '/<div class="commerce-orders-event-after-complete-order commerce-orders-event-after-order-paid hidden">/',
+            '/<div class="craft-commerce-orders-event-after-complete-order craft-commerce-orders-event-after-order-paid hidden">/',
             $source
         );
     }
@@ -217,4 +217,35 @@ class ConditionTemplateGuardsTest extends TestCase
         $this->assertStringNotContainsString('console.log', $source);
     }
 
+    // ========================================================================= //
+    // Tier 2: per-category condition.twig partials
+    // ========================================================================= //
+
+    /**
+     * @return string[][]
+     */
+    public static function tier2ConditionPartialProvider(): array
+    {
+        return [
+            ['craft-commerce-products/condition.twig',          'craft-commerce-products'],
+            ['digital-products-products/condition.twig',  'digital-products-products'],
+            ['digital-products-licenses/condition.twig',   'digital-products-licenses'],
+            ['solspace-calendar-events/condition.twig',            'solspace-calendar-events'],
+        ];
+    }
+
+    /**
+     * @dataProvider tier2ConditionPartialProvider
+     */
+    public function testTier2ConditionPartialIncludesSharedPartialWithEventType(string $partial, string $eventType): void
+    {
+        // Each new category's condition.twig wraps the shared _condition
+        // partial with the matching eventType. Without the eventType arg,
+        // the shared partial bails on a null condition and the slot is empty.
+        $source = self::read($partial);
+        $this->assertStringContainsString(
+            "with { eventType: '{$eventType}' }",
+            $source
+        );
+    }
 }

@@ -108,7 +108,7 @@ class MessagesServiceTest extends TestCase
 
     public function testSendInvokesSendEnvelopes(): void
     {
-        // Final step — actually dispatching the compiled envelopes (queue
+        // Final step, actually dispatching the compiled envelopes (queue
         // or in-process, per Dispatch::useQueue).
         $this->assertStringContainsString(
             '$dispatch->sendEnvelopes()',

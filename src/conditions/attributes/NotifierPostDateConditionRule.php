@@ -14,7 +14,7 @@ namespace doublesecretagency\notifier\conditions\attributes;
 use Craft;
 use craft\base\ElementInterface;
 use craft\elements\conditions\entries\PostDateConditionRule;
-use doublesecretagency\notifier\helpers\events\EntryEvents;
+use doublesecretagency\notifier\helpers\events\Originals;
 
 /**
  * Class NotifierPostDateConditionRule
@@ -51,10 +51,7 @@ class NotifierPostDateConditionRule extends PostDateConditionRule
         if ($this->rangeType !== self::RANGE_TYPE_HAS_CHANGED) {
             return parent::matchElement($element);
         }
-        if (empty($element->id) || empty($element->siteId)) {
-            return false;
-        }
-        $original = EntryEvents::getCapturedOriginal($element->id, $element->siteId);
+        $original = Originals::get($element);
         if (!$original) {
             return false;
         }

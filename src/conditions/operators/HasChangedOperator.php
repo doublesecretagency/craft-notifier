@@ -13,7 +13,7 @@ namespace doublesecretagency\notifier\conditions\operators;
 
 use Craft;
 use craft\base\ElementInterface;
-use doublesecretagency\notifier\helpers\events\EntryEvents;
+use doublesecretagency\notifier\helpers\events\Originals;
 use yii\db\QueryInterface;
 
 /**
@@ -21,9 +21,9 @@ use yii\db\QueryInterface;
  * @since 3.0.0
  *
  * Adds a `has_changed` operator to per-field condition rules. Two-tier check:
- * live `isFieldDirty()` for the per-site `entry-saved` event, value-diff against
- * the captured original for the propagated event (where Craft has already
- * called `markAsClean()`).
+ * live `isFieldDirty()` for the per-site save events, value-diff against
+ * the captured original when Craft has already called `markAsClean()`
+ * (the entry after-propagate path, or any propagated element save).
  */
 trait HasChangedOperator
 {
@@ -99,11 +99,8 @@ trait HasChangedOperator
             }
         }
 
-        // After-propagate runs after `markAsClean()`; diff against captured original
-        if (empty($element->id) || empty($element->siteId)) {
-            return false;
-        }
-        $original = EntryEvents::getCapturedOriginal($element->id, $element->siteId);
+        // Once Craft has called `markAsClean()`, diff against captured original
+        $original = Originals::get($element);
         if (!$original) {
             return false;
         }

@@ -41,6 +41,10 @@ return [
     'Which specific event will activate the notification?' => 'Bildirimi hangi belirli olay tetikler?',
     'Assets Event'                                         => 'Asset olayı',
     'Commerce Orders Event'                                => 'Commerce sipariş olayı',
+    'Commerce Products Event'                              => 'Commerce ürün olayı',
+    'Digital Products Event'                               => 'Digital Products olayı',
+    'Digital Product Licenses Event'                       => 'Digital Products lisans olayı',
+    'Solspace Calendar Event'                              => 'Solspace Calendar olayı',
     'Entries Event'                                        => 'Giriş olayı',
     'Users Event'                                          => 'Kullanıcı olayı',
 

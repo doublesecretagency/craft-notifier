@@ -158,7 +158,7 @@ class ChannelEnvelopeMappingTest extends TestCase
 
     public function testAnnouncementsAreAlwaysQueued(): void
     {
-        // No opt-out — announcements always queue.
+        // No opt-out, announcements always queue.
         $this->assertMatchesRegularExpression(
             "/case 'announcement':\s*\\\$this->useQueue\s*=\s*true/",
             $this->dispatchSource

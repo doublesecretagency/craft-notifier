@@ -360,7 +360,7 @@ class Notification extends Element
             return true;
         }
 
-        // Otherwise require the save permission — drafts are an edit affordance
+        // Otherwise require the save permission, drafts are an edit affordance
         return $user->can('notifier-saveNotifications');
     }
 

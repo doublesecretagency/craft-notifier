@@ -184,7 +184,7 @@ class NotificationElementTest extends TestCase
 
     public function testCanCreateDraftsRequiresSavePermission(): void
     {
-        // Creating a draft is an edit affordance — historically returned true
+        // Creating a draft is an edit affordance, historically returned true
         // unconditionally, which let view-only users author drafts. Drafts
         // must now require notifier-saveNotifications, same as a fresh save.
         $this->assertMatchesRegularExpression(
@@ -199,7 +199,7 @@ class NotificationElementTest extends TestCase
 
     public function testValidateDynamicRecipientsPermissionExists(): void
     {
-        // Server-side gate on the Dynamic Recipients dropdown — the CP
+        // Server-side gate on the Dynamic Recipients dropdown, the CP
         // template hides the option, but a crafted POST could bypass that.
         $this->assertTrue(
             $this->reflection->hasMethod('validateDynamicRecipientsPermission')
@@ -385,7 +385,7 @@ class NotificationElementTest extends TestCase
 
     public function testGetEventConditionUsesConditionsService(): void
     {
-        // Single hydration call — Craft's Conditions service knows how to
+        // Single hydration call, Craft's Conditions service knows how to
         // unwrap the {config: "<json>"} shape produced by the builder POST
         // and reconstruct the rule list.
         $this->assertStringContainsString(
@@ -397,7 +397,7 @@ class NotificationElementTest extends TestCase
     public function testGetEventConditionSeedsElementType(): void
     {
         // Without an `elementType` on the config, ElementCondition's rule
-        // loop short-circuits at line 180 — every per-field rule and every
+        // loop short-circuits at line 180, every per-field rule and every
         // element-type-aware base rule (Status, Title, Uri, HasUrl) drops
         // out, leaving only the misleadingly-named nested-entry "Field" rule
         // and a handful of generic rules. Hydration must call into the

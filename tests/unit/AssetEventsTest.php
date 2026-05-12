@@ -121,13 +121,18 @@ class AssetEventsTest extends TestCase
         );
     }
 
-    public function testOriginalsAreKeyedByAssetIdAndSiteId(): void
+    public function testOriginalsAreCapturedViaCentralRegistry(): void
     {
-        // beforeSave fires once per site during multi-site propagation. The
-        // composite key prevents per-site captures from clobbering each other
-        // before the dispatch handlers (afterPropagate, afterMove) read them.
+        // The Originals helper stores by (class, id, siteId) so per-site
+        // captures don't clobber each other before the dispatch handlers
+        // (afterPropagate, afterMove) read them, and the has-changed
+        // operators can look up the snapshot polymorphically.
         $this->assertMatchesRegularExpression(
-            '/\$_originals\[\$asset->id\]\[\$asset->siteId\]\s*=\s*\$original/',
+            '/Originals::capture\(\$original\)/',
+            $this->helperSource
+        );
+        $this->assertMatchesRegularExpression(
+            '/Originals::find\(Asset::class,\s*\$asset->id,\s*\$asset->siteId\)/',
             $this->helperSource
         );
     }
@@ -283,7 +288,7 @@ class AssetEventsTest extends TestCase
     {
         // Every AssetEvents handler must scope the Notification query to the
         // 'assets' eventType so it cannot pick up dispatch rows belonging to
-        // entries / users / commerce-orders.
+        // entries / users / craft-commerce-orders.
         $this->assertMatchesRegularExpression(
             sprintf(
                 '/%s[\s\S]*?\'eventType\'\s*=>\s*\'assets\'/',

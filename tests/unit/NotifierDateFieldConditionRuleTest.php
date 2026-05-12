@@ -75,14 +75,14 @@ class NotifierDateFieldConditionRuleTest extends TestCase
         // Same two-tier check as the trait: live isFieldDirty() first (covers
         // entry-saved-per-site), captured-original diff second (covers
         // entry-saved-and-propagated, where markAsClean() has already wiped
-        // the live state). EntryEvents::getCapturedOriginal is the public
-        // accessor for the pre-save snapshot.
+        // the live state). Originals::get() is the polymorphic accessor for
+        // the pre-save snapshot.
         $this->assertMatchesRegularExpression(
             '/\$element->isFieldDirty\(\$field->handle\)/',
             $this->ruleSource
         );
         $this->assertStringContainsString(
-            'EntryEvents::getCapturedOriginal($element->id, $element->siteId)',
+            'Originals::get($element)',
             $this->ruleSource
         );
         // Source assigns to local variables for readability

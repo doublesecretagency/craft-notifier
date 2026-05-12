@@ -1,0 +1,17 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-digital-products-licenses hidden">
+    {{ forms.selectField({
+        label: 'Digital Product Licenses Event'|t('notifier'),
+        instructions: commonInstructions,
+        id: 'event-digital-products-licenses',
+        name: 'event[digital-products-licenses]',
+        value: notification.event,
+        options: {'':''}|merge(notificationOptions.allEvents['digital-products-licenses'] ?? []),
+        toggle: true,
+        targetPrefix: '.digital-products-licenses-event-',
+    }) }}
+    <hr class="digital-products-licenses-event-after-propagate digital-products-licenses-event-after-delete digital-products-licenses-event-after-restore hidden">
+    {% include 'notifier/notifications/_edit/event/digital-products-licenses/digitalProductTypes' %}
+    {% include 'notifier/notifications/_edit/event/digital-products-licenses/condition' %}
+</div>

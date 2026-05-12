@@ -11,7 +11,7 @@ use ReflectionClass;
 /**
  * Unit tests for the "is a draft" event filter.
  *
- * Drafts are prohibited by default — most users authoring notifications
+ * Drafts are prohibited by default, most users authoring notifications
  * want them to fire on the published canonical entry, not on each draft
  * autosave.
  */
@@ -43,7 +43,7 @@ class DraftFilterTest extends TestCase
 
     public function testDefaultValueProhibitsDrafts(): void
     {
-        // Drafts default to FALSE — i.e. by default, notifications skip drafts.
+        // Drafts default to FALSE, i.e. by default, notifications skip drafts.
         $this->assertFalse(DraftFilter::defaultValue());
     }
 

@@ -25,7 +25,7 @@ use ReflectionClass;
  * Structural tests for the Events service.
  *
  * Events::registerNotificationEvents() attaches Yii listeners to the
- * Entry / Asset / User element classes — these listeners are the only
+ * Entry / Asset / User element classes, these listeners are the only
  * way notifications get triggered, so silently dropping one is a
  * release-blocking regression. These tests verify the event-attachment
  * map at the source level.
@@ -157,7 +157,7 @@ class EventsServiceTest extends TestCase
     public function testEntryAfterSaveElementNoLongerListensOnEntryClass(): void
     {
         // The replaced listener must not still be registered on the Entry
-        // class, otherwise the propagate event would fire twice — once at the
+        // class, otherwise the propagate event would fire twice, once at the
         // pre-commit per-element layer and again at the post-commit service
         // layer.
         $this->assertDoesNotMatchRegularExpression(
@@ -358,8 +358,8 @@ class EventsServiceTest extends TestCase
     public function testCommerceEventsDelegateToHelper(): void
     {
         // Both Commerce listeners must dispatch through the
-        // CommerceOrderEvents helper rather than inlining handler logic
-        // — keeps the service shape uniform with Entry/Asset/User.
+        // CommerceOrderEvents helper rather than inlining handler logic.
+        // Keeps the service shape uniform with Entry/Asset/User.
         $this->assertStringContainsString(
             "[CommerceOrderEvents::class, 'afterCompleteOrder']",
             $this->eventsSource
@@ -376,7 +376,7 @@ class EventsServiceTest extends TestCase
 
     public function testGetAllFiltersIncludesAllFiveActiveFilters(): void
     {
-        // Active filter classes — the disabled ones (NewElementFilter,
+        // Active filter classes, the disabled ones (NewElementFilter,
         // DuplicatingFilter, PropagatingFilter, ResavingFilter) remain in
         // the source as commented-out entries; deliberate exclusions.
         // The source uses the short class name (imported via use statements).
@@ -477,28 +477,28 @@ class EventsServiceTest extends TestCase
     public function testGetConditionClassForEventTypeReturnsOrderConditionWhenCommerceInstalled(): void
     {
         // Commerce is optional. In this sandbox it's installed, so the resolver
-        // must return OrderCondition. Installs without Commerce would see null —
+        // must return OrderCondition. Installs without Commerce would see null,
         // that branch is regression-protected by the class_exists guard below.
         $service = new Events();
         $this->assertSame(
             OrderCondition::class,
-            $service->getConditionClassForEventType('commerce-orders')
+            $service->getConditionClassForEventType('craft-commerce-orders')
         );
     }
 
     public function testGetConditionClassForEventTypeGuardsCommerceMappingOnClassExists(): void
     {
-        // The commerce-orders branch must be guarded so installs without
+        // The craft-commerce-orders branch must be guarded so installs without
         // Commerce do not trigger an autoload error when the resolver runs.
         $this->assertMatchesRegularExpression(
-            "/'commerce-orders'[\s\S]*?class_exists\(OrderCondition::class\)/",
+            "/'craft-commerce-orders'[\s\S]*?class_exists\(OrderCondition::class\)/",
             $this->eventsSource
         );
     }
 
     public function testGetConditionClassForEventTypeReturnsNullForUnknownTypes(): void
     {
-        // Defensive default — every other string falls through to null so
+        // Defensive default, every other string falls through to null so
         // callers can cleanly short-circuit when no condition is configured.
         $service = new Events();
         $this->assertNull($service->getConditionClassForEventType('not-a-real-type'));
@@ -579,31 +579,282 @@ class EventsServiceTest extends TestCase
     public function testGetElementClassForEventTypeReturnsOrderWhenCommerceInstalled(): void
     {
         // Commerce is optional. In this sandbox it's installed, so the resolver
-        // must return Order. Installs without Commerce would see null — that
+        // must return Order. Installs without Commerce would see null, that
         // branch is regression-protected by the class_exists guard below.
         $service = new Events();
         $this->assertSame(
             Order::class,
-            $service->getElementClassForEventType('commerce-orders')
+            $service->getElementClassForEventType('craft-commerce-orders')
         );
     }
 
     public function testGetElementClassForEventTypeGuardsCommerceMappingOnClassExists(): void
     {
-        // The commerce-orders branch must be guarded so installs without
+        // The craft-commerce-orders branch must be guarded so installs without
         // Commerce do not trigger an autoload error when the resolver runs.
         $this->assertMatchesRegularExpression(
-            "/'commerce-orders'[\s\S]*?class_exists\(Order::class\)/",
+            "/'craft-commerce-orders'[\s\S]*?class_exists\(Order::class\)/",
             $this->eventsSource
         );
     }
 
     public function testGetElementClassForEventTypeReturnsNullForUnknownTypes(): void
     {
-        // Defensive default — every other string falls through to null so
+        // Defensive default, every other string falls through to null so
         // callers can cleanly short-circuit when no element type is configured.
         $service = new Events();
         $this->assertNull($service->getElementClassForEventType('not-a-real-type'));
         $this->assertNull($service->getElementClassForEventType(''));
+    }
+
+    // ========================================================================= //
+    // Tier 2 private registrars
+    // ========================================================================= //
+
+    /**
+     * @return string[][]
+     */
+    public static function tier2RegistrarProvider(): array
+    {
+        return [
+            ['_registerCommerceProductEvents'],
+            ['_registerDigitalProductEvents'],
+            ['_registerDigitalProductLicenseEvents'],
+            ['_registerCalendarEventEvents'],
+        ];
+    }
+
+    /**
+     * @dataProvider tier2RegistrarProvider
+     */
+    public function testHasPrivateTier2Registrar(string $method): void
+    {
+        // Each Tier 2 category gets its own private registrar so plugin-bridge
+        // categories can be guarded individually in registerNotificationEvents.
+        $this->assertTrue($this->reflection->hasMethod($method));
+        $this->assertTrue($this->reflection->getMethod($method)->isPrivate());
+    }
+
+    // ========================================================================= //
+    // Tier 2 plugin-bridge class_exists guards
+    // ========================================================================= //
+
+    public function testGuardsCommerceProductRegistrationOnClassExists(): void
+    {
+        // Commerce Products live in the same plugin as Orders but are a
+        // separate Element class. Guard on the Product class specifically
+        // so the registrar bails if Commerce is somehow installed without
+        // the Product surface.
+        $this->assertMatchesRegularExpression(
+            '/class_exists\(CommerceProduct::class\)[\s\S]*?_registerCommerceProductEvents/',
+            $this->eventsSource
+        );
+    }
+
+    public function testGuardsDigitalProductRegistrationOnClassExists(): void
+    {
+        // Digital Products is a separate plugin. Guard on its Product class
+        // so installs without the plugin do not fatal at boot.
+        $this->assertMatchesRegularExpression(
+            '/class_exists\(DigitalProduct::class\)[\s\S]*?_registerDigitalProductEvents/',
+            $this->eventsSource
+        );
+    }
+
+    public function testGuardsCalendarEventRegistrationOnClassExists(): void
+    {
+        // Solspace Calendar is a separate plugin. Guard on its Event element
+        // class so installs without the plugin do not fatal at boot.
+        $this->assertMatchesRegularExpression(
+            '/class_exists\(CalendarEvent::class\)[\s\S]*?_registerCalendarEventEvents/',
+            $this->eventsSource
+        );
+    }
+
+    // ========================================================================= //
+    // Tier 2 event registrations (source-level)
+    // ========================================================================= //
+
+    /**
+     * @return string[][]
+     */
+    public static function tier2EventRegistrationProvider(): array
+    {
+        return [
+            // [classToken, eventConstant, helperClass, handlerMethod]
+            ['Order',             'EVENT_BEFORE_SAVE',   'CommerceOrderEvents',           'beforeSave'],
+            ['CommerceProduct',   'EVENT_BEFORE_SAVE',   'CommerceProductEvents',         'beforeSave'],
+            ['CommerceProduct',   'EVENT_AFTER_PROPAGATE',    'CommerceProductEvents',         'afterPropagate'],
+            ['CommerceProduct',   'EVENT_AFTER_DELETE',  'CommerceProductEvents',         'afterDelete'],
+            ['CommerceProduct',   'EVENT_AFTER_RESTORE', 'CommerceProductEvents',         'afterRestore'],
+            ['DigitalProduct',    'EVENT_BEFORE_SAVE',   'DigitalProductEvents',          'beforeSave'],
+            ['DigitalProduct',    'EVENT_AFTER_PROPAGATE',    'DigitalProductEvents',          'afterPropagate'],
+            ['DigitalProduct',    'EVENT_AFTER_DELETE',  'DigitalProductEvents',          'afterDelete'],
+            ['DigitalProduct',    'EVENT_AFTER_RESTORE', 'DigitalProductEvents',          'afterRestore'],
+            ['License',           'EVENT_BEFORE_SAVE',   'DigitalProductLicenseEvents',   'beforeSave'],
+            ['License',           'EVENT_AFTER_PROPAGATE',    'DigitalProductLicenseEvents',   'afterPropagate'],
+            ['License',           'EVENT_AFTER_DELETE',  'DigitalProductLicenseEvents',   'afterDelete'],
+            ['License',           'EVENT_AFTER_RESTORE', 'DigitalProductLicenseEvents',   'afterRestore'],
+            ['CalendarEvent',     'EVENT_BEFORE_SAVE',   'CalendarEventEvents',           'beforeSave'],
+            ['CalendarEvent',     'EVENT_AFTER_PROPAGATE',    'CalendarEventEvents',           'afterPropagate'],
+            ['CalendarEvent',     'EVENT_AFTER_DELETE',  'CalendarEventEvents',           'afterDelete'],
+            ['CalendarEvent',     'EVENT_AFTER_RESTORE', 'CalendarEventEvents',           'afterRestore'],
+        ];
+    }
+
+    /**
+     * @dataProvider tier2EventRegistrationProvider
+     */
+    public function testRegistersTier2Event(string $classToken, string $eventConstant, string $helperClass, string $handlerMethod): void
+    {
+        // Each Tier 2 element class gets save / delete / restore wired to
+        // the matching helper method, mirroring the Tier 1 pattern.
+        $this->assertMatchesRegularExpression(
+            sprintf(
+                '/%s::class[\s\S]*?%s::%s[\s\S]*?%s::class[\s\S]*?%s/',
+                preg_quote($classToken, '/'),
+                preg_quote($classToken, '/'),
+                preg_quote($eventConstant, '/'),
+                preg_quote($helperClass, '/'),
+                preg_quote($handlerMethod, '/')
+            ),
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersUserAfterAssignToGroups(): void
+    {
+        // The new assignment event rides the Users service, not the User element.
+        // Matches the existing afterActivateUser registration shape.
+        $this->assertMatchesRegularExpression(
+            '/Users::class[\s\S]*?Users::EVENT_AFTER_ASSIGN_USER_TO_GROUPS[\s\S]*?UserEvents::class[\s\S]*?afterAssignToGroups/',
+            $this->eventsSource
+        );
+    }
+
+    // ========================================================================= //
+    // Tier 2 condition-class resolution
+    // ========================================================================= //
+
+    /**
+     * @return array<int, array{string, string|null}>
+     */
+    public static function tier2ConditionMappingProvider(): array
+    {
+        return [
+            ['craft-commerce-products',         'CommerceProductCondition'],
+            ['digital-products-products', null],
+            ['digital-products-licenses',  null],
+            ['solspace-calendar-events',           'CalendarEventCondition'],
+        ];
+    }
+
+    /**
+     * @dataProvider tier2ConditionMappingProvider
+     */
+    public function testTier2ConditionMappingShape(string $eventType, ?string $conditionToken): void
+    {
+        if ($conditionToken === null) {
+            // Digital Products elements don't ship dedicated condition classes;
+            // the resolver returns null and the Field Conditions slot renders empty.
+            $this->assertMatchesRegularExpression(
+                sprintf("/'%s'\\s*=>\\s*null/", preg_quote($eventType, '/')),
+                $this->eventsSource
+            );
+            return;
+        }
+
+        // Categories with a backing condition class must guard on class_exists
+        // so installs without the source plugin don't blow up the resolver.
+        $this->assertMatchesRegularExpression(
+            sprintf(
+                "/'%s'[\\s\\S]*?class_exists\\(%s::class\\)/",
+                preg_quote($eventType, '/'),
+                preg_quote($conditionToken, '/')
+            ),
+            $this->eventsSource
+        );
+    }
+
+    // ========================================================================= //
+    // Tier 2 element-class resolution
+    // ========================================================================= //
+
+    /**
+     * @return string[][]
+     */
+    public static function tier2ElementMappingProvider(): array
+    {
+        return [
+            ['craft-commerce-products',         'CommerceProduct'],
+            ['digital-products-products', 'DigitalProduct'],
+            ['digital-products-licenses',  'License'],
+            ['solspace-calendar-events',           'CalendarEvent'],
+        ];
+    }
+
+    /**
+     * @dataProvider tier2ElementMappingProvider
+     */
+    public function testTier2ElementMappingGuardsOnClassExists(string $eventType, string $elementToken): void
+    {
+        // Each Tier 2 element-class mapping must guard on class_exists so
+        // installs without the source plugin do not autoload-error.
+        $this->assertMatchesRegularExpression(
+            sprintf(
+                "/'%s'[\\s\\S]*?class_exists\\(%s::class\\)/",
+                preg_quote($eventType, '/'),
+                preg_quote($elementToken, '/')
+            ),
+            $this->eventsSource
+        );
+    }
+
+    // ========================================================================= //
+    // Tier 2 imports
+    // ========================================================================= //
+
+    public function testImportsTier2HelperClasses(): void
+    {
+        // The four new helper classes must be imported so the listener
+        // callbacks compile.
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\helpers\\events\\CommerceProductEvents',
+            $this->eventsSource
+        );
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\helpers\\events\\DigitalProductEvents',
+            $this->eventsSource
+        );
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\helpers\\events\\DigitalProductLicenseEvents',
+            $this->eventsSource
+        );
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\helpers\\events\\CalendarEventEvents',
+            $this->eventsSource
+        );
+    }
+
+    public function testImportsTier2ElementClasses(): void
+    {
+        // Element-class use statements are safe even when the plugin is absent;
+        // PHP autoload only resolves them on demand.
+        $this->assertStringContainsString(
+            'use craft\\commerce\\elements\\Product as CommerceProduct',
+            $this->eventsSource
+        );
+        $this->assertStringContainsString(
+            'use craft\\digitalproducts\\elements\\Product as DigitalProduct',
+            $this->eventsSource
+        );
+        $this->assertStringContainsString(
+            'use craft\\digitalproducts\\elements\\License',
+            $this->eventsSource
+        );
+        $this->assertStringContainsString(
+            'use Solspace\\Calendar\\Elements\\Event as CalendarEvent',
+            $this->eventsSource
+        );
     }
 }

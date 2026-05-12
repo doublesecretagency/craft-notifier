@@ -10,7 +10,7 @@ use ReflectionClass;
  * Pure-unit tests for the OutboundEmail envelope.
  *
  * The send() side effect (Craft's mailer) is exercised manually in the
- * sandbox; these tests cover envelope state — properties, defaults,
+ * sandbox; these tests cover envelope state, properties, defaults,
  * inheritance from BaseEnvelope, and the jobInfo shape that drives the
  * queue UI label.
  */

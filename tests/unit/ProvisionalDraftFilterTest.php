@@ -12,7 +12,7 @@ use ReflectionClass;
 /**
  * Unit tests for the "is a provisional draft" event filter.
  *
- * Provisional drafts are Craft's autosave mechanism — every keystroke in
+ * Provisional drafts are Craft's autosave mechanism, every keystroke in
  * the entry editor flushes through this state. Notifications should
  * almost never fire on provisional drafts, hence the prohibitive default.
  */
@@ -44,7 +44,7 @@ class ProvisionalDraftFilterTest extends TestCase
 
     public function testDefaultValueProhibitsProvisionalDrafts(): void
     {
-        // Critical default — autosaves are noise; notifications must skip.
+        // Critical default, autosaves are noise; notifications must skip.
         $this->assertFalse(ProvisionalDraftFilter::defaultValue());
     }
 
@@ -75,7 +75,7 @@ class ProvisionalDraftFilterTest extends TestCase
     public function testExcludesOtherLifecycleFilters(): void
     {
         // Provisional drafts conflict with regular drafts, revisions, and
-        // first-save semantics — all three are hidden when this is enabled.
+        // first-save semantics, all three are hidden when this is enabled.
         $excluded = ProvisionalDraftFilter::excludes();
 
         $this->assertContains(DraftFilter::class, $excluded);

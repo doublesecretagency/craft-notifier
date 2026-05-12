@@ -1,0 +1,17 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-solspace-calendar-events hidden">
+    {{ forms.selectField({
+        label: 'Solspace Calendar Event'|t('notifier'),
+        instructions: commonInstructions,
+        id: 'event-solspace-calendar-events',
+        name: 'event[solspace-calendar-events]',
+        value: notification.event,
+        options: {'':''}|merge(notificationOptions.allEvents['solspace-calendar-events'] ?? []),
+        toggle: true,
+        targetPrefix: '.solspace-calendar-events-event-',
+    }) }}
+    <hr class="solspace-calendar-events-event-after-propagate solspace-calendar-events-event-after-delete solspace-calendar-events-event-after-restore hidden">
+    {% include 'notifier/notifications/_edit/event/solspace-calendar-events/calendars' %}
+    {% include 'notifier/notifications/_edit/event/solspace-calendar-events/condition' %}
+</div>

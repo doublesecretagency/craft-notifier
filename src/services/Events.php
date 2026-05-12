@@ -18,7 +18,11 @@ use craft\elements\User;
 use craft\elements\conditions\assets\AssetCondition;
 use craft\elements\conditions\users\UserCondition;
 use craft\commerce\elements\Order;
+use craft\commerce\elements\Product as CommerceProduct;
 use craft\commerce\elements\conditions\orders\OrderCondition;
+use craft\commerce\elements\conditions\products\ProductCondition as CommerceProductCondition;
+use craft\digitalproducts\elements\License;
+use craft\digitalproducts\elements\Product as DigitalProduct;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Drafts;
 use craft\services\Elements;
@@ -30,9 +34,15 @@ use doublesecretagency\notifier\filters\FirstSaveFilter;
 use doublesecretagency\notifier\filters\ProvisionalDraftFilter;
 use doublesecretagency\notifier\filters\RevisionFilter;
 use doublesecretagency\notifier\helpers\events\AssetEvents;
+use doublesecretagency\notifier\helpers\events\CalendarEventEvents;
 use doublesecretagency\notifier\helpers\events\CommerceOrderEvents;
+use doublesecretagency\notifier\helpers\events\CommerceProductEvents;
+use doublesecretagency\notifier\helpers\events\DigitalProductEvents;
+use doublesecretagency\notifier\helpers\events\DigitalProductLicenseEvents;
 use doublesecretagency\notifier\helpers\events\EntryEvents;
 use doublesecretagency\notifier\helpers\events\UserEvents;
+use Solspace\Calendar\Elements\Event as CalendarEvent;
+use Solspace\Calendar\Elements\conditions\EventCondition as CalendarEventCondition;
 use yii\base\Event;
 
 /**
@@ -83,6 +93,19 @@ class Events extends Component
 
         if (class_exists(Order::class)) {
             $this->_registerCommerceOrderEvents();
+        }
+
+        if (class_exists(CommerceProduct::class)) {
+            $this->_registerCommerceProductEvents();
+        }
+
+        if (class_exists(DigitalProduct::class)) {
+            $this->_registerDigitalProductEvents();
+            $this->_registerDigitalProductLicenseEvents();
+        }
+
+        if (class_exists(CalendarEvent::class)) {
+            $this->_registerCalendarEventEvents();
         }
     }
 
@@ -210,6 +233,12 @@ class Events extends Component
             User::EVENT_AFTER_PROPAGATE,
             [UserEvents::class, 'afterUpdate']
         );
+        // When a user is assigned to one or more groups
+        Event::on(
+            Users::class,
+            Users::EVENT_AFTER_ASSIGN_USER_TO_GROUPS,
+            [UserEvents::class, 'afterAssignToGroups']
+        );
         // When a user is deleted
         Event::on(
             User::class,
@@ -231,6 +260,13 @@ class Events extends Component
      */
     private function _registerCommerceOrderEvents(): void
     {
+        // Get original Order prior to saving
+        Event::on(
+            Order::class,
+            Order::EVENT_BEFORE_SAVE,
+            [CommerceOrderEvents::class, 'beforeSave']
+        );
+
         // When an order is completed (placed)
         Event::on(
             Order::class,
@@ -243,6 +279,138 @@ class Events extends Component
             Order::class,
             Order::EVENT_AFTER_ORDER_PAID,
             [CommerceOrderEvents::class, 'afterOrderPaid']
+        );
+    }
+
+    /**
+     * Register all events for Commerce Products.
+     *
+     * @return void
+     */
+    private function _registerCommerceProductEvents(): void
+    {
+        // Get original Commerce product prior to saving
+        Event::on(
+            CommerceProduct::class,
+            CommerceProduct::EVENT_BEFORE_SAVE,
+            [CommerceProductEvents::class, 'beforeSave']
+        );
+        // When a Commerce product is saved
+        Event::on(
+            CommerceProduct::class,
+            CommerceProduct::EVENT_AFTER_PROPAGATE,
+            [CommerceProductEvents::class, 'afterPropagate']
+        );
+        // When a Commerce product is deleted
+        Event::on(
+            CommerceProduct::class,
+            CommerceProduct::EVENT_AFTER_DELETE,
+            [CommerceProductEvents::class, 'afterDelete']
+        );
+        // When a Commerce product is restored
+        Event::on(
+            CommerceProduct::class,
+            CommerceProduct::EVENT_AFTER_RESTORE,
+            [CommerceProductEvents::class, 'afterRestore']
+        );
+    }
+
+    /**
+     * Register all events for Digital Products.
+     *
+     * @return void
+     */
+    private function _registerDigitalProductEvents(): void
+    {
+        // Get original Digital Product prior to saving
+        Event::on(
+            DigitalProduct::class,
+            DigitalProduct::EVENT_BEFORE_SAVE,
+            [DigitalProductEvents::class, 'beforeSave']
+        );
+        // When a digital product is saved
+        Event::on(
+            DigitalProduct::class,
+            DigitalProduct::EVENT_AFTER_PROPAGATE,
+            [DigitalProductEvents::class, 'afterPropagate']
+        );
+        // When a digital product is deleted
+        Event::on(
+            DigitalProduct::class,
+            DigitalProduct::EVENT_AFTER_DELETE,
+            [DigitalProductEvents::class, 'afterDelete']
+        );
+        // When a digital product is restored
+        Event::on(
+            DigitalProduct::class,
+            DigitalProduct::EVENT_AFTER_RESTORE,
+            [DigitalProductEvents::class, 'afterRestore']
+        );
+    }
+
+    /**
+     * Register all events for Digital Product Licenses.
+     *
+     * @return void
+     */
+    private function _registerDigitalProductLicenseEvents(): void
+    {
+        // Get original License prior to saving
+        Event::on(
+            License::class,
+            License::EVENT_BEFORE_SAVE,
+            [DigitalProductLicenseEvents::class, 'beforeSave']
+        );
+        // When a license is saved
+        Event::on(
+            License::class,
+            License::EVENT_AFTER_PROPAGATE,
+            [DigitalProductLicenseEvents::class, 'afterPropagate']
+        );
+        // When a license is deleted
+        Event::on(
+            License::class,
+            License::EVENT_AFTER_DELETE,
+            [DigitalProductLicenseEvents::class, 'afterDelete']
+        );
+        // When a license is restored
+        Event::on(
+            License::class,
+            License::EVENT_AFTER_RESTORE,
+            [DigitalProductLicenseEvents::class, 'afterRestore']
+        );
+    }
+
+    /**
+     * Register all events for Solspace Calendar events.
+     *
+     * @return void
+     */
+    private function _registerCalendarEventEvents(): void
+    {
+        // Get original Calendar Event prior to saving
+        Event::on(
+            CalendarEvent::class,
+            CalendarEvent::EVENT_BEFORE_SAVE,
+            [CalendarEventEvents::class, 'beforeSave']
+        );
+        // When a calendar event is saved
+        Event::on(
+            CalendarEvent::class,
+            CalendarEvent::EVENT_AFTER_PROPAGATE,
+            [CalendarEventEvents::class, 'afterPropagate']
+        );
+        // When a calendar event is deleted
+        Event::on(
+            CalendarEvent::class,
+            CalendarEvent::EVENT_AFTER_DELETE,
+            [CalendarEventEvents::class, 'afterDelete']
+        );
+        // When a calendar event is restored
+        Event::on(
+            CalendarEvent::class,
+            CalendarEvent::EVENT_AFTER_RESTORE,
+            [CalendarEventEvents::class, 'afterRestore']
         );
     }
 
@@ -289,7 +457,12 @@ class Events extends Component
             'assets'  => AssetCondition::class,
             'users'   => UserCondition::class,
             // Plugins
-            'commerce-orders' => class_exists(OrderCondition::class) ? OrderCondition::class : null,
+            'craft-commerce-orders' => class_exists(OrderCondition::class) ? OrderCondition::class : null,
+            'craft-commerce-products' => class_exists(CommerceProductCondition::class) ? CommerceProductCondition::class : null,
+            // Digital Products doesn't ship dedicated condition classes; null falls back to no Field Conditions slot
+            'digital-products-products' => null,
+            'digital-products-licenses' => null,
+            'solspace-calendar-events' => class_exists(CalendarEventCondition::class) ? CalendarEventCondition::class : null,
             default => null,
         };
     }
@@ -310,7 +483,11 @@ class Events extends Component
             'assets'  => Asset::class,
             'users'   => User::class,
             // Plugins
-            'commerce-orders' => class_exists(Order::class) ? Order::class : null,
+            'craft-commerce-orders' => class_exists(Order::class) ? Order::class : null,
+            'craft-commerce-products' => class_exists(CommerceProduct::class) ? CommerceProduct::class : null,
+            'digital-products-products' => class_exists(DigitalProduct::class) ? DigitalProduct::class : null,
+            'digital-products-licenses' => class_exists(License::class) ? License::class : null,
+            'solspace-calendar-events' => class_exists(CalendarEvent::class) ? CalendarEvent::class : null,
             default => null,
         };
     }

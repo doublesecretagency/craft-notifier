@@ -81,7 +81,7 @@ class OutboundSmsTest extends TestCase
 
     public function testTooShortNumberReturnsNull(): void
     {
-        // Fewer than 10 digits is unusable — return null so the caller bails.
+        // Fewer than 10 digits is unusable, return null so the caller bails.
         $result = $this->_invokeFormat('555-1234');
         $this->assertNull($result);
     }
@@ -119,7 +119,7 @@ class OutboundSmsTest extends TestCase
 
     public function testSendUsesTestPhoneNumberWhenConfigured(): void
     {
-        // testToPhoneNumber should override the recipient when set —
+        // testToPhoneNumber should override the recipient when set,
         // critical for keeping local development from texting real users.
         $this->assertStringContainsString('testToPhoneNumber', $this->smsSource);
     }

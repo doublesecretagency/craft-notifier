@@ -8,9 +8,7 @@ Sends a notification when **a Commerce Order becomes fully paid**. Fires when th
 
 If an order is refunded, and returns to zero once again, another notification will be triggered.
 
-:::tip Requires Craft Commerce
-This trigger is only available when [Craft Commerce](https://plugins.craftcms.com/commerce) is installed. The event type is hidden from the dropdown otherwise.
-:::
+<!--@include: @/events/types/_requires-craft-commerce.md-->
 
 <!--@include: @/events/types/_field-conditions.md-->
 
@@ -32,10 +30,10 @@ Amount paid: {{ order.totalPaid|currency }}
 :::warning Refunds and re-payments
 If an order is later refunded and then paid again, this trigger will fire a second time. Each transition into the fully-paid state is treated as a separate notification opportunity.
 
-To send a notification only on the initial completion of the order, use [**"When an order is completed (placed)"**](/events/types/commerce-orders/order-completed) instead.
+To send a notification only on the initial completion of the order, use [**"When an order is completed (placed)"**](/events/types/craft-commerce/order-completed) instead.
 :::
 
-<!--@include: @/events/types/commerce-orders/_notifying-the-customer.md-->
+<!--@include: @/events/types/craft-commerce/_notifying-the-customer.md-->
 
 ## Examples
 

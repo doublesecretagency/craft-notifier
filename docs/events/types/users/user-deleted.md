@@ -4,7 +4,9 @@ description: Trigger a notification when a User account is deleted.
 
 # When a user is deleted
 
-Sends a notification when **a User has been deleted**. The trigger fires for both soft deletes (account moved to the trash) and hard deletes alike. Restoring a deleted user fires the separate [**"When a user is restored"**](/events/types/users/user-restored) trigger.
+Sends a notification when **a User has been deleted**.
+
+This trigger fires for both soft deletes (moved to the trash) and hard deletes. Restoring a deleted user fires the separate [**"When a user is restored"**](/events/types/users/user-restored) event.
 
 <!--@include: @/events/types/_user-group-filters.md-->
 

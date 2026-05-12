@@ -88,7 +88,7 @@ class SendMessageJobTest extends TestCase
     public function testDescriptionReadsFromEnvelopeJobInfo(): void
     {
         // The description interpolates messageType / recipient from the
-        // envelope's jobInfo array — so the queue worker UI shows
+        // envelope's jobInfo array, so the queue worker UI shows
         // "Sending an email to Jane Doe" rather than just "SendMessage job."
         $this->assertStringContainsString(
             "\$this->envelope->jobInfo['messageType']",

@@ -104,7 +104,7 @@ class RecipientsServiceTest extends TestCase
      */
     public function testStrategyMethodIsPrivate(string $method): void
     {
-        // All six strategy methods are internal — the public surface is the
+        // All six strategy methods are internal, the public surface is the
         // single getRecipients() dispatcher.
         $this->assertTrue(
             $this->reflection->hasMethod($method),
@@ -179,7 +179,7 @@ class RecipientsServiceTest extends TestCase
 
     public function testAllAdminsFiltersByAdminFlag(): void
     {
-        // _allAdmins must use User::find()->admin() — without the admin()
+        // _allAdmins must use User::find()->admin(), without the admin()
         // call it would return all users, which would be a serious bug.
         $this->assertStringContainsString(
             'User::find()->admin()',

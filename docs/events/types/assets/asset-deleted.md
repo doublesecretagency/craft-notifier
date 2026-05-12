@@ -4,7 +4,9 @@ description: Trigger a notification when an Asset is deleted from any volume.
 
 # When an asset is deleted
 
-Sends a notification when **an Asset has been deleted**. The trigger fires for both soft deletes (moved to the trash) and hard deletes alike. Restoring a deleted asset fires the separate [**"When an asset is restored"**](/events/types/assets/asset-restored) trigger.
+Sends a notification when **an Asset has been deleted**.
+
+This trigger fires for both soft deletes (moved to the trash) and hard deletes. Restoring a deleted asset fires the separate [**"When an asset is restored"**](/events/types/assets/asset-restored) event.
 
 <!--@include: @/events/types/_volume-filters.md-->
 

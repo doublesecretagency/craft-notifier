@@ -72,7 +72,7 @@ If the `{% setRecipients %}` tag is run more than once, the results will be _add
 {% setRecipients order.customer %}
 ```
 
-For more on the Commerce Order pattern, see [When an order is completed](/events/types/commerce-orders/order-completed#notifying-the-customer).
+For more on the Commerce Order pattern, see [When an order is completed](/events/types/craft-commerce/order-completed#notifying-the-customer).
 
 ## Advanced Examples
 

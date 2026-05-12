@@ -107,7 +107,7 @@ class HasChangedAttributeOperatorTraitTest extends TestCase
     public function testMatchElementDiffsAgainstCapturedOriginal(): void
     {
         $this->assertStringContainsString(
-            'EntryEvents::getCapturedOriginal($element->id, $element->siteId)',
+            'Originals::get($element)',
             $this->traitSource
         );
         $this->assertMatchesRegularExpression(
@@ -116,18 +116,10 @@ class HasChangedAttributeOperatorTraitTest extends TestCase
         );
     }
 
-    public function testMatchElementGuardsAgainstMissingIdAndSiteId(): void
-    {
-        $this->assertMatchesRegularExpression(
-            '/empty\(\$element->id\) \|\| empty\(\$element->siteId\)/',
-            $this->traitSource
-        );
-    }
-
-    public function testImportsEntryEventsAccessor(): void
+    public function testImportsOriginalsRegistry(): void
     {
         $this->assertStringContainsString(
-            'use doublesecretagency\\notifier\\helpers\\events\\EntryEvents',
+            'use doublesecretagency\\notifier\\helpers\\events\\Originals',
             $this->traitSource
         );
     }

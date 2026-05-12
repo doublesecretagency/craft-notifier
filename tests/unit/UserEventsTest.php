@@ -4,6 +4,7 @@ namespace doublesecretagency\notifier\tests\unit;
 use craft\elements\User;
 use craft\events\ModelEvent;
 use craft\events\UserEvent;
+use craft\events\UserGroupsAssignEvent;
 use doublesecretagency\notifier\helpers\events\UserEvents;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -65,12 +66,13 @@ class UserEventsTest extends TestCase
     public static function userEventMethodProvider(): array
     {
         return [
-            ['beforeSave',         ModelEvent::class],
-            ['afterPropagate',     ModelEvent::class],
-            ['afterActivateUser',  UserEvent::class],
-            ['afterUpdate',        ModelEvent::class],
-            ['afterDelete',        Event::class],
-            ['afterRestore',       Event::class],
+            ['beforeSave',           ModelEvent::class],
+            ['afterPropagate',       ModelEvent::class],
+            ['afterActivateUser',    UserEvent::class],
+            ['afterUpdate',          ModelEvent::class],
+            ['afterAssignToGroups',  UserGroupsAssignEvent::class],
+            ['afterDelete',          Event::class],
+            ['afterRestore',         Event::class],
         ];
     }
 
@@ -171,11 +173,12 @@ class UserEventsTest extends TestCase
     public static function notificationEventValueProvider(): array
     {
         return [
-            ['afterPropagate',    'after-propagate'],
-            ['afterActivateUser', 'after-activate-user'],
-            ['afterUpdate',       'after-update'],
-            ['afterDelete',       'after-delete'],
-            ['afterRestore',      'after-restore'],
+            ['afterPropagate',       'after-propagate'],
+            ['afterActivateUser',    'after-activate-user'],
+            ['afterUpdate',          'after-update'],
+            ['afterAssignToGroups',  'after-assign-to-groups'],
+            ['afterDelete',          'after-delete'],
+            ['afterRestore',         'after-restore'],
         ];
     }
 
@@ -204,12 +207,49 @@ class UserEventsTest extends TestCase
     {
         // Every UserEvents handler must scope the Notification query to the
         // 'users' eventType so it cannot pick up dispatch rows belonging to
-        // entries / assets / commerce-orders.
+        // entries / assets / craft-commerce-orders.
         $this->assertMatchesRegularExpression(
             sprintf(
                 '/%s[\s\S]*?\'eventType\'\s*=>\s*\'users\'/',
                 preg_quote($method, '/')
             ),
+            $this->helperSource
+        );
+    }
+
+    // ========================================================================= //
+    // afterAssignToGroups: service event handling
+    // ========================================================================= //
+
+    public function testAfterAssignToGroupsHydratesUserFromUserId(): void
+    {
+        // UserGroupsAssignEvent carries `userId`, not the User element directly.
+        // The handler must hydrate via Craft::$app->getUsers()->getUserById($event->userId)
+        // before passing the user downstream.
+        $this->assertMatchesRegularExpression(
+            '/afterAssignToGroups[\s\S]*?getUserById\(\$event->userId\)/',
+            $this->helperSource
+        );
+    }
+
+    public function testAfterAssignToGroupsPassesNewGroupIdsInData(): void
+    {
+        // The Dispatch filter for this event reads `data['newGroupIds']` to
+        // gate on newly-assigned overlap with the configured groups. The
+        // handler must populate that data key.
+        $this->assertMatchesRegularExpression(
+            '/afterAssignToGroups[\s\S]*?\'newGroupIds\'\s*=>\s*\$event->newGroupIds/',
+            $this->helperSource
+        );
+    }
+
+    public function testAfterAssignToGroupsPassesUserAsObject(): void
+    {
+        // Twig templates and Dispatch's _matchEventCondition both read the
+        // element from data['object']. For service events that don't fire on
+        // the element directly, the handler must seed this key.
+        $this->assertMatchesRegularExpression(
+            '/afterAssignToGroups[\s\S]*?\'object\'\s*=>\s*\$user/',
             $this->helperSource
         );
     }

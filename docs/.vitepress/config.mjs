@@ -48,10 +48,16 @@ export default defineConfig({
           },
           {
             items: [
-              {text: 'Users',           link: '/events/types/users'},
-              {text: 'Entries',         link: '/events/types/entries'},
-              {text: 'Assets',          link: '/events/types/assets'},
-              {text: 'Commerce Orders', link: '/events/types/commerce-orders'},
+              {text: 'Entries',          link: '/events/types/entries/'},
+              {text: 'Assets',           link: '/events/types/assets/'},
+              {text: 'Users',            link: '/events/types/users/'},
+            ]
+          },
+          {
+            items: [
+              {text: 'Craft Commerce',   link: '/events/types/craft-commerce/'},
+              {text: 'Digital Products', link: '/events/types/digital-products/'},
+              {text: 'Solspace Calendar', link: '/events/types/solspace-calendar/'},
             ]
           },
         ]
@@ -197,16 +203,7 @@ export default defineConfig({
             {text: 'Overview',        link: '/events/'},
             {text: 'All Event Types', link: '/events/types/',
               items: [
-                {text: 'Users', link: '/events/types/users', collapsed: true,
-                  items: [
-                    {text: 'New user is created', link: '/events/types/users/new-user-created'},
-                    {text: 'User is activated',   link: '/events/types/users/user-activated'},
-                    {text: 'User is updated',     link: '/events/types/users/user-updated'},
-                    {text: 'User is deleted',     link: '/events/types/users/user-deleted'},
-                    {text: 'User is restored',    link: '/events/types/users/user-restored'},
-                  ]
-                },
-                {text: 'Entries', link: '/events/types/entries', collapsed: true,
+                {text: 'Entries', link: '/events/types/entries/', collapsed: true,
                   items: [
                     {text: 'Entry is saved',      link: '/events/types/entries/entry-saved-per-site'},
                     {text: 'Entry is propagated', link: '/events/types/entries/entry-saved-and-propagated'},
@@ -214,7 +211,7 @@ export default defineConfig({
                     {text: 'Entry is restored',   link: '/events/types/entries/entry-restored'},
                   ]
                 },
-                {text: 'Assets', link: '/events/types/assets', collapsed: true,
+                {text: 'Assets', link: '/events/types/assets/', collapsed: true,
                   items: [
                     {text: 'New file is uploaded', link: '/events/types/assets/file-uploaded'},
                     {text: 'Asset is moved',       link: '/events/types/assets/asset-moved'},
@@ -223,10 +220,40 @@ export default defineConfig({
                     {text: 'Asset is restored',    link: '/events/types/assets/asset-restored'},
                   ]
                 },
-                {text: 'Commerce Orders', link: '/events/types/commerce-orders', collapsed: true,
+                {text: 'Users', link: '/events/types/users/', collapsed: true,
                   items: [
-                    {text: 'Order is completed',  link: '/events/types/commerce-orders/order-completed'},
-                    {text: 'Order is fully paid', link: '/events/types/commerce-orders/order-fully-paid'},
+                    {text: 'New user is created',          link: '/events/types/users/new-user-created'},
+                    {text: 'User is activated',            link: '/events/types/users/user-activated'},
+                    {text: 'User is updated',              link: '/events/types/users/user-updated'},
+                    {text: 'User is assigned to groups',   link: '/events/types/users/user-assigned-to-groups'},
+                    {text: 'User is deleted',              link: '/events/types/users/user-deleted'},
+                    {text: 'User is restored',             link: '/events/types/users/user-restored'},
+                  ]
+                },
+                {text: 'Craft Commerce', link: '/events/types/craft-commerce/', collapsed: true,
+                  items: [
+                    {text: 'Order is completed',  link: '/events/types/craft-commerce/order-completed'},
+                    {text: 'Order is fully paid', link: '/events/types/craft-commerce/order-fully-paid'},
+                    {text: 'Product is saved',    link: '/events/types/craft-commerce/product-saved'},
+                    {text: 'Product is deleted',  link: '/events/types/craft-commerce/product-deleted'},
+                    {text: 'Product is restored', link: '/events/types/craft-commerce/product-restored'},
+                  ]
+                },
+                {text: 'Digital Products', link: '/events/types/digital-products/', collapsed: true,
+                  items: [
+                    {text: 'Product is saved',    link: '/events/types/digital-products/product-saved'},
+                    {text: 'Product is deleted',  link: '/events/types/digital-products/product-deleted'},
+                    {text: 'Product is restored', link: '/events/types/digital-products/product-restored'},
+                    {text: 'License is saved',    link: '/events/types/digital-products/license-saved'},
+                    {text: 'License is deleted',  link: '/events/types/digital-products/license-deleted'},
+                    {text: 'License is restored', link: '/events/types/digital-products/license-restored'},
+                  ]
+                },
+                {text: 'Solspace Calendar', link: '/events/types/solspace-calendar/', collapsed: true,
+                  items: [
+                    {text: 'Event is saved',    link: '/events/types/solspace-calendar/event-saved'},
+                    {text: 'Event is deleted',  link: '/events/types/solspace-calendar/event-deleted'},
+                    {text: 'Event is restored', link: '/events/types/solspace-calendar/event-restored'},
                   ]
                 },
               ]

@@ -14,7 +14,7 @@ use ReflectionClass;
  *
  * "First save" means Craft's $element->firstSave flag aligned with the
  * desired value AND the element is not currently a revision. This filter
- * is also exclusive — if it's enabled, several lifecycle filters become
+ * is also exclusive, if it's enabled, several lifecycle filters become
  * meaningless and should be hidden in the UI.
  */
 class FirstSaveFilterTest extends TestCase

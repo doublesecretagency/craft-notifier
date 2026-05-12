@@ -9,12 +9,16 @@
     id: 'eventType',
     name: 'eventType',
     value: notification.eventType,
-    options: {'':''}|merge(notificationOptions.eventType),
+    options: {'':''}|merge(notificationOptions.eventTypeOptions),
     toggle: true,
     targetPrefix: '.event-type-',
 }) }}
 
-{% include 'notifier/notifications/_edit/event/users' %}
 {% include 'notifier/notifications/_edit/event/entries' %}
 {% include 'notifier/notifications/_edit/event/assets' %}
-{% include 'notifier/notifications/_edit/event/commerce-orders' %}
+{% include 'notifier/notifications/_edit/event/users' %}
+{% include 'notifier/notifications/_edit/event/craft-commerce-orders' %}
+{% include 'notifier/notifications/_edit/event/craft-commerce-products' %}
+{% include 'notifier/notifications/_edit/event/digital-products-products' %}
+{% include 'notifier/notifications/_edit/event/digital-products-licenses' %}
+{% include 'notifier/notifications/_edit/event/solspace-calendar-events' %}

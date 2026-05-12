@@ -1,0 +1,18 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-craft-commerce-orders hidden">
+    {{ forms.selectField({
+        label: 'Commerce Orders Event'|t('notifier'),
+        instructions: commonInstructions,
+        id: 'event-craft-commerce-orders',
+        name: 'event[craft-commerce-orders]',
+        value: notification.event,
+        options: {'':''}|merge(notificationOptions.allEvents['craft-commerce-orders'] ?? []),
+        toggle: true,
+        targetPrefix: '.craft-commerce-orders-event-',
+    }) }}
+    {# Hidden until a Commerce Orders Event is selected #}
+    <div class="craft-commerce-orders-event-after-complete-order craft-commerce-orders-event-after-order-paid hidden">
+        {% include 'notifier/notifications/_edit/event/_condition' with { eventType: 'craft-commerce-orders' } %}
+    </div>
+</div>

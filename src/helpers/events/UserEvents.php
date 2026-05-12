@@ -11,9 +11,11 @@
 
 namespace doublesecretagency\notifier\helpers\events;
 
+use Craft;
 use craft\elements\User;
 use craft\events\ModelEvent;
 use craft\events\UserEvent;
+use craft\events\UserGroupsAssignEvent;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\NotifierPlugin;
 use yii\base\Event;
@@ -24,11 +26,6 @@ use yii\base\Event;
  */
 class UserEvents
 {
-
-    /**
-     * @var array Original elements prior to saving.
-     */
-    private static array $_originals = [];
 
     /**
      * Get original User prior to saving.
@@ -61,7 +58,8 @@ class UserEvents
         // Eagerly load field values; lazy reads later would pick up post-save content
         $original->getFieldValues();
 
-        static::$_originals[$user->id] = $original;
+        // Stash for the after-* handlers and the condition operators
+        Originals::capture($original);
     }
 
     /**
@@ -90,7 +88,7 @@ class UserEvents
 
         // Pass data to message parser
         $data = [
-            'original' => (static::$_originals[$user->id] ?? null),
+            'original' => Originals::find(User::class, $user->id),
         ];
 
         // Send all matching notifications
@@ -138,7 +136,7 @@ class UserEvents
         }
 
         // Get captured pre-save original for this user
-        $original = (static::$_originals[$user->id] ?? null);
+        $original = Originals::find(User::class, $user->id);
 
         // If the pending status just transitioned from true to false, this
         // save is part of the activation flow; let after-activate-user own it
@@ -157,6 +155,42 @@ class UserEvents
         // Pass captured original for change-detection use in templates
         $data = [
             'original' => $original,
+        ];
+
+        // Send all matching notifications
+        NotifierPlugin::getInstance()->messages->sendAll($notifications, $event, $data);
+    }
+
+    /**
+     * When a user is assigned to one or more groups.
+     *
+     * @param UserGroupsAssignEvent $event
+     * @return void
+     */
+    public static function afterAssignToGroups(UserGroupsAssignEvent $event): void
+    {
+        // Load the user being assigned
+        $user = Craft::$app->getUsers()->getUserById($event->userId);
+
+        // If user can't be loaded, bail
+        if (!$user) {
+            return;
+        }
+
+        // Get all notifications for this event
+        $notifications = Notification::find()
+            ->where([
+                'eventType' => 'users',
+                'event' => 'after-assign-to-groups',
+            ])
+            ->all();
+
+        // Pass the user as the object, plus the newGroupIds for runtime filtering
+        $data = [
+            'object' => $user,
+            'newGroupIds' => $event->newGroupIds,
+            'removedGroupIds' => $event->removedGroupIds,
+            'groupIds' => $event->groupIds,
         ];
 
         // Send all matching notifications

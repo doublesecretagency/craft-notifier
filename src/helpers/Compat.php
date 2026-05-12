@@ -58,7 +58,7 @@ abstract class Compat
      *
      * Raw string literals are used (not class constants) because referencing a
      * constant that doesn't exist on the loaded Craft version is a fatal error.
-     * The string values are part of Craft's stable internal contract — they're
+     * The string values are part of Craft's stable internal contract, they're
      * what the framework dispatches against.
      *
      * @return string

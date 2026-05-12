@@ -42,7 +42,7 @@ class EntryEventsTest extends TestCase
     public function testLivesInHelpersEventsNamespace(): void
     {
         // Sibling of AssetEvents / UserEvents / CommerceOrderEvents under the
-        // same namespace — keeps the on-disk shape uniform.
+        // same namespace, keeps the on-disk shape uniform.
         $this->assertSame(
             'doublesecretagency\notifier\helpers\events',
             $this->reflection->getNamespaceName()
@@ -101,7 +101,7 @@ class EntryEventsTest extends TestCase
     public function testMethodAcceptsExpectedEventType(string $method, string $eventClass): void
     {
         // The parameter type must match the Yii event Notifier registers
-        // against — afterSaveElement consumes an ElementEvent because that's
+        // against, afterSaveElement consumes an ElementEvent because that's
         // what Elements::EVENT_AFTER_SAVE_ELEMENT fires; the others consume
         // ModelEvent.
         $params = $this->reflection->getMethod($method)->getParameters();
@@ -150,42 +150,27 @@ class EntryEventsTest extends TestCase
         );
     }
 
-    public function testOriginalsAreKeyedByEntryIdAndSiteId(): void
+    public function testOriginalsAreCapturedViaCentralRegistry(): void
     {
-        // beforeSave fires once per site during multi-site propagation. Without
-        // a composite key, the last-propagated site's capture overwrites the
-        // active editing site's capture before the dispatch handlers read it,
-        // and `original.summary` ends up locked to whichever site was processed
-        // last (typically untouched by the user's edit).
+        // beforeSave fires once per site during multi-site propagation.
+        // Originals::capture() stores the snapshot keyed by (class, id, siteId)
+        // so per-site captures don't clobber each other before the dispatch
+        // handlers (afterSave, afterPropagate) read them, and the has-changed
+        // operators can look up the snapshot polymorphically.
         $this->assertMatchesRegularExpression(
-            '/\$_originals\[\$entry->id\]\[\$entry->siteId\]\s*=\s*\$original/',
+            '/Originals::capture\(\$original\)/',
             $this->helperSource
         );
     }
 
     public function testDispatchersReadOriginalsByEntryAndSite(): void
     {
-        // afterSave / afterPropagate must look up the original by the same
-        // composite key that beforeSave wrote with.
+        // afterSave / afterPropagate must look up the captured snapshot by
+        // the (class, id, siteId) the central registry recorded at beforeSave.
         $this->assertMatchesRegularExpression(
-            '/static::\$_originals\[\$entry->id\]\[\$entry->siteId\][\s\S]*?\?\?\s*null/',
+            '/Originals::find\(Entry::class,\s*\$entry->id,\s*\$entry->siteId\)/',
             $this->helperSource
         );
-    }
-
-    public function testHasGetCapturedOriginalAccessor(): void
-    {
-        // The HasChangedOperator trait's diff fallback (used when Craft has
-        // already called markAsClean() before the propagated dispatch fires)
-        // depends on this accessor.
-        $this->assertTrue($this->reflection->hasMethod('getCapturedOriginal'));
-        $method = $this->reflection->getMethod('getCapturedOriginal');
-        $this->assertTrue($method->isPublic());
-        $this->assertTrue($method->isStatic());
-        $params = $method->getParameters();
-        $this->assertCount(2, $params);
-        $this->assertSame('entryId', $params[0]->getName());
-        $this->assertSame('siteId', $params[1]->getName());
     }
 
     // ========================================================================= //
@@ -195,7 +180,7 @@ class EntryEventsTest extends TestCase
     public function testAfterSaveElementGuardsEntryInstance(): void
     {
         // Elements::EVENT_AFTER_SAVE_ELEMENT fires for every element type, not
-        // just entries — the bridge must short-circuit on non-Entry payloads.
+        // just entries, the bridge must short-circuit on non-Entry payloads.
         $this->assertMatchesRegularExpression(
             '/afterSaveElement[\s\S]*?\$event->element\s+instanceof\s+Entry/',
             $this->helperSource
@@ -230,7 +215,7 @@ class EntryEventsTest extends TestCase
     public function testAfterSaveElementForwardsToAfterPropagate(): void
     {
         // The bridge must hand the synthesized ModelEvent off to the existing
-        // afterPropagate handler — that's the single source of truth for the
+        // afterPropagate handler, that's the single source of truth for the
         // "saved and propagated" dispatch path.
         $this->assertMatchesRegularExpression(
             '/afterSaveElement[\s\S]*?(?:static|self)::afterPropagate\(/',

@@ -126,8 +126,8 @@ class DispatchModelTest extends TestCase
 
     public function testFilterByEventTypeHandlesAllEventTypes(): void
     {
-        // The eventType switch must cover entries / users / assets / commerce-orders
-        // — the four event-type families Notifier supports.
+        // The eventType switch must cover entries / users / assets / craft-commerce-orders
+        // (the four event-type families Notifier supports).
         $this->assertMatchesRegularExpression(
             "/case\s+'entries'/",
             $this->dispatchSource
@@ -141,7 +141,7 @@ class DispatchModelTest extends TestCase
             $this->dispatchSource
         );
         $this->assertMatchesRegularExpression(
-            "/case\s+'commerce-orders'/",
+            "/case\s+'craft-commerce-orders'/",
             $this->dispatchSource
         );
     }
@@ -186,7 +186,7 @@ class DispatchModelTest extends TestCase
 
     public function testAnnouncementsAlwaysQueued(): void
     {
-        // Announcements have no opt-out — the configureByMessageType branch
+        // Announcements have no opt-out, the configureByMessageType branch
         // must hard-set useQueue = true.
         $this->assertMatchesRegularExpression(
             "/case 'announcement':\s*\\\$this->useQueue\s*=\s*true/",
@@ -262,9 +262,17 @@ class DispatchModelTest extends TestCase
         // The plugin id is the same for every recipient in a dispatch, so
         // it's resolved once at the top of _compileAnnouncement() and baked
         // into each envelope. Avoids a per-recipient query at send time.
+        // Must use getStoredPluginInfo() (returns the DB row, which carries
+        // the `id` column); getPluginInfo() returns Composer + license metadata
+        // and has never exposed the row id in Craft 5.
         $this->assertMatchesRegularExpression(
-            "/_compileAnnouncement[\s\S]*?getPlugins\(\)->getPluginInfo\('notifier'\)/",
+            "/_compileAnnouncement[\s\S]*?getPlugins\(\)->getStoredPluginInfo\('notifier'\)/",
             $this->dispatchSource
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            "/getPlugins\(\)->getPluginInfo\('notifier'\)/",
+            $this->dispatchSource,
+            'getPluginInfo() does not return the row id; getStoredPluginInfo() must be used.'
         );
         $this->assertMatchesRegularExpression(
             "/_compileAnnouncement[\s\S]*?'pluginId'\s*=>\s*\\\$pluginId/",
@@ -290,7 +298,7 @@ class DispatchModelTest extends TestCase
 
     public function testEntryFilterChecksSiteOnAfterSave(): void
     {
-        // Site filtering only applies to AFTER_SAVE — propagation events
+        // Site filtering only applies to AFTER_SAVE, propagation events
         // produce one save per site, and we want notifications scoped to
         // the user-selected sites.
         $this->assertMatchesRegularExpression(
@@ -409,10 +417,10 @@ class DispatchModelTest extends TestCase
 
     public function testFilterByEventTypeRunsConditionMatchAfterEventTypeBranches(): void
     {
-        // After each event-type branch (entries / users / assets / commerce-orders)
+        // After each event-type branch (entries / users / assets / craft-commerce-orders)
         // resolves, the shared condition gate runs once before returning.
         $this->assertMatchesRegularExpression(
-            '/case\s+\'commerce-orders\'[\s\S]*?break;[\s\S]*?_matchEventCondition\(\)/',
+            '/case\s+\'craft-commerce-orders\'[\s\S]*?break;[\s\S]*?_matchEventCondition\(\)/',
             $this->dispatchSource
         );
     }
@@ -420,7 +428,7 @@ class DispatchModelTest extends TestCase
     public function testEntriesBranchInvokesEntriesFilterBeforeCondition(): void
     {
         // Entries-specific filters (section / entry type / site / FilterInterface
-        // classes) must short-circuit first — the heavier condition match only
+        // classes) must short-circuit first, the heavier condition match only
         // runs once those cheap checks pass.
         $this->assertMatchesRegularExpression(
             "/case\s+'entries'[\s\S]*?_filterEntries\(\)[\s\S]*?_matchEventCondition\(\)/",
@@ -510,7 +518,7 @@ class DispatchModelTest extends TestCase
     public function testRenderSwitchesToElementSite(): void
     {
         // The per-site trigger fires once per site, but the request's current
-        // site stays constant across firings — without an explicit switch,
+        // site stays constant across firings, without an explicit switch,
         // currentSite, entry.url, and other site-aware globals all resolve
         // against the request's site instead of the entry's. _renderObjectTemplate
         // must call setCurrentSite($object->getSite()) when the object is an
@@ -574,7 +582,7 @@ class DispatchModelTest extends TestCase
     {
         // PR #32 cleanup: every event type seeds `object` from the dispatch's
         // own data array, falling back to the raw event sender. The earlier
-        // form special-cased User Activated events with a separate alias —
+        // form special-cased User Activated events with a separate alias,
         // the cleanup pass collapsed both paths into this single line.
         $this->assertStringContainsString(
             "'object' => (\$this->data['object'] ?? \$this->event->sender)",
@@ -589,5 +597,103 @@ class DispatchModelTest extends TestCase
         // both the alias and the comment; pinning the comment's absence
         // catches accidental reintroduction of the special case.
         $this->assertStringNotContainsString('Unique case', $this->dispatchSource);
+    }
+
+    // ========================================================================= //
+    // Tier 2: new event-type filter methods + switch cases
+    // ========================================================================= //
+
+    /**
+     * @return string[][]
+     */
+    public static function tier2FilterMethodProvider(): array
+    {
+        return [
+            ['_filterCommerceProducts',        'craft-commerce-products'],
+            ['_filterDigitalProducts',         'digital-products-products'],
+            ['_filterDigitalProductLicenses',  'digital-products-licenses'],
+            ['_filterCalendarEvents',          'solspace-calendar-events'],
+        ];
+    }
+
+    /**
+     * @dataProvider tier2FilterMethodProvider
+     */
+    public function testTier2FilterMethodExists(string $method): void
+    {
+        // Each new event-type category gets a private filter method that
+        // gates dispatch on the category-specific axis (product type,
+        // digital product type, calendar). Mandatory presence; the
+        // switch in filterByEventType references each by name.
+        $this->assertTrue($this->reflection->hasMethod($method));
+        $this->assertTrue($this->reflection->getMethod($method)->isPrivate());
+    }
+
+    /**
+     * @dataProvider tier2FilterMethodProvider
+     */
+    public function testFilterByEventTypeRoutesTier2Category(string $method, string $eventType): void
+    {
+        // The switch in filterByEventType must route each Tier 2 category
+        // to its matching private filter method.
+        $this->assertMatchesRegularExpression(
+            sprintf(
+                "/case '%s'[\\s\\S]*?%s\\(\\)/",
+                preg_quote($eventType, '/'),
+                preg_quote($method, '/')
+            ),
+            $this->dispatchSource
+        );
+    }
+
+    public function testCommerceProductsFilterReadsProductTypesConfig(): void
+    {
+        // Mandatory product-types gate analogous to Sections for entries
+        // and Volumes for assets.
+        $this->assertStringContainsString(
+            "\$this->notification->eventConfig['productTypes']",
+            $this->dispatchSource
+        );
+    }
+
+    public function testDigitalProductsFilterReadsSharedDigitalProductTypesConfig(): void
+    {
+        // DP Products and DP Licenses share the same filter source under
+        // the digitalProductTypes config key.
+        $this->assertStringContainsString(
+            "\$this->notification->eventConfig['digitalProductTypes']",
+            $this->dispatchSource
+        );
+    }
+
+    public function testDigitalProductLicensesFilterGatesOnParentProductType(): void
+    {
+        // License filter must gate on the parent product's typeId, not
+        // a hypothetical license-level typeId. The body resolves the
+        // product via getProduct() then reads its typeId.
+        $this->assertMatchesRegularExpression(
+            '/_filterDigitalProductLicenses[\s\S]*?getProduct\(\)/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testCalendarEventsFilterReadsCalendarsConfig(): void
+    {
+        // Mandatory calendars gate analogous to Sections for entries.
+        $this->assertStringContainsString(
+            "\$this->notification->eventConfig['calendars']",
+            $this->dispatchSource
+        );
+    }
+
+    public function testUserFilterHandlesAssignToGroupsSpecially(): void
+    {
+        // The assignment event needs newly-assigned-overlap semantics,
+        // not the standard "is in any configured group" gate. The branch
+        // reads data['newGroupIds'] populated by UserEvents::afterAssignToGroups.
+        $this->assertMatchesRegularExpression(
+            "/'after-assign-to-groups'[\s\S]*?newGroupIds/",
+            $this->dispatchSource
+        );
     }
 }

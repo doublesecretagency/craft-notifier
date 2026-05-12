@@ -74,7 +74,7 @@ class RevisionFilterTest extends TestCase
     public function testExcludesOtherLifecycleFilters(): void
     {
         // Revisions are mutually exclusive with the other lifecycle states
-        // — drafts, provisional drafts, and the first-save semantics.
+        // (drafts, provisional drafts, and the first-save semantics).
         $excluded = RevisionFilter::excludes();
 
         $this->assertContains(DraftFilter::class, $excluded);

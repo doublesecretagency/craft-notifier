@@ -27,23 +27,6 @@ class EntryEvents
 {
 
     /**
-     * @var array Original elements prior to saving, keyed by [entryId][siteId].
-     */
-    private static array $_originals = [];
-
-    /**
-     * Get the pre-save original captured at beforeSave for the given entry+site.
-     *
-     * @param int $entryId
-     * @param int $siteId
-     * @return Entry|null
-     */
-    public static function getCapturedOriginal(int $entryId, int $siteId): ?Entry
-    {
-        return (static::$_originals[$entryId][$siteId] ?? null);
-    }
-
-    /**
      * Get original Entry prior to saving.
      *
      * @param ModelEvent $event
@@ -77,8 +60,8 @@ class EntryEvents
         // Eagerly load field values; lazy reads later would pick up post-save content
         $original->getFieldValues();
 
-        // Key by entryId+siteId so per-site propagation doesn't clobber the active site's capture
-        static::$_originals[$entry->id][$entry->siteId] = $original;
+        // Stash for the after-save / after-propagate handlers and the condition operators
+        Originals::capture($original);
     }
 
     /**
@@ -102,7 +85,7 @@ class EntryEvents
 
         // Get original for this entry+site
         $data = [
-            'original' => (static::$_originals[$entry->id][$entry->siteId] ?? null),
+            'original' => Originals::find(Entry::class, $entry->id, $entry->siteId),
         ];
 
         // Send all matching notifications
@@ -185,7 +168,7 @@ class EntryEvents
 
         // Get original for this entry+site
         $data = [
-            'original' => (static::$_originals[$entry->id][$entry->siteId] ?? null),
+            'original' => Originals::find(Entry::class, $entry->id, $entry->siteId),
         ];
 
         // Send all matching notifications

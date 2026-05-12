@@ -41,6 +41,10 @@ return [
     'Which specific event will activate the notification?' => 'Que evento específico ativará a notificação?',
     'Assets Event'                                         => 'Evento de Recursos',
     'Commerce Orders Event'                                => 'Evento de Encomendas Commerce',
+    'Commerce Products Event'                              => 'Evento de Produtos Commerce',
+    'Digital Products Event'                               => 'Evento Digital Products',
+    'Digital Product Licenses Event'                       => 'Evento de Licenças Digital Products',
+    'Solspace Calendar Event'                              => 'Evento Solspace Calendar',
     'Entries Event'                                        => 'Evento de Entradas',
     'Users Event'                                          => 'Evento de Utilizadores',
 

@@ -42,7 +42,7 @@ class EventFilterTemplatesTest extends TestCase
 
     public function testVolumesTemplateUsesCorrectInputName(): void
     {
-        // The runtime _filterAssets() reads $eventConfig['volumes'] —
+        // The runtime _filterAssets() reads $eventConfig['volumes'],
         // the template must emit hidden inputs under exactly that key.
         $source = self::read('assets/volumes.twig');
         $this->assertStringContainsString(
@@ -94,7 +94,7 @@ class EventFilterTemplatesTest extends TestCase
 
     public function testUserGroupsTemplateUsesCorrectInputName(): void
     {
-        // The runtime _filterUsers() reads $eventConfig['userGroups'] —
+        // The runtime _filterUsers() reads $eventConfig['userGroups'],
         // the template must emit hidden inputs under exactly that key.
         $source = self::read('users/groups.twig');
         $this->assertStringContainsString(
@@ -205,4 +205,90 @@ class EventFilterTemplatesTest extends TestCase
         );
     }
 
+    // ========================================================================= //
+    // Tier 2 filter-axis partials
+    // ========================================================================= //
+
+    /**
+     * @return array<int, array{string, string}>
+     */
+    public static function tier2FilterPartialProvider(): array
+    {
+        return [
+            ['craft-commerce-products/productTypes.twig',                  'availableProductTypes'],
+            ['digital-products-products/digitalProductTypes.twig',   'availableDigitalProductTypes'],
+            ['digital-products-licenses/digitalProductTypes.twig',    'availableDigitalProductTypes'],
+            ['solspace-calendar-events/calendars.twig',                       'availableCalendars'],
+        ];
+    }
+
+    /**
+     * @dataProvider tier2FilterPartialProvider
+     */
+    public function testTier2FilterPartialUsesExpectedHelper(string $partial, string $helper): void
+    {
+        // Each new filter-axis partial must call the matching Twig helper
+        // to populate its checkbox list.
+        $source = self::read($partial);
+        $this->assertStringContainsString("{$helper}()", $source);
+    }
+
+    /**
+     * @dataProvider tier2FilterPartialProvider
+     */
+    public function testTier2FilterPartialGuardsOnNonEmptyHelper(string $partial, string $helper): void
+    {
+        // The partial wraps its rendering in a check on the helper's length
+        // so installs without the source plugin (or without configured items)
+        // collapse the filter section gracefully.
+        $source = self::read($partial);
+        $this->assertStringContainsString("{$helper}()|length", $source);
+    }
+
+    public function testTier2IndexesIncludeFilterAndCondition(): void
+    {
+        // Each Tier 2 category's index.twig must include its filter-axis
+        // partial AND the condition slot wrapper, mirroring the entries/
+        // assets/users folder shape.
+        $commerce = self::read('craft-commerce-products/index.twig');
+        $this->assertStringContainsString(
+            "{% include 'notifier/notifications/_edit/event/craft-commerce-products/productTypes' %}",
+            $commerce
+        );
+        $this->assertStringContainsString(
+            "{% include 'notifier/notifications/_edit/event/craft-commerce-products/condition' %}",
+            $commerce
+        );
+
+        $digital = self::read('digital-products-products/index.twig');
+        $this->assertStringContainsString(
+            "{% include 'notifier/notifications/_edit/event/digital-products-products/digitalProductTypes' %}",
+            $digital
+        );
+
+        $licenses = self::read('digital-products-licenses/index.twig');
+        $this->assertStringContainsString(
+            "{% include 'notifier/notifications/_edit/event/digital-products-licenses/digitalProductTypes' %}",
+            $licenses
+        );
+
+        $calendar = self::read('solspace-calendar-events/index.twig');
+        $this->assertStringContainsString(
+            "{% include 'notifier/notifications/_edit/event/solspace-calendar-events/calendars' %}",
+            $calendar
+        );
+    }
+
+    public function testUsersIndexCarriesAssignToGroupsToggleClass(): void
+    {
+        // The new sub-toggle must appear in all three places that drive
+        // CP show/hide on the users tab.
+        $index = self::read('users/index.twig');
+        $groups = self::read('users/groups.twig');
+        $condition = self::read('users/condition.twig');
+
+        $this->assertStringContainsString('users-event-after-assign-to-groups', $index);
+        $this->assertStringContainsString('users-event-after-assign-to-groups', $groups);
+        $this->assertStringContainsString('users-event-after-assign-to-groups', $condition);
+    }
 }

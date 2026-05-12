@@ -22,44 +22,40 @@ abstract class Options
      * Available event types.
      */
     public const EVENT_TYPE = [
-        'users'            => 'Users',
-        'entries'          => 'Entries',
-        'assets'           => 'Assets',
-        'commerce-orders'  => 'Commerce Orders',
+        'entries'                   => 'Entries',
+        'assets'                    => 'Assets',
+        'users'                     => 'Users',
+        'craft-commerce-orders'           => 'Commerce Orders',
+        'craft-commerce-products'         => 'Commerce Products',
+        'digital-products-products'          => 'Digital Products',
+        'digital-products-licenses'  => 'Digital Product Licenses',
+        'solspace-calendar-events'           => 'Solspace Calendar',
+    ];
+
+    /**
+     * Event types grouped by plugin, for the CP dropdown.
+     */
+    public const EVENT_TYPE_GROUPED = [
+        'entries' => 'Entries',
+        'assets'  => 'Assets',
+        'users'   => 'Users',
+        ['optgroup' => 'Craft Commerce'],
+        'craft-commerce-orders'   => 'Commerce Orders',
+        'craft-commerce-products' => 'Commerce Products',
+        ['optgroup' => 'Digital Products'],
+        'digital-products-products'         => 'Products',
+        'digital-products-licenses' => 'Licenses',
+        ['optgroup' => 'Solspace Calendar'],
+        'solspace-calendar-events' => 'Calendar Events',
     ];
 
     /**
      * Available events for all event types.
      * https://craftcms.com/docs/4.x/extend/events.html#event-code-generator
+     *
+     * Top-level key order must match EVENT_TYPE.
      */
     public const ALL_EVENTS = [
-        'users' => [
-            [
-                'label' => 'When a new user is created',
-                'value' => 'after-propagate',
-                'class' => 'craft\elements\User::EVENT_AFTER_PROPAGATE'
-            ],
-            [
-                'label' => 'When a user is activated',
-                'value' => 'after-activate-user',
-                'class' => 'craft\services\Users::EVENT_AFTER_ACTIVATE_USER'
-            ],
-            [
-                'label' => 'When a user is updated',
-                'value' => 'after-update',
-                'class' => 'craft\elements\User::EVENT_AFTER_PROPAGATE'
-            ],
-            [
-                'label' => 'When a user is deleted',
-                'value' => 'after-delete',
-                'class' => 'craft\elements\User::EVENT_AFTER_DELETE'
-            ],
-            [
-                'label' => 'When a user is restored',
-                'value' => 'after-restore',
-                'class' => 'craft\elements\User::EVENT_AFTER_RESTORE'
-            ],
-        ],
         'entries' => [
             [
                 'label' => 'When an entry is saved (send one message per each site)',
@@ -109,7 +105,39 @@ abstract class Options
                 'class' => 'craft\elements\Asset::EVENT_AFTER_RESTORE'
             ],
         ],
-        'commerce-orders' => [
+        'users' => [
+            [
+                'label' => 'When a new user is created',
+                'value' => 'after-propagate',
+                'class' => 'craft\elements\User::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When a user is activated',
+                'value' => 'after-activate-user',
+                'class' => 'craft\services\Users::EVENT_AFTER_ACTIVATE_USER'
+            ],
+            [
+                'label' => 'When a user is updated',
+                'value' => 'after-update',
+                'class' => 'craft\elements\User::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When a user is assigned to one or more groups',
+                'value' => 'after-assign-to-groups',
+                'class' => 'craft\services\Users::EVENT_AFTER_ASSIGN_USER_TO_GROUPS'
+            ],
+            [
+                'label' => 'When a user is deleted',
+                'value' => 'after-delete',
+                'class' => 'craft\elements\User::EVENT_AFTER_DELETE'
+            ],
+            [
+                'label' => 'When a user is restored',
+                'value' => 'after-restore',
+                'class' => 'craft\elements\User::EVENT_AFTER_RESTORE'
+            ],
+        ],
+        'craft-commerce-orders' => [
             [
                 'label' => 'When an order is completed (placed)',
                 'value' => 'after-complete-order',
@@ -120,7 +148,75 @@ abstract class Options
                 'value' => 'after-order-paid',
                 'class' => 'craft\commerce\elements\Order::EVENT_AFTER_ORDER_PAID'
             ],
-        ]
+        ],
+        'craft-commerce-products' => [
+            [
+                'label' => 'When a product is saved',
+                'value' => 'after-propagate',
+                'class' => 'craft\commerce\elements\Product::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When a product is deleted',
+                'value' => 'after-delete',
+                'class' => 'craft\commerce\elements\Product::EVENT_AFTER_DELETE'
+            ],
+            [
+                'label' => 'When a product is restored',
+                'value' => 'after-restore',
+                'class' => 'craft\commerce\elements\Product::EVENT_AFTER_RESTORE'
+            ],
+        ],
+        'digital-products-products' => [
+            [
+                'label' => 'When a digital product is saved',
+                'value' => 'after-propagate',
+                'class' => 'craft\digitalproducts\elements\Product::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When a digital product is deleted',
+                'value' => 'after-delete',
+                'class' => 'craft\digitalproducts\elements\Product::EVENT_AFTER_DELETE'
+            ],
+            [
+                'label' => 'When a digital product is restored',
+                'value' => 'after-restore',
+                'class' => 'craft\digitalproducts\elements\Product::EVENT_AFTER_RESTORE'
+            ],
+        ],
+        'digital-products-licenses' => [
+            [
+                'label' => 'When a license is saved',
+                'value' => 'after-propagate',
+                'class' => 'craft\digitalproducts\elements\License::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When a license is deleted',
+                'value' => 'after-delete',
+                'class' => 'craft\digitalproducts\elements\License::EVENT_AFTER_DELETE'
+            ],
+            [
+                'label' => 'When a license is restored',
+                'value' => 'after-restore',
+                'class' => 'craft\digitalproducts\elements\License::EVENT_AFTER_RESTORE'
+            ],
+        ],
+        'solspace-calendar-events' => [
+            [
+                'label' => 'When a calendar event is saved',
+                'value' => 'after-propagate',
+                'class' => 'Solspace\Calendar\Elements\Event::EVENT_AFTER_PROPAGATE'
+            ],
+            [
+                'label' => 'When a calendar event is deleted',
+                'value' => 'after-delete',
+                'class' => 'Solspace\Calendar\Elements\Event::EVENT_AFTER_DELETE'
+            ],
+            [
+                'label' => 'When a calendar event is restored',
+                'value' => 'after-restore',
+                'class' => 'Solspace\Calendar\Elements\Event::EVENT_AFTER_RESTORE'
+            ],
+        ],
     ];
 
     /**

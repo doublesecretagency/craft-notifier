@@ -148,10 +148,11 @@ class HasChangedOperatorTraitTest extends TestCase
         // For the propagated event, dirty state is gone by the time the
         // bridged afterApplyDraft handler fires. The diff against the
         // pre-save original captured at beforeSave is the only way to detect
-        // the change at that lifecycle point. EntryEvents::getCapturedOriginal()
-        // is the public accessor for the captured state.
+        // the change at that lifecycle point. Originals::get() is the
+        // polymorphic accessor that works across every element type the
+        // plugin captures (Entry, Asset, User, Commerce Product, etc.).
         $this->assertStringContainsString(
-            'EntryEvents::getCapturedOriginal($element->id, $element->siteId)',
+            'Originals::get($element)',
             $this->traitSource
         );
         // The diff itself; the source assigns to local variables first for
@@ -170,14 +171,13 @@ class HasChangedOperatorTraitTest extends TestCase
         );
     }
 
-    public function testMatchElementGuardsAgainstMissingIdAndSiteId(): void
+    public function testMatchElementGuardsAgainstMissingOriginal(): void
     {
-        // The captured-original lookup is keyed on (id, siteId). When either
-        // is missing (e.g., a brand-new entry that hasn't been saved yet, or
-        // a synthetic test element without identity), the lookup would throw;
-        // bail to false instead.
+        // The captured-original lookup returns null for elements that weren't
+        // captured (e.g. a brand-new element on its first save, where the
+        // pre-save state doesn't exist yet). Bail to false in that case.
         $this->assertMatchesRegularExpression(
-            '/empty\(\$element->id\) \|\| empty\(\$element->siteId\)/',
+            '/Originals::get\(\$element\)[\s\S]*?if\s*\(!\$original\)\s*\{\s*return\s+false/',
             $this->traitSource
         );
     }
@@ -197,14 +197,14 @@ class HasChangedOperatorTraitTest extends TestCase
         );
     }
 
-    public function testImportsEntryEventsAccessor(): void
+    public function testImportsOriginalsRegistry(): void
     {
-        // The diff fallback reaches across to the EntryEvents helper for the
-        // pre-save snapshot. Without the import, the accessor reference at
-        // the bottom of matchElement() would resolve to a non-existent class
+        // The diff fallback reaches across to the central Originals registry
+        // for the pre-save snapshot. Without the import, the accessor reference
+        // at the bottom of matchElement() would resolve to a non-existent class
         // in the operators namespace.
         $this->assertStringContainsString(
-            'use doublesecretagency\\notifier\\helpers\\events\\EntryEvents',
+            'use doublesecretagency\\notifier\\helpers\\events\\Originals',
             $this->traitSource
         );
     }

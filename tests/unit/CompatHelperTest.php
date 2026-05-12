@@ -108,7 +108,7 @@ class CompatHelperTest extends TestCase
 
     public function testUtilitiesEventNameReturnsRawStrings(): void
     {
-        // Raw string literals are deliberate — referencing the class constants
+        // Raw string literals are deliberate, referencing the class constants
         // (Utilities::EVENT_REGISTER_UTILITIES vs EVENT_REGISTER_UTILITY_TYPES)
         // would be a fatal error on whichever Craft version doesn't define it
         $this->assertMatchesRegularExpression(

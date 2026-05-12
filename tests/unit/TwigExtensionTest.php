@@ -17,7 +17,7 @@ use Twig\Extension\GlobalsInterface;
  * {% setRecipients %}), and two helper functions for the CP.
  *
  * The token-parser instantiation requires Twig autoloading but no
- * Craft container — these tests therefore instantiate the extension
+ * Craft container, these tests therefore instantiate the extension
  * directly and call getTokenParsers() / getFunctions() to verify
  * registration.
  */
@@ -42,7 +42,7 @@ class TwigExtensionTest extends TestCase
     public function testImplementsGlobalsInterface(): void
     {
         // GlobalsInterface is what makes getGlobals() actually run inside
-        // Twig — without it, registered globals are silently ignored.
+        // Twig, without it, registered globals are silently ignored.
         $this->assertTrue($this->reflection->implementsInterface(GlobalsInterface::class));
     }
 
@@ -86,7 +86,7 @@ class TwigExtensionTest extends TestCase
 
     public function testFunctionMethodsExist(): void
     {
-        // The TwigFunction objects point at instance methods — those methods
+        // The TwigFunction objects point at instance methods, those methods
         // must be present and public.
         $this->assertTrue($this->reflection->hasMethod('availableSiteGroupsAndSites'));
         $this->assertTrue(
@@ -116,7 +116,7 @@ class TwigExtensionTest extends TestCase
     public function testRegistersGlobalsWithoutBootingCraft(): void
     {
         // We don't call getGlobals() (it reaches into Craft's fields service)
-        // — but verify the method exists, is public, and the source explicitly
+        // but verify the method exists, is public, and the source explicitly
         // exposes the `notifier` and `notificationOptions` globals.
         $this->assertTrue($this->reflection->hasMethod('getGlobals'));
         $this->assertTrue(
@@ -141,5 +141,73 @@ class TwigExtensionTest extends TestCase
         $this->assertStringContainsString("'messageType'", $source);
         $this->assertStringContainsString("'recipientsType'", $source);
         $this->assertStringContainsString("'flashType'", $source);
+    }
+
+    // ========================================================================= //
+    // Tier 2 filter-source helpers
+    // ========================================================================= //
+
+    /**
+     * @return string[][]
+     */
+    public static function tier2HelperProvider(): array
+    {
+        return [
+            ['availableProductTypes'],
+            ['availableDigitalProductTypes'],
+            ['availableCalendars'],
+        ];
+    }
+
+    /**
+     * @dataProvider tier2HelperProvider
+     */
+    public function testTier2HelperIsPublic(string $method): void
+    {
+        // Each Tier 2 category needs its own filter-source helper exposed to
+        // Twig. The CP filter-axis partials call these to build their
+        // checkbox lists; missing helpers would render an empty filter UI.
+        $this->assertTrue($this->reflection->hasMethod($method));
+        $this->assertTrue($this->reflection->getMethod($method)->isPublic());
+        $this->assertSame('array', (string) $this->reflection->getMethod($method)->getReturnType());
+    }
+
+    public function testTier2HelpersGuardOnPluginPresence(): void
+    {
+        // Each plugin-bridged helper must guard on class_exists so installs
+        // without the source plugin return an empty array rather than fatal.
+        $path = $this->reflection->getFileName();
+        $source = file_get_contents($path);
+
+        $this->assertStringContainsString("class_exists('craft\\\\commerce\\\\Plugin')", $source);
+        $this->assertStringContainsString("class_exists('craft\\\\digitalproducts\\\\Plugin')", $source);
+        $this->assertStringContainsString("class_exists('Solspace\\\\Calendar\\\\Calendar')", $source);
+    }
+
+    public function testTier2HelpersRegisteredAsTwigFunctions(): void
+    {
+        // The new helpers must be exposed via getFunctions() so Twig
+        // templates can call availableProductTypes() / etc.
+        $path = $this->reflection->getFileName();
+        $source = file_get_contents($path);
+
+        $this->assertStringContainsString("'availableProductTypes'", $source);
+        $this->assertStringContainsString("'availableDigitalProductTypes'", $source);
+        $this->assertStringContainsString("'availableCalendars'", $source);
+    }
+
+    public function testGlobalsGuardTier2CategoriesOnPluginPresence(): void
+    {
+        // getGlobals() must unset each Tier 2 category from eventTypes and
+        // allEvents when the source plugin is absent, otherwise the CP would
+        // surface a non-functional dropdown option.
+        $path = $this->reflection->getFileName();
+        $source = file_get_contents($path);
+
+        $this->assertStringContainsString("class_exists('craft\\\\commerce\\\\elements\\\\Product')", $source);
+        $this->assertStringContainsString("class_exists('craft\\\\digitalproducts\\\\elements\\\\Product')", $source);
+        $this->assertStringContainsString("class_exists('Solspace\\\\Calendar\\\\Elements\\\\Event')", $source);
+        $this->assertStringContainsString("unset(\$eventTypes['craft-commerce-products']", $source);
+        $this->assertStringContainsString("unset(\$eventTypes['solspace-calendar-events']", $source);
     }
 }

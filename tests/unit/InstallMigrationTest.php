@@ -49,7 +49,7 @@ class InstallMigrationTest extends TestCase
 
     public function testNotificationsTableNameConstant(): void
     {
-        // Constants matter — the rest of the plugin (Records, queries) reads
+        // Constants matter, the rest of the plugin (Records, queries) reads
         // the table name through Yii's `{{%...}}` placeholder.
         $this->assertSame(
             '{{%notifier_notifications}}',
@@ -98,7 +98,7 @@ class InstallMigrationTest extends TestCase
     {
         // Each column must appear in the createTable call. If a column is
         // renamed in the source without a corresponding migration, this
-        // test fails — forcing the contributor to write the migration.
+        // test fails, forcing the contributor to write the migration.
         $this->assertMatchesRegularExpression(
             "/'$column'\s*=>/",
             $this->migrationSource,
@@ -158,7 +158,7 @@ class InstallMigrationTest extends TestCase
     public function testNotificationsForeignKeyToElementsCascades(): void
     {
         // When an element is deleted, the matching notification row must be
-        // dropped too — that's the Craft element-extension-table contract.
+        // dropped too, that's the Craft element-extension-table contract.
         $this->assertMatchesRegularExpression(
             "/addForeignKey[\s\S]*?self::NOTIFICATIONS[\s\S]*?'\{\{%elements\}\}'[\s\S]*?'CASCADE'/",
             $this->migrationSource

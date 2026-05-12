@@ -59,26 +59,80 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
         // Configure available events by installed plugins
         $eventTypes = Options::EVENT_TYPE;
+        $eventTypeGrouped = Options::EVENT_TYPE_GROUPED;
         $allEvents = Options::ALL_EVENTS;
 
-        // Hide Commerce events if Craft Commerce is not installed
+        // Hide Commerce Order events if Craft Commerce is not installed
         if (!class_exists('craft\\commerce\\elements\\Order')) {
-            unset($eventTypes['commerce-orders'], $allEvents['commerce-orders']);
+            unset($eventTypes['craft-commerce-orders'], $eventTypeGrouped['craft-commerce-orders'], $allEvents['craft-commerce-orders']);
         }
+
+        // Hide Commerce Product events if Craft Commerce is not installed
+        if (!class_exists('craft\\commerce\\elements\\Product')) {
+            unset($eventTypes['craft-commerce-products'], $eventTypeGrouped['craft-commerce-products'], $allEvents['craft-commerce-products']);
+        }
+
+        // Hide Digital Products events if the plugin is not installed
+        if (!class_exists('craft\\digitalproducts\\elements\\Product')) {
+            unset(
+                $eventTypes['digital-products-products'],
+                $eventTypes['digital-products-licenses'],
+                $eventTypeGrouped['digital-products-products'],
+                $eventTypeGrouped['digital-products-licenses'],
+                $allEvents['digital-products-products'],
+                $allEvents['digital-products-licenses']
+            );
+        }
+
+        // Hide Solspace Calendar events if the plugin is not installed
+        if (!class_exists('Solspace\\Calendar\\Elements\\Event')) {
+            unset($eventTypes['solspace-calendar-events'], $eventTypeGrouped['solspace-calendar-events'], $allEvents['solspace-calendar-events']);
+        }
+
+        // Drop optgroup dividers whose children all got removed above
+        $eventTypeGrouped = $this->_pruneEmptyOptgroups($eventTypeGrouped);
 
         // Return globally accessible variables
         return [
             'notifier' => new Notifier(),
             'notificationOptions' => [
-                'eventType'      => $eventTypes,
-                'allEvents'      => $allEvents,
-                'messageType'    => Options::MESSAGE_TYPE,
-                'emailField'     => $fieldOptions['email'],
-                'smsField'       => $fieldOptions['sms'],
-                'flashType'      => Options::FLASH_TYPE,
-                'recipientsType' => Options::RECIPIENTS_TYPE,
+                'eventType'        => $eventTypes,
+                'eventTypeOptions' => $eventTypeGrouped,
+                'allEvents'        => $allEvents,
+                'messageType'      => Options::MESSAGE_TYPE,
+                'emailField'       => $fieldOptions['email'],
+                'smsField'         => $fieldOptions['sms'],
+                'flashType'        => Options::FLASH_TYPE,
+                'recipientsType'   => Options::RECIPIENTS_TYPE,
             ],
         ];
+    }
+
+    /**
+     * Drop optgroup dividers from a grouped options array if all their
+     * children were unset upstream (e.g. when the source plugin is absent).
+     *
+     * @param array $options
+     * @return array
+     */
+    private function _pruneEmptyOptgroups(array $options): array
+    {
+        $result = [];
+        $pendingOptgroup = null;
+        foreach ($options as $key => $value) {
+            // Optgroup divider - hold until we know a child follows
+            if (is_int($key) && is_array($value) && isset($value['optgroup'])) {
+                $pendingOptgroup = $value;
+                continue;
+            }
+            // Real option - flush the pending optgroup first, then emit
+            if ($pendingOptgroup !== null) {
+                $result[] = $pendingOptgroup;
+                $pendingOptgroup = null;
+            }
+            $result[$key] = $value;
+        }
+        return $result;
     }
 
     /**
@@ -157,6 +211,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
             new TwigFunction('availableSectionAndEntryTypes', [$this, 'availableSectionAndEntryTypes']),
             new TwigFunction('availableVolumes', [$this, 'availableVolumes']),
             new TwigFunction('availableUserGroups', [$this, 'availableUserGroups']),
+            new TwigFunction('availableProductTypes', [$this, 'availableProductTypes']),
+            new TwigFunction('availableDigitalProductTypes', [$this, 'availableDigitalProductTypes']),
+            new TwigFunction('availableCalendars', [$this, 'availableCalendars']),
         ];
     }
 
@@ -279,6 +336,81 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
         // Return compiled options
         return $userGroups;
+    }
+
+    /**
+     * Get all available Craft Commerce product types.
+     *
+     * @return array
+     */
+    public function availableProductTypes(): array
+    {
+        // Initialize product types
+        $productTypes = [];
+
+        // If Craft Commerce is not installed, return empty
+        if (!class_exists('craft\\commerce\\Plugin')) {
+            return $productTypes;
+        }
+
+        // Loop through all product types
+        foreach (\craft\commerce\Plugin::getInstance()->getProductTypes()->getAllProductTypes() as $type) {
+            // Append each product type
+            $productTypes[$type->id] = $type->name;
+        }
+
+        // Return compiled options
+        return $productTypes;
+    }
+
+    /**
+     * Get all available Digital Products product types.
+     *
+     * @return array
+     */
+    public function availableDigitalProductTypes(): array
+    {
+        // Initialize product types
+        $productTypes = [];
+
+        // If Digital Products is not installed, return empty
+        if (!class_exists('craft\\digitalproducts\\Plugin')) {
+            return $productTypes;
+        }
+
+        // Loop through all digital product types
+        foreach (\craft\digitalproducts\Plugin::getInstance()->getProductTypes()->getAllProductTypes() as $type) {
+            // Append each product type
+            $productTypes[$type->id] = $type->name;
+        }
+
+        // Return compiled options
+        return $productTypes;
+    }
+
+    /**
+     * Get all available Solspace Calendars.
+     *
+     * @return array
+     */
+    public function availableCalendars(): array
+    {
+        // Initialize calendars
+        $calendars = [];
+
+        // If Solspace Calendar is not installed, return empty
+        if (!class_exists('Solspace\\Calendar\\Calendar')) {
+            return $calendars;
+        }
+
+        // Loop through all calendars
+        foreach (\Solspace\Calendar\Calendar::getInstance()->calendars->getAllCalendars() as $calendar) {
+            // Append each calendar
+            $calendars[$calendar->id] = $calendar->name;
+        }
+
+        // Return compiled options
+        return $calendars;
     }
 
 }

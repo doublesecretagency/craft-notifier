@@ -12,7 +12,7 @@ use ReflectionClass;
  * Each filter exposes a small public surface (display labels, default
  * value, exclusivity rules) plus a protected check() method that runs
  * inside Dispatch::_filterEntries. The check() implementation reads
- * Element properties that aren't easily synthesized without Craft —
+ * Element properties that aren't easily synthesized without Craft,
  * those are covered via source-level assertions.
  */
 class ElementEnabledFilterTest extends TestCase
@@ -43,7 +43,7 @@ class ElementEnabledFilterTest extends TestCase
 
     public function testDefaultValueRequiresEnabled(): void
     {
-        // Element-enabled filter defaults to required — i.e. by default,
+        // Element-enabled filter defaults to required, i.e. by default,
         // notifications only fire for enabled elements. This is the safer
         // default; users opt in to disabled-element notifications explicitly.
         $this->assertTrue(ElementEnabledFilter::defaultValue());

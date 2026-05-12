@@ -6,7 +6,7 @@ description: Trigger a notification when an Entry is deleted. Fires once per del
 
 Sends a notification when **an Entry has been deleted**. Multi-site entries fire this trigger once (when the canonical record is deleted), regardless of how many sites the entry was propagated to.
 
-The trigger fires for soft deletes (moved to the trash) and hard deletes alike. Restoring a deleted entry fires the separate [**"When an entry is restored"**](/events/types/entries/entry-restored) trigger.
+This trigger fires for both soft deletes (moved to the trash) and hard deletes. Restoring a deleted entry fires the separate [**"When an entry is restored"**](/events/types/entries/entry-restored) event.
 
 <!--@include: @/events/types/_field-conditions.md-->
 

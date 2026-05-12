@@ -105,7 +105,7 @@ class NotificationLogModelTest extends TestCase
     public function testEnvelopeMethodExists(): void
     {
         // envelope() seeds the log row that ties subsequent log entries
-        // to a specific outbound message — it must be public.
+        // to a specific outbound message, it must be public.
         $this->assertTrue($this->reflection->hasMethod('envelope'));
         $this->assertTrue($this->reflection->getMethod('envelope')->isPublic());
     }
@@ -170,7 +170,7 @@ class NotificationLogModelTest extends TestCase
 
     public function testEnvelopeShortCircuitsWhenLoggingDisabled(): void
     {
-        // envelope() must also bail early when logging is disabled — without
+        // envelope() must also bail early when logging is disabled, without
         // this guard, _prune() would still run on every dispatch even though
         // there's nothing to prune toward.
         $this->assertMatchesRegularExpression(
@@ -185,7 +185,7 @@ class NotificationLogModelTest extends TestCase
 
     public function testInternalPruneIsPrivate(): void
     {
-        // Pruning is an internal concern of the log model — never called
+        // Pruning is an internal concern of the log model, never called
         // directly from outside.
         $this->assertTrue($this->reflection->hasMethod('_prune'));
         $this->assertTrue($this->reflection->getMethod('_prune')->isPrivate());
@@ -194,7 +194,7 @@ class NotificationLogModelTest extends TestCase
     public function testEnvelopeTriggersPrune(): void
     {
         // Pruning is wired to fire once per dispatch, at the start of each
-        // new envelope. There is no cron — the per-envelope hook is the
+        // new envelope. There is no cron, the per-envelope hook is the
         // entire enforcement mechanism.
         $this->assertMatchesRegularExpression(
             '/public function envelope[\s\S]*?\$this->_prune\(\)/',

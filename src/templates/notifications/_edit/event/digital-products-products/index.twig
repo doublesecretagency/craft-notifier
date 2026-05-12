@@ -1,0 +1,17 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-digital-products-products hidden">
+    {{ forms.selectField({
+        label: 'Digital Products Event'|t('notifier'),
+        instructions: commonInstructions,
+        id: 'event-digital-products-products',
+        name: 'event[digital-products-products]',
+        value: notification.event,
+        options: {'':''}|merge(notificationOptions.allEvents['digital-products-products'] ?? []),
+        toggle: true,
+        targetPrefix: '.digital-products-products-event-',
+    }) }}
+    <hr class="digital-products-products-event-after-propagate digital-products-products-event-after-delete digital-products-products-event-after-restore hidden">
+    {% include 'notifier/notifications/_edit/event/digital-products-products/digitalProductTypes' %}
+    {% include 'notifier/notifications/_edit/event/digital-products-products/condition' %}
+</div>

@@ -13,7 +13,7 @@ namespace doublesecretagency\notifier\conditions\operators;
 
 use Craft;
 use craft\base\ElementInterface;
-use doublesecretagency\notifier\helpers\events\EntryEvents;
+use doublesecretagency\notifier\helpers\events\Originals;
 use yii\db\QueryInterface;
 
 /**
@@ -35,7 +35,7 @@ trait HasChangedAttributeOperator
 
     /**
      * Return the value used for the has_changed diff. Must be scalar /
-     * array / DateTime — anything that compares safely with `!=` without
+     * array / DateTime, anything that compares safely with `!=` without
      * recursing into cyclic object graphs.
      *
      * @param ElementInterface $element
@@ -93,10 +93,7 @@ trait HasChangedAttributeOperator
             return parent::matchElement($element);
         }
 
-        if (empty($element->id) || empty($element->siteId)) {
-            return false;
-        }
-        $original = EntryEvents::getCapturedOriginal($element->id, $element->siteId);
+        $original = Originals::get($element);
         if (!$original) {
             return false;
         }
