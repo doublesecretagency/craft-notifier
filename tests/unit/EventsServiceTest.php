@@ -476,9 +476,12 @@ class EventsServiceTest extends TestCase
 
     public function testGetConditionClassForEventTypeReturnsOrderConditionWhenCommerceInstalled(): void
     {
-        // Commerce is optional. In this sandbox it's installed, so the resolver
-        // must return OrderCondition. Installs without Commerce would see null,
-        // that branch is regression-protected by the class_exists guard below.
+        // Commerce is optional. When it's installed, the resolver must return
+        // OrderCondition. When it's not, skip - the class_exists guard below
+        // regression-protects the missing-plugin branch.
+        if (!class_exists(OrderCondition::class)) {
+            static::markTestSkipped('Craft Commerce is not installed.');
+        }
         $service = new Events();
         $this->assertSame(
             OrderCondition::class,
@@ -578,9 +581,12 @@ class EventsServiceTest extends TestCase
 
     public function testGetElementClassForEventTypeReturnsOrderWhenCommerceInstalled(): void
     {
-        // Commerce is optional. In this sandbox it's installed, so the resolver
-        // must return Order. Installs without Commerce would see null, that
-        // branch is regression-protected by the class_exists guard below.
+        // Commerce is optional. When it's installed, the resolver must return
+        // Order. When it's not, skip - the class_exists guard below
+        // regression-protects the missing-plugin branch.
+        if (!class_exists(Order::class)) {
+            static::markTestSkipped('Craft Commerce is not installed.');
+        }
         $service = new Events();
         $this->assertSame(
             Order::class,

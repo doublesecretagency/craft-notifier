@@ -51,7 +51,7 @@ class NotificationsController extends Controller
 
         // Make sure the user is allowed to create this notification
         if (!Craft::$app->getElements()->canSave($notification)) {
-            throw new ForbiddenHttpException('User not authorized to save this notification.');
+            throw new ForbiddenHttpException(Craft::t('notifier', 'User not authorized to save this notification.'));
         }
 
         $notification->setScenario(Element::SCENARIO_ESSENTIALS);
@@ -114,7 +114,7 @@ class NotificationsController extends Controller
 
         // If the user can neither view nor save, bail
         if (!$canSave && !$elementsService->canView($notification)) {
-            throw new ForbiddenHttpException('User not authorized to view this notification.');
+            throw new ForbiddenHttpException(Craft::t('notifier', 'User not authorized to view this notification.'));
         }
 
         // If the user cannot save, render the screen in read-only mode
@@ -261,7 +261,7 @@ class NotificationsController extends Controller
 
         // Make sure the user is allowed to delete this notification
         if (!Craft::$app->getElements()->canDelete($notification)) {
-            throw new ForbiddenHttpException('User not authorized to delete this notification.');
+            throw new ForbiddenHttpException(Craft::t('notifier', 'User not authorized to delete this notification.'));
         }
 
         // Attempt to delete the Notification
@@ -316,7 +316,7 @@ class NotificationsController extends Controller
 
         // If no matching Notification, 404
         if (!$notification) {
-            throw new NotFoundHttpException('Notification not found');
+            throw new NotFoundHttpException(Craft::t('notifier', 'Notification not found'));
         }
 
         // Dispatch the test
@@ -366,7 +366,7 @@ class NotificationsController extends Controller
             }
 
             // Throw error message
-            throw new NotFoundHttpException('Notification not found');
+            throw new NotFoundHttpException(Craft::t('notifier', 'Notification not found'));
         }
 
         // Return a fresh notification

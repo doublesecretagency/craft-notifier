@@ -21,9 +21,13 @@ class Install extends Migration
 {
 
     /**
-     * Table names.
+     * @var string The notifications table name.
      */
     const NOTIFICATIONS = '{{%notifier_notifications}}';
+
+    /**
+     * @var string The log table name.
+     */
     const LOG = '{{%notifier_log}}';
 
     /**

@@ -52,6 +52,31 @@ class Recipient extends Model
     public ?string $phoneNumber = null;
 
     /**
+     * @var string|null ntfy topic name (for the ntfy message type).
+     */
+    public ?string $topic = null;
+
+    /**
+     * @var string|null Slack Incoming Webhook URL. May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $slackWebhookUrl = null;
+
+    /**
+     * @var string|null Slack channel label (e.g. "#engineering").
+     */
+    public ?string $slackChannelLabel = null;
+
+    /**
+     * @var string|null Bluesky handle (e.g. "example.bsky.social").
+     */
+    public ?string $blueskyHandle = null;
+
+    /**
+     * @var string|null Bluesky app password. May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $blueskyAppPassword = null;
+
+    /**
      * Extract missing data from existing data.
      *
      * @return void
@@ -108,7 +133,7 @@ class Recipient extends Model
      * Derive a display name from raw contact info when no User is attached.
      *
      * Keeps log rows for Dynamic Recipients-authored recipients legible by
-     * falling back to the email address, then the phone number, rather than
+     * falling back to the first available contact identifier, rather than
      * surfacing the generic "dynamic recipients" task label.
      *
      * @return void
@@ -120,8 +145,14 @@ class Recipient extends Model
             return;
         }
 
-        // Fall back to the raw email address, then the raw phone number
-        $this->name = ($this->emailAddress ?? $this->phoneNumber);
+        // Fall back to the first available contact identifier
+        $this->name = (
+            $this->emailAddress
+            ?? $this->phoneNumber
+            ?? $this->topic
+            ?? $this->slackChannelLabel
+            ?? $this->blueskyHandle
+        );
     }
 
     // ========================================================================= //

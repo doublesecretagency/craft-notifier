@@ -18,7 +18,7 @@ New Article: {{ entry.title }}
 New Article: {title}
 ```
 
-In the short syntax, the `object` is mapped to the element which triggered the notification (ie: the saved Entry).
+In the short syntax, the `object` is mapped to the element which triggered the notification (e.g. the saved Entry).
 
 :::warning No Object Syntax in External Templates
 If you `include` a separate Twig file, the short object syntax won't be available within the included file.

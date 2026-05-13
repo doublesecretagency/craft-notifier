@@ -10,7 +10,7 @@ Sends **an email** when the notification event is triggered.
 
 ## Config
 
-<img class="dropshadow" src="/images/messages/email-config.png" alt="" style="width:659px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/email-config.png" alt="" style="width:650px; margin-top:10px">
 
 <!--@include: @/messages/types/_docs-links.md-->
 <!--@include: @/messages/types/_queue-link.md-->

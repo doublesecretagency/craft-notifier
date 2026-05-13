@@ -8,7 +8,7 @@ description: Follow these instructions to set up the Notifier plugin for Craft C
 
 To install the Notifier plugin via the plugin store, follow these steps:
 
-1. In your site's control panel, visit the Plugin Store page. If you do not see a link to the Plugin Store, be sure you are working in an environment which [allows admin changes](https://craftcms.com/docs/4.x/config/config-settings.html#allowadminchanges).
+1. In your site's control panel, visit the Plugin Store page. If you do not see a link to the Plugin Store, be sure you are working in an environment which [allows admin changes](https://craftcms.com/docs/5.x/reference/config/general.html#allowadminchanges).
 
 2. Search for "Notifier".
 

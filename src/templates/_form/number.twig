@@ -15,6 +15,7 @@
 {% set config = config|merge({
     type: 'number',
     size: 6,
+    name: 'settings[' ~ key ~ ']',
     value: ((configFile[key] ?? settings[key] ?? null) ?: null),
     disabled: configOverride,
     warning: (configOverride ? message),

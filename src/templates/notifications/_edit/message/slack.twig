@@ -1,0 +1,30 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+<div class="message-type-slack hidden">
+
+    {{ codeEditor.textAreaField({
+        label: "Slack Message Body"|t('notifier'),
+        instructions: "Use [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax, e.g. `*bold*`, `_italic_`, `` `code` ``, etc.",
+        placeholder: commonPlaceholder,
+        rows: 5,
+        id: 'messageConfig-slackBody',
+        name: 'messageConfig[slackBody]',
+        value: (notification.messageConfig.slackBody ?? null),
+        errors: notification.getErrors('messageConfig[slackBody]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {% include 'notifier/notifications/_edit/message/docs-links' %}
+
+    <hr>
+
+    {{ forms.lightswitchField({
+        label: "Send Message via Queue"|t('notifier'),
+        instructions: queueInstructions,
+        id: 'messageConfig-slackQueue',
+        name: 'messageConfig[slackQueue]',
+        offLabel: 'Send immediately'|t('notifier'),
+        onLabel: 'Add to queue'|t('notifier'),
+        on: (notification.messageConfig.slackQueue ?? true),
+    }) }}
+</div>

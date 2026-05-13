@@ -30,21 +30,23 @@ class ChannelEnvelopeMappingTest extends TestCase
     // Switch coverage
     // ========================================================================= //
 
-    public function testSwitchCoversAllFourMessageTypes(): void
+    public function testSwitchCoversAllEightMessageTypes(): void
     {
-        // The four message types must each have a dedicated case branch.
+        // The eight message types must each have a dedicated case branch.
         $this->assertMatchesRegularExpression("/case\s+'email':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'sms':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'announcement':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'flash':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'pushover':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'ntfy':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'slack':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'bluesky':/", $this->dispatchSource);
     }
 
-    public function testNoOrphanedChannelsBeyondTheKnownFour(): void
+    public function testNoOrphanedChannelsBeyondTheKnownEight(): void
     {
         // The switch is on $this->notification->messageType. Any case beyond
-        // the canonical four would indicate a half-implemented channel.
-        // Count the "case '...':" entries that immediately precede a
-        // useQueue / envelopes assignment.
+        // the canonical eight would indicate a half-implemented channel.
         preg_match_all(
             "/case\s+'([a-z]+)':\s*\\\$this->useQueue/",
             $this->dispatchSource,
@@ -55,9 +57,9 @@ class ChannelEnvelopeMappingTest extends TestCase
         sort($cases);
 
         $this->assertSame(
-            ['announcement', 'email', 'flash', 'sms'],
+            ['announcement', 'bluesky', 'email', 'flash', 'ntfy', 'pushover', 'slack', 'sms'],
             $cases,
-            'Dispatch::configureByMessageType should switch on exactly the four canonical channels'
+            'Dispatch::configureByMessageType should switch on exactly the eight canonical channels'
         );
     }
 
@@ -93,6 +95,38 @@ class ChannelEnvelopeMappingTest extends TestCase
     {
         $this->assertMatchesRegularExpression(
             "/case 'flash':[\s\S]*?\\\$this->_compileFlash\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testPushoverCaseDelegatesToPushoverCompiler(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'pushover':[\s\S]*?\\\$this->_compilePushover\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testNtfyCaseDelegatesToNtfyCompiler(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'ntfy':[\s\S]*?\\\$this->_compileNtfy\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testSlackCaseDelegatesToSlackCompiler(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'slack':[\s\S]*?\\\$this->_compileSlack\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testBlueskyCaseDelegatesToBlueskyCompiler(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'bluesky':[\s\S]*?\\\$this->_compileBluesky\(\)/",
             $this->dispatchSource
         );
     }
@@ -135,6 +169,38 @@ class ChannelEnvelopeMappingTest extends TestCase
         );
     }
 
+    public function testPushoverCompilerInstantiatesOutboundPushover(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/_compilePushover[\s\S]*?new OutboundPushover/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testNtfyCompilerInstantiatesOutboundNtfy(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/_compileNtfy[\s\S]*?new OutboundNtfy/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testSlackCompilerInstantiatesOutboundSlack(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/_compileSlack[\s\S]*?new OutboundSlack/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testBlueskyCompilerInstantiatesOutboundBluesky(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/_compileBluesky[\s\S]*?new OutboundBluesky/',
+            $this->dispatchSource
+        );
+    }
+
     // ========================================================================= //
     // Queue policy per channel
     // ========================================================================= //
@@ -170,6 +236,38 @@ class ChannelEnvelopeMappingTest extends TestCase
         // Flash messages need the active session, so they always run inline.
         $this->assertMatchesRegularExpression(
             "/case 'flash':\s*\\\$this->useQueue\s*=\s*false/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testPushoverRespectsConfigurableQueueOptIn(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'pushover':[\s\S]*?messageConfig\['pushoverQueue'\]/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testNtfyRespectsConfigurableQueueOptIn(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'ntfy':[\s\S]*?messageConfig\['ntfyQueue'\]/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testSlackRespectsConfigurableQueueOptIn(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'slack':[\s\S]*?messageConfig\['slackQueue'\]/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testBlueskyRespectsConfigurableQueueOptIn(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'bluesky':[\s\S]*?messageConfig\['blueskyQueue'\]/",
             $this->dispatchSource
         );
     }

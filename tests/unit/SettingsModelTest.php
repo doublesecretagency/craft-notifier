@@ -100,4 +100,90 @@ class SettingsModelTest extends TestCase
         $this->assertSame('int', $type->getName());
         $this->assertTrue($type->allowsNull());
     }
+
+    // ========================================================================= //
+    // Pushover properties
+    // ========================================================================= //
+
+    public function testPushoverApplicationTokenDefaultsToNull(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertNull($defaults['pushoverApplicationToken']);
+    }
+
+    // ========================================================================= //
+    // ntfy properties
+    // ========================================================================= //
+
+    public function testNtfyServerUrlDefaultsToNull(): void
+    {
+        // Stored default is null. OutboundNtfy::send() falls back to the public ntfy.sh server at runtime.
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertNull($defaults['ntfyServerUrl']);
+    }
+
+    public function testOutboundNtfyFallsBackToPublicHostWhenServerUrlUnset(): void
+    {
+        // Source-level regex: the send() body must contain the ?: 'https://ntfy.sh' fallback
+        $path = dirname(__DIR__, 2) . '/src/models/OutboundNtfy.php';
+        $source = file_get_contents($path);
+        $this->assertMatchesRegularExpression(
+            '/App::parseEnv\(\s*\$settings->ntfyServerUrl\s*\)\s*\?:\s*[\'"]https:\/\/ntfy\.sh[\'"]/',
+            $source
+        );
+    }
+
+    public function testNtfyAccessTokenDefaultsToNull(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertNull($defaults['ntfyAccessToken']);
+    }
+
+    public function testNtfyTopicsDefaultsToEmptyArray(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertSame([], $defaults['ntfyTopics']);
+    }
+
+    // ========================================================================= //
+    // Slack properties
+    // ========================================================================= //
+
+    public function testSlackWebhooksDefaultsToEmptyArray(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertSame([], $defaults['slackChannels']);
+    }
+
+    // ========================================================================= //
+    // Bluesky properties
+    // ========================================================================= //
+
+    public function testBlueskyPdsUrlDefaultsToPublicHost(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertSame('https://bsky.social', $defaults['blueskyPdsUrl']);
+    }
+
+    public function testBlueskyAccountsDefaultsToEmptyArray(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertSame([], $defaults['blueskyAccounts']);
+    }
+
+    // ========================================================================= //
+    // Encryption surface removed
+    // ========================================================================= //
+
+    public function testEncryptionSurfaceIsGone(): void
+    {
+        // Credentials are no longer encrypted at rest. Slack webhook URLs and
+        // Bluesky app passwords are stored as-is (typically as $ENV_VAR
+        // references), so the model must carry no encrypt/decrypt machinery.
+        $this->assertFalse($this->reflection->hasMethod('encryptValue'));
+        $this->assertFalse($this->reflection->hasMethod('decryptValue'));
+        $this->assertFalse($this->reflection->hasMethod('_decryptSensitiveFields'));
+        $this->assertFalse($this->reflection->hasConstant('SENSITIVE_FIELDS'));
+        $this->assertFalse($this->reflection->hasConstant('ENCRYPTED_MARKER'));
+    }
 }

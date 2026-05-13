@@ -62,7 +62,7 @@ class Notification extends Element
     public array $eventConfig = [];
 
     /**
-     * @var string|null Type of message to send. (ie: email, text)
+     * @var string|null Type of message to send. (e.g. email, text)
      */
     public ?string $messageType = null;
 
@@ -72,7 +72,7 @@ class Notification extends Element
     public array $messageConfig = [];
 
     /**
-     * @var string|null Type of recipients. (ie: Admins)
+     * @var string|null Type of recipients. (e.g. Admins)
      */
     public ?string $recipientsType = null;
 
@@ -598,7 +598,7 @@ class Notification extends Element
                 $record = NotificationRecord::findOne($this->id);
 
                 if (!$record) {
-                    throw new BaseException('Invalid notification ID: '.$this->id);
+                    throw new BaseException(Craft::t('notifier', 'Invalid notification ID: {id}', ['id' => $this->id]));
                 }
             } else {
                 $record = new NotificationRecord();

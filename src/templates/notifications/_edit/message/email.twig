@@ -102,8 +102,8 @@
         instructions: queueInstructions,
         id: 'messageConfig-emailQueue',
         name: 'messageConfig[emailQueue]',
-        offLabel: 'Send immediately',
-        onLabel: 'Add to queue',
+        offLabel: 'Send immediately'|t('notifier'),
+        onLabel: 'Add to queue'|t('notifier'),
         on: (notification.messageConfig.emailQueue ?? true),
     }) }}
 </div>

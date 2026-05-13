@@ -377,25 +377,63 @@ class OptionsTest extends TestCase
     // Other channel/recipient maps (regression coverage)
     // ========================================================================= //
 
-    public function testMessageTypeIncludesAllFourChannels(): void
+    public function testMessageTypeIncludesAllEightChannels(): void
     {
-        // Email / SMS / Announcement / Flash are the four channels Notifier
-        // understands; any addition would also need a Dispatch case branch.
+        // The eight channels Notifier understands; any addition would also need a Dispatch case branch.
         $this->assertArrayHasKey('email', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('sms', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('announcement', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('flash', Options::MESSAGE_TYPE);
+        $this->assertArrayHasKey('pushover', Options::MESSAGE_TYPE);
+        $this->assertArrayHasKey('ntfy', Options::MESSAGE_TYPE);
+        $this->assertArrayHasKey('slack', Options::MESSAGE_TYPE);
+        $this->assertArrayHasKey('bluesky', Options::MESSAGE_TYPE);
     }
 
-    public function testRecipientsTypeIncludesAllSixStrategies(): void
+    public function testRecipientsTypeIncludesAllNineStrategies(): void
     {
-        // The six recipient strategies must each remain addressable by key
-        // so RecipientsService::getRecipients() can dispatch them.
+        // The nine recipient strategies must each remain addressable by key.
         $this->assertArrayHasKey('current-user', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('all-users', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('all-admins', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('selected-groups', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('selected-users', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('dynamic-recipients', Options::RECIPIENTS_TYPE);
+        $this->assertArrayHasKey('ntfy-topics', Options::RECIPIENTS_TYPE);
+        $this->assertArrayHasKey('slack-channels', Options::RECIPIENTS_TYPE);
+        $this->assertArrayHasKey('bluesky-accounts', Options::RECIPIENTS_TYPE);
+    }
+
+    public function testAllowedRecipientTypesMapIsExhaustive(): void
+    {
+        // Every message type must have an entry in the allowed-recipient map
+        foreach (array_keys(Options::MESSAGE_TYPE) as $messageType) {
+            $this->assertArrayHasKey(
+                $messageType,
+                Options::ALLOWED_RECIPIENT_TYPES,
+                "ALLOWED_RECIPIENT_TYPES missing entry for message type: {$messageType}"
+            );
+        }
+    }
+
+    public function testAllowedRecipientTypesReferenceValidRecipients(): void
+    {
+        // Every referenced recipient-type key must exist in RECIPIENTS_TYPE
+        foreach (Options::ALLOWED_RECIPIENT_TYPES as $messageType => $recipientTypes) {
+            foreach ($recipientTypes as $recipientType) {
+                $this->assertArrayHasKey(
+                    $recipientType,
+                    Options::RECIPIENTS_TYPE,
+                    "ALLOWED_RECIPIENT_TYPES[{$messageType}] references unknown recipient type: {$recipientType}"
+                );
+            }
+        }
+    }
+
+    public function testNtfyPriorityMapHasFiveLevels(): void
+    {
+        $this->assertCount(5, Options::NTFY_PRIORITY);
+        $this->assertArrayHasKey('1', Options::NTFY_PRIORITY);
+        $this->assertArrayHasKey('5', Options::NTFY_PRIORITY);
     }
 }

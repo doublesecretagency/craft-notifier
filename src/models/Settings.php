@@ -21,6 +21,13 @@ class Settings extends Model
 {
 
     /**
+     * @var string Default Bluesky PDS URL, used when no custom PDS is configured.
+     */
+    public const DEFAULT_PDS_URL = 'https://bsky.social';
+
+    // ========================================================================= //
+
+    /**
      * @var bool Whether the plugin should write to the notifier_log table.
      */
     public bool $loggingEnabled = true;
@@ -56,5 +63,48 @@ class Settings extends Model
      * @var string|null Recipient phone number for testing purposes.
      */
     public ?string $testToPhoneNumber = null; // TO
+
+    // ========================================================================= //
+
+    /**
+     * @var string|null Pushover application token.
+     */
+    public ?string $pushoverApplicationToken = null;
+
+    // ========================================================================= //
+
+    /**
+     * @var string|null ntfy server URL. When unset, Notifier falls back to https://ntfy.sh at send time.
+     */
+    public ?string $ntfyServerUrl = null;
+
+    /**
+     * @var string|null ntfy access token (optional, for protected topics).
+     */
+    public ?string $ntfyAccessToken = null;
+
+    /**
+     * @var array Named list of ntfy topics. Each row: ['uid' => string, 'label' => string, 'topic' => string].
+     */
+    public array $ntfyTopics = [];
+
+    // ========================================================================= //
+
+    /**
+     * @var array Named list of Slack channels. Each row: ['uid' => string, 'label' => string, 'webhookUrl' => string]. The webhookUrl may be a $ENV_VAR reference, resolved at send time.
+     */
+    public array $slackChannels = [];
+
+    // ========================================================================= //
+
+    /**
+     * @var string|null Bluesky PDS URL (default https://bsky.social).
+     */
+    public ?string $blueskyPdsUrl = self::DEFAULT_PDS_URL;
+
+    /**
+     * @var array Named list of Bluesky accounts. Each row: ['uid' => string, 'label' => string, 'handle' => string, 'appPassword' => string]. The appPassword may be a $ENV_VAR reference, resolved at send time.
+     */
+    public array $blueskyAccounts = [];
 
 }

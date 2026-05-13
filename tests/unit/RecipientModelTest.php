@@ -40,6 +40,35 @@ class RecipientModelTest extends TestCase
         $this->assertNull($recipient->name);
         $this->assertNull($recipient->emailAddress);
         $this->assertNull($recipient->phoneNumber);
+        $this->assertNull($recipient->topic);
+        $this->assertNull($recipient->slackWebhookUrl);
+        $this->assertNull($recipient->slackChannelLabel);
+        $this->assertNull($recipient->blueskyHandle);
+        $this->assertNull($recipient->blueskyAppPassword);
+    }
+
+    public function testNameDerivedFromSlackLabelWhenNoEmailOrPhone(): void
+    {
+        $recipient = new Recipient([
+            'slackChannelLabel' => 'engineering',
+        ]);
+        $this->assertSame('engineering', $recipient->name);
+    }
+
+    public function testNameDerivedFromBlueskyHandleWhenNoOtherChannel(): void
+    {
+        $recipient = new Recipient([
+            'blueskyHandle' => 'example.bsky.social',
+        ]);
+        $this->assertSame('example.bsky.social', $recipient->name);
+    }
+
+    public function testNameDerivedFromNtfyTopicWhenNoOtherChannel(): void
+    {
+        $recipient = new Recipient([
+            'topic' => 'release-events',
+        ]);
+        $this->assertSame('release-events', $recipient->name);
     }
 
     public function testEmptyRecipientStringifiesToEmptyString(): void

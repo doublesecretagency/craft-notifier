@@ -84,7 +84,7 @@ abstract class BaseElementFilter extends Component implements ExclusiveFilterInt
             return static::checkElement($event->element, $value);
         }
 
-        throw new NotSupportedException('Invalid element event: ' . get_class($event));
+        throw new NotSupportedException(Craft::t('notifier', 'Invalid element event: {class}', ['class' => get_class($event)]));
     }
 
     /**

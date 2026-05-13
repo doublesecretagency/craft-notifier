@@ -462,6 +462,22 @@ class Dispatch extends Model
                 $this->useQueue = false;
                 $this->envelopes = [$this->_compileFlash()];
                 break;
+            case 'pushover':
+                $this->useQueue = ($this->notification->messageConfig['pushoverQueue'] ?? true);
+                $this->envelopes = $this->_compilePushover();
+                break;
+            case 'ntfy':
+                $this->useQueue = ($this->notification->messageConfig['ntfyQueue'] ?? true);
+                $this->envelopes = $this->_compileNtfy();
+                break;
+            case 'slack':
+                $this->useQueue = ($this->notification->messageConfig['slackQueue'] ?? true);
+                $this->envelopes = $this->_compileSlack();
+                break;
+            case 'bluesky':
+                $this->useQueue = ($this->notification->messageConfig['blueskyQueue'] ?? true);
+                $this->envelopes = $this->_compileBluesky();
+                break;
         }
     }
 
@@ -815,6 +831,403 @@ class Dispatch extends Model
         ], $details));
     }
 
+    /**
+     * Compile the message as one or more Pushover notifications.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compilePushover(): array
+    {
+        // Read the per-User Pushover key field handle off the notification
+        $keyFieldHandle = ($this->notification->messageConfig['pushoverKeyField'] ?? null);
+
+        // Get User recipients via the existing User-centric recipient resolution
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If no key field is configured, log and skip
+            if (!$keyFieldHandle) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Pushover user-key field is not configured on this notification.'
+                ));
+                break;
+            }
+
+            // If the recipient has no User, log and skip (Pushover requires a User profile)
+            if (!$recipient->user) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no associated User; cannot send Pushover message.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Read the per-User Pushover key from the configured custom field
+            $userKey = (string) ($recipient->user->{$keyFieldHandle} ?? '');
+
+            // If user has no key, log [SKIPPED] and continue
+            if (!$userKey) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    '[SKIPPED] User "{name}" has no Pushover key.',
+                    ['name' => ($recipient->name ?? $recipient->user->username ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $jobInfo = [
+                'messageType' => 'a Pushover message',
+                'recipient'   => ($recipient->name ?? $recipient->user->username ?? $genericRecipient),
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse message body and title
+            try {
+                $title = $this->_parseTwig($config, $this->notification->messageConfig['pushoverTitle'] ?? '');
+                $body  = $this->_parseTwig($config, $this->notification->messageConfig['pushoverBody']  ?? '');
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $title = ($this->notification->messageConfig['pushoverTitle'] ?? '');
+                $body  = ($this->notification->messageConfig['pushoverBody']  ?? '');
+                $parseError = $e;
+            }
+
+            // Get message details
+            $details = [
+                'userKey' => $userKey,
+                'title'   => $title,
+                'body'    => $body,
+            ];
+
+            // Log envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, [
+                'title' => $title,
+                'body'  => $body,
+                'isTest' => $this->isTest,
+            ]);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound Pushover message into envelope
+            $outbound[] = new OutboundPushover(array_merge([
+                'notificationId' => $this->notification->id,
+                'envelopeId'     => $envelopeId,
+                'jobInfo'        => $jobInfo,
+            ], $details));
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
+    /**
+     * Compile the message as one or more ntfy push notifications.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileNtfy(): array
+    {
+        // Get topic recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient has no topic, log and skip
+            if (!$recipient->topic) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no ntfy topic.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $jobInfo = [
+                'messageType' => 'an ntfy message',
+                'recipient'   => ($recipient->name ?? $recipient->topic),
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse all rendered fields
+            try {
+                $title    = $this->_parseTwig($config, $this->notification->messageConfig['ntfyTitle']    ?? '');
+                $body     = $this->_parseTwig($config, $this->notification->messageConfig['ntfyBody']     ?? '');
+                $clickUrl = $this->_parseTwig($config, $this->notification->messageConfig['ntfyClickUrl'] ?? '');
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $title    = ($this->notification->messageConfig['ntfyTitle']    ?? '');
+                $body     = ($this->notification->messageConfig['ntfyBody']     ?? '');
+                $clickUrl = ($this->notification->messageConfig['ntfyClickUrl'] ?? '');
+                $parseError = $e;
+            }
+
+            // Resolve simple-config fields (priority, tags, markdown)
+            $priority = (int) ($this->notification->messageConfig['ntfyPriority'] ?? 3);
+            $tags     = ($this->notification->messageConfig['ntfyTags']     ?? null);
+            $markdown = (bool) ($this->notification->messageConfig['ntfyMarkdown'] ?? false);
+
+            // Get message details
+            $details = [
+                'topic'    => $recipient->topic,
+                'title'    => $title,
+                'body'     => $body,
+                'priority' => $priority,
+                'tags'     => $tags,
+                'clickUrl' => ($clickUrl ?: null),
+                'markdown' => $markdown,
+            ];
+
+            // Initialize logging for envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound ntfy message into envelope
+            $outbound[] = new OutboundNtfy(array_merge([
+                'notificationId' => $this->notification->id,
+                'envelopeId'     => $envelopeId,
+                'jobInfo'        => $jobInfo,
+            ], $details));
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
+    /**
+     * Compile the message as one or more Slack channel posts.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileSlack(): array
+    {
+        // Get Slack webhook recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient has no webhook URL, log and skip
+            if (!$recipient->slackWebhookUrl) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no Slack webhook URL.',
+                    ['name' => ($recipient->slackChannelLabel ?? $recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info (avoid leaking the webhook URL into the log)
+            $displayLabel = ($recipient->slackChannelLabel ?? 'a Slack channel');
+            $jobInfo = [
+                'messageType' => 'a Slack message',
+                'recipient'   => $displayLabel,
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse message body
+            try {
+                $body = $this->_parseTwig($config, $this->notification->messageConfig['slackBody'] ?? '');
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $body = ($this->notification->messageConfig['slackBody'] ?? '');
+                $parseError = $e;
+            }
+
+            // Get message details
+            $details = [
+                'webhookUrl' => $recipient->slackWebhookUrl,
+                'label'      => $recipient->slackChannelLabel,
+                'body'       => $body,
+            ];
+
+            // Log envelope with the label only (not the URL, to keep credentials out of the log)
+            $envelopeId = $this->notification->log->envelope($jobInfo, [
+                'label' => $recipient->slackChannelLabel,
+                'body'  => $body,
+                'isTest' => $this->isTest,
+            ]);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound Slack message into envelope
+            $outbound[] = new OutboundSlack(array_merge([
+                'notificationId' => $this->notification->id,
+                'envelopeId'     => $envelopeId,
+                'jobInfo'        => $jobInfo,
+            ], $details));
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
+    /**
+     * Compile the message as one or more Bluesky posts.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileBluesky(): array
+    {
+        // Get Bluesky account recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient is missing required Bluesky credentials, log and skip
+            if (!$recipient->blueskyHandle || !$recipient->blueskyAppPassword) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no Bluesky credentials.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $jobInfo = [
+                'messageType' => 'a Bluesky post',
+                'recipient'   => ($recipient->name ?? $recipient->blueskyHandle),
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse message body
+            try {
+                $body = $this->_parseTwig($config, $this->notification->messageConfig['blueskyBody'] ?? '');
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $body = ($this->notification->messageConfig['blueskyBody'] ?? '');
+                $parseError = $e;
+            }
+
+            // Derive the post language from the primary site
+            $language = explode('-', Craft::$app->getSites()->getPrimarySite()->language)[0];
+
+            // Generate link-preview cards unless explicitly disabled
+            $linkCard = (bool) ($this->notification->messageConfig['blueskyLinkCard'] ?? true);
+
+            // Get message details
+            $details = [
+                'handle'      => $recipient->blueskyHandle,
+                'appPassword' => $recipient->blueskyAppPassword,
+                'label'       => $recipient->name,
+                'body'        => $body,
+                'language'    => $language,
+                'linkCard'    => $linkCard,
+            ];
+
+            // Log envelope with handle only (app password is intentionally NOT logged)
+            $envelopeId = $this->notification->log->envelope($jobInfo, [
+                'handle'   => $recipient->blueskyHandle,
+                'body'     => $body,
+                'language' => $language,
+                'isTest'   => $this->isTest,
+            ]);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound Bluesky post into envelope
+            $outbound[] = new OutboundBluesky(array_merge([
+                'notificationId' => $this->notification->id,
+                'envelopeId'     => $envelopeId,
+                'jobInfo'        => $jobInfo,
+            ], $details));
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
     // ========================================================================= //
 
     /**
@@ -1056,11 +1469,11 @@ class Dispatch extends Model
             // If sending via the queue
             if ($this->useQueue) {
                 // Add message to the queue
-                $this->notification->log->info("Adding message to queue.", $envelope->envelopeId);
+                $this->notification->log->info(Craft::t('notifier', 'Adding message to queue.'), $envelope->envelopeId);
                 Queue::push(new SendMessage(['envelope' => $envelope]));
             } else {
                 // Send message immediately
-                $this->notification->log->info("Sending message immediately (bypassing queue).", $envelope->envelopeId);
+                $this->notification->log->info(Craft::t('notifier', 'Sending message immediately (bypassing queue).'), $envelope->envelopeId);
                 $envelope->send();
             }
         }

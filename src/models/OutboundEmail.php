@@ -58,13 +58,13 @@ class OutboundEmail extends BaseEnvelope
 
         // If no recipient specified, log error and bail
         if (!$this->to) {
-            $notification->log->error("Unable to send email, no recipient specified.", $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', 'Unable to send email, no recipient specified.'), $this->envelopeId);
             return false;
         }
 
         // If no message body specified, log error and bail
         if (!$this->body) {
-            $notification->log->error("Unable to send email, the message body was empty.", $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', 'Unable to send email, the message body was empty.'), $this->envelopeId);
             return false;
         }
 
@@ -80,13 +80,13 @@ class OutboundEmail extends BaseEnvelope
 
         // If unsuccessful, log warning/error and bail
         if (!$success) {
-            $notification->log->warning("Unable to send the email using Craft's native email handling.", $this->envelopeId);
-            $notification->log->error("Check your general email settings within Craft.", $this->envelopeId);
+            $notification->log->warning(Craft::t('notifier', "Unable to send the email using Craft's native email handling."), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', 'Check your general email settings within Craft.'), $this->envelopeId);
             return false;
         }
 
         // Log success message
-        $notification->log->success("Successfully sent email message!", $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully sent email message!'), $this->envelopeId);
 
         // Return whether message was sent successfully
         return $success;

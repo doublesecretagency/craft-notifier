@@ -3,12 +3,10 @@
 ## Unreleased
 
 ### Added
-- Added the [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) recipient type.
-- Added a `{% setRecipients %}` Twig tag for use inside Dynamic Recipients snippets.
-- Added field-level [conditions](https://craftcms.com/docs/5.x/extend/conditions.html) to all element events.
-- Added a ["has changed" operator](https://plugins.doublesecretagency.com/notifier/events/types/entries/entry-saved-per-site#has-changed-operator) to field condition rules.
-- Added [Volume filtering](https://plugins.doublesecretagency.com/notifier/events/types/assets) for Asset events.
-- Added [User Group filtering](https://plugins.doublesecretagency.com/notifier/events/types/users) for User events.
+- Added support for sending [Pushover](https://plugins.doublesecretagency.com/notifier/messages/types/pushover) notifications via [Pushover](https://pushover.net). ([#19](https://github.com/doublesecretagency/craft-notifier/issues/19))
+- Added support for sending [ntfy](https://plugins.doublesecretagency.com/notifier/messages/types/ntfy) notifications via [ntfy.sh](https://ntfy.sh).
+- Added support for posting [Slack](https://plugins.doublesecretagency.com/notifier/messages/types/slack) messages via [Incoming Webhooks](https://api.slack.com/messaging/webhooks).
+- Added support for publishing [Bluesky](https://plugins.doublesecretagency.com/notifier/messages/types/bluesky) posts via the [ATProto](https://atproto.com) API.
 - Added trigger event ["When an entry is deleted"](https://plugins.doublesecretagency.com/notifier/events/types/entries/entry-deleted). ([#2](https://github.com/doublesecretagency/craft-notifier/issues/2))
 - Added trigger event ["When an entry is restored"](https://plugins.doublesecretagency.com/notifier/events/types/entries/entry-restored).
 - Added trigger event ["When a user is updated"](https://plugins.doublesecretagency.com/notifier/events/types/users/user-updated). ([#2](https://github.com/doublesecretagency/craft-notifier/issues/2))
@@ -33,18 +31,26 @@
 - Added trigger event ["When an event is saved"](https://plugins.doublesecretagency.com/notifier/events/types/solspace-calendar/event-saved) for [Solspace Calendar](https://plugins.craftcms.com/calendar).
 - Added trigger event ["When an event is deleted"](https://plugins.doublesecretagency.com/notifier/events/types/solspace-calendar/event-deleted) for [Solspace Calendar](https://plugins.craftcms.com/calendar).
 - Added trigger event ["When an event is restored"](https://plugins.doublesecretagency.com/notifier/events/types/solspace-calendar/event-restored) for [Solspace Calendar](https://plugins.craftcms.com/calendar).
-- Added user permissions for viewing, saving, testing, and deleting notifications. ([#28](https://github.com/doublesecretagency/craft-notifier/issues/28))
-- Added user permissions for authoring Dynamic Recipients snippets.
-- Added user permissions for viewing and deleting the notification log.
-- Added a read-only edit screen for users with view-only access to notifications.
+- Added the [ntfy Topics](https://plugins.doublesecretagency.com/notifier/recipients/types/ntfy-topics) recipient type for posting to one or more ntfy topics.
+- Added the [Slack Channels](https://plugins.doublesecretagency.com/notifier/recipients/types/slack-channels) recipient type for posting to one or more Slack channels.
+- Added the [Bluesky Accounts](https://plugins.doublesecretagency.com/notifier/recipients/types/bluesky-accounts) recipient type for posting to one or more Bluesky accounts.
+- Added the [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) recipient type.
+- Added a [`{% setRecipients %}`](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients#how-to-use) Twig tag for use inside Dynamic Recipients snippets.
+- Announcement notifications now support every standard [recipient type](https://plugins.doublesecretagency.com/notifier/recipients/types/).
+- Added [Volume filtering](https://plugins.doublesecretagency.com/notifier/events/types/assets) for Asset events.
+- Added [User Group filtering](https://plugins.doublesecretagency.com/notifier/events/types/users) for User events.
+- Added field-level [conditions](https://craftcms.com/docs/5.x/extend/conditions.html) to all element events.
+- Added a ["has changed" operator](https://plugins.doublesecretagency.com/notifier/events/types/entries/entry-saved-per-site#has-changed-operator) to field condition rules.
+- Added a ["Send a test message"](https://plugins.doublesecretagency.com/notifier/testing) button to each Notification's edit screen.
 - Added a [Rich Text editor](https://plugins.doublesecretagency.com/notifier/messages/types/email#body-editor) option for the email message body. ([#12](https://github.com/doublesecretagency/craft-notifier/issues/12))
+- Added comprehensive unit tests.
+- Added [translations](https://plugins.doublesecretagency.com/notifier/translations) for eighteen locales.
 - Added [`loggingEnabled`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to disable writing to the notification log.
 - Added [`logRetentionDays`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by age.
 - Added [`logRetentionRecords`](https://plugins.doublesecretagency.com/notifier/logging#restricting-log-size) setting to limit log retention by event count.
-- Added a ["Send a test message"](https://plugins.doublesecretagency.com/notifier/testing) button to each Notification's edit screen.
-- Added comprehensive unit tests.
-- Added [translations](https://plugins.doublesecretagency.com/notifier/translations) for eighteen locales.
-- Announcement notifications now support every standard [recipient type](https://plugins.doublesecretagency.com/notifier/recipients/types/).
+- Added user permissions for viewing, saving, testing, and deleting notifications. ([#28](https://github.com/doublesecretagency/craft-notifier/issues/28))
+- Added user permissions for authoring Dynamic Recipients snippets.
+- Added user permissions for viewing and deleting the notification log.
 
 ### Changed
 - The Notification Log utility is now hidden from users without the "View notification log" permission.

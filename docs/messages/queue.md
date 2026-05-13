@@ -4,7 +4,7 @@ description: Send certain message types via Craft's job queue, or bypass the que
 
 # Optional Queue
 
-For some [message types](/messages/types/), it's possible to **send notifications via the [job queue](https://craftcms.com/docs/4.x/extend/queue-jobs.html)**. This is the recommended behavior for most cases, however, you can always circumvent the queue and send messages immediately.
+For some [message types](/messages/types/), it's possible to **send notifications via the [job queue](https://craftcms.com/docs/5.x/extend/queue-jobs.html)**. This is the recommended behavior for most cases, however, you can always circumvent the queue and send messages immediately.
 
 <img class="dropshadow" src="/images/queue/queue-toggle.png" alt="" style="width:345px; margin-top:10px">
 

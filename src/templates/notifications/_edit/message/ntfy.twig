@@ -1,0 +1,80 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+<div class="message-type-ntfy hidden">
+
+    {{ forms.selectField({
+        label: "Priority"|t('notifier'),
+        instructions: "Priority level of the ntfy message.",
+        id: 'messageConfig-ntfyPriority',
+        name: 'messageConfig[ntfyPriority]',
+        value: (notification.messageConfig.ntfyPriority ?? '3'),
+        options: notificationOptions.ntfyPriority ?? {'5':'5 - Max','4':'4 - High','3':'3 - Default','2':'2 - Low','1':'1 - Min'},
+    }) }}
+
+    {{ forms.textField({
+        label: "Tags"|t('notifier'),
+        instructions: "Optional, comma-separated. Examples: `warning,fire,bell`. See [ntfy emoji shortcodes](https://docs.ntfy.sh/emojis/).",
+        id: 'messageConfig-ntfyTags',
+        name: 'messageConfig[ntfyTags]',
+        value: (notification.messageConfig.ntfyTags ?? null),
+        placeholder: 'warning,fire',
+    }) }}
+
+    <hr>
+
+    {% include 'notifier/notifications/_edit/message/docs-links' %}
+
+    {{ codeEditor.textAreaField({
+        label: "Title"|t('notifier'),
+        instructions: "Optional title shown above the message body in the ntfy client.",
+        placeholder: commonPlaceholder,
+        rows: 2,
+        id: 'messageConfig-ntfyTitle',
+        name: 'messageConfig[ntfyTitle]',
+        value: (notification.messageConfig.ntfyTitle ?? null),
+        errors: notification.getErrors('messageConfig[ntfyTitle]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {{ codeEditor.textAreaField({
+        label: "Body"|t('notifier'),
+        instructions: "Body of the ntfy push notification.",
+        placeholder: commonPlaceholder,
+        rows: 4,
+        id: 'messageConfig-ntfyBody',
+        name: 'messageConfig[ntfyBody]',
+        value: (notification.messageConfig.ntfyBody ?? null),
+        errors: notification.getErrors('messageConfig[ntfyBody]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {{ forms.lightswitchField({
+        label: "Enable Markdown"|t('notifier'),
+        instructions: "When enabled, the body is rendered as Markdown by clients which support it.",
+        id: 'messageConfig-ntfyMarkdown',
+        name: 'messageConfig[ntfyMarkdown]',
+        on: (notification.messageConfig.ntfyMarkdown ?? true),
+    }) }}
+
+    {{ codeEditor.textAreaField({
+        label: "Link URL"|t('notifier'),
+        instructions: "When tapped, the notification can optionally open a URL.",
+        placeholder: '{{ entry.url }}',
+        rows: 2,
+        id: 'messageConfig-ntfyClickUrl',
+        name: 'messageConfig[ntfyClickUrl]',
+        value: (notification.messageConfig.ntfyClickUrl ?? null),
+        errors: notification.getErrors('messageConfig[ntfyClickUrl]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    <hr>
+
+    {{ forms.lightswitchField({
+        label: "Send Message via Queue"|t('notifier'),
+        instructions: queueInstructions,
+        id: 'messageConfig-ntfyQueue',
+        name: 'messageConfig[ntfyQueue]',
+        offLabel: 'Send immediately'|t('notifier'),
+        onLabel: 'Add to queue'|t('notifier'),
+        on: (notification.messageConfig.ntfyQueue ?? true),
+    }) }}
+</div>

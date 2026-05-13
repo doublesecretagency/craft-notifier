@@ -37,7 +37,7 @@ The `object` variable (and its `entry` alias) is the saved [Entry](https://docs.
 ## Caveats
 
 :::warning Relationship Issues
-If your [message template](/messages/) relies on the [`original` variable](/messages/variables#element-variables), please note that any **related** values (ie: Matrix Blocks, Assets, etc) may have changed by the time propagation has completed.
+If your [message template](/messages/) relies on the [`original` variable](/messages/variables#element-variables), please note that any **related** values (e.g. Matrix Blocks, Assets, etc.) may have changed by the time propagation has completed.
 
 To ensure `original` relationships are accurate, instead use the event **["When an entry is saved (send one message per each site)"](/events/types/entries/entry-saved-per-site)**.
 :::

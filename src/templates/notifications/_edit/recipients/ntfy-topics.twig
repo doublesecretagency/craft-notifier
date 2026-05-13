@@ -1,0 +1,25 @@
+{% import '_includes/forms' as forms %}
+
+{% set topicOptions = [] %}
+{% for row in (notificationOptions.ntfyTopics ?? []) %}
+    {% set topicOptions = topicOptions|merge([{ label: row.label, value: row.uid }]) %}
+{% endfor %}
+
+<div class="recipients-type-ntfy-topics">
+
+    {% if topicOptions|length %}
+        {{ forms.checkboxSelectField({
+            label: "Select ntfy topic(s)"|t('notifier'),
+            instructions: "Which ntfy topics should receive this message?"|t('notifier'),
+            id: 'recipientsConfig-ntfyTopicUids',
+            name: 'recipientsConfig[ntfyTopicUids]',
+            options: topicOptions,
+            values: (notification.recipientsConfig.ntfyTopicUids ?? []),
+        }) }}
+    {% else %}
+        <p class="instructions warning">
+            {{ "No ntfy topics configured. Add one in [Settings → ntfy]({url})."|t('notifier', { url: url('settings/plugins/notifier/ntfy') })|md }}
+        </p>
+    {% endif %}
+
+</div>

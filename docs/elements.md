@@ -4,7 +4,7 @@ description: Notifications are third-party elements within Craft, organized into
 
 # Notification Elements
 
-Notifications are third-party [elements](https://craftcms.com/docs/4.x/elements.html) within the Craft ecosystem.
+Notifications are third-party [elements](https://craftcms.com/docs/5.x/system/elements.html) within the Craft ecosystem.
 
 <img class="dropshadow" src="/images/elements/notification-elements.png" alt="" style="width:1252px; margin-top:10px">
 

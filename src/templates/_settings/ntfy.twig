@@ -1,0 +1,55 @@
+{% import '_includes/forms' as forms %}
+{% set autosuggest = 'notifier/_form/autosuggest' %}
+
+<h2>{{ "ntfy"|t('notifier') }}</h2>
+<p>{{ "ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic."|t('notifier') }}</p>
+<div class="pane">
+    {% include autosuggest with {
+        config: {
+            label: "Server URL"|t('notifier'),
+            instructions: "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`."|t('notifier'),
+            name: 'ntfyServerUrl',
+            placeholder: 'https://ntfy.sh',
+        }
+    } %}
+    {% include autosuggest with {
+        config: {
+            label: "Access token"|t('notifier'),
+            instructions: "Optional, required for protected topics or self-hosted instances with auth."|t('notifier'),
+            name: 'ntfyAccessToken',
+        }
+    } %}
+</div>
+
+<h2>{{ "ntfy Topics"|t('notifier') }}</h2>
+<p>{{ "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification."|t('notifier')|md }}</p>
+<div class="pane notifier-named-list">
+    {{ forms.editableTableField({
+        label: "Topics"|t('notifier'),
+        instructions: "Click any row's **Test** button to send a quick test message to that topic."|t('notifier'),
+        id: 'ntfyTopics',
+        name: 'settings[ntfyTopics]',
+        cols: {
+            label: {
+                heading: "Label"|t('notifier'),
+                type: 'singleline',
+                width: '30%',
+            },
+            topic: {
+                heading: "Topic"|t('notifier'),
+                type: 'singleline',
+                width: '50%',
+            },
+            uid: {
+                heading: '',
+                type: 'hidden',
+            },
+        },
+        rows: settings.ntfyTopics ?? [],
+        addRowLabel: "Add a topic"|t('notifier'),
+        staticRows: false,
+        allowAdd: true,
+        allowDelete: true,
+        allowReorder: true,
+    }) }}
+</div>

@@ -1,0 +1,36 @@
+{% import '_includes/forms' as forms %}
+{% set autosuggest = 'notifier/_form/autosuggest' %}
+
+<h2>{{ "Twilio API Credentials"|t('notifier') }}</h2>
+<p>{{ "If using the Twilio API to send SMS messages, the following credentials are required."|t('notifier') }}</p>
+<div class="pane">
+    {% include autosuggest with {
+        config: {
+            label: "Twilio Account SID"|t('notifier'),
+            name: 'twilioAccountSid',
+        }
+    } %}
+    {% include autosuggest with {
+        config: {
+            label: "Twilio Auth Token"|t('notifier'),
+            name: 'twilioAuthToken',
+        }
+    } %}
+    {% include autosuggest with {
+        config: {
+            label: "Twilio phone number (sends each SMS message)"|t('notifier'),
+            name: 'twilioPhoneNumber',
+        }
+    } %}
+</div>
+
+<h2>{{ "SMS Testing"|t('notifier') }}</h2>
+<p>{{ "Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient."|t('notifier') }}</p>
+<div class="pane">
+    {% include autosuggest with {
+        config: {
+            label: "Test phone number"|t('notifier'),
+            name: 'testToPhoneNumber',
+        }
+    } %}
+</div>

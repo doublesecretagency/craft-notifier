@@ -9,14 +9,18 @@
     {% set recipientsTypeOptions = recipientsTypeOptions|filter((label, value) => value != 'dynamic-recipients') %}
 {% endif %}
 
-<div class="message-type-email message-type-sms message-type-announcement hidden">
+{# Filter down to the User-centric recipient types for the email / sms / announcement / pushover wrapper #}
+{% set userCentricKeys = ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users', 'dynamic-recipients'] %}
+{% set userCentricOptions = recipientsTypeOptions|filter((label, value) => value in userCentricKeys) %}
+
+<div class="message-type-email message-type-sms message-type-announcement message-type-pushover hidden">
     {{ forms.selectField({
         label: 'Recipients Type'|t('notifier'),
         instructions: 'Who will receive this message?'|t('notifier'),
         id: 'recipientsType',
         name: 'recipientsType',
         value: notification.recipientsType,
-        options: {'':''}|merge(recipientsTypeOptions),
+        options: {'':''}|merge(userCentricOptions),
         toggle: true,
         targetPrefix: '.recipients-type-',
     }) }}
@@ -29,3 +33,69 @@
         {% include 'notifier/notifications/_edit/recipients/dynamic-recipients' %}
     {% endif %}
 </div>
+
+{# ntfy: locked to ntfy-topics #}
+<div class="message-type-ntfy hidden">
+    <input type="hidden" name="recipientsType" value="ntfy-topics" disabled>
+    {% include 'notifier/notifications/_edit/recipients/ntfy-topics' %}
+</div>
+
+{# Slack: locked to slack-channels #}
+<div class="message-type-slack hidden">
+    <input type="hidden" name="recipientsType" value="slack-channels" disabled>
+    {% include 'notifier/notifications/_edit/recipients/slack-channels' %}
+</div>
+
+{# Bluesky: locked to bluesky-accounts #}
+<div class="message-type-bluesky hidden">
+    <input type="hidden" name="recipientsType" value="bluesky-accounts" disabled>
+    {% include 'notifier/notifications/_edit/recipients/bluesky-accounts' %}
+</div>
+
+{% js %}
+(function () {
+
+    // Get the message type select
+    const messageType = document.getElementById('messageType');
+
+    // If select isn't present, bail
+    if (!messageType) {
+        return;
+    }
+
+    // Enable only the recipientsType input matching the current message type
+    const sync = function () {
+
+        // Get the current message type value
+        const value = messageType.value;
+
+        // Loop through every recipientsType input
+        document.querySelectorAll('[name="recipientsType"]').forEach(function (input) {
+
+            // Find the input's message-type wrapper
+            const wrapper = input.closest('[class*="message-type-"]');
+
+            // If no wrapper, disable and bail
+            if (!wrapper) {
+                input.disabled = true;
+                return;
+            }
+
+            // Extract message types declared on the wrapper
+            const types = Array.from(wrapper.classList)
+                .filter(function (c) { return c.startsWith('message-type-'); })
+                .map(function (c) { return c.substring('message-type-'.length); });
+
+            // Disable unless the wrapper covers the current message type
+            input.disabled = !value || !types.includes(value);
+        });
+    };
+
+    // Re-sync on every message type change
+    messageType.addEventListener('change', sync);
+
+    // Sync once on initial load
+    sync();
+
+})();
+{% endjs %}

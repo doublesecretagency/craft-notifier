@@ -13,6 +13,7 @@
 
 {# Append additional config settings #}
 {% set config = config|merge({
+    name: 'settings[' ~ key ~ ']',
     on: ((configFile[key] ?? settings[key] ?? false) ? true : false),
     disabled: configOverride,
     warning: (configOverride ? message),

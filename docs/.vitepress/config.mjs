@@ -78,6 +78,10 @@ export default defineConfig({
               {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
               {text: 'Announcement',       link: '/messages/types/announcement'},
               {text: 'Flash Message',      link: '/messages/types/flash'},
+              {text: 'Pushover',           link: '/messages/types/pushover'},
+              {text: 'ntfy',               link: '/messages/types/ntfy'},
+              {text: 'Slack',              link: '/messages/types/slack'},
+              {text: 'Bluesky',            link: '/messages/types/bluesky'},
             ]
           },
           {
@@ -109,6 +113,13 @@ export default defineConfig({
               {text: 'Selected Groups',    link: '/recipients/types/selected-groups'},
               {text: 'Selected Users',     link: '/recipients/types/selected-users'},
               {text: 'Dynamic Recipients', link: '/recipients/types/dynamic-recipients'},
+            ]
+          },
+          {
+            items: [
+              {text: 'ntfy Topics',       link: '/recipients/types/ntfy-topics'},
+              {text: 'Slack Channels',    link: '/recipients/types/slack-channels'},
+              {text: 'Bluesky Accounts',  link: '/recipients/types/bluesky-accounts'},
             ]
           },
         ]
@@ -187,10 +198,18 @@ export default defineConfig({
                 {text: 'Install via CLI',          link: '/getting-started/#installation-via-console-commands'}
               ]
             },
-            {text: 'Twilio',           link: '/getting-started/twilio'},
             {text: 'Settings Page',    link: '/getting-started/settings'},
             {text: 'PHP Config File',  link: '/getting-started/config'},
             {text: 'User Permissions', link: '/getting-started/permissions'},
+            {text: 'Integrations',     link: '/getting-started/integrations/',
+              items: [
+                {text: 'Twilio',   link: '/getting-started/integrations/twilio'},
+                {text: 'Pushover', link: '/getting-started/integrations/pushover'},
+                {text: 'ntfy',     link: '/getting-started/integrations/ntfy'},
+                {text: 'Slack',    link: '/getting-started/integrations/slack'},
+                {text: 'Bluesky',  link: '/getting-started/integrations/bluesky'},
+              ]
+            },
           ]
         }
       ],
@@ -273,6 +292,10 @@ export default defineConfig({
                 {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
                 {text: 'Announcement',       link: '/messages/types/announcement'},
                 {text: 'Flash Message',      link: '/messages/types/flash'},
+                {text: 'Pushover',           link: '/messages/types/pushover'},
+                {text: 'ntfy',               link: '/messages/types/ntfy'},
+                {text: 'Slack',              link: '/messages/types/slack'},
+                {text: 'Bluesky',            link: '/messages/types/bluesky'},
               ]
             },
             {text: 'Message Templating',     link: '/messages/templating'},
@@ -297,6 +320,9 @@ export default defineConfig({
                 {text: 'Selected Groups',    link: '/recipients/types/selected-groups'},
                 {text: 'Selected Users',     link: '/recipients/types/selected-users'},
                 {text: 'Dynamic Recipients', link: '/recipients/types/dynamic-recipients'},
+                {text: 'ntfy Topics',        link: '/recipients/types/ntfy-topics'},
+                {text: 'Slack Channels',     link: '/recipients/types/slack-channels'},
+                {text: 'Bluesky Accounts',   link: '/recipients/types/bluesky-accounts'},
               ]
             }
           ]

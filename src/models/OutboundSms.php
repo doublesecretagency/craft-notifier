@@ -11,6 +11,7 @@
 
 namespace doublesecretagency\notifier\models;
 
+use Craft;
 use craft\helpers\App;
 use craft\helpers\Json;
 use doublesecretagency\notifier\elements\Notification;
@@ -70,11 +71,11 @@ class OutboundSms extends BaseEnvelope
         if ($missing) {
 
             // Link to docs for Twilio credentials
-            $url = 'https://plugins.doublesecretagency.com/notifier/getting-started/twilio';
+            $url = 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/twilio';
 
             // Log error
             $m = implode(' and ', $missing);
-            $notification->log->error("[Invalid Twilio credentials.]({$url}) Missing {$m}.", $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[Invalid Twilio credentials.]({url}) Missing {missing}.', ['url' => $url, 'missing' => $m]), $this->envelopeId);
 
             // Return failure
             return false;
@@ -85,7 +86,7 @@ class OutboundSms extends BaseEnvelope
 
         // If no sender exists, log error and return failure
         if (!$from) {
-            $notification->log->error('Unable to send SMS, no Twilio phone number exists.', $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', 'Unable to send SMS, no Twilio phone number exists.'), $this->envelopeId);
             return false;
         }
 
@@ -95,7 +96,7 @@ class OutboundSms extends BaseEnvelope
 
         // If no recipient exists, log error and return failure
         if (!$to) {
-            $notification->log->error('Unable to send SMS, no recipient phone number exists.', $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', 'Unable to send SMS, no recipient phone number exists.'), $this->envelopeId);
             return false;
         }
 
@@ -105,7 +106,7 @@ class OutboundSms extends BaseEnvelope
 
         // If recipient phone number is invalid, log error and return failure
         if (!$to) {
-            $notification->log->error('Unable to send SMS, recipient phone number is invalid.', $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', 'Unable to send SMS, recipient phone number is invalid.'), $this->envelopeId);
             return false;
         }
 
@@ -137,7 +138,7 @@ class OutboundSms extends BaseEnvelope
         }
 
         // Log success message
-        $notification->log->success("Successfully sent SMS message!", $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully sent SMS message!'), $this->envelopeId);
 
         // Return success
         return true;

@@ -1,0 +1,55 @@
+{% import '_includes/forms' as forms %}
+{% set autosuggest = 'notifier/_form/autosuggest' %}
+
+<h2>{{ "Bluesky"|t('notifier') }}</h2>
+<p>{{ "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `$BLUESKY_APP_PASSWORD`) rather than pasting the password directly."|t('notifier')|md }}</p>
+<div class="pane">
+    {% include autosuggest with {
+        config: {
+            label: "PDS URL"|t('notifier'),
+            instructions: "Defaults to https://bsky.social. Point at a custom PDS if your installation federates."|t('notifier'),
+            name: 'blueskyPdsUrl',
+            placeholder: 'https://bsky.social',
+        }
+    } %}
+</div>
+
+<h2>{{ "Bluesky Accounts"|t('notifier') }}</h2>
+<p>{{ "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification."|t('notifier')|md }}</p>
+<div class="pane notifier-named-list">
+    {{ forms.editableTableField({
+        label: "Accounts"|t('notifier'),
+        instructions: "Click any row's **Test** button to confirm the account authenticates."|t('notifier'),
+        id: 'blueskyAccounts',
+        name: 'settings[blueskyAccounts]',
+        cols: {
+            label: {
+                heading: "Label"|t('notifier'),
+                type: 'singleline',
+                width: '20%',
+            },
+            handle: {
+                heading: "Handle"|t('notifier'),
+                type: 'singleline',
+                width: '30%',
+                placeholder: 'example.bsky.social',
+            },
+            appPassword: {
+                heading: "App password"|t('notifier'),
+                type: 'singleline',
+                width: '30%',
+                placeholder: '$BLUESKY_APP_PASSWORD',
+            },
+            uid: {
+                heading: '',
+                type: 'hidden',
+            },
+        },
+        rows: settings.blueskyAccounts ?? [],
+        addRowLabel: "Add an account"|t('notifier'),
+        staticRows: false,
+        allowAdd: true,
+        allowDelete: true,
+        allowReorder: true,
+    }) }}
+</div>

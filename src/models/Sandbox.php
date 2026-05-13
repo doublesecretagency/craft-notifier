@@ -28,28 +28,39 @@ class Sandbox extends Model
 {
 
     /**
-     * Config options for 'list':
+     * @var string The 'list' config option selecting a blacklist security policy.
      *
      * Default blacklist:
      * https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php
+     */
+    public const BLACKLIST = 'blacklist'; // Default
+
+    /**
+     * @var string The 'list' config option selecting a whitelist security policy.
      *
      * Default whitelist:
      * https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php
      */
-    public const BLACKLIST = 'blacklist'; // Default
     public const WHITELIST = 'whitelist';
 
     /**
-     * Config options for 'mode':
-     *
-     * - ADD specified Twig values to the security policy.
-     * - REMOVE specified Twig values from the security policy.
-     * - REPLACE the security policy with the specified Twig values.
-     * - DISABLE the security policy entirely.
+     * @var string The 'mode' config option to ADD Twig values to the security policy.
      */
     public const ADD = 'add'; // Default
+
+    /**
+     * @var string The 'mode' config option to REMOVE Twig values from the security policy.
+     */
     public const REMOVE = 'remove';
+
+    /**
+     * @var string The 'mode' config option to REPLACE the security policy with the specified Twig values.
+     */
     public const REPLACE = 'replace';
+
+    /**
+     * @var string The 'mode' config option to DISABLE the security policy entirely.
+     */
     public const DISABLE = 'disable';
 
     // ========================================================================= //

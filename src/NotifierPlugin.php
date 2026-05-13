@@ -186,18 +186,17 @@ class NotifierPlugin extends Plugin
 
     /**
      * @inheritdoc
+     *
+     * Redirect Craft's default plugin-settings entry point to our General sub-page.
+     * Each sub-page is its own CP route, rendered through `SettingsProvidersController`.
      */
-    protected function settingsHtml(): ?string
+    public function getSettingsResponse(): mixed
     {
-        // Get data from config file
-        $configFile = Craft::$app->getConfig()->getConfigFromFile('notifier');
-
-        // Load plugin settings template
-        return Craft::$app->getView()->renderTemplate('notifier/settings', [
-            'configFile' => $configFile,
-            'settings' => $this->getSettings(),
-        ]);
+        return Craft::$app->getResponse()->redirect(
+            UrlHelper::cpUrl('settings/plugins/notifier/general')
+        );
     }
+
 
     /**
      * @inheritdoc
@@ -326,6 +325,14 @@ class NotifierPlugin extends Plugin
                 $event->rules['notifications/new'] = 'notifier/notifications/create';
                 // Edit Notification
                 $event->rules['notifications/<notificationId:\d+>'] = 'notifier/notifications/edit';
+
+                // Settings sub-pages (vertical sidebar UX)
+                $event->rules['settings/plugins/notifier/general']  = 'notifier/settings-providers/general';
+                $event->rules['settings/plugins/notifier/twilio']   = 'notifier/settings-providers/twilio';
+                $event->rules['settings/plugins/notifier/pushover'] = 'notifier/settings-providers/pushover';
+                $event->rules['settings/plugins/notifier/ntfy']     = 'notifier/settings-providers/ntfy';
+                $event->rules['settings/plugins/notifier/slack']    = 'notifier/settings-providers/slack';
+                $event->rules['settings/plugins/notifier/bluesky']  = 'notifier/settings-providers/bluesky';
             }
         );
     }

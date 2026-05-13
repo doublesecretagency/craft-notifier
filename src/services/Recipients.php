@@ -18,6 +18,7 @@ use craft\helpers\ArrayHelper;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\models\Recipient;
+use doublesecretagency\notifier\NotifierPlugin;
 use Throwable;
 use yii\validators\EmailValidator;
 
@@ -61,6 +62,9 @@ class Recipients extends Component
             case 'selected-groups':    return ($notification ? $this->_selectedGroups($notification)    : []);
             case 'selected-users':     return ($notification ? $this->_selectedUsers($notification)     : []);
             case 'dynamic-recipients': return ($notification ? $this->_dynamicRecipients($notification, $dispatch) : []);
+            case 'ntfy-topics':        return ($notification ? $this->_ntfyTopics($notification)        : []);
+            case 'slack-channels':     return ($notification ? $this->_slackChannels($notification)     : []);
+            case 'bluesky-accounts':   return ($notification ? $this->_blueskyAccounts($notification)   : []);
         }
 
         // Invalid recipients type
@@ -279,6 +283,127 @@ class Recipients extends Component
         }
 
         // Return the resolved recipients
+        return $recipients;
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Get ntfy topic recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _ntfyTopics(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'ntfyTopicUids',
+            NotifierPlugin::$plugin->getSettings()->ntfyTopics,
+            'ntfy topic',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'  => $row['label'] ?? null,
+                    'topic' => $row['topic'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Get Slack channel recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _slackChannels(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'slackChannelUids',
+            NotifierPlugin::$plugin->getSettings()->slackChannels,
+            'Slack channel',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'              => $row['label'] ?? null,
+                    'slackChannelLabel' => $row['label'] ?? null,
+                    'slackWebhookUrl'   => $row['webhookUrl'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Get Bluesky account recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _blueskyAccounts(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'blueskyAccountUids',
+            NotifierPlugin::$plugin->getSettings()->blueskyAccounts,
+            'Bluesky account',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'               => $row['label'] ?? $row['handle'] ?? null,
+                    'blueskyHandle'      => $row['handle'] ?? null,
+                    'blueskyAppPassword' => $row['appPassword'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Resolve a list of credential UIDs from `recipientsConfig` against a named list of rows from plugin settings.
+     *
+     * @param Notification $notification
+     * @param string $configKey The key inside `recipientsConfig` (e.g. 'slackChannelUids')
+     * @param array $list The named-list array of rows from plugin settings
+     * @param string $kind Human-readable label for log messages (e.g. 'Slack channel')
+     * @param callable $rowToRecipient Maps a single row into a Recipient instance
+     * @return Recipient[]
+     */
+    private function _resolveByUid(Notification $notification, string $configKey, array $list, string $kind, callable $rowToRecipient): array
+    {
+        // Pull the UIDs the notification has selected
+        $uids = ($notification->recipientsConfig[$configKey] ?? null);
+
+        // If no UIDs, return empty array
+        if (!$uids) {
+            return [];
+        }
+
+        // Normalize to array
+        if (!is_array($uids)) {
+            $uids = [$uids];
+        }
+
+        // Index the named list by UID for O(1) lookup
+        $byUid = ArrayHelper::index($list, 'uid');
+
+        // Collect recipients
+        $recipients = [];
+
+        // Walk each requested UID
+        foreach ($uids as $uid) {
+
+            // If the UID is no longer in the list (admin removed it), log and skip
+            if (!isset($byUid[$uid])) {
+                $notification->log->warning(Craft::t('notifier',
+                    'Configured {kind} no longer exists in plugin settings (uid: {uid}).',
+                    ['kind' => $kind, 'uid' => $uid]
+                ));
+                continue;
+            }
+
+            // Hand the row to the factory to build a Recipient
+            $recipients[] = $rowToRecipient($byUid[$uid]);
+
+        }
+
         return $recipients;
     }
 

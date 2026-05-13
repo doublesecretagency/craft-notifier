@@ -26,7 +26,7 @@ Each recipient will receive their own unique copy of the message. Any [special v
 
 ## Advance Filtering of Recipients
 
-If needed, you can start with a pre-existing set of recipients (ie: "All Admins"), then reduce the subset even further. By using the [`skipMessage`](/messages/skip) tag, you can omit recipients on a granular level.
+If needed, you can start with a pre-existing set of recipients (e.g. "All Admins"), then reduce the subset even further. By using the [`skipMessage`](/messages/skip) tag, you can omit recipients on a granular level.
 
 ```twig
 {# Don't send message to Doug #}

@@ -21,6 +21,7 @@ use craft\fields\Url;
 use doublesecretagency\notifier\enums\Options;
 use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\helpers\Notifier;
+use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\web\twig\tokenparsers\SetRecipientsTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
 use Twig\Extension\AbstractExtension;
@@ -92,18 +93,27 @@ class Extension extends AbstractExtension implements GlobalsInterface
         // Drop optgroup dividers whose children all got removed above
         $eventTypeGrouped = $this->_pruneEmptyOptgroups($eventTypeGrouped);
 
+        // Get plugin settings
+        $settings = NotifierPlugin::$plugin->getSettings();
+
         // Return globally accessible variables
         return [
             'notifier' => new Notifier(),
             'notificationOptions' => [
-                'eventType'        => $eventTypes,
-                'eventTypeOptions' => $eventTypeGrouped,
-                'allEvents'        => $allEvents,
-                'messageType'      => Options::MESSAGE_TYPE,
-                'emailField'       => $fieldOptions['email'],
-                'smsField'         => $fieldOptions['sms'],
-                'flashType'        => Options::FLASH_TYPE,
-                'recipientsType'   => Options::RECIPIENTS_TYPE,
+                'eventType'              => $eventTypes,
+                'eventTypeOptions'       => $eventTypeGrouped,
+                'allEvents'              => $allEvents,
+                'messageType'            => Options::MESSAGE_TYPE,
+                'emailField'             => $fieldOptions['email'],
+                'smsField'               => $fieldOptions['sms'],
+                'pushoverKeyField'       => $fieldOptions['pushoverKey'],
+                'flashType'              => Options::FLASH_TYPE,
+                'recipientsType'         => Options::RECIPIENTS_TYPE,
+                'allowedRecipientTypes'  => Options::ALLOWED_RECIPIENT_TYPES,
+                'ntfyPriority'           => Options::NTFY_PRIORITY,
+                'ntfyTopics'             => ($settings->ntfyTopics ?? []),
+                'slackChannels'          => ($settings->slackChannels ?? []),
+                'blueskyAccounts'        => ($settings->blueskyAccounts ?? []),
             ],
         ];
     }
@@ -161,6 +171,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
             'sms' => [
                 '' => ''
             ],
+            'pushoverKey' => [
+                '' => ''
+            ],
         ];
 
         // Get field layout for Users
@@ -192,6 +205,11 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
             // Add to SMS field options
             $fieldOptions['sms'][$field->handle] = $field->name;
+
+            // Pushover keys are short ASCII strings; restrict to PlainText only
+            if ($field instanceof PlainText) {
+                $fieldOptions['pushoverKey'][$field->handle] = $field->name;
+            }
 
         }
 

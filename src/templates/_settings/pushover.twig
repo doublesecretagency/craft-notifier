@@ -1,0 +1,14 @@
+{% import '_includes/forms' as forms %}
+{% set autosuggest = 'notifier/_form/autosuggest' %}
+
+<h2>{{ "Pushover"|t('notifier') }}</h2>
+<p>{{ "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)."|t('notifier')|md }}</p>
+<div class="pane">
+    {% include autosuggest with {
+        config: {
+            label: "Application API Token"|t('notifier'),
+            instructions: "The 30-character app token from your Pushover application."|t('notifier'),
+            name: 'pushoverApplicationToken',
+        }
+    } %}
+</div>

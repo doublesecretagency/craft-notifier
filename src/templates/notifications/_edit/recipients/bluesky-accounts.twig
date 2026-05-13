@@ -1,0 +1,26 @@
+{% import '_includes/forms' as forms %}
+
+{% set accountOptions = [] %}
+{% for row in (notificationOptions.blueskyAccounts ?? []) %}
+    {% set displayLabel = row.label ?? row.handle %}
+    {% set accountOptions = accountOptions|merge([{ label: displayLabel, value: row.uid }]) %}
+{% endfor %}
+
+<div class="recipients-type-bluesky-accounts">
+
+    {% if accountOptions|length %}
+        {{ forms.checkboxSelectField({
+            label: "Select Bluesky account(s)"|t('notifier'),
+            instructions: "Which Bluesky accounts should post this message?"|t('notifier'),
+            id: 'recipientsConfig-blueskyAccountUids',
+            name: 'recipientsConfig[blueskyAccountUids]',
+            options: accountOptions,
+            values: (notification.recipientsConfig.blueskyAccountUids ?? []),
+        }) }}
+    {% else %}
+        <p class="instructions warning">
+            {{ "No Bluesky accounts configured. Add one in [Settings → Bluesky]({url})."|t('notifier', { url: url('settings/plugins/notifier/bluesky') })|md }}
+        </p>
+    {% endif %}
+
+</div>

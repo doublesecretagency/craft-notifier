@@ -63,7 +63,7 @@ class OutboundAnnouncement extends BaseEnvelope
 
         // If no userId specified, log error and bail
         if (!$this->userId) {
-            $notification->log->error("Unable to post announcement, no recipient userId specified.", $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', 'Unable to post announcement, no recipient userId specified.'), $this->envelopeId);
             return false;
         }
 
@@ -79,7 +79,7 @@ class OutboundAnnouncement extends BaseEnvelope
             ->execute();
 
         // Log success message
-        $notification->log->success("Successfully posted announcement!", $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully posted announcement!'), $this->envelopeId);
 
         // Return successfully
         return true;

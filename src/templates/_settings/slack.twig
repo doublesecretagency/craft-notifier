@@ -1,0 +1,36 @@
+{% import '_includes/forms' as forms %}
+
+<h2>{{ "Slack Channels"|t('notifier') }}</h2>
+<p>{{ "Add an [Incoming Webhook](https://api.slack.com/messaging/webhooks) for each Slack channel you'd like to post into. Each webhook becomes available as a recipient on the **Recipients** tab when configuring a notification. A webhook URL is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_WEBHOOK_URL`) rather than pasting the URL directly."|t('notifier')|md }}</p>
+<div class="pane notifier-named-list">
+    {{ forms.editableTableField({
+        label: "Channels"|t('notifier'),
+        instructions: "Click any row's **Test** button to send a quick test message to that channel."|t('notifier'),
+        id: 'slackChannels',
+        name: 'settings[slackChannels]',
+        cols: {
+            label: {
+                heading: "Label"|t('notifier'),
+                type: 'singleline',
+                width: '30%',
+                placeholder: '#channelname',
+            },
+            webhookUrl: {
+                heading: "Webhook URL"|t('notifier'),
+                type: 'singleline',
+                width: '50%',
+                placeholder: '$SLACK_WEBHOOK_URL',
+            },
+            uid: {
+                heading: '',
+                type: 'hidden',
+            },
+        },
+        rows: settings.slackChannels ?? [],
+        addRowLabel: "Add a channel"|t('notifier'),
+        staticRows: false,
+        allowAdd: true,
+        allowDelete: true,
+        allowReorder: true,
+    }) }}
+</div>

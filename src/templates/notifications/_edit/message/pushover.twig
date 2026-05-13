@@ -1,0 +1,53 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+<div class="message-type-pushover hidden">
+    {{ forms.selectField({
+        label: "Field containing each user's Pushover key"|t('notifier'),
+        instructions: fieldInstructions|t('notifier', {'type' : 'Pushover user key'}),
+        id: 'messageConfig-pushoverKeyField',
+        name: 'messageConfig[pushoverKeyField]',
+        value: (notification.messageConfig.pushoverKeyField ?? null),
+        options: notificationOptions.pushoverKeyField,
+    }) }}
+
+    <hr>
+
+    {% include 'notifier/notifications/_edit/message/docs-links' %}
+
+    {{ codeEditor.textAreaField({
+        label: "Title"|t('notifier'),
+        instructions: "Optional title shown above the body on the recipient's device.",
+        placeholder: commonPlaceholder,
+        rows: 2,
+        id: 'messageConfig-pushoverTitle',
+        name: 'messageConfig[pushoverTitle]',
+        value: (notification.messageConfig.pushoverTitle ?? null),
+        errors: notification.getErrors('messageConfig[pushoverTitle]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {{ codeEditor.textAreaField({
+        label: "Body"|t('notifier'),
+        instructions: "Body of the Pushover notification. Plain text. HTML / Markdown are not rendered.",
+        placeholder: commonPlaceholder,
+        rows: 4,
+        id: 'messageConfig-pushoverBody',
+        name: 'messageConfig[pushoverBody]',
+        value: (notification.messageConfig.pushoverBody ?? null),
+        errors: notification.getErrors('messageConfig[pushoverBody]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    <p class="instructions">{{ "The Pushover application token is configured in [Settings → Pushover](url)."|t('notifier', { url: url('settings/plugins/notifier/pushover') })|md }}</p>
+
+    <hr>
+
+    {{ forms.lightswitchField({
+        label: "Send Message via Queue"|t('notifier'),
+        instructions: queueInstructions,
+        id: 'messageConfig-pushoverQueue',
+        name: 'messageConfig[pushoverQueue]',
+        offLabel: 'Send immediately'|t('notifier'),
+        onLabel: 'Add to queue'|t('notifier'),
+        on: (notification.messageConfig.pushoverQueue ?? true),
+    }) }}
+</div>

@@ -96,6 +96,9 @@ class RecipientsServiceTest extends TestCase
             ['_selectedGroups'],
             ['_selectedUsers'],
             ['_dynamicRecipients'],
+            ['_ntfyTopics'],
+            ['_slackChannels'],
+            ['_blueskyAccounts'],
         ];
     }
 
@@ -120,33 +123,18 @@ class RecipientsServiceTest extends TestCase
     // Strategy dispatch (source-level)
     // ========================================================================= //
 
-    public function testGetRecipientsDispatchesAllSixStrategies(): void
+    public function testGetRecipientsDispatchesAllNineStrategies(): void
     {
-        // The switch on recipientsType must cover all six strategies.
-        $this->assertMatchesRegularExpression(
-            "/case\s+'current-user'/",
-            $this->recipientsSource
-        );
-        $this->assertMatchesRegularExpression(
-            "/case\s+'all-users'/",
-            $this->recipientsSource
-        );
-        $this->assertMatchesRegularExpression(
-            "/case\s+'all-admins'/",
-            $this->recipientsSource
-        );
-        $this->assertMatchesRegularExpression(
-            "/case\s+'selected-groups'/",
-            $this->recipientsSource
-        );
-        $this->assertMatchesRegularExpression(
-            "/case\s+'selected-users'/",
-            $this->recipientsSource
-        );
-        $this->assertMatchesRegularExpression(
-            "/case\s+'dynamic-recipients'/",
-            $this->recipientsSource
-        );
+        // The switch on recipientsType must cover all nine strategies.
+        $this->assertMatchesRegularExpression("/case\s+'current-user'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'all-users'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'all-admins'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'selected-groups'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'selected-users'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'dynamic-recipients'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'ntfy-topics'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'slack-channels'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'bluesky-accounts'/", $this->recipientsSource);
     }
 
     public function testEachCaseDelegatesToItsStrategy(): void

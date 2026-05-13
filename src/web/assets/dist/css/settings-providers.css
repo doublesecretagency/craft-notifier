@@ -1,0 +1,52 @@
+/*
+ * Notifier - Settings Providers
+ *
+ * Editable-table styling for the per-provider Test column + uid hiding.
+ * Sidebar layout uses Craft's native CP sidebar (no custom CSS needed).
+ */
+
+/* Visually hide the trailing `uid` column on every named-list table. Craft's
+   editableTable tags the column with `.hidden-cell` but doesn't set display:none
+   by default. The hidden <textarea> inside still roundtrips through the form
+   POST so saved UIDs stay stable. */
+.notifier-named-list table.editable th.hidden-cell,
+.notifier-named-list table.editable td.hidden-cell {
+    display: none !important;
+}
+
+/* Cap the long-content cells (Slack webhook URLs, Bluesky app passwords) so
+   they truncate with an ellipsis rather than stretching the table past its
+   container. */
+.notifier-named-list table.editable td.singleline-cell .editable-table-preview {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 22em;
+}
+
+/* Per-row Test column - dedicated cell sitting between data cells and the
+   row's structural action cells (reorder, menu, delete). The vertical padding
+   keeps the button from hugging the row's top/bottom edges. */
+.notifier-named-list table.editable th.notifier-test-th,
+.notifier-named-list table.editable td.notifier-test-cell {
+    width: 1px;
+    white-space: nowrap;
+    text-align: right;
+    padding: 6px 8px;
+}
+
+/* Craft's `.btn` declares `min-width: 24px` (icon-button assumption) which,
+   combined with `box-sizing: border-box`, squeezes a text-only "Test" button
+   into a 24px square. Let the button size to its label. */
+.notifier-named-list table.editable td.notifier-test-cell .btn {
+    min-width: 0;
+}
+
+/* Two-section settings sub-pages (ntfy, Bluesky) stack a global-credentials
+   pane on top of a named-list pane. The second section's <h2> sits flush
+   against the first pane's closing edge by default. Add explicit breathing
+   room so the section break reads clearly. */
+.pane + h2 {
+    margin-top: 24px;
+}
+

@@ -1,0 +1,40 @@
+{% extends "_layouts/cp" %}
+
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\SettingsProvidersAsset') %}
+
+{% set title = 'Notifier Settings'|t('notifier') %}
+
+{% set crumbs = [
+    { label: 'Settings'|t('app'), url: url('settings') },
+    { label: 'Plugins'|t('app'),  url: url('settings/plugins') },
+] %}
+
+{% set navItems = {
+    general:  { label: 'General'|t('notifier'),  url: url('settings/plugins/notifier/general')  },
+    twilio:   { label: 'Twilio'|t('notifier'),   url: url('settings/plugins/notifier/twilio')   },
+    pushover: { label: 'Pushover'|t('notifier'), url: url('settings/plugins/notifier/pushover') },
+    ntfy:     { label: 'ntfy'|t('notifier'),     url: url('settings/plugins/notifier/ntfy')     },
+    slack:    { label: 'Slack'|t('notifier'),    url: url('settings/plugins/notifier/slack')    },
+    bluesky:  { label: 'Bluesky'|t('notifier'),  url: url('settings/plugins/notifier/bluesky')  },
+} %}
+
+{% set selectedNavItem = section %}
+{% set docTitle = navItems[selectedNavItem].label ~ ' - ' ~ title %}
+
+{% set fullPageForm = true %}
+
+{% block sidebar %}
+    {% include '_includes/nav' with {
+        label: title,
+        items: navItems,
+        selectedItem: selectedNavItem,
+    } only %}
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="action" value="notifier/settings-providers/save">
+    <input type="hidden" name="section" value="{{ selectedNavItem }}">
+    <input type="hidden" name="redirect" value="{{ ('settings/plugins/notifier/'~selectedNavItem)|hash }}">
+
+    {% include 'notifier/_settings/'~selectedNavItem %}
+{% endblock %}

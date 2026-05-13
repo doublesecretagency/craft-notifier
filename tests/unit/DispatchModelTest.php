@@ -110,9 +110,10 @@ class DispatchModelTest extends TestCase
         // Each compile branch must tag its log->envelope() call with isTest
         // so the log row records the fact. The flag is intentionally NOT
         // passed into the envelope constructor (envelopes are delivery-only).
-        // Pin all four occurrences of the log-side merge.
+        // Pin all eight occurrences of the log-side merge (email, sms, announcement,
+        // flash, ntfy, slack, pushover, bluesky).
         $this->assertSame(
-            4,
+            8,
             preg_match_all(
                 "/'isTest'\s*=>\s*\\\$this->isTest/",
                 $this->dispatchSource
@@ -146,25 +147,16 @@ class DispatchModelTest extends TestCase
         );
     }
 
-    public function testConfigureByMessageTypeHandlesAllFourChannels(): void
+    public function testConfigureByMessageTypeHandlesAllChannels(): void
     {
-        // The four supported channels must each appear as a case.
-        $this->assertMatchesRegularExpression(
-            "/case\s+'email':/",
-            $this->dispatchSource
-        );
-        $this->assertMatchesRegularExpression(
-            "/case\s+'sms':/",
-            $this->dispatchSource
-        );
-        $this->assertMatchesRegularExpression(
-            "/case\s+'announcement':/",
-            $this->dispatchSource
-        );
-        $this->assertMatchesRegularExpression(
-            "/case\s+'flash':/",
-            $this->dispatchSource
-        );
+        // Every supported channel must appear as a case in configureByMessageType().
+        foreach (['email', 'sms', 'announcement', 'flash', 'pushover', 'ntfy', 'slack', 'bluesky'] as $channel) {
+            $this->assertMatchesRegularExpression(
+                "/case\s+'{$channel}':/",
+                $this->dispatchSource,
+                "configureByMessageType() should handle the '{$channel}' channel"
+            );
+        }
     }
 
     public function testEmailRespectsEmailQueueConfig(): void
@@ -199,6 +191,100 @@ class DispatchModelTest extends TestCase
         // Flash messages are session-scoped; they must dispatch in-process.
         $this->assertMatchesRegularExpression(
             "/case 'flash':\s*\\\$this->useQueue\s*=\s*false/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testNewChannelsRespectPerMessageQueueConfig(): void
+    {
+        // Pushover / ntfy / Slack / Bluesky each honor a per-message queue lightswitch.
+        $this->assertStringContainsString("'pushoverQueue'", $this->dispatchSource);
+        $this->assertStringContainsString("'ntfyQueue'", $this->dispatchSource);
+        $this->assertStringContainsString("'slackQueue'", $this->dispatchSource);
+        $this->assertStringContainsString("'blueskyQueue'", $this->dispatchSource);
+    }
+
+    // ========================================================================= //
+    // Slack / ntfy / Pushover / Bluesky compile pipelines
+    // ========================================================================= //
+
+    public function testSlackCaseInvokesCompileSlack(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'slack':[\s\S]*?_compileSlack\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testNtfyCaseInvokesCompileNtfy(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'ntfy':[\s\S]*?_compileNtfy\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testPushoverCaseInvokesCompilePushover(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'pushover':[\s\S]*?_compilePushover\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testBlueskyCaseInvokesCompileBluesky(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'bluesky':[\s\S]*?_compileBluesky\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testCompileSlackInstantiatesSlackEnvelope(): void
+    {
+        // _compileSlack() builds OutboundSlack envelopes from the slackBody config.
+        $this->assertStringContainsString('new OutboundSlack(', $this->dispatchSource);
+        $this->assertStringContainsString("messageConfig['slackBody']", $this->dispatchSource);
+    }
+
+    public function testCompileNtfyInstantiatesNtfyEnvelope(): void
+    {
+        // _compileNtfy() builds OutboundNtfy envelopes and forwards the priority/tags/markdown config.
+        $this->assertStringContainsString('new OutboundNtfy(', $this->dispatchSource);
+        $this->assertStringContainsString("messageConfig['ntfyBody']", $this->dispatchSource);
+        $this->assertStringContainsString("messageConfig['ntfyPriority']", $this->dispatchSource);
+    }
+
+    public function testCompilePushoverInstantiatesPushoverEnvelope(): void
+    {
+        // _compilePushover() builds OutboundPushover envelopes from the per-User key field.
+        $this->assertStringContainsString('new OutboundPushover(', $this->dispatchSource);
+        $this->assertStringContainsString("messageConfig['pushoverKeyField']", $this->dispatchSource);
+        $this->assertStringContainsString("messageConfig['pushoverBody']", $this->dispatchSource);
+    }
+
+    public function testCompilePushoverSkipsRecipientsWithoutUserOrKey(): void
+    {
+        // Three guard branches: no key field configured, recipient has no User, User has no key.
+        $this->assertMatchesRegularExpression('/if\s*\(\s*!\$keyFieldHandle\s*\)/', $this->dispatchSource);
+        $this->assertMatchesRegularExpression('/if\s*\(\s*!\$recipient->user\s*\)/', $this->dispatchSource);
+        $this->assertMatchesRegularExpression('/if\s*\(\s*!\$userKey\s*\)/', $this->dispatchSource);
+        $this->assertStringContainsString('[SKIPPED] User "{name}" has no Pushover key.', $this->dispatchSource);
+    }
+
+    public function testCompileBlueskyInstantiatesBlueskyEnvelope(): void
+    {
+        // _compileBluesky() builds OutboundBluesky envelopes and tags the post with the primary site language.
+        $this->assertStringContainsString('new OutboundBluesky(', $this->dispatchSource);
+        $this->assertStringContainsString("messageConfig['blueskyBody']", $this->dispatchSource);
+        $this->assertStringContainsString('getPrimarySite()', $this->dispatchSource);
+    }
+
+    public function testCompileBlueskyReadsLinkCardConfig(): void
+    {
+        // _compileBluesky() forwards the per-notification link-preview toggle, defaulting on.
+        $this->assertMatchesRegularExpression(
+            "/messageConfig\['blueskyLinkCard'\]\s*\?\?\s*true/",
             $this->dispatchSource
         );
     }

@@ -4,7 +4,7 @@ description: Set up a Twilio account and connect it to Notifier so the plugin ca
 
 # Configuring Twilio
 
-If using the Twilio API to send [SMS (text messages)](/messages/types/sms-text), you'll first need to create and configure your [Twilio account](https://console.twilio.com).
+If using Twilio to send [SMS (text messages)](/messages/types/sms-text), you'll need to create and configure your [Twilio account](https://console.twilio.com).
 
 ### Get an Active Number
 
@@ -28,14 +28,17 @@ Copy the complete set of Twilio API credentials and save them to your `.env` fil
 
 ```dotenv
 # Twilio API credentials
-TWILIO_ACCOUNT_SID="AC58c47ed8054da83c9f0a86fcbadf63f2"
-TWILIO_AUTH_TOKEN="c84c5394bd883e0bbf1883162cf8f158"
+TWILIO_ACCOUNT_SID="AC5****************************3f2"
+TWILIO_AUTH_TOKEN="c84**************************158"
 TWILIO_PHONE_NUMBER="+18885556412"
 ```
 
-### Load credentials via Settings
+### Configure Notifier
 
-Once those values have been added to your `.env`, there are two ways to load them into Craft:
+In the Craft control panel, go to **Settings → Plugins → Notifier → Twilio** to load the API credentials.
 
-- Via the [Settings](/getting-started/settings) page.
-- Via the [PHP config](/getting-started/config) file.
+In each field, reference the matching `.env` variable (e.g. `$TWILIO_ACCOUNT_SID`).
+
+<img class="dropshadow" src="/images/settings/settings-twilio.png" alt="Screenshot of the Twilio settings sub-page" style="width:1044px; margin-top:10px">
+
+You can also set these values in a [PHP config file](/getting-started/config) instead.

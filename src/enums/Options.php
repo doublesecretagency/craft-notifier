@@ -19,7 +19,7 @@ abstract class Options
 {
 
     /**
-     * Available event types.
+     * @var array Available event types.
      */
     public const EVENT_TYPE = [
         'entries'                   => 'Entries',
@@ -33,7 +33,7 @@ abstract class Options
     ];
 
     /**
-     * Event types grouped by plugin, for the CP dropdown.
+     * @var array Event types grouped by plugin, for the CP dropdown.
      */
     public const EVENT_TYPE_GROUPED = [
         'entries' => 'Entries',
@@ -50,8 +50,9 @@ abstract class Options
     ];
 
     /**
-     * Available events for all event types.
-     * https://craftcms.com/docs/4.x/extend/events.html#event-code-generator
+     * @var array Available events for all event types.
+     *
+     * https://craftcms.com/docs/5.x/extend/events.html#event-code-generator
      *
      * Top-level key order must match EVENT_TYPE.
      */
@@ -220,17 +221,21 @@ abstract class Options
     ];
 
     /**
-     * Available message types.
+     * @var array Available message types.
      */
     public const MESSAGE_TYPE = [
         'email'        => 'Email',
         'sms'          => 'SMS (Text Message)',
         'announcement' => 'Announcement',
         'flash'        => 'Flash Message',
+        'pushover'     => 'Pushover',
+        'ntfy'         => 'ntfy',
+        'slack'        => 'Slack',
+        'bluesky'      => 'Bluesky',
     ];
 
     /**
-     * Available flash message types.
+     * @var array Available flash message types.
      */
     public const FLASH_TYPE = [
 //        'success' => 'Success', // Disabled to mask bug (conflict with default "on save" flash message)
@@ -239,7 +244,7 @@ abstract class Options
     ];
 
     /**
-     * Available recipient types.
+     * @var array Available recipient types.
      */
     public const RECIPIENTS_TYPE = [
         'current-user'       => 'Current User (who triggers the Event)',
@@ -248,6 +253,36 @@ abstract class Options
         'selected-groups'    => 'All Users in selected User Group(s)',
         'selected-users'     => 'Only selected User(s)',
         'dynamic-recipients' => 'Dynamic Recipients',
+        'ntfy-topics'        => 'Selected ntfy topic(s)',
+        'slack-channels'     => 'Selected Slack channel(s)',
+        'bluesky-accounts'   => 'Selected Bluesky account(s)',
+    ];
+
+    /**
+     * @var array Map of which recipient types are available for each message type.
+     *
+     * Used to filter the Recipients Type dropdown on the notification edit screen.
+     */
+    public const ALLOWED_RECIPIENT_TYPES = [
+        'email'        => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users', 'dynamic-recipients'],
+        'sms'          => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users', 'dynamic-recipients'],
+        'announcement' => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users'],
+        'flash'        => ['current-user'],
+        'pushover'     => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users', 'dynamic-recipients'],
+        'ntfy'         => ['ntfy-topics'],
+        'slack'        => ['slack-channels'],
+        'bluesky'      => ['bluesky-accounts'],
+    ];
+
+    /**
+     * @var array ntfy priority levels (1 = min, 5 = max). Default 3.
+     */
+    public const NTFY_PRIORITY = [
+        '5' => '5 - Max',
+        '4' => '4 - High',
+        '3' => '3 - Default',
+        '2' => '2 - Low',
+        '1' => '1 - Min',
     ];
 
 }
