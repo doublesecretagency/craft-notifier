@@ -163,7 +163,7 @@ class ConditionTemplateGuardsTest extends TestCase
         $source = self::read('craft-commerce-orders.twig');
         $this->assertStringContainsString("targetPrefix: '.craft-commerce-orders-event-'", $source);
         $this->assertMatchesRegularExpression(
-            '/<div class="craft-commerce-orders-event-after-complete-order craft-commerce-orders-event-after-order-paid hidden">/',
+            '/<div class="craft-commerce-orders-event-manually-triggered craft-commerce-orders-event-after-complete-order craft-commerce-orders-event-after-order-paid hidden">/',
             $source
         );
     }

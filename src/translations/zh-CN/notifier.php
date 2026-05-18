@@ -391,4 +391,15 @@ return [
     'Enable Markdown' => '启用 Markdown',
     'Link URL' => '链接 URL',
     'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => 'Webhook URL 无效。必须以 https://hooks.slack.com/services/ 开头。',
+
+    // Manual triggers
+    'Send Notification'                                            => '发送通知',
+    'Send manual notifications'                                    => '发送手动通知',
+    'Are you sure you want to send this notification?'             => '确定要发送此通知吗？',
+    'This notification cannot be triggered manually.'              => '此通知无法手动触发。',
+    'This notification no longer applies to the selected element.' => '此通知不再适用于所选元素。',
+    'Notification sent.'                                           => '通知已发送。',
+    'Element not found'                                            => '未找到元素',
+    'Manual Trigger Label'                                         => '手动触发标签',
+    'An element action label (helps to differentiate multiple manual triggers).' => '元素操作标签（有助于区分多个手动触发）。',
 ];

@@ -59,6 +59,10 @@ abstract class Options
     public const ALL_EVENTS = [
         'entries' => [
             [
+                'label' => 'When manually triggered',
+                'value' => 'manually-triggered'
+            ],
+            [
                 'label' => 'When an entry is saved (send one message per each site)',
                 'value' => 'after-save',
                 'class' => 'craft\elements\Entry::EVENT_AFTER_SAVE'
@@ -80,6 +84,10 @@ abstract class Options
             ],
         ],
         'assets' => [
+            [
+                'label' => 'When manually triggered',
+                'value' => 'manually-triggered'
+            ],
             [
                 'label' => 'When a new file is uploaded and saved',
                 'value' => 'after-propagate',
@@ -107,6 +115,10 @@ abstract class Options
             ],
         ],
         'users' => [
+            [
+                'label' => 'When manually triggered',
+                'value' => 'manually-triggered'
+            ],
             [
                 'label' => 'When a new user is created',
                 'value' => 'after-propagate',
@@ -140,6 +152,10 @@ abstract class Options
         ],
         'craft-commerce-orders' => [
             [
+                'label' => 'When manually triggered',
+                'value' => 'manually-triggered'
+            ],
+            [
                 'label' => 'When an order is completed (placed)',
                 'value' => 'after-complete-order',
                 'class' => 'craft\commerce\elements\Order::EVENT_AFTER_COMPLETE_ORDER'
@@ -151,6 +167,10 @@ abstract class Options
             ],
         ],
         'craft-commerce-products' => [
+            [
+                'label' => 'When manually triggered',
+                'value' => 'manually-triggered'
+            ],
             [
                 'label' => 'When a product is saved',
                 'value' => 'after-propagate',
@@ -169,6 +189,10 @@ abstract class Options
         ],
         'digital-products-products' => [
             [
+                'label' => 'When manually triggered',
+                'value' => 'manually-triggered'
+            ],
+            [
                 'label' => 'When a digital product is saved',
                 'value' => 'after-propagate',
                 'class' => 'craft\digitalproducts\elements\Product::EVENT_AFTER_PROPAGATE'
@@ -186,6 +210,10 @@ abstract class Options
         ],
         'digital-products-licenses' => [
             [
+                'label' => 'When manually triggered',
+                'value' => 'manually-triggered'
+            ],
+            [
                 'label' => 'When a license is saved',
                 'value' => 'after-propagate',
                 'class' => 'craft\digitalproducts\elements\License::EVENT_AFTER_PROPAGATE'
@@ -202,6 +230,10 @@ abstract class Options
             ],
         ],
         'solspace-calendar-events' => [
+            [
+                'label' => 'When manually triggered',
+                'value' => 'manually-triggered'
+            ],
             [
                 'label' => 'When a calendar event is saved',
                 'value' => 'after-propagate',
@@ -232,6 +264,20 @@ abstract class Options
         'ntfy'         => 'ntfy',
         'slack'        => 'Slack',
         'bluesky'      => 'Bluesky',
+    ];
+
+    /**
+     * @var array Icon for each message type, shown beside the manual-send action menu item.
+     */
+    public const MESSAGE_TYPE_ICON = [
+        'email'        => 'envelope',
+        'sms'          => 'comment-dots',
+        'announcement' => 'gift',
+        'flash'        => 'bolt',
+        'pushover'     => 'mobile-screen',
+        'ntfy'         => 'angle-right',
+        'slack'        => 'slack',
+        'bluesky'      => 'bluesky',
     ];
 
     /**

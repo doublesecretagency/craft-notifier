@@ -187,6 +187,42 @@ class MessagesServiceTest extends TestCase
     }
 
     // ========================================================================= //
+    // getManualNotifications, manual-trigger membership resolution
+    // ========================================================================= //
+
+    public function testHasGetManualNotificationsMethod(): void
+    {
+        $this->assertTrue($this->reflection->hasMethod('getManualNotifications'));
+        $this->assertTrue($this->reflection->getMethod('getManualNotifications')->isPublic());
+    }
+
+    public function testGetManualNotificationsSignature(): void
+    {
+        // getManualNotifications(ElementInterface $element): array
+        $method = $this->reflection->getMethod('getManualNotifications');
+        $params = $method->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertSame('element', $params[0]->getName());
+        $this->assertSame('array', (string) $method->getReturnType());
+    }
+
+    public function testGetManualNotificationsQueriesManuallyTriggered(): void
+    {
+        // Only Notifications wired to the `manually-triggered` event qualify.
+        $body = $this->_extractMethodBody('getManualNotifications');
+        $this->assertStringContainsString("'manually-triggered'", $body);
+    }
+
+    public function testGetManualNotificationsReusesDispatchFilter(): void
+    {
+        // Membership is gated by the live dispatch filter, not a duplicated
+        // copy of the section / volume / group logic.
+        $body = $this->_extractMethodBody('getManualNotifications');
+        $this->assertStringContainsString('new Dispatch(', $body);
+        $this->assertStringContainsString('filterByEventType()', $body);
+    }
+
+    // ========================================================================= //
 
     /**
      * Extract the body of a named method from the cached source for source-level

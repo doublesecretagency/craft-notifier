@@ -43,6 +43,7 @@ export default defineConfig({
           {
             items: [
               {text: 'Overview',        link: '/events/'},
+              {text: 'Manual Sending',  link: '/events/manually-send'},
               {text: 'All Event Types', link: '/events/types/'},
             ]
           },
@@ -220,6 +221,7 @@ export default defineConfig({
           text: 'Events',
           items: [
             {text: 'Overview',        link: '/events/'},
+            {text: 'Manual Sending',  link: '/events/manually-send'},
             {text: 'All Event Types', link: '/events/types/',
               items: [
                 {text: 'Entries', link: '/events/types/entries/', collapsed: true,

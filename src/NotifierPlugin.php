@@ -12,11 +12,22 @@
 namespace doublesecretagency\notifier;
 
 use Craft;
+use craft\base\Element;
+use craft\base\ElementInterface;
 use craft\base\Model;
 use craft\base\Plugin;
 use craft\base\conditions\BaseCondition;
+use craft\commerce\elements\Order;
+use craft\commerce\elements\Product as CommerceProduct;
+use craft\digitalproducts\elements\License;
+use craft\digitalproducts\elements\Product as DigitalProduct;
+use craft\elements\Asset;
+use craft\elements\Entry;
+use craft\elements\User;
+use craft\events\DefineMenuItemsEvent;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterConditionRulesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
@@ -69,6 +80,7 @@ use doublesecretagency\notifier\conditions\fields\NotifierNumberFieldConditionRu
 use doublesecretagency\notifier\conditions\fields\NotifierOptionsFieldConditionRule;
 use doublesecretagency\notifier\conditions\fields\NotifierRelationalFieldConditionRule;
 use doublesecretagency\notifier\conditions\fields\NotifierTextFieldConditionRule;
+use doublesecretagency\notifier\elements\actions\SendNotification;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\enums\Options;
 use doublesecretagency\notifier\helpers\Compat;
@@ -79,6 +91,7 @@ use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
 use doublesecretagency\notifier\utilities\NotificationLog;
 use doublesecretagency\notifier\web\twig\Extension;
+use Solspace\Calendar\Elements\Event as CalendarEvent;
 use yii\base\Event;
 
 /**
@@ -164,6 +177,11 @@ class NotifierPlugin extends Plugin
             $this->_registerCpRoutes();
             $this->_registerUtilities();
             $this->_registerTableAttributes();
+            $this->_registerElementActions();
+            // The disclosure action menu only exists in Craft 5
+            if (Compat::isCraft5()) {
+                $this->_registerActionMenuItems();
+            }
         }
 
         // Load Twig extension
@@ -288,6 +306,9 @@ class NotifierPlugin extends Plugin
                                 ],
                                 'notifier-testNotifications' => [
                                     'label' => Craft::t('notifier', 'Test notifications'),
+                                ],
+                                'notifier-sendManualNotifications' => [
+                                    'label' => Craft::t('notifier', 'Send manual notifications'),
                                 ],
                                 'notifier-deleteNotifications' => [
                                     'label' => Craft::t('notifier', 'Delete notifications'),
@@ -426,6 +447,153 @@ class NotifierPlugin extends Plugin
 
                 }
 
+            }
+        );
+    }
+
+    /**
+     * Register the "Send Notification" bulk action on every supported element index.
+     *
+     * @return void
+     */
+    private function _registerElementActions(): void
+    {
+        // Map each supported element class to its Notifier event type
+        $elementTypes = [
+            Entry::class => 'entries',
+            Asset::class => 'assets',
+            User::class  => 'users',
+        ];
+
+        // Append third-party element types only when their plugin is installed
+        if (class_exists(Order::class)) {
+            $elementTypes[Order::class] = 'craft-commerce-orders';
+        }
+        if (class_exists(CommerceProduct::class)) {
+            $elementTypes[CommerceProduct::class] = 'craft-commerce-products';
+        }
+        if (class_exists(DigitalProduct::class)) {
+            $elementTypes[DigitalProduct::class] = 'digital-products-products';
+            $elementTypes[License::class] = 'digital-products-licenses';
+        }
+        if (class_exists(CalendarEvent::class)) {
+            $elementTypes[CalendarEvent::class] = 'solspace-calendar-events';
+        }
+
+        // Register a "Send Notification" bulk action for each element type
+        foreach ($elementTypes as $elementClass => $eventType) {
+            Event::on(
+                $elementClass,
+                Element::EVENT_REGISTER_ACTIONS,
+                static function (RegisterElementActionsEvent $event) use ($eventType) {
+                    // Get the current user
+                    $user = Craft::$app->getUser()->getIdentity();
+                    // If the user can't send manual notifications, bail
+                    if (!$user || !$user->can('notifier-sendManualNotifications')) {
+                        return;
+                    }
+                    // Whether any manually triggered notifications exist for this type
+                    $exists = Notification::find()
+                        ->where([
+                            'eventType' => $eventType,
+                            'event' => 'manually-triggered',
+                        ])
+                        ->exists();
+                    // If none exist, bail
+                    if (!$exists) {
+                        return;
+                    }
+                    // Append the "Send Notification" bulk action
+                    $event->actions[] = [
+                        'type' => SendNotification::class,
+                        'notifierEventType' => $eventType,
+                    ];
+                }
+            );
+        }
+    }
+
+    /**
+     * Register the "Send Notification" item on every supported element's action menu.
+     *
+     * Craft 5 only; the disclosure action menu does not exist in Craft 4.
+     *
+     * @return void
+     */
+    private function _registerActionMenuItems(): void
+    {
+        Event::on(
+            Element::class,
+            Element::EVENT_DEFINE_ACTION_MENU_ITEMS,
+            static function (DefineMenuItemsEvent $event) {
+                // Get the current user
+                $user = Craft::$app->getUser()->getIdentity();
+                // If the user can't send manual notifications, bail
+                if (!$user || !$user->can('notifier-sendManualNotifications')) {
+                    return;
+                }
+                // Get the element whose action menu is being built
+                $element = $event->sender;
+                // If the element isn't a saved element, bail
+                if (!($element instanceof ElementInterface) || !$element->id) {
+                    return;
+                }
+                // Get all manually triggered notifications which apply to this element
+                $notifications = NotifierPlugin::$plugin->messages->getManualNotifications($element);
+                // If none apply, append nothing
+                if (!$notifications) {
+                    return;
+                }
+                // Always fire against the canonical element, never a provisional draft
+                $elementId = $element->getCanonicalId();
+                // Confirmation shown before any notification is dispatched
+                $confirm = Craft::t('notifier', 'Are you sure you want to send this notification?');
+                // Generic error shown if the request fails outright
+                $error = Craft::t('app', 'A server error occurred.');
+                // Get the view service
+                $view = Craft::$app->getView();
+                // Append one menu item per applicable notification
+                foreach ($notifications as $notification) {
+                    // Unique DOM id for this menu item
+                    $itemId = sprintf('notifier-send-%s', mt_rand());
+                    // Label distinguishes multiple manual triggers on the same element
+                    $label = $notification->getManualTriggerLabel();
+                    // Append the menu item
+                    $event->items[] = [
+                        'id' => $itemId,
+                        'icon' => $notification->getMessageTypeIcon(),
+                        'label' => $label,
+                    ];
+                    // Wire the item to POST the manual-send action on activation
+                    $view->registerJsWithVars(static fn($id, $notificationId, $eId, $confirmMsg, $errorMsg) => <<<JS
+(() => {
+    const btn = $('#' + $id);
+    btn.on('activate', () => {
+        if (!window.confirm($confirmMsg)) {
+            return;
+        }
+        Craft.sendActionRequest('POST', 'notifier/notifications/send-manual', {
+            data: {notificationId: $notificationId, elementId: $eId},
+        }).then((response) => {
+            const data = (response.data || {});
+            if (data.success) {
+                Craft.cp.displayNotice(data.message);
+            } else {
+                Craft.cp.displayError(data.message);
+            }
+        }).catch(() => {
+            Craft.cp.displayError($errorMsg);
+        });
+    });
+})();
+JS, [
+                        $view->namespaceInputId($itemId),
+                        (int) $notification->id,
+                        (int) $elementId,
+                        $confirm,
+                        $error,
+                    ]);
+                }
             }
         );
     }

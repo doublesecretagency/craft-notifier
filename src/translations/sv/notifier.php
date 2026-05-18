@@ -391,4 +391,15 @@ return [
     'Enable Markdown' => 'Aktivera Markdown',
     'Link URL' => 'Länk-URL',
     'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => 'Ingen giltig webhook-URL. Måste börja med https://hooks.slack.com/services/',
+
+    // Manual triggers
+    'Send Notification'                                            => 'Skicka avisering',
+    'Send manual notifications'                                    => 'Skicka manuella aviseringar',
+    'Are you sure you want to send this notification?'             => 'Är du säker på att du vill skicka den här aviseringen?',
+    'This notification cannot be triggered manually.'              => 'Den här aviseringen kan inte utlösas manuellt.',
+    'This notification no longer applies to the selected element.' => 'Den här aviseringen gäller inte längre det valda elementet.',
+    'Notification sent.'                                           => 'Avisering skickad.',
+    'Element not found'                                            => 'Elementet hittades inte',
+    'Manual Trigger Label'                                         => 'Etikett för manuell utlösare',
+    'An element action label (helps to differentiate multiple manual triggers).' => 'En etikett för elementåtgärden (hjälper till att skilja flera manuella utlösare åt).',
 ];

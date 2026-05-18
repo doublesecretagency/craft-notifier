@@ -20,6 +20,7 @@ use craft\models\FieldLayout;
 use craft\web\CpScreenResponseBehavior;
 use doublesecretagency\notifier\elements\conditions\NotificationCondition;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
+use doublesecretagency\notifier\enums\Options;
 use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\fieldlayoutelements\notifications\EventFieldLayoutTab;
 use doublesecretagency\notifier\fieldlayoutelements\notifications\MessageFieldLayoutTab;
@@ -593,47 +594,69 @@ class Notification extends Element
         // If not propagating
         if (!$this->propagating) {
 
-            // Get the notification record
+            // If not new
             if (!$isNew) {
+                // Get the existing notification record
                 $record = NotificationRecord::findOne($this->id);
-
+                // If it can't be found, throw an exception
                 if (!$record) {
                     throw new BaseException(Craft::t('notifier', 'Invalid notification ID: {id}', ['id' => $this->id]));
                 }
             } else {
+                // Create a new notification record
                 $record = new NotificationRecord();
+                // Set the notification ID
                 $record->id = $this->id;
             }
 
             // Get request service
             $request = Craft::$app->getRequest();
 
-            // Get POST values
-            $description      = $request->getBodyParam('description');
-            $eventType        = $request->getBodyParam('eventType');
-            $event            = $request->getBodyParam('event');
-            $eventConfig      = $request->getBodyParam('eventConfig');
-            $messageType      = $request->getBodyParam('messageType');
-            $messageConfig    = $request->getBodyParam('messageConfig');
-            $recipientsType   = $request->getBodyParam('recipientsType');
-            $recipientsConfig = $request->getBodyParam('recipientsConfig');
+            // Initialize POST values (null falls back to the saved value)
+            $description = $eventType = $event = $eventConfig = null;
+            $messageType = $messageConfig = $recipientsType = $recipientsConfig = null;
 
-            // Read only the active tab's condition (each tab posts its own per-type key)
-            $selectedEventType = ($eventType ?? (string) $this->eventType);
-            $eventCondition    = $request->getBodyParam("eventCondition_{$selectedEventType}");
+            // If not a console request
+            if (!$request->getIsConsoleRequest()) {
 
-            // Extract specific event
-            $event = ($event[$eventType] ?? null);
+                // Get POST values
+                $description      = $request->getBodyParam('description');
+                $eventType        = $request->getBodyParam('eventType');
+                $event            = $request->getBodyParam('event');
+                $eventConfig      = $request->getBodyParam('eventConfig');
+                $messageType      = $request->getBodyParam('messageType');
+                $messageConfig    = $request->getBodyParam('messageConfig');
+                $recipientsType   = $request->getBodyParam('recipientsType');
+                $recipientsConfig = $request->getBodyParam('recipientsConfig');
 
-            // Relocate the condition payload into eventConfig under the canonical key
-            if ($eventCondition !== null) {
+                // Get the active tab's condition and label
+                $selectedEventType  = ($eventType ?? (string) $this->eventType);
+                $eventCondition     = $request->getBodyParam("eventCondition_{$selectedEventType}");
+                $manualTriggerLabel = $request->getBodyParam("manualTriggerLabel_{$selectedEventType}");
+
+                // Extract specific event
+                $event = ($event[$eventType] ?? null);
+
+                // If the config is not an array, initialize it
                 if (!is_array($eventConfig)) {
                     $eventConfig = [];
                 }
-                $eventConfig['condition'] = $eventCondition;
+
+                // If an event condition exists
+                if ($eventCondition !== null) {
+                    // Copy it to the config
+                    $eventConfig['condition'] = $eventCondition;
+                }
+
+                // If the manual trigger label exists
+                if ($manualTriggerLabel !== null) {
+                    // Copy it to the config
+                    $eventConfig['manualTriggerLabel'] = $manualTriggerLabel;
+                }
+
             }
 
-            // Save to the `notifier_notifications` table
+            // Configure the notification
             $record->description      = $description      ?? $this->description;
             $record->eventType        = $eventType        ?? $this->eventType;
             $record->event            = $event            ?? $this->event;
@@ -643,6 +666,7 @@ class Notification extends Element
             $record->recipientsType   = $recipientsType   ?? $this->recipientsType;
             $record->recipientsConfig = $recipientsConfig ?? $this->recipientsConfig;
 
+            // Save the notification
             $record->save(false);
         }
 
@@ -660,6 +684,41 @@ class Notification extends Element
     public function send(Event $event): void
     {
         NotifierPlugin::getInstance()->messages->send($this, $event);
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Get the label for this notification's manual trigger.
+     *
+     * Shown on the "Send Notification" element action
+     * to differentiate multiple manual triggers.
+     *
+     * @return string The configured label, or the default fallback.
+     */
+    public function getManualTriggerLabel(): string
+    {
+        // Get the configured label
+        $label = trim((string) ($this->eventConfig['manualTriggerLabel'] ?? ''));
+
+        // Return the label, or the default fallback
+        return ($label ?: Craft::t('notifier', 'Send Notification'));
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Get the icon for this notification's message type.
+     *
+     * Shown beside the manual-send action of an element's edit screen
+     * to differentiate multiple manual triggers.
+     *
+     * @return string A Font Awesome icon name.
+     */
+    public function getMessageTypeIcon(): string
+    {
+        // Get the icon for the message type, or use a generic fallback
+        return (Options::MESSAGE_TYPE_ICON[$this->messageType] ?? 'paper-plane');
     }
 
     // ========================================================================= //

@@ -1,6 +1,5 @@
 {% import '_includes/forms' as forms %}
 
-{# Shared condition builder, included once per event-type tab #}
 {% set condition = notification.getEventCondition(eventType) %}
 
 {% if condition %}

@@ -12,8 +12,10 @@
 namespace doublesecretagency\notifier\services;
 
 use craft\base\Component;
+use craft\base\ElementInterface;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\models\Dispatch;
+use doublesecretagency\notifier\NotifierPlugin;
 use yii\base\Event;
 
 /**
@@ -104,6 +106,48 @@ class Messages extends Component
 
         // Return the populated dispatch so the caller can report envelope count
         return $dispatch;
+    }
+
+    /**
+     * Get all manually triggered Notifications which apply to a given element.
+     *
+     * @param ElementInterface $element
+     * @return Notification[] Notifications which can be manually triggered for this element.
+     * @since 3.0.0
+     */
+    public function getManualNotifications(ElementInterface $element): array
+    {
+        // Get the Notifier event type for this element
+        $eventType = NotifierPlugin::getInstance()->events->getEventTypeForElement($element);
+
+        // If the element type is unsupported, bail
+        if (!$eventType) {
+            return [];
+        }
+
+        // Get all manually triggered Notifications for this event type
+        $notifications = Notification::find()
+            ->where([
+                'eventType' => $eventType,
+                'event' => 'manually-triggered',
+            ])
+            ->all();
+
+        // Create an event with this element
+        $event = new Event(['sender' => $element]);
+
+        // Keep only the Notifications whose filters accept this element
+        return array_values(array_filter($notifications,
+            static function (Notification $notification) use ($element, $event): bool {
+                // Reuse the live dispatch filter as the membership gate
+                $dispatch = new Dispatch([
+                    'notification' => $notification,
+                    'event' => $event,
+                    'data' => ['object' => $element],
+                ]);
+                return $dispatch->filterByEventType();
+            }
+        ));
     }
 
 }

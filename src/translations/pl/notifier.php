@@ -391,4 +391,15 @@ return [
     'Enable Markdown' => 'Włącz Markdown',
     'Link URL' => 'URL odnośnika',
     'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => 'Nieprawidłowy URL webhooka. Musi zaczynać się od https://hooks.slack.com/services/',
+
+    // Manual triggers
+    'Send Notification'                                            => 'Wyślij powiadomienie',
+    'Send manual notifications'                                    => 'Wysyłaj powiadomienia ręczne',
+    'Are you sure you want to send this notification?'             => 'Czy na pewno chcesz wysłać to powiadomienie?',
+    'This notification cannot be triggered manually.'              => 'Tego powiadomienia nie można wyzwolić ręcznie.',
+    'This notification no longer applies to the selected element.' => 'To powiadomienie nie dotyczy już wybranego elementu.',
+    'Notification sent.'                                           => 'Powiadomienie wysłane.',
+    'Element not found'                                            => 'Nie znaleziono elementu',
+    'Manual Trigger Label'                                         => 'Etykieta wyzwalacza ręcznego',
+    'An element action label (helps to differentiate multiple manual triggers).' => 'Etykieta akcji elementu (pomaga rozróżnić wiele wyzwalaczy ręcznych).',
 ];

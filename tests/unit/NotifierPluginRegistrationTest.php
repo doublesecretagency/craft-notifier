@@ -433,4 +433,66 @@ class NotifierPluginRegistrationTest extends TestCase
         );
     }
 
+    // ========================================================================= //
+    // Manual-trigger registrations
+    // ========================================================================= //
+
+    public function testSendManualPermissionIsNestedUnderView(): void
+    {
+        // The manual-send permission is a sibling of test / delete, nested
+        // under viewNotifications.
+        $this->assertMatchesRegularExpression(
+            "/notifier-viewNotifications.*?nested.*?notifier-sendManualNotifications/s",
+            $this->pluginSource
+        );
+    }
+
+    public function testHasPrivateRegisterElementActionsMethod(): void
+    {
+        // The bulk-action registrar must exist and be private.
+        $this->assertTrue($this->reflection->hasMethod('_registerElementActions'));
+        $this->assertTrue($this->reflection->getMethod('_registerElementActions')->isPrivate());
+    }
+
+    public function testHasPrivateRegisterActionMenuItemsMethod(): void
+    {
+        // The edit-screen action-menu registrar must exist and be private.
+        $this->assertTrue($this->reflection->hasMethod('_registerActionMenuItems'));
+        $this->assertTrue($this->reflection->getMethod('_registerActionMenuItems')->isPrivate());
+    }
+
+    public function testRegistersSendNotificationBulkAction(): void
+    {
+        // The "Send Notification" bulk action attaches via EVENT_REGISTER_ACTIONS.
+        $this->assertMatchesRegularExpression(
+            '/_registerElementActions[\s\S]*?EVENT_REGISTER_ACTIONS[\s\S]*?SendNotification::class/',
+            $this->pluginSource
+        );
+    }
+
+    public function testActionMenuRegistrationIsCraft5Only(): void
+    {
+        // The disclosure action menu does not exist in Craft 4, so its
+        // registration must be guarded behind Compat::isCraft5().
+        $this->assertMatchesRegularExpression(
+            '/Compat::isCraft5\(\)[\s\S]*?_registerActionMenuItems/',
+            $this->pluginSource
+        );
+        $this->assertStringContainsString('EVENT_DEFINE_ACTION_MENU_ITEMS', $this->pluginSource);
+    }
+
+    public function testActionMenuItemUsesManualTriggerLabel(): void
+    {
+        // Each edit-screen menu item is labeled by the notification's manual
+        // trigger label, so multiple manual triggers can be told apart.
+        $this->assertStringContainsString('getManualTriggerLabel()', $this->pluginSource);
+    }
+
+    public function testActionMenuItemHasMessageTypeIcon(): void
+    {
+        // Each edit-screen menu item carries an icon derived from the
+        // notification's message type.
+        $this->assertStringContainsString('getMessageTypeIcon()', $this->pluginSource);
+    }
+
 }

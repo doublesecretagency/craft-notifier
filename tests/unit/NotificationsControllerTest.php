@@ -208,6 +208,62 @@ class NotificationsControllerTest extends TestCase
     }
 
     // ========================================================================= //
+    // Manual-send action
+    // ========================================================================= //
+
+    public function testHasSendManualAction(): void
+    {
+        // Operator-triggered manual dispatch from the element edit screen
+        $this->assertTrue($this->reflection->hasMethod('actionSendManual'));
+        $this->assertTrue($this->reflection->getMethod('actionSendManual')->isPublic());
+    }
+
+    public function testSendManualActionRequiresPostRequest(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/actionSendManual[\s\S]*?requirePostRequest\(\)/',
+            $this->controllerSource
+        );
+    }
+
+    public function testSendManualActionRequiresJson(): void
+    {
+        // Manual-send endpoint is AJAX-only; reject non-JSON POSTs
+        $this->assertMatchesRegularExpression(
+            '/actionSendManual[\s\S]*?requireAcceptsJson\(\)/',
+            $this->controllerSource
+        );
+    }
+
+    public function testSendManualActionRequiresSendPermission(): void
+    {
+        // Dedicated permission, sibling to test / delete under viewNotifications
+        $this->assertMatchesRegularExpression(
+            "/actionSendManual[\s\S]*?requirePermission\('notifier-sendManualNotifications'\)/",
+            $this->controllerSource
+        );
+    }
+
+    public function testSendManualActionDelegatesToMessagesSend(): void
+    {
+        // Don't reimplement the dispatch path; defer to Messages::send
+        $this->assertMatchesRegularExpression(
+            '/actionSendManual[\s\S]*?messages->send\(/',
+            $this->controllerSource
+        );
+    }
+
+    public function testSendManualActionRevalidatesMembership(): void
+    {
+        // A stale page or crafted POST must not dispatch a Notification the
+        // element no longer matches.
+        $this->assertMatchesRegularExpression(
+            '/actionSendManual[\s\S]*?getManualNotifications\(/',
+            $this->controllerSource
+        );
+    }
+
+    // ========================================================================= //
     // Helper methods
     // ========================================================================= //
 

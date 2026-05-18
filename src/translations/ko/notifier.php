@@ -391,4 +391,15 @@ return [
     'Enable Markdown' => 'Markdown 활성화',
     'Link URL' => '링크 URL',
     'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => '유효한 웹훅 URL 이 아닙니다. https://hooks.slack.com/services/ 로 시작해야 합니다.',
+
+    // Manual triggers
+    'Send Notification'                                            => '알림 보내기',
+    'Send manual notifications'                                    => '수동 알림 보내기',
+    'Are you sure you want to send this notification?'             => '이 알림을 보내시겠습니까?',
+    'This notification cannot be triggered manually.'              => '이 알림은 수동으로 트리거할 수 없습니다.',
+    'This notification no longer applies to the selected element.' => '이 알림은 더 이상 선택한 요소에 적용되지 않습니다.',
+    'Notification sent.'                                           => '알림을 보냈습니다.',
+    'Element not found'                                            => '요소를 찾을 수 없습니다',
+    'Manual Trigger Label'                                         => '수동 트리거 레이블',
+    'An element action label (helps to differentiate multiple manual triggers).' => '요소 작업 레이블 (여러 수동 트리거를 구분하는 데 도움이 됩니다).',
 ];

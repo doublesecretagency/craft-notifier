@@ -1,0 +1,11 @@
+{% import '_includes/forms' as forms %}
+
+{# Per-type field name avoids collisions across multiple tabs #}
+{{ forms.textField({
+    label: 'Manual Trigger Label'|t('notifier'),
+    instructions: 'An element action label (helps to differentiate multiple manual triggers).'|t('notifier'),
+    id: "manualTriggerLabel_#{eventType}",
+    name: "manualTriggerLabel_#{eventType}",
+    value: notification.eventConfig.manualTriggerLabel ?? '',
+    placeholder: 'Send Notification'|t('notifier'),
+}) }}

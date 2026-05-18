@@ -11,8 +11,11 @@
         toggle: true,
         targetPrefix: '.craft-commerce-orders-event-',
     }) }}
+    <div class="craft-commerce-orders-event-manually-triggered hidden">
+        {% include 'notifier/notifications/_edit/event/_manual-trigger-label' with { eventType: 'craft-commerce-orders' } %}
+    </div>
     {# Hidden until a Commerce Orders Event is selected #}
-    <div class="craft-commerce-orders-event-after-complete-order craft-commerce-orders-event-after-order-paid hidden">
+    <div class="craft-commerce-orders-event-manually-triggered craft-commerce-orders-event-after-complete-order craft-commerce-orders-event-after-order-paid hidden">
         {% include 'notifier/notifications/_edit/event/_condition' with { eventType: 'craft-commerce-orders' } %}
     </div>
 </div>

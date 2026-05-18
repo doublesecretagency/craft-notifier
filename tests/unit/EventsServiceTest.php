@@ -863,4 +863,60 @@ class EventsServiceTest extends TestCase
             $this->eventsSource
         );
     }
+
+    // ========================================================================= //
+    // Element-type resolution for manual triggers
+    // ========================================================================= //
+
+    public function testHasGetEventTypeForElementMethod(): void
+    {
+        // Inverse of getElementClassForEventType(); resolves a live element to
+        // its Notifier event type so the manual-trigger affordances can be scoped.
+        $this->assertTrue($this->reflection->hasMethod('getEventTypeForElement'));
+        $this->assertTrue(
+            $this->reflection->getMethod('getEventTypeForElement')->isPublic()
+        );
+    }
+
+    public function testGetEventTypeForElementSignature(): void
+    {
+        // getEventTypeForElement(ElementInterface $element): ?string
+        $params = $this->reflection->getMethod('getEventTypeForElement')->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertSame('element', $params[0]->getName());
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function eventTypeForElementProvider(): array
+    {
+        return [
+            ['Entry',           'entries'],
+            ['Asset',           'assets'],
+            ['User',            'users'],
+            ['Order',           'craft-commerce-orders'],
+            ['CommerceProduct', 'craft-commerce-products'],
+            ['DigitalProduct',  'digital-products-products'],
+            ['License',         'digital-products-licenses'],
+            ['CalendarEvent',   'solspace-calendar-events'],
+        ];
+    }
+
+    /**
+     * @dataProvider eventTypeForElementProvider
+     */
+    public function testGetEventTypeForElementMapsEachElementClass(string $classToken, string $eventType): void
+    {
+        // Each supported element class must resolve to its event type via an
+        // instanceof arm; drift here breaks manual-trigger scoping.
+        $this->assertMatchesRegularExpression(
+            sprintf(
+                "/instanceof %s\\s*=>\\s*'%s'/",
+                preg_quote($classToken, '/'),
+                preg_quote($eventType, '/')
+            ),
+            $this->eventsSource
+        );
+    }
 }

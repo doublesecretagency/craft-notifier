@@ -390,6 +390,16 @@ class OptionsTest extends TestCase
         $this->assertArrayHasKey('bluesky', Options::MESSAGE_TYPE);
     }
 
+    public function testMessageTypeIconCoversEveryMessageType(): void
+    {
+        // Every message type must declare an icon, so the manual-send action
+        // menu never falls through to a generic placeholder.
+        foreach (array_keys(Options::MESSAGE_TYPE) as $type) {
+            $this->assertArrayHasKey($type, Options::MESSAGE_TYPE_ICON,
+                "Message type '{$type}' must declare an icon in MESSAGE_TYPE_ICON");
+        }
+    }
+
     public function testRecipientsTypeIncludesAllNineStrategies(): void
     {
         // The nine recipient strategies must each remain addressable by key.
@@ -435,5 +445,41 @@ class OptionsTest extends TestCase
         $this->assertCount(5, Options::NTFY_PRIORITY);
         $this->assertArrayHasKey('1', Options::NTFY_PRIORITY);
         $this->assertArrayHasKey('5', Options::NTFY_PRIORITY);
+    }
+
+    // ========================================================================= //
+    // ALL_EVENTS coverage: manually-triggered sub-event
+    // ========================================================================= //
+
+    /**
+     * @dataProvider eventTypeKeyProvider
+     */
+    public function testEveryEventTypeOffersManuallyTriggered(string $key): void
+    {
+        // The manual-trigger feature adds a `manually-triggered` sub-event to
+        // every element-type dropdown so any element type can be fired on demand.
+        $values = array_column(Options::ALL_EVENTS[$key], 'value');
+        $this->assertContains('manually-triggered', $values);
+    }
+
+    /**
+     * @dataProvider eventTypeKeyProvider
+     */
+    public function testManuallyTriggeredIsTheFirstSubEvent(string $key): void
+    {
+        // It sits first in each list so it leads the CP event dropdown.
+        $first = Options::ALL_EVENTS[$key][0];
+        $this->assertSame('manually-triggered', $first['value']);
+        $this->assertSame('When manually triggered', $first['label']);
+    }
+
+    public function testManuallyTriggeredHasNoEventClass(): void
+    {
+        // Manual triggers aren't backed by a Yii event, so the `class` key
+        // is intentionally omitted from every manually-triggered entry.
+        foreach (Options::ALL_EVENTS as $key => $events) {
+            $this->assertArrayNotHasKey('class', $events[0],
+                "manually-triggered entry under '{$key}' must not declare a class");
+        }
     }
 }

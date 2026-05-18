@@ -22,6 +22,7 @@ use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\NotifierPlugin;
 use Throwable;
+use yii\base\Event;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidRouteException;
 use yii\web\BadRequestHttpException;
@@ -339,6 +340,77 @@ class NotificationsController extends Controller
             'success' => true,
             'message' => Craft::t('notifier', 'Test notification dispatched.'),
             'envelopeCount' => $envelopeCount,
+        ]);
+    }
+
+    /**
+     * Manually trigger a Notification for a specific element.
+     *
+     * Fired from the element edit screen's action menu. Re-validates membership
+     * server-side, so a stale page or crafted POST can't fire a mismatched Notification.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @since 3.0.0
+     */
+    public function actionSendManual(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Require the dedicated manual-send permission
+        $this->requirePermission('notifier-sendManualNotifications');
+
+        // Get the specified notification and element IDs
+        $notificationId = (int) $this->request->getRequiredBodyParam('notificationId');
+        $elementId      = (int) $this->request->getRequiredBodyParam('elementId');
+
+        // Load the Notification
+        $notification = Notifier::getNotification($notificationId);
+
+        // If no matching Notification, 404
+        if (!$notification) {
+            throw new NotFoundHttpException(Craft::t('notifier', 'Notification not found'));
+        }
+
+        // If the Notification isn't manually triggerable, bail
+        if ('manually-triggered' !== $notification->event) {
+            throw new BadRequestHttpException(Craft::t('notifier', 'This notification cannot be triggered manually.'));
+        }
+
+        // Load the element
+        $element = Craft::$app->getElements()->getElementById($elementId);
+
+        // If no matching element, 404
+        if (!$element) {
+            throw new NotFoundHttpException(Craft::t('notifier', 'Element not found'));
+        }
+
+        // Re-validate that the Notification still applies to this element
+        $applicable = NotifierPlugin::getInstance()->messages->getManualNotifications($element);
+        $stillApplies = array_filter(
+            $applicable,
+            static fn(Notification $n): bool => ((int) $n->id === $notificationId)
+        );
+
+        // If the Notification no longer applies, return a soft failure
+        if (!$stillApplies) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'This notification no longer applies to the selected element.'),
+            ]);
+        }
+
+        // Send the Notification for the element
+        $event = new Event(['sender' => $element]);
+        NotifierPlugin::getInstance()->messages->send($notification, $event, ['object' => $element]);
+
+        // Report success
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Notification sent.'),
         ]);
     }
 

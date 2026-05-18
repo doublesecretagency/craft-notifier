@@ -23,3 +23,14 @@ Once an event is triggered, it will send a [message](/messages/) for each releva
 In actuality, the saving of an Entry will trigger _several_ different [internal events](https://craftcms.com/docs/5.x/extend/events.html) as it runs through the entire process (before save, after save, after propagate, etc).
 
 For the purpose of the Notifier plugin, each "event" has been translated to its nearest PHP approximation.
+
+## Manual Sending
+
+Some notifications don't have to wait for a Craft event. They can be triggered manually and sent **on demand**.
+
+Manual notifications can be triggered from:
+- an element's edit screen
+- the element index
+- the console
+
+See [Manually Send](/events/manually-send) for details.

@@ -391,4 +391,15 @@ return [
     'Enable Markdown' => 'Markdown\'ı etkinleştir',
     'Link URL' => "Bağlantı URL'si",
     'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => "Geçerli bir web kancası URL'si değil. https://hooks.slack.com/services/ ile başlamalı.",
+
+    // Manual triggers
+    'Send Notification'                                            => 'Bildirim gönder',
+    'Send manual notifications'                                    => 'Manuel bildirim gönder',
+    'Are you sure you want to send this notification?'             => 'Bu bildirimi göndermek istediğinizden emin misiniz?',
+    'This notification cannot be triggered manually.'              => 'Bu bildirim manuel olarak tetiklenemez.',
+    'This notification no longer applies to the selected element.' => 'Bu bildirim artık seçili öğeye uygulanmıyor.',
+    'Notification sent.'                                           => 'Bildirim gönderildi.',
+    'Element not found'                                            => 'Öğe bulunamadı',
+    'Manual Trigger Label'                                         => 'Manuel tetikleyici etiketi',
+    'An element action label (helps to differentiate multiple manual triggers).' => 'Öge eylemi etiketi (birden fazla manuel tetikleyiciyi ayırt etmeye yardımcı olur).',
 ];

@@ -301,6 +301,19 @@ class NotificationElementTest extends TestCase
         }
     }
 
+    public function testAfterSaveGuardsBodyParamsAgainstConsoleRequests(): void
+    {
+        // getBodyParam() only exists on a web request. afterSave() must guard
+        // the POST reads behind a console-request check so console and
+        // programmatic saves persist the element's own property values
+        // instead of fataling on the missing method.
+        $this->assertMatchesRegularExpression(
+            '/getIsConsoleRequest\(\)[\s\S]*?getBodyParam\(/',
+            $this->notificationSource,
+            'afterSave must guard getBodyParam() behind a console-request check'
+        );
+    }
+
     // ========================================================================= //
     // Task recipient labels
     // ========================================================================= //
@@ -460,6 +473,63 @@ class NotificationElementTest extends TestCase
         $this->assertMatchesRegularExpression(
             '/getBodyParam\\("eventCondition_\\{\\$selectedEventType\\}"\\)[\s\S]*?\\$eventConfig\\[\'condition\'\\]\s*=\s*\\$eventCondition/',
             $this->notificationSource
+        );
+    }
+
+    // ========================================================================= //
+    // Manual trigger label
+    // ========================================================================= //
+
+    public function testHasGetManualTriggerLabelMethod(): void
+    {
+        $this->assertTrue($this->reflection->hasMethod('getManualTriggerLabel'));
+        $this->assertTrue($this->reflection->getMethod('getManualTriggerLabel')->isPublic());
+    }
+
+    public function testGetManualTriggerLabelReturnsString(): void
+    {
+        // The label is always a string; an empty config value falls back to
+        // a default rather than returning null.
+        $this->assertSame(
+            'string',
+            (string) $this->reflection->getMethod('getManualTriggerLabel')->getReturnType()
+        );
+    }
+
+    public function testGetManualTriggerLabelFallsBackToDefault(): void
+    {
+        // An unconfigured or empty label resolves to the "Send Notification" default.
+        $this->assertMatchesRegularExpression(
+            "/getManualTriggerLabel[\s\S]*?eventConfig\\['manualTriggerLabel'\\][\s\S]*?'Send Notification'/",
+            $this->notificationSource
+        );
+    }
+
+    public function testAfterSaveMergesManualTriggerLabelIntoEventConfig(): void
+    {
+        // Each event-type tab posts its label under a per-type key
+        // (manualTriggerLabel_entries, etc.). afterSave reads only the one
+        // matching the selected event type, then relocates it into
+        // $eventConfig['manualTriggerLabel'] for canonical persistence.
+        $this->assertMatchesRegularExpression(
+            '/getBodyParam\\("manualTriggerLabel_\\{\\$selectedEventType\\}"\\)[\s\S]*?\\$eventConfig\\[\'manualTriggerLabel\'\\]\s*=\s*\\$manualTriggerLabel/',
+            $this->notificationSource
+        );
+    }
+
+    public function testHasGetMessageTypeIconMethod(): void
+    {
+        $this->assertTrue($this->reflection->hasMethod('getMessageTypeIcon'));
+        $this->assertTrue($this->reflection->getMethod('getMessageTypeIcon')->isPublic());
+    }
+
+    public function testGetMessageTypeIconReturnsString(): void
+    {
+        // The icon is always a string; an unknown message type falls back to
+        // a generic icon rather than returning null.
+        $this->assertSame(
+            'string',
+            (string) $this->reflection->getMethod('getMessageTypeIcon')->getReturnType()
         );
     }
 

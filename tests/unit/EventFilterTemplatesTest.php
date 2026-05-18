@@ -291,4 +291,101 @@ class EventFilterTemplatesTest extends TestCase
         $this->assertStringContainsString('users-event-after-assign-to-groups', $groups);
         $this->assertStringContainsString('users-event-after-assign-to-groups', $condition);
     }
+
+    // ========================================================================= //
+    // Manual-trigger toggle classes
+    // ========================================================================= //
+
+    /**
+     * @return string[][]
+     */
+    public static function manualTriggerPartialProvider(): array
+    {
+        return [
+            ['entries/entry-types.twig',                           'entries'],
+            ['entries/condition.twig',                             'entries'],
+            ['assets/volumes.twig',                                'assets'],
+            ['assets/condition.twig',                              'assets'],
+            ['users/groups.twig',                                  'users'],
+            ['users/condition.twig',                               'users'],
+            ['craft-commerce-orders.twig',                         'craft-commerce-orders'],
+            ['craft-commerce-products/productTypes.twig',          'craft-commerce-products'],
+            ['craft-commerce-products/condition.twig',             'craft-commerce-products'],
+            ['digital-products-products/digitalProductTypes.twig', 'digital-products-products'],
+            ['digital-products-products/condition.twig',           'digital-products-products'],
+            ['digital-products-licenses/digitalProductTypes.twig', 'digital-products-licenses'],
+            ['digital-products-licenses/condition.twig',           'digital-products-licenses'],
+            ['solspace-calendar-events/calendars.twig',            'solspace-calendar-events'],
+            ['solspace-calendar-events/condition.twig',            'solspace-calendar-events'],
+        ];
+    }
+
+    /**
+     * @dataProvider manualTriggerPartialProvider
+     */
+    public function testPartialCarriesManuallyTriggeredToggleClass(string $partial, string $eventType): void
+    {
+        // Each element type's membership and condition partials must show for
+        // the manually-triggered sub-event, so the wrapper carries the
+        // matching toggle class.
+        $source = self::read($partial);
+        $this->assertStringContainsString("{$eventType}-event-manually-triggered", $source);
+    }
+
+    public function testSitesAndFiltersPartialsSkipManuallyTriggered(): void
+    {
+        // Per-site delivery and the save-lifecycle filters are meaningless for
+        // a manual trigger, so those partials deliberately omit the class.
+        $this->assertStringNotContainsString('entries-event-manually-triggered', self::read('entries/sites.twig'));
+        $this->assertStringNotContainsString('entries-event-manually-triggered', self::read('entries/filters.twig'));
+    }
+
+    // ========================================================================= //
+    // Manual Trigger Label field
+    // ========================================================================= //
+
+    public function testManualTriggerLabelPartialExists(): void
+    {
+        $this->assertFileExists(self::templatePath('_manual-trigger-label.twig'));
+    }
+
+    public function testManualTriggerLabelPartialUsesPerTypeFieldName(): void
+    {
+        // The field name is per-type so the eight tabs do not collide on submit,
+        // mirroring the per-type pattern used by the condition builder.
+        $source = self::read('_manual-trigger-label.twig');
+        $this->assertStringContainsString('manualTriggerLabel_#{eventType}', $source);
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function manualTriggerLabelTabProvider(): array
+    {
+        return [
+            ['entries/index.twig',                   'entries'],
+            ['assets/index.twig',                    'assets'],
+            ['users/index.twig',                     'users'],
+            ['craft-commerce-orders.twig',           'craft-commerce-orders'],
+            ['craft-commerce-products/index.twig',   'craft-commerce-products'],
+            ['digital-products-products/index.twig', 'digital-products-products'],
+            ['digital-products-licenses/index.twig', 'digital-products-licenses'],
+            ['solspace-calendar-events/index.twig',  'solspace-calendar-events'],
+        ];
+    }
+
+    /**
+     * @dataProvider manualTriggerLabelTabProvider
+     */
+    public function testEventTabIncludesManualTriggerLabel(string $tab, string $eventType): void
+    {
+        // Every event-type tab includes the shared Manual Trigger Label field,
+        // gated to the manually-triggered sub-event.
+        $source = self::read($tab);
+        $this->assertStringContainsString(
+            "{% include 'notifier/notifications/_edit/event/_manual-trigger-label' with { eventType: '{$eventType}' } %}",
+            $source
+        );
+        $this->assertStringContainsString("{$eventType}-event-manually-triggered", $source);
+    }
 }

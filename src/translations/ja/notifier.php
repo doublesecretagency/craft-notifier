@@ -391,4 +391,15 @@ return [
     'Enable Markdown' => 'Markdown を有効化',
     'Link URL' => 'リンク URL',
     'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => '有効な Webhook URL ではありません。https://hooks.slack.com/services/ で始まる必要があります。',
+
+    // Manual triggers
+    'Send Notification'                                            => '通知を送信',
+    'Send manual notifications'                                    => '手動通知を送信',
+    'Are you sure you want to send this notification?'             => 'この通知を送信してもよろしいですか？',
+    'This notification cannot be triggered manually.'              => 'この通知は手動でトリガーできません。',
+    'This notification no longer applies to the selected element.' => 'この通知は選択された要素には適用されなくなりました。',
+    'Notification sent.'                                           => '通知を送信しました。',
+    'Element not found'                                            => '要素が見つかりません',
+    'Manual Trigger Label'                                         => '手動トリガーのラベル',
+    'An element action label (helps to differentiate multiple manual triggers).' => '要素アクションのラベル（複数の手動トリガーを区別しやすくします）。',
 ];

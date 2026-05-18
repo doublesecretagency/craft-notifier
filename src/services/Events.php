@@ -12,6 +12,7 @@
 namespace doublesecretagency\notifier\services;
 
 use craft\base\Component;
+use craft\base\ElementInterface;
 use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
@@ -468,9 +469,9 @@ class Events extends Component
     }
 
     /**
-     * Get the Craft element class for a given event type.
+     * Resolve an event type to its Craft element class for element conditions.
      *
-     * Seeds `ElementCondition::$elementType` so per-field rules register at hydrate time.
+     * Inverse of `getEventTypeForElement()`.
      *
      * @param string $eventType
      * @return string|null Fully-qualified ElementInterface class, or null when unsupported.
@@ -488,6 +489,31 @@ class Events extends Component
             'digital-products-products' => class_exists(DigitalProduct::class) ? DigitalProduct::class : null,
             'digital-products-licenses' => class_exists(License::class) ? License::class : null,
             'solspace-calendar-events' => class_exists(CalendarEvent::class) ? CalendarEvent::class : null,
+            default => null,
+        };
+    }
+
+    /**
+     * Resolve an element to its Notifier event type for manual sending.
+     *
+     * Inverse of `getElementClassForEventType()`.
+     *
+     * @param ElementInterface $element
+     * @return string|null Notifier event type, or null when the element type is unsupported.
+     */
+    public function getEventTypeForElement(ElementInterface $element): ?string
+    {
+        return match (true) {
+            // Native
+            $element instanceof Entry => 'entries',
+            $element instanceof Asset => 'assets',
+            $element instanceof User  => 'users',
+            // Plugins
+            $element instanceof Order           => 'craft-commerce-orders',
+            $element instanceof CommerceProduct => 'craft-commerce-products',
+            $element instanceof DigitalProduct  => 'digital-products-products',
+            $element instanceof License         => 'digital-products-licenses',
+            $element instanceof CalendarEvent   => 'solspace-calendar-events',
             default => null,
         };
     }
