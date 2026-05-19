@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'Bu bildirim artık seçili öğeye uygulanmıyor.',
     'Notification sent.'                                           => 'Bildirim gönderildi.',
     'Element not found'                                            => 'Öğe bulunamadı',
-    'Manual Trigger Label'                                         => 'Manuel tetikleyici etiketi',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'Öge eylemi etiketi (birden fazla manuel tetikleyiciyi ayırt etmeye yardımcı olur).',
+    'Trigger Label'                                                => 'Tetikleyici etiketi',
+    'An element action label (helps to differentiate multiple triggers).'        => 'Öge eylemi etiketi (birden fazla tetikleyiciyi ayırt etmeye yardımcı olur).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'Tarihinde',
+    'days before'                                                 => 'gün önce',
+    'days after'                                                  => 'gün sonra',
+    'Relevant Date'                                               => 'İlgili Tarih',
+    'Send the notification relative to a chosen date.'            => 'Bildirimi seçilen bir tarihe göre gönderin.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Bir girdinin yayın tarihi geldiğinde ve yayına geçtiğinde tetiklenir.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Zamanlanmış gönderim',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Zamanlanmış çalıştırma web isteklerinin kimliğini doğrulamak için paylaşılan gizli anahtar. Yalnızca zamanlama web uç noktası üzerinden tetiklendiğinde gereklidir.',
+    'Scheduled-Run Token' => 'Zamanlanmış çalıştırma belirteci',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Her istekle birlikte X-Notifier-Token başlığı veya token gövde parametresi olarak gönderilir.',
 ];

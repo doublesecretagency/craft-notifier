@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'Denne notifikation gælder ikke længere for det valgte element.',
     'Notification sent.'                                           => 'Notifikation sendt.',
     'Element not found'                                            => 'Element ikke fundet',
-    'Manual Trigger Label'                                         => 'Manuel udløser-etiket',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'En etiket for elementhandlingen (hjælper med at skelne mellem flere manuelle udløsere).',
+    'Trigger Label'                                                => 'Udløser-etiket',
+    'An element action label (helps to differentiate multiple triggers).'        => 'En etiket for elementhandlingen (hjælper med at skelne mellem flere udløsere).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'På',
+    'days before'                                                 => 'dage før',
+    'days after'                                                  => 'dage efter',
+    'Relevant Date'                                               => 'Relevant dato',
+    'Send the notification relative to a chosen date.'            => 'Send notifikationen i forhold til en valgt dato.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Udløses, når en indtastnings udgivelsesdato nås, og den bliver live.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Planlagt afsendelse',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Delt hemmelighed til at autentificere planlagte kørselsanmodninger over web. Kræves kun, når tidsplanen udløses via webendpointet.',
+    'Scheduled-Run Token' => 'Token til planlagt kørsel',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Sendes med hver forespørgsel som headeren X-Notifier-Token eller som parameteren token i brødteksten.',
 ];

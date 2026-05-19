@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'To powiadomienie nie dotyczy już wybranego elementu.',
     'Notification sent.'                                           => 'Powiadomienie wysłane.',
     'Element not found'                                            => 'Nie znaleziono elementu',
-    'Manual Trigger Label'                                         => 'Etykieta wyzwalacza ręcznego',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'Etykieta akcji elementu (pomaga rozróżnić wiele wyzwalaczy ręcznych).',
+    'Trigger Label'                                                => 'Etykieta wyzwalacza',
+    'An element action label (helps to differentiate multiple triggers).'        => 'Etykieta akcji elementu (pomaga rozróżnić wiele wyzwalaczy).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'W dniu',
+    'days before'                                                 => 'dni przed',
+    'days after'                                                  => 'dni po',
+    'Relevant Date'                                               => 'Istotna data',
+    'Send the notification relative to a chosen date.'            => 'Wyślij powiadomienie względem wybranej daty.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Uruchamia się, gdy zostanie osiągnięta data publikacji wpisu i staje się on aktywny.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Wysyłanie zaplanowane',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Wspólny sekret do uwierzytelniania żądań sieciowych zaplanowanego uruchomienia. Wymagany tylko wtedy, gdy harmonogram jest wyzwalany przez punkt końcowy sieci Web.',
+    'Scheduled-Run Token' => 'Token zaplanowanego uruchomienia',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Wysyłane z każdym żądaniem jako nagłówek X-Notifier-Token lub parametr token w treści.',
 ];

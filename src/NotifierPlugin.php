@@ -89,6 +89,7 @@ use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\Events;
 use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
+use doublesecretagency\notifier\services\ScheduleRunner;
 use doublesecretagency\notifier\utilities\NotificationLog;
 use doublesecretagency\notifier\web\twig\Extension;
 use Solspace\Calendar\Elements\Event as CalendarEvent;
@@ -101,6 +102,7 @@ use yii\base\Event;
  * @property Events $events
  * @property Messages $messages
  * @property Recipients $recipients
+ * @property ScheduleRunner $scheduleRunner
  */
 class NotifierPlugin extends Plugin
 {
@@ -113,7 +115,7 @@ class NotifierPlugin extends Plugin
     /**
      * @var string Current schema version of the plugin.
      */
-    public string $schemaVersion = '1.0.0';
+    public string $schemaVersion = '3.0.0';
 
     /**
      * @var NotifierPlugin Self-referential plugin property.
@@ -156,6 +158,7 @@ class NotifierPlugin extends Plugin
             'events' => Events::class,
             'messages' => Messages::class,
             'recipients' => Recipients::class,
+            'scheduleRunner' => ScheduleRunner::class,
         ]);
 
         // Redirect after plugin is installed

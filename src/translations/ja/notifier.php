@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'この通知は選択された要素には適用されなくなりました。',
     'Notification sent.'                                           => '通知を送信しました。',
     'Element not found'                                            => '要素が見つかりません',
-    'Manual Trigger Label'                                         => '手動トリガーのラベル',
-    'An element action label (helps to differentiate multiple manual triggers).' => '要素アクションのラベル（複数の手動トリガーを区別しやすくします）。',
+    'Trigger Label'                                                => 'トリガーのラベル',
+    'An element action label (helps to differentiate multiple triggers).'        => '要素アクションのラベル（複数のトリガーを区別しやすくします）。',
+
+    // Event tab: date trigger
+    'On'                                                          => '当日',
+    'days before'                                                 => '日前',
+    'days after'                                                  => '日後',
+    'Relevant Date'                                               => '関連する日付',
+    'Send the notification relative to a chosen date.'            => '選択した日付を基準に通知を送信します。',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'エントリの投稿日に達し、ライブになったときに実行されます。',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'スケジュール送信',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'スケジュール実行のWebリクエストを認証するための共有シークレット。Webエンドポイント経由でスケジュールを起動する場合のみ必要です。',
+    'Scheduled-Run Token' => 'スケジュール実行トークン',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => '各リクエストとともに X-Notifier-Token ヘッダーまたは token ボディパラメータとして送信されます。',
 ];

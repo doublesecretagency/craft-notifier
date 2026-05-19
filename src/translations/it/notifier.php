@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => "Questa notifica non si applica più all'elemento selezionato.",
     'Notification sent.'                                           => 'Notifica inviata.',
     'Element not found'                                            => 'Elemento non trovato',
-    'Manual Trigger Label'                                         => 'Etichetta del trigger manuale',
-    'An element action label (helps to differentiate multiple manual triggers).' => "Un'etichetta per l'azione dell'elemento (aiuta a distinguere più trigger manuali).",
+    'Trigger Label'                                                => 'Etichetta del trigger',
+    'An element action label (helps to differentiate multiple triggers).'        => "Un'etichetta per l'azione dell'elemento (aiuta a distinguere più trigger).",
+
+    // Event tab: date trigger
+    'On'                                                          => 'Il',
+    'days before'                                                 => 'giorni prima',
+    'days after'                                                  => 'giorni dopo',
+    'Relevant Date'                                               => 'Data rilevante',
+    'Send the notification relative to a chosen date.'            => 'Invia la notifica in relazione a una data scelta.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Si attiva quando viene raggiunta la data di pubblicazione di una voce e questa diventa attiva.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Invio programmato',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => "Segreto condiviso per autenticare le richieste web dell'esecuzione programmata. Richiesto solo quando la pianificazione viene attivata tramite l'endpoint web.",
+    'Scheduled-Run Token' => 'Token di esecuzione programmata',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Inviato con ogni richiesta come header X-Notifier-Token o come parametro token nel corpo.',
 ];

@@ -41,4 +41,4 @@ In each field, reference the matching `.env` variable (e.g. `$TWILIO_ACCOUNT_SID
 
 <img class="dropshadow" src="/images/settings/settings-twilio.png" alt="Screenshot of the Twilio settings sub-page" style="width:1044px; margin-top:10px">
 
-You can also set these values in a [PHP config file](/getting-started/config) instead.
+You can also set these values in a [PHP config file](/getting-started/settings/php-config) instead.

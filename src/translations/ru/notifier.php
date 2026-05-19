@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'Это уведомление больше не применяется к выбранному элементу.',
     'Notification sent.'                                           => 'Уведомление отправлено.',
     'Element not found'                                            => 'Элемент не найден',
-    'Manual Trigger Label'                                         => 'Метка ручного триггера',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'Метка действия элемента (помогает различать несколько ручных триггеров).',
+    'Trigger Label'                                                => 'Метка триггера',
+    'An element action label (helps to differentiate multiple triggers).'        => 'Метка действия элемента (помогает различать несколько триггеров).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'В день',
+    'days before'                                                 => 'дней до',
+    'days after'                                                  => 'дней после',
+    'Relevant Date'                                               => 'Соответствующая дата',
+    'Send the notification relative to a chosen date.'            => 'Отправляйте уведомление относительно выбранной даты.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Срабатывает, когда наступает дата публикации записи и она становится активной.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Запланированная отправка',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Общий секрет для аутентификации веб-запросов запланированного запуска. Требуется только при запуске расписания через веб-конечную точку.',
+    'Scheduled-Run Token' => 'Токен запланированного запуска',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Отправляется с каждым запросом как заголовок X-Notifier-Token или параметр token в теле запроса.',
 ];

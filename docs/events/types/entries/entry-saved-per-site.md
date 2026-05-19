@@ -4,7 +4,7 @@ description: Trigger a notification once per site each time a multi-site Entry s
 
 # When an entry is saved (send one message per each site)
 
-Sends a notification when **an entry has finished saving on each particular site**. Multi-site entries fire this trigger once per site, so a notification would dispatch one message for each site the entry saved to.
+Sends a notification when **an entry has finished saving on each particular site**. Multi-site entries fire this trigger once per site, so a notification would send one message for each site the entry saved to.
 
 Each message renders with `currentSite`, `entry.url`, and other site-aware values resolved against the **entry's site**, not the site the editor was on when they triggered the save.
 

@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'Esta notificação não se aplica mais ao elemento selecionado.',
     'Notification sent.'                                           => 'Notificação enviada.',
     'Element not found'                                            => 'Elemento não encontrado',
-    'Manual Trigger Label'                                         => 'Rótulo do acionador manual',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'Um rótulo de ação de elemento (ajuda a diferenciar vários acionadores manuais).',
+    'Trigger Label'                                                => 'Rótulo do acionador',
+    'An element action label (helps to differentiate multiple triggers).'        => 'Um rótulo de ação de elemento (ajuda a diferenciar vários acionadores).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'Em',
+    'days before'                                                 => 'dias antes',
+    'days after'                                                  => 'dias depois',
+    'Relevant Date'                                               => 'Data relevante',
+    'Send the notification relative to a chosen date.'            => 'Envie a notificação em relação a uma data escolhida.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'É acionado quando a data de publicação de uma entrada é atingida e ela fica ativa.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Envio agendado',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Segredo compartilhado para autenticar solicitações web de execução agendada. Necessário apenas quando o agendamento é acionado através do endpoint web.',
+    'Scheduled-Run Token' => 'Token de execução agendada',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Enviado em cada solicitação como o cabeçalho X-Notifier-Token ou parâmetro token no corpo.',
 ];

@@ -150,4 +150,18 @@ class Messages extends Component
         ));
     }
 
+    /**
+     * Get all Notifications driven by the scheduled run.
+     *
+     * @return Notification[] Notifications using a time-based trigger event.
+     * @since 3.0.0
+     */
+    public function getScheduledNotifications(): array
+    {
+        // Get all notifications using a time-based trigger event
+        return Notification::find()
+            ->where(['event' => ['date-reached', 'pending-to-live']])
+            ->all();
+    }
+
 }

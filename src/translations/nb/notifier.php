@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'Dette varselet gjelder ikke lenger for det valgte elementet.',
     'Notification sent.'                                           => 'Varsel sendt.',
     'Element not found'                                            => 'Fant ikke elementet',
-    'Manual Trigger Label'                                         => 'Etikett for manuell utløser',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'En etikett for elementhandlingen (hjelper med å skille flere manuelle utløsere).',
+    'Trigger Label'                                                => 'Etikett for utløser',
+    'An element action label (helps to differentiate multiple triggers).'        => 'En etikett for elementhandlingen (hjelper med å skille flere utløsere).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'På',
+    'days before'                                                 => 'dager før',
+    'days after'                                                  => 'dager etter',
+    'Relevant Date'                                               => 'Relevant dato',
+    'Send the notification relative to a chosen date.'            => 'Send varselet i forhold til en valgt dato.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Utløses når en oppførings publiseringsdato nås, og den blir live.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Planlagt sending',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Delt hemmelighet for å autentisere webforespørsler om planlagt kjøring. Kreves bare når planen utløses via webendepunktet.',
+    'Scheduled-Run Token' => 'Token for planlagt kjøring',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Sendes med hver forespørsel som headeren X-Notifier-Token eller som parameteren token i meldingsteksten.',
 ];

@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => '此通知不再适用于所选元素。',
     'Notification sent.'                                           => '通知已发送。',
     'Element not found'                                            => '未找到元素',
-    'Manual Trigger Label'                                         => '手动触发标签',
-    'An element action label (helps to differentiate multiple manual triggers).' => '元素操作标签（有助于区分多个手动触发）。',
+    'Trigger Label'                                                => '触发标签',
+    'An element action label (helps to differentiate multiple triggers).'        => '元素操作标签（有助于区分多个触发）。',
+
+    // Event tab: date trigger
+    'On'                                                          => '当天',
+    'days before'                                                 => '天前',
+    'days after'                                                  => '天后',
+    'Relevant Date'                                               => '相关日期',
+    'Send the notification relative to a chosen date.'            => '相对于选定日期发送通知。',
+    "Fires when an entry's Post Date passes and it becomes Live." => '当条目的发布日期到达并变为已发布状态时触发。',
+
+    // Scheduled sending
+    'Scheduled Sending' => '定时发送',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => '用于验证定时运行 Web 请求的共享密钥。仅在通过 Web 端点触发计划时才需要。',
+    'Scheduled-Run Token' => '定时运行令牌',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => '随每个请求一起发送,作为 X-Notifier-Token 标头或 token 主体参数。',
 ];

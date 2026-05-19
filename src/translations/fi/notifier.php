@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'Tämä ilmoitus ei enää koske valittua elementtiä.',
     'Notification sent.'                                           => 'Ilmoitus lähetetty.',
     'Element not found'                                            => 'Elementtiä ei löytynyt',
-    'Manual Trigger Label'                                         => 'Manuaalisen liipaisimen nimi',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'Elementtitoiminnon nimi (auttaa erottamaan useat manuaaliset liipaisimet).',
+    'Trigger Label'                                                => 'Liipaisimen nimi',
+    'An element action label (helps to differentiate multiple triggers).'        => 'Elementtitoiminnon nimi (auttaa erottamaan useat liipaisimet).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'Päivänä',
+    'days before'                                                 => 'päivää ennen',
+    'days after'                                                  => 'päivää jälkeen',
+    'Relevant Date'                                               => 'Olennainen päivämäärä',
+    'Send the notification relative to a chosen date.'            => 'Lähetä ilmoitus suhteessa valittuun päivämäärään.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Laukeaa, kun merkinnän julkaisupäivä koittaa ja se muuttuu julkaistuksi.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Ajastettu lähetys',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Jaettu salaisuus ajastetun suorituksen verkkopyyntöjen todentamiseen. Vaaditaan vain, kun aikataulu käynnistetään verkko-osoitteen kautta.',
+    'Scheduled-Run Token' => 'Ajastetun suorituksen tunnus',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Lähetetään jokaisen pyynnön mukana joko X-Notifier-Token-otsikkona tai token-parametrina pyynnön rungossa.',
 ];

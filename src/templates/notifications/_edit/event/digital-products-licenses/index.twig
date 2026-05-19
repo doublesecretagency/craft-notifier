@@ -14,6 +14,9 @@
     <div class="digital-products-licenses-event-manually-triggered hidden">
         {% include 'notifier/notifications/_edit/event/_manual-trigger-label' with { eventType: 'digital-products-licenses' } %}
     </div>
+    <div class="digital-products-licenses-event-date-reached hidden">
+        {% include 'notifier/notifications/_edit/event/_date-reached' with { eventType: 'digital-products-licenses' } %}
+    </div>
     <hr class="digital-products-licenses-event-manually-triggered digital-products-licenses-event-after-propagate digital-products-licenses-event-after-delete digital-products-licenses-event-after-restore hidden">
     {% include 'notifier/notifications/_edit/event/digital-products-licenses/digitalProductTypes' %}
     {% include 'notifier/notifications/_edit/event/digital-products-licenses/condition' %}

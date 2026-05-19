@@ -1,0 +1,46 @@
+{% import '_includes/forms' as forms %}
+
+{# Get date-reached config #}
+{% set dateReached = (notification.eventConfig.dateReached ?? {}) %}
+
+{# Set per-type field name to avoid collisions across multiple tabs #}
+{% set drId = "dateReached_#{eventType}" %}
+
+{% set dateReachedInput %}
+    <div class="notifier-date-reached">
+        {# Day offset, hidden when the direction is "On" #}
+        <div class="notifier-date-reached-offset {{ 'on' == (dateReached.direction ?? 'on') ? 'hidden' }}">
+            {{ forms.text({
+                type: 'number',
+                name: "#{drId}[offset]",
+                value: (dateReached.offset ?? ''),
+                disabled: (readOnly ?? false),
+            }) }}
+        </div>
+        {# Offset direction #}
+        <div class="notifier-date-reached-direction">
+            {{ forms.select({
+                name: "#{drId}[direction]",
+                value: (dateReached.direction ?? 'on'),
+                options: {
+                    on: 'On'|t('notifier'),
+                    before: 'days before'|t('notifier'),
+                    after: 'days after'|t('notifier'),
+                },
+                disabled: (readOnly ?? false),
+            }) }}
+        </div>
+        {# Target date field #}
+        {{ forms.select({
+            name: "#{drId}[field]",
+            value: (dateReached.field ?? ''),
+            options: {'':''}|merge(availableDateFields(eventType)),
+            disabled: (readOnly ?? false),
+        }) }}
+    </div>
+{% endset %}
+
+{{ forms.field({
+    label: 'Relevant Date'|t('notifier'),
+    instructions: 'Send the notification relative to a chosen date.'|t('notifier'),
+}, dateReachedInput) }}

@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'Deze notificatie is niet langer van toepassing op het geselecteerde element.',
     'Notification sent.'                                           => 'Notificatie verzonden.',
     'Element not found'                                            => 'Element niet gevonden',
-    'Manual Trigger Label'                                         => 'Label voor handmatige trigger',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'Een label voor de elementactie (helpt meerdere handmatige triggers te onderscheiden).',
+    'Trigger Label'                                                => 'Label voor trigger',
+    'An element action label (helps to differentiate multiple triggers).'        => 'Een label voor de elementactie (helpt meerdere triggers te onderscheiden).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'Op',
+    'days before'                                                 => 'dagen ervoor',
+    'days after'                                                  => 'dagen erna',
+    'Relevant Date'                                               => 'Relevante datum',
+    'Send the notification relative to a chosen date.'            => 'Verstuur de melding ten opzichte van een gekozen datum.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Wordt geactiveerd wanneer de publicatiedatum van een item wordt bereikt en het live gaat.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Geplande verzending',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Gedeeld geheim om webverzoeken voor een geplande uitvoering te authenticeren. Alleen vereist wanneer de planning via het webeindpunt wordt geactiveerd.',
+    'Scheduled-Run Token' => 'Token voor geplande uitvoering',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Wordt met elk verzoek meegestuurd als de X-Notifier-Token header of de token body parameter.',
 ];

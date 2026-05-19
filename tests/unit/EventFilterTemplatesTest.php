@@ -341,7 +341,7 @@ class EventFilterTemplatesTest extends TestCase
     }
 
     // ========================================================================= //
-    // Manual Trigger Label field
+    // Trigger Label field
     // ========================================================================= //
 
     public function testManualTriggerLabelPartialExists(): void
@@ -379,7 +379,7 @@ class EventFilterTemplatesTest extends TestCase
      */
     public function testEventTabIncludesManualTriggerLabel(string $tab, string $eventType): void
     {
-        // Every event-type tab includes the shared Manual Trigger Label field,
+        // Every event-type tab includes the shared Trigger Label field,
         // gated to the manually-triggered sub-event.
         $source = self::read($tab);
         $this->assertStringContainsString(

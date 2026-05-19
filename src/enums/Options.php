@@ -59,8 +59,8 @@ abstract class Options
     public const ALL_EVENTS = [
         'entries' => [
             [
-                'label' => 'When manually triggered',
-                'value' => 'manually-triggered'
+                'label' => 'When an entry changes from Pending to Live',
+                'value' => 'pending-to-live'
             ],
             [
                 'label' => 'When an entry is saved (send one message per each site)',
@@ -82,12 +82,16 @@ abstract class Options
                 'value' => 'after-restore',
                 'class' => 'craft\elements\Entry::EVENT_AFTER_RESTORE'
             ],
-        ],
-        'assets' => [
+            [
+                'label' => 'When a scheduled date is reached',
+                'value' => 'date-reached'
+            ],
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
             ],
+        ],
+        'assets' => [
             [
                 'label' => 'When a new file is uploaded and saved',
                 'value' => 'after-propagate',
@@ -113,12 +117,16 @@ abstract class Options
                 'value' => 'after-restore',
                 'class' => 'craft\elements\Asset::EVENT_AFTER_RESTORE'
             ],
-        ],
-        'users' => [
+            [
+                'label' => 'When a scheduled date is reached',
+                'value' => 'date-reached'
+            ],
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
             ],
+        ],
+        'users' => [
             [
                 'label' => 'When a new user is created',
                 'value' => 'after-propagate',
@@ -149,12 +157,16 @@ abstract class Options
                 'value' => 'after-restore',
                 'class' => 'craft\elements\User::EVENT_AFTER_RESTORE'
             ],
-        ],
-        'craft-commerce-orders' => [
+            [
+                'label' => 'When a scheduled date is reached',
+                'value' => 'date-reached'
+            ],
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
             ],
+        ],
+        'craft-commerce-orders' => [
             [
                 'label' => 'When an order is completed (placed)',
                 'value' => 'after-complete-order',
@@ -165,12 +177,16 @@ abstract class Options
                 'value' => 'after-order-paid',
                 'class' => 'craft\commerce\elements\Order::EVENT_AFTER_ORDER_PAID'
             ],
-        ],
-        'craft-commerce-products' => [
+            [
+                'label' => 'When a scheduled date is reached',
+                'value' => 'date-reached'
+            ],
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
             ],
+        ],
+        'craft-commerce-products' => [
             [
                 'label' => 'When a product is saved',
                 'value' => 'after-propagate',
@@ -186,12 +202,16 @@ abstract class Options
                 'value' => 'after-restore',
                 'class' => 'craft\commerce\elements\Product::EVENT_AFTER_RESTORE'
             ],
-        ],
-        'digital-products-products' => [
+            [
+                'label' => 'When a scheduled date is reached',
+                'value' => 'date-reached'
+            ],
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
             ],
+        ],
+        'digital-products-products' => [
             [
                 'label' => 'When a digital product is saved',
                 'value' => 'after-propagate',
@@ -207,12 +227,16 @@ abstract class Options
                 'value' => 'after-restore',
                 'class' => 'craft\digitalproducts\elements\Product::EVENT_AFTER_RESTORE'
             ],
-        ],
-        'digital-products-licenses' => [
+            [
+                'label' => 'When a scheduled date is reached',
+                'value' => 'date-reached'
+            ],
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
             ],
+        ],
+        'digital-products-licenses' => [
             [
                 'label' => 'When a license is saved',
                 'value' => 'after-propagate',
@@ -228,12 +252,16 @@ abstract class Options
                 'value' => 'after-restore',
                 'class' => 'craft\digitalproducts\elements\License::EVENT_AFTER_RESTORE'
             ],
-        ],
-        'solspace-calendar-events' => [
+            [
+                'label' => 'When a scheduled date is reached',
+                'value' => 'date-reached'
+            ],
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
             ],
+        ],
+        'solspace-calendar-events' => [
             [
                 'label' => 'When a calendar event is saved',
                 'value' => 'after-propagate',
@@ -248,6 +276,14 @@ abstract class Options
                 'label' => 'When a calendar event is restored',
                 'value' => 'after-restore',
                 'class' => 'Solspace\Calendar\Elements\Event::EVENT_AFTER_RESTORE'
+            ],
+            [
+                'label' => 'When a scheduled date is reached',
+                'value' => 'date-reached'
+            ],
+            [
+                'label' => 'When manually triggered',
+                'value' => 'manually-triggered'
             ],
         ],
     ];

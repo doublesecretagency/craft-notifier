@@ -14,6 +14,9 @@
     <div class="entries-event-manually-triggered hidden">
         {% include 'notifier/notifications/_edit/event/_manual-trigger-label' with { eventType: 'entries' } %}
     </div>
+    <div class="entries-event-date-reached hidden">
+        {% include 'notifier/notifications/_edit/event/_date-reached' with { eventType: 'entries' } %}
+    </div>
     <hr class="entries-event-manually-triggered entries-event-after-save entries-event-after-propagate entries-event-after-delete entries-event-after-restore hidden">
     {% include 'notifier/notifications/_edit/event/entries/sites' %}
     {% include 'notifier/notifications/_edit/event/entries/entry-types' %}

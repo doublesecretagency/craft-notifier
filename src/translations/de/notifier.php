@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'Diese Benachrichtigung trifft auf das ausgewählte Element nicht mehr zu.',
     'Notification sent.'                                           => 'Benachrichtigung gesendet.',
     'Element not found'                                            => 'Element nicht gefunden',
-    'Manual Trigger Label'                                         => 'Bezeichnung des manuellen Auslösers',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'Eine Bezeichnung für die Elementaktion (hilft, mehrere manuelle Auslöser zu unterscheiden).',
+    'Trigger Label'                                                => 'Bezeichnung des Auslösers',
+    'An element action label (helps to differentiate multiple triggers).'        => 'Eine Bezeichnung für die Elementaktion (hilft, mehrere Auslöser zu unterscheiden).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'Am',
+    'days before'                                                 => 'Tage vorher',
+    'days after'                                                  => 'Tage danach',
+    'Relevant Date'                                               => 'Relevantes Datum',
+    'Send the notification relative to a chosen date.'            => 'Senden Sie die Benachrichtigung relativ zu einem ausgewählten Datum.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Wird ausgelöst, wenn das Veröffentlichungsdatum eines Eintrags erreicht wird und er live geht.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Geplanter Versand',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Geteiltes Geheimnis zur Authentifizierung von Web-Anfragen für die geplante Ausführung. Nur erforderlich, wenn der Zeitplan über den Web-Endpunkt ausgelöst wird.',
+    'Scheduled-Run Token' => 'Token für geplante Ausführung',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Wird bei jeder Anfrage als X-Notifier-Token-Header oder als token-Body-Parameter gesendet.',
 ];

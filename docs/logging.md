@@ -12,7 +12,7 @@ To see a detailed notification log, visit **Utilities > Notification Log** in th
 
 By default, the log will accumulate events indefinitely, until/unless they are manually cleared. The following settings manage whether and how long those log events remain in the database.
 
-These settings can be managed via either the plugin's [Settings page](/getting-started/settings) or the plugin's [PHP config file](/getting-started/config).
+These settings can be managed via either the plugin's [control panel page](/getting-started/settings/control-panel) or its [PHP config file](/getting-started/settings/php-config).
 
 ### `loggingEnabled`
 

@@ -45,6 +45,13 @@ class Settings extends Model
     // ========================================================================= //
 
     /**
+     * @var string|null Shared secret for the scheduled-run web endpoint. May be a `$ENV_VAR` reference.
+     */
+    public ?string $scheduledToken = null;
+
+    // ========================================================================= //
+
+    /**
      * @var string|null Twilio Account SID.
      */
     public ?string $twilioAccountSid = null;

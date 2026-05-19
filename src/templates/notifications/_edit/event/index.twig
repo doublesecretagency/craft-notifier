@@ -22,3 +22,35 @@
 {% include 'notifier/notifications/_edit/event/digital-products-products' %}
 {% include 'notifier/notifications/_edit/event/digital-products-licenses' %}
 {% include 'notifier/notifications/_edit/event/solspace-calendar-events' %}
+
+{% css %}
+.notifier-date-reached {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+}
+.notifier-date-reached .text {
+    width: 4em;
+}
+{% endcss %}
+
+{% js on ready %}
+// Loop through each date-reached row on the page
+document.querySelectorAll('.notifier-date-reached').forEach((row) => {
+    // Get the direction dropdown and the offset wrapper
+    const direction = row.querySelector('.notifier-date-reached-direction select');
+    const offset = row.querySelector('.notifier-date-reached-offset');
+    // If either control is missing, bail
+    if (!direction || !offset) {
+        return;
+    }
+    // Show or hide the offset based on the direction
+    const sync = () => {
+        offset.classList.toggle('hidden', 'on' === direction.value);
+    };
+    // Sync whenever the direction changes
+    direction.addEventListener('change', sync);
+    // Sync once to set the initial state
+    sync();
+});
+{% endjs %}

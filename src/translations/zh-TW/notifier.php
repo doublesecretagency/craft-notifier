@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => '此通知不再適用於所選元素。',
     'Notification sent.'                                           => '通知已傳送。',
     'Element not found'                                            => '找不到元素',
-    'Manual Trigger Label'                                         => '手動觸發標籤',
-    'An element action label (helps to differentiate multiple manual triggers).' => '元素動作標籤（有助於區分多個手動觸發）。',
+    'Trigger Label'                                                => '觸發標籤',
+    'An element action label (helps to differentiate multiple triggers).'        => '元素動作標籤（有助於區分多個觸發）。',
+
+    // Event tab: date trigger
+    'On'                                                          => '當天',
+    'days before'                                                 => '天前',
+    'days after'                                                  => '天後',
+    'Relevant Date'                                               => '相關日期',
+    'Send the notification relative to a chosen date.'            => '相對於選定日期傳送通知。',
+    "Fires when an entry's Post Date passes and it becomes Live." => '當項目的發佈日期到達並變為已發佈狀態時觸發。',
+
+    // Scheduled sending
+    'Scheduled Sending' => '排程傳送',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => '用於驗證排程執行 Web 請求的共用密鑰。僅在透過 Web 端點觸發排程時才需要。',
+    'Scheduled-Run Token' => '排程執行權杖',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => '隨每個請求一起傳送,作為 X-Notifier-Token 標頭或 token 主體參數。',
 ];

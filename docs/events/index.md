@@ -33,4 +33,4 @@ Manual notifications can be triggered from:
 - the element index
 - the console
 
-See [Manually Send](/events/manually-send) for details.
+See [Manual Sending](/events/manual-sending) for details.

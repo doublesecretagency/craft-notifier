@@ -1,5 +1,5 @@
 ---
-description: Post a control panel announcement when the notification event is triggered. Always dispatched via the queue.
+description: Post a control panel announcement when the notification event is triggered. Always sent via the queue.
 ---
 
 # Announcement

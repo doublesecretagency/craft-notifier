@@ -13,11 +13,14 @@ namespace doublesecretagency\notifier\elements;
 
 use Craft;
 use craft\base\Element;
+use craft\db\Query;
 use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
+use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use craft\models\FieldLayout;
 use craft\web\CpScreenResponseBehavior;
+use DateTime;
 use doublesecretagency\notifier\elements\conditions\NotificationCondition;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
 use doublesecretagency\notifier\enums\Options;
@@ -33,6 +36,7 @@ use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\records\Notification as NotificationRecord;
 use yii\base\Event;
 use yii\base\Exception as BaseException;
+use yii\db\IntegrityException;
 use yii\web\Response;
 
 /**
@@ -633,6 +637,7 @@ class Notification extends Element
                 $selectedEventType  = ($eventType ?? (string) $this->eventType);
                 $eventCondition     = $request->getBodyParam("eventCondition_{$selectedEventType}");
                 $manualTriggerLabel = $request->getBodyParam("manualTriggerLabel_{$selectedEventType}");
+                $dateReached        = $request->getBodyParam("dateReached_{$selectedEventType}");
 
                 // Extract specific event
                 $event = ($event[$eventType] ?? null);
@@ -654,6 +659,16 @@ class Notification extends Element
                     $eventConfig['manualTriggerLabel'] = $manualTriggerLabel;
                 }
 
+                // If the date-reached config exists
+                if (is_array($dateReached)) {
+                    // Copy a sanitized copy to the config
+                    $eventConfig['dateReached'] = [
+                        'field'     => (string) ($dateReached['field']     ?? ''),
+                        'direction' => (string) ($dateReached['direction'] ?? 'on'),
+                        'offset'    => (int)    ($dateReached['offset']    ?? 0),
+                    ];
+                }
+
             }
 
             // Configure the notification
@@ -668,6 +683,9 @@ class Notification extends Element
 
             // Save the notification
             $record->save(false);
+
+            // Ensure scheduled notifications have a scheduled history row
+            $this->_ensureScheduledHistory($record->event);
         }
 
         parent::afterSave($isNew);
@@ -741,6 +759,53 @@ class Notification extends Element
         }
         // Fallback to "unknown"
         return 'unknown recipient';
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Ensure a scheduled notification has a row in the scheduled history table.
+     *
+     * Each scheduled notification has a row in `notifier_scheduledhistory`
+     * that records the moment of its most recent run. Creating the row here,
+     * on save, closes the gap before the first scheduled run, and re-creates
+     * the row if it is ever removed.
+     *
+     * @param string|null $event The notification's saved event.
+     * @return void
+     */
+    private function _ensureScheduledHistory(?string $event): void
+    {
+        // If this isn't a scheduled event, bail
+        if (!in_array($event, ['date-reached', 'pending-to-live'], true)) {
+            return;
+        }
+
+        // Scheduled history table
+        $table = '{{%notifier_scheduledhistory}}';
+
+        // Whether a matching row already exists for this notification
+        $exists = (new Query())
+            ->from($table)
+            ->where(['notificationId' => $this->id])
+            ->exists();
+
+        // If a row already exists, bail
+        if ($exists) {
+            return;
+        }
+
+        try {
+            // Initialize the scheduled notification's timestamp
+            Craft::$app->getDb()->createCommand()
+                ->insert($table, [
+                    'notificationId' => $this->id,
+                    'lastRunAt' => Db::prepareDateForDb(new DateTime()),
+                ])
+                ->execute();
+        } catch (IntegrityException) {
+            // A concurrent save already seeded the row
+        }
     }
 
 }

@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => 'Den här aviseringen gäller inte längre det valda elementet.',
     'Notification sent.'                                           => 'Avisering skickad.',
     'Element not found'                                            => 'Elementet hittades inte',
-    'Manual Trigger Label'                                         => 'Etikett för manuell utlösare',
-    'An element action label (helps to differentiate multiple manual triggers).' => 'En etikett för elementåtgärden (hjälper till att skilja flera manuella utlösare åt).',
+    'Trigger Label'                                                => 'Etikett för utlösare',
+    'An element action label (helps to differentiate multiple triggers).'        => 'En etikett för elementåtgärden (hjälper till att skilja flera utlösare åt).',
+
+    // Event tab: date trigger
+    'On'                                                          => 'På',
+    'days before'                                                 => 'dagar före',
+    'days after'                                                  => 'dagar efter',
+    'Relevant Date'                                               => 'Relevant datum',
+    'Send the notification relative to a chosen date.'            => 'Skicka aviseringen i förhållande till ett valt datum.',
+    "Fires when an entry's Post Date passes and it becomes Live." => 'Utlöses när en posts publiceringsdatum nås och den blir live.',
+
+    // Scheduled sending
+    'Scheduled Sending' => 'Schemalagd sändning',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Delad hemlighet för att autentisera webbförfrågningar för schemalagd körning. Krävs endast när schemat utlöses via webbslutpunkten.',
+    'Scheduled-Run Token' => 'Token för schemalagd körning',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Skickas med varje förfrågan som X-Notifier-Token-rubrik eller token-parameter i kroppen.',
 ];

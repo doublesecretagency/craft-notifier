@@ -4,9 +4,9 @@ description: Using a PHP config file, you can override several of the plugin's s
 
 # PHP Config File
 
-Nearly everything on the plugin's [Settings](/getting-started/settings) page can also be managed via PHP in a config file. By setting these values in `config/notifier.php`, they take precedence over whatever may be set in the control panel.
+Nearly every setting can also be managed via a PHP config file. See [Settings](/getting-started/settings/) for how the control panel and PHP config file interact.
 
-To configure the sandbox, start by creating a `config/notifier.php` file. It might look something like this...
+To get started, create a `config/notifier.php` file. It might look something like this...
 
 ```php
 /**
@@ -48,7 +48,7 @@ Values set in `config/notifier.php` take effect at runtime. So if a key is set b
 
 ## Settings available via Control Panel
 
-The following settings can also be managed on the [Settings](/getting-started/settings) page.
+The following settings can also be managed on the [Control Panel](/getting-started/settings/control-panel) page.
 
 ### Logging
 
@@ -88,10 +88,6 @@ Settings for [ntfy](/getting-started/integrations/ntfy):
 Settings for [Bluesky](/getting-started/integrations/bluesky):
 
 - `blueskyPdsUrl` - Bluesky PDS URL. Defaults to `https://bsky.social`.
-
-:::tip Topics, Webhooks & Accounts
-The ntfy topics, Slack webhooks, and Bluesky accounts lists are managed only on their control panel sub-pages, not in `config/notifier.php`. Store any sensitive values (Slack webhook URLs, Bluesky app passwords) in a `.env` variable and reference that variable from the control panel field.
-:::
 
 ## Settings available only via PHP file
 

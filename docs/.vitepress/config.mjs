@@ -42,9 +42,10 @@ export default defineConfig({
         items: [
           {
             items: [
-              {text: 'Overview',        link: '/events/'},
-              {text: 'Manual Sending',  link: '/events/manually-send'},
-              {text: 'All Event Types', link: '/events/types/'},
+              {text: 'Overview',          link: '/events/'},
+              {text: 'Manual Sending',    link: '/events/manual-sending'},
+              {text: 'Scheduled Sending', link: '/events/scheduled-sending'},
+              {text: 'All Event Types',   link: '/events/types/'},
             ]
           },
           {
@@ -199,9 +200,14 @@ export default defineConfig({
                 {text: 'Install via CLI',          link: '/getting-started/#installation-via-console-commands'}
               ]
             },
-            {text: 'Settings Page',    link: '/getting-started/settings'},
-            {text: 'PHP Config File',  link: '/getting-started/config'},
+            {text: 'Settings',          link: '/getting-started/settings/',
+              items: [
+                {text: 'Control Panel',   link: '/getting-started/settings/control-panel'},
+                {text: 'PHP Config File', link: '/getting-started/settings/php-config'},
+              ]
+            },
             {text: 'User Permissions', link: '/getting-started/permissions'},
+            {text: 'Run the Schedule', link: '/getting-started/run-the-schedule'},
             {text: 'Integrations',     link: '/getting-started/integrations/',
               items: [
                 {text: 'Twilio',   link: '/getting-started/integrations/twilio'},
@@ -220,16 +226,19 @@ export default defineConfig({
         {
           text: 'Events',
           items: [
-            {text: 'Overview',        link: '/events/'},
-            {text: 'Manual Sending',  link: '/events/manually-send'},
-            {text: 'All Event Types', link: '/events/types/',
+            {text: 'Overview',          link: '/events/'},
+            {text: 'Manual Sending',    link: '/events/manual-sending'},
+            {text: 'Scheduled Sending', link: '/events/scheduled-sending'},
+            {text: 'All Event Types',   link: '/events/types/',
               items: [
                 {text: 'Entries', link: '/events/types/entries/', collapsed: true,
                   items: [
-                    {text: 'Entry is saved',      link: '/events/types/entries/entry-saved-per-site'},
-                    {text: 'Entry is propagated', link: '/events/types/entries/entry-saved-and-propagated'},
-                    {text: 'Entry is deleted',    link: '/events/types/entries/entry-deleted'},
-                    {text: 'Entry is restored',   link: '/events/types/entries/entry-restored'},
+                    {text: 'Pending to Live',           link: '/events/types/entries/pending-to-live'},
+                    {text: 'Entry is saved',            link: '/events/types/entries/entry-saved-per-site'},
+                    {text: 'Entry is propagated',       link: '/events/types/entries/entry-saved-and-propagated'},
+                    {text: 'Entry is deleted',          link: '/events/types/entries/entry-deleted'},
+                    {text: 'Entry is restored',         link: '/events/types/entries/entry-restored'},
+                    {text: 'Scheduled date is reached', link: '/events/types/entries/date-reached'},
                   ]
                 },
                 {text: 'Assets', link: '/events/types/assets/', collapsed: true,

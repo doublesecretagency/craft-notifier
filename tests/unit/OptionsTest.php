@@ -465,12 +465,14 @@ class OptionsTest extends TestCase
     /**
      * @dataProvider eventTypeKeyProvider
      */
-    public function testManuallyTriggeredIsTheFirstSubEvent(string $key): void
+    public function testManuallyTriggeredIsTheLastSubEvent(string $key): void
     {
-        // It sits first in each list so it leads the CP event dropdown.
-        $first = Options::ALL_EVENTS[$key][0];
-        $this->assertSame('manually-triggered', $first['value']);
-        $this->assertSame('When manually triggered', $first['label']);
+        // It sits last in each list, below the event-driven and time-based
+        // triggers, so the dropdown leads with the more common cases.
+        $events = Options::ALL_EVENTS[$key];
+        $last = $events[array_key_last($events)];
+        $this->assertSame('manually-triggered', $last['value']);
+        $this->assertSame('When manually triggered', $last['label']);
     }
 
     public function testManuallyTriggeredHasNoEventClass(): void
@@ -478,8 +480,83 @@ class OptionsTest extends TestCase
         // Manual triggers aren't backed by a Yii event, so the `class` key
         // is intentionally omitted from every manually-triggered entry.
         foreach (Options::ALL_EVENTS as $key => $events) {
-            $this->assertArrayNotHasKey('class', $events[0],
+            $last = $events[array_key_last($events)];
+            $this->assertArrayNotHasKey('class', $last,
                 "manually-triggered entry under '{$key}' must not declare a class");
+        }
+    }
+
+    // ========================================================================= //
+    // ALL_EVENTS coverage: scheduled trigger events
+    // ========================================================================= //
+
+    /**
+     * @dataProvider eventTypeKeyProvider
+     */
+    public function testEveryEventTypeOffersDateReached(string $key): void
+    {
+        // "When a date is reached" is a poll-driven trigger offered for
+        // every element type.
+        $values = array_column(Options::ALL_EVENTS[$key], 'value');
+        $this->assertContains('date-reached', $values);
+    }
+
+    public function testDateReachedIsTheSecondToLastSubEvent(): void
+    {
+        // date-reached sits directly above manually-triggered, so the two
+        // non-Yii triggers close out every element-type list together.
+        foreach (Options::ALL_EVENTS as $key => $events) {
+            $secondToLast = $events[count($events) - 2];
+            $this->assertSame('date-reached', $secondToLast['value'],
+                "date-reached must be the second-to-last sub-event under '{$key}'");
+        }
+    }
+
+    public function testDateReachedLabelMentionsScheduled(): void
+    {
+        // The label is "When a scheduled date is reached", distinguishing it
+        // from the event-driven triggers in the dropdown.
+        foreach (Options::ALL_EVENTS as $key => $events) {
+            foreach ($events as $event) {
+                if ('date-reached' === $event['value']) {
+                    $this->assertSame('When a scheduled date is reached', $event['label']);
+                }
+            }
+        }
+    }
+
+    public function testEntriesOffersPendingToLive(): void
+    {
+        // The Pending-to-Live trigger is entry-specific; only entries carry
+        // a Post Date whose passing drives a status transition.
+        $values = array_column(Options::ALL_EVENTS['entries'], 'value');
+        $this->assertContains('pending-to-live', $values);
+    }
+
+    public function testPendingToLiveIsEntriesOnly(): void
+    {
+        // No other element type exposes the entries-only Pending-to-Live event.
+        foreach (Options::ALL_EVENTS as $key => $events) {
+            if ('entries' === $key) {
+                continue;
+            }
+            $values = array_column($events, 'value');
+            $this->assertNotContains('pending-to-live', $values,
+                "'{$key}' must not offer the entries-only pending-to-live event");
+        }
+    }
+
+    public function testScheduledEventsHaveNoEventClass(): void
+    {
+        // date-reached and pending-to-live are poll-driven, not backed by a
+        // Yii event, so neither declares a `class` key.
+        foreach (Options::ALL_EVENTS as $key => $events) {
+            foreach ($events as $event) {
+                if (in_array($event['value'], ['date-reached', 'pending-to-live'], true)) {
+                    $this->assertArrayNotHasKey('class', $event,
+                        "scheduled event '{$event['value']}' under '{$key}' must not declare a class");
+                }
+            }
         }
     }
 }

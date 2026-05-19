@@ -400,6 +400,20 @@ return [
     'This notification no longer applies to the selected element.' => '이 알림은 더 이상 선택한 요소에 적용되지 않습니다.',
     'Notification sent.'                                           => '알림을 보냈습니다.',
     'Element not found'                                            => '요소를 찾을 수 없습니다',
-    'Manual Trigger Label'                                         => '수동 트리거 레이블',
-    'An element action label (helps to differentiate multiple manual triggers).' => '요소 작업 레이블 (여러 수동 트리거를 구분하는 데 도움이 됩니다).',
+    'Trigger Label'                                                => '트리거 레이블',
+    'An element action label (helps to differentiate multiple triggers).'        => '요소 작업 레이블 (여러 트리거를 구분하는 데 도움이 됩니다).',
+
+    // Event tab: date trigger
+    'On'                                                          => '당일',
+    'days before'                                                 => '일 전',
+    'days after'                                                  => '일 후',
+    'Relevant Date'                                               => '관련 날짜',
+    'Send the notification relative to a chosen date.'            => '선택한 날짜를 기준으로 알림을 보냅니다.',
+    "Fires when an entry's Post Date passes and it becomes Live." => '항목의 게시일이 지나 라이브 상태가 되면 실행됩니다.',
+
+    // Scheduled sending
+    'Scheduled Sending' => '예약 발송',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => '예약 실행 웹 요청을 인증하기 위한 공유 비밀입니다. 일정이 웹 엔드포인트를 통해 트리거되는 경우에만 필요합니다.',
+    'Scheduled-Run Token' => '예약 실행 토큰',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => '각 요청과 함께 X-Notifier-Token 헤더 또는 token 본문 매개변수로 전송됩니다.',
 ];

@@ -30,7 +30,7 @@ Allows users to send a test message via the [**Send a test message**](/testing) 
 
 #### `Send manual notifications`
 
-Allows users to [manually send](/events/manually-send) a notification from an element's edit screen or the element index. Separate from "Save notifications", so you can let a user send notifications without also letting them change how a notification is configured.
+Allows users to [manually send](/events/manual-sending) a notification from an element's edit screen or the element index. Separate from "Save notifications", so you can let a user send notifications without also letting them change how a notification is configured.
 
 #### `Delete notifications`
 

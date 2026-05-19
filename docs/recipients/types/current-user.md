@@ -18,7 +18,7 @@ Available for [all message types](/messages/types/).
 
 ## Examples
 
-**Surface a downstream effect with a flash message**
+**Show a downstream effect with a flash message**
 
 ```twig
 "{{ entry.title }}" published. The team will be notified shortly.

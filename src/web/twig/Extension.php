@@ -13,6 +13,7 @@ namespace doublesecretagency\notifier\web\twig;
 
 use Craft;
 use craft\elements\User;
+use craft\fields\Date as DateField;
 use craft\fields\Dropdown;
 use craft\fields\Email;
 use craft\fields\PlainText;
@@ -232,6 +233,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
             new TwigFunction('availableProductTypes', [$this, 'availableProductTypes']),
             new TwigFunction('availableDigitalProductTypes', [$this, 'availableDigitalProductTypes']),
             new TwigFunction('availableCalendars', [$this, 'availableCalendars']),
+            new TwigFunction('availableDateFields', [$this, 'availableDateFields']),
         ];
     }
 
@@ -429,6 +431,35 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
         // Return compiled options
         return $calendars;
+    }
+
+    /**
+     * Get all available date fields for a given event type.
+     *
+     * Entries also expose their native Post Date and Expiry Date.
+     *
+     * @param string $eventType
+     * @return array Map of date field options.
+     */
+    public function availableDateFields(string $eventType): array
+    {
+        // Initialize date fields
+        $dateFields = [];
+
+        // Entries expose their native Post Date and Expiry Date
+        if ('entries' === $eventType) {
+            $dateFields['postDate']   = Craft::t('app', 'Post Date');
+            $dateFields['expiryDate'] = Craft::t('app', 'Expiry Date');
+        }
+
+        // Loop through every custom Date field
+        foreach (Craft::$app->getFields()->getFieldsByType(DateField::class) as $field) {
+            // Append each Date field
+            $dateFields[$field->handle] = $field->name;
+        }
+
+        // Return compiled options
+        return $dateFields;
     }
 
 }

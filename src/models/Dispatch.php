@@ -92,6 +92,11 @@ class Dispatch extends Model
      */
     public function filterByEventType(): bool
     {
+        // If this is a scheduled event, bypass event-type filters
+        if (in_array($this->notification->event, ['date-reached', 'pending-to-live'], true)) {
+            return true;
+        }
+
         // Filter further by event type
         switch ($this->notification->eventType) {
             case 'entries':

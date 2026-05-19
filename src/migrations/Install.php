@@ -31,6 +31,11 @@ class Install extends Migration
     const LOG = '{{%notifier_log}}';
 
     /**
+     * @var string The scheduled history table name.
+     */
+    const SCHEDULED_HISTORY = '{{%notifier_scheduledhistory}}';
+
+    /**
      * @inheritdoc
      */
     public function safeUp(): void
@@ -44,6 +49,7 @@ class Install extends Migration
      */
     public function safeDown(): void
     {
+        $this->dropTableIfExists(self::SCHEDULED_HISTORY);
         $this->dropTableIfExists(self::LOG);
         $this->dropTableIfExists(self::NOTIFICATIONS);
     }
@@ -87,6 +93,16 @@ class Install extends Migration
                 'uid'            => $this->uid(),
             ]);
         }
+
+        // If table does not already exist, create it
+        if (!$this->db->tableExists(self::SCHEDULED_HISTORY)) {
+            $this->createTable(self::SCHEDULED_HISTORY, [
+                'id'             => $this->primaryKey(),
+                'notificationId' => $this->integer()->notNull(),
+                'lastRunAt'      => $this->dateTime()->notNull(),
+            ]);
+            $this->createIndex(null, self::SCHEDULED_HISTORY, ['notificationId'], true);
+        }
     }
 
     /**
@@ -99,6 +115,9 @@ class Install extends Migration
 
         // Relate Logs to Notifications
         $this->addForeignKey(null, self::LOG, ['notificationId'], self::NOTIFICATIONS, ['id'], 'SET NULL');
+
+        // Relate Scheduled History to Notifications
+        $this->addForeignKey(null, self::SCHEDULED_HISTORY, ['notificationId'], self::NOTIFICATIONS, ['id'], 'CASCADE');
     }
 
 }
