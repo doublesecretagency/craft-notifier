@@ -52,6 +52,10 @@ return [
     'Users Event'                    => 'Gebruiker-gebeurtenis',
     'Ungrouped Users'                => 'Gebruikers zonder groep',
 
+    // Feed
+    'Feed Event' => 'Feed-gebeurtenis',
+    'Feed URL' => 'Feed-URL',
+    'The URL of the RSS, Atom, or JSON feed to watch.' => 'De URL van de te bewaken RSS-, Atom- of JSON-feed.',
     // Field and element conditions
     'Field Conditions'             => 'Veldvoorwaarden',
     'Send the message only when the saved element matches the following conditions.' => 'Verzend het bericht alleen wanneer het opgeslagen element aan de volgende voorwaarden voldoet.',
@@ -120,7 +124,7 @@ return [
     'Message Type'                       => 'Berichttype',
     'What type of message will be sent?' => 'Welk type bericht wordt verzonden?',
     'Send Message via Queue'             => 'Bericht via wachtrij verzenden',
-    'Should the message be sent via the [jobs queue]({queueUrl})?' => 'Moet het bericht via de [taakwachtrij]({queueUrl}) worden verzonden?',
+    '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Templating]({templatingUrl}) en [speciale variabelen]({variablesUrl}) worden ook ondersteund.',
     'Send immediately' => 'Direct verzenden',
     'Add to queue' => 'Aan wachtrij toevoegen',
 
@@ -145,7 +149,6 @@ return [
 
     // Message tab: Pushover fields
     "Field containing each user's Pushover key" => 'Pushover-sleutelveld van gebruiker',
-    'The Pushover application token is configured in [Settings → Pushover](url).' => 'Het Pushover-applicatietoken wordt geconfigureerd in [Instellingen → Pushover](url).',
 
     // Message tab: ntfy fields
     'Priority'           => 'Prioriteit',
@@ -155,6 +158,8 @@ return [
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack-berichttekst',
+    'Bot Icon URL' => 'Pictogram-URL',
+    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => 'Een URL voor het pictogram dat naast dit bericht wordt weergegeven. Laat leeg om de standaard van het kanaal te gebruiken.',
 
     // Message tab: Bluesky fields
     'Post Body' => 'Berichttekst',
@@ -249,10 +254,25 @@ return [
 
     // Settings: Slack
     'Slack Channels' => 'Slack-kanalen',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Maak een [Slack-app](https://api.slack.com/apps) met de scopes `chat:write`, `chat:write.customize` en `chat:write.public`, en voeg vervolgens een rij toe voor elk kanaal waarin je wilt posten. Elk kanaal wordt beschikbaar als ontvanger op het tabblad **Recipients** bij het configureren van een notificatie. Een bot-token is een geheim, dus sla het op in een `.env`-variabele en verwijs naar die variabele (bijv. `$SLACK_BOT_TOKEN`) in plaats van het token direct te plakken.',
     'Channels'       => 'Kanalen',
     'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => 'Elk Slack-kanaal heeft een eigen Incoming Webhook-URL nodig. Gebruik de knop **Test** voor een snelle controle na opslaan.',
-    'Webhook URL'    => 'Webhook-URL',
     'Add a channel'  => 'Een kanaal toevoegen',
+    'Bot Token' => 'Bot-token',
+    'Channel ID' => 'Kanaal-ID',
+    'Bot Emoji' => 'Pictogram-emoji',
+    'Bot Name' => 'Gebruikersnaam',
+    'Show link previews' => 'Toon linkvoorbeelden',
+    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => 'Een emoji-snelcode die naast dit bericht wordt weergegeven, bijv. `:rocket:`. Wordt alleen gebruikt als de pictogram-URL leeg is.',
+    "A display name for this message. Leave blank to use the app's default." => 'Een weergavenaam voor dit bericht. Laat leeg om de standaard van de app te gebruiken.',
+    'Whether Slack should unfurl link previews for URLs in the message body.' => "Of Slack linkvoorbeelden moet weergeven voor URL's in het berichtinhoud.",
+    'Not a valid Bot Token. Must start with `xoxb-`.' => 'Geen geldig Bot-token. Moet beginnen met `xoxb-`.',
+    'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Geen geldig kanaal-ID. Moet eruitzien als `C01234ABCD`.',
+    'Unable to send Slack message, no bot token.' => 'Kan Slack-bericht niet verzenden: geen bot-token.',
+    'Unable to send Slack message, no channel ID.' => 'Kan Slack-bericht niet verzenden: geen kanaal-ID.',
+    'Recipient "{name}" has no Slack bot token.' => 'Ontvanger "{name}" heeft geen Slack-bot-token.',
+    'Recipient "{name}" has no Slack channel ID.' => 'Ontvanger "{name}" heeft geen Slack-kanaal-ID.',
+    'Slack rejected the message: {error}' => 'Slack heeft het bericht geweigerd: {error}',
     'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'Sla eerst op om een rij te bewaren en klik vervolgens op de **Test**-knop om een snelle controle tegen Slack uit te voeren.',
 
     // Settings: Bluesky
@@ -292,6 +312,10 @@ return [
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.'          => '{messageType} verzenden naar {recipient}.',
     'Adding message to queue.'                       => 'Bericht aan wachtrij toevoegen.',
+    'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.' => 'Kan de feed niet verwerken. De PHP-extensies `simplexml` en `libxml` zijn vereist.',
+    'Unable to parse the feed.' => 'Kan de feed niet verwerken.',
+    'Unable to fetch the feed: {message}' => 'Kan de feed niet ophalen: {message}',
+    'Initial feed scan failed: {message}' => 'Eerste feed-scan mislukt: {message}',
     'Sending message immediately (bypassing queue).' => 'Bericht direct verzenden (wachtrij overslaan).',
     'Log events deleted.'                            => 'Logboekgebeurtenissen verwijderd.',
     'notification'                                   => 'melding',
@@ -332,10 +356,7 @@ return [
     'Successfully sent ntfy message to topic "{topic}".'     => 'ntfy-bericht succesvol verzonden naar onderwerp "{topic}".',
 
     // Outbound: Slack log messages
-    'Unable to send Slack message, no webhook URL.' => 'Kan Slack-bericht niet verzenden: geen webhook-URL.',
-    'Unable to send Slack message, webhook URL is not valid.' => 'Kan Slack-bericht niet verzenden: webhook-URL is niet geldig.',
     'Unable to send Slack message, body is empty.'  => 'Kan Slack-bericht niet verzenden: tekst is leeg.',
-    'Slack POST failed (HTTP {status}): {reason}'   => 'Slack POST mislukt (HTTP {status}): {reason}',
     'Slack POST failed: {reason}'                   => 'Slack POST mislukt: {reason}',
     'Successfully sent Slack message to "{label}".' => 'Slack-bericht succesvol verzonden naar "{label}".',
 
@@ -357,7 +378,6 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => 'Ontvanger "{name}" heeft geen gekoppelde gebruiker; kan Pushover-bericht niet verzenden.',
     '[SKIPPED] User "{name}" has no Pushover key.'   => '[OVERGESLAGEN] Gebruiker "{name}" heeft geen Pushover-sleutel.',
     'Recipient "{name}" has no ntfy topic.'          => 'Ontvanger "{name}" heeft geen ntfy-onderwerp.',
-    'Recipient "{name}" has no Slack webhook URL.'   => 'Ontvanger "{name}" heeft geen Slack-webhook-URL.',
     'Recipient "{name}" has no Bluesky credentials.' => 'Ontvanger "{name}" heeft geen Bluesky-referenties.',
 
     // Errors / exceptions
@@ -382,7 +402,6 @@ return [
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Voeg de Bluesky-accounts toe waarvandaan je wilt posten. Elk account wordt beschikbaar als ontvanger op het tabblad **Ontvangers** bij het configureren van een melding.',
     "Click any row's **Test** button to confirm the account authenticates." => 'Klik op de knop **Test** van een rij om te bevestigen dat het account authenticeert.',
-    "Add an [Incoming Webhook](https://api.slack.com/messaging/webhooks) for each Slack channel you'd like to post into. Each webhook becomes available as a recipient on the **Recipients** tab when configuring a notification. A webhook URL is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$SLACK_WEBHOOK_URL`) rather than pasting the URL directly." => 'Voeg een [Incoming Webhook](https://api.slack.com/messaging/webhooks) toe voor elk Slack-kanaal waarin je wilt posten. Elke webhook wordt beschikbaar als ontvanger op het tabblad **Ontvangers** bij het configureren van een melding. Een webhook-URL is een geheim, dus sla deze op in een `.env`-variabele en verwijs naar die variabele (bijv. `$SLACK_WEBHOOK_URL`) in plaats van de URL rechtstreeks te plakken.',
     "Click any row's **Test** button to send a quick test message to that channel." => 'Klik op de knop **Test** van een rij om een snel testbericht naar dat kanaal te sturen.',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => 'Optioneel. Wijs naar een zelf-gehoste ntfy-instantie indien van toepassing. Standaard `https://ntfy.sh`.',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'Optioneel. Vereist voor beschermde onderwerpen of zelf-gehoste instanties met authenticatie.',
@@ -390,7 +409,6 @@ return [
     "Click any row's **Test** button to send a quick test message to that topic." => 'Klik op de knop **Test** van een rij om een snel testbericht naar dat onderwerp te sturen.',
     'Enable Markdown' => 'Markdown inschakelen',
     'Link URL' => 'Link-URL',
-    'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => 'Geen geldige webhook-URL. Moet beginnen met https://hooks.slack.com/services/',
 
     // Manual triggers
     'Send Notification'                                            => 'Notificatie verzenden',
@@ -398,6 +416,7 @@ return [
     'Are you sure you want to send this notification?'             => 'Weet je zeker dat je deze notificatie wilt verzenden?',
     'This notification cannot be triggered manually.'              => 'Deze notificatie kan niet handmatig worden geactiveerd.',
     'This notification no longer applies to the selected element.' => 'Deze notificatie is niet langer van toepassing op het geselecteerde element.',
+    'Notification was not sent. Check the Notification Log for details.' => 'Notificatie is niet verzonden. Bekijk het Meldingenlogboek voor details.',
     'Notification sent.'                                           => 'Notificatie verzonden.',
     'Element not found'                                            => 'Element niet gevonden',
     'Trigger Label'                                                => 'Label voor trigger',
@@ -416,4 +435,41 @@ return [
     'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Gedeeld geheim om webverzoeken voor een geplande uitvoering te authenticeren. Alleen vereist wanneer de planning via het webeindpunt wordt geactiveerd.',
     'Scheduled-Run Token' => 'Token voor geplande uitvoering',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Wordt met elk verzoek meegestuurd als de X-Notifier-Token header of de token body parameter.',
+    'Pushover Title' => 'Pushover-titel',
+    'Pushover Body' => 'Pushover-tekst',
+    'ntfy Title' => 'ntfy-titel',
+    'ntfy Body' => 'ntfy-tekst',
+    'ntfy Link URL' => 'ntfy-link-URL',
+    'Render Link Previews' => 'Linkvoorvertoningen tonen',
+    'Don\'t unfurl' => 'Niet uitklappen',
+    'Expand link previews' => 'Linkvoorvertoningen uitklappen',
+    'Regular text only' => 'Alleen platte tekst',
+    'Markdown enabled' => 'Markdown ingeschakeld',
+    'Dynamic Pushover Title' => 'Dynamische Pushover-titel',
+    'Dynamic Subject Line' => 'Dynamische onderwerpregel',
+    'Dynamic Bot Name' => 'Dynamische botnaam',
+    'Dynamic ntfy Title' => 'Dynamische ntfy-titel',
+    'Dynamic Announcement Title' => 'Dynamische aankondigingstitel',
+    'Dynamic Flash Message Title' => 'Dynamische Flash-berichttitel',
+    'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Platte tekst, maximaal 300 tekens. URL\'s en `@handle.tld`-vermeldingen worden automatisch links.',
+    'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Genereer automatisch een previewkaart wanneer de tekst van het bericht een URL bevat.',
+    'Whether the message be sent via the [jobs queue]({queueUrl}).' => 'Of het bericht via de [taakwachtrij]({queueUrl}) moet worden verzonden.',
+    'Priority level of the ntfy message.' => 'Prioriteitsniveau van het ntfy-bericht.',
+    'Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/).' => 'Optioneel kommagescheiden [emoji-codes](https://docs.ntfy.sh/emojis/) opnemen.',
+    'Body of the ntfy notification.' => 'Inhoud van de ntfy-melding.',
+    'Optionally open a URL when the notification is clicked.' => 'Optioneel een URL openen wanneer op de melding wordt geklikt.',
+    'Whether to parse the body as Markdown in supported clients.' => 'Of de inhoud in ondersteunde clients als Markdown moet worden gerenderd.',
+    'Heading of the announcement.' => 'Kop van de aankondiging.',
+    'Body of the announcement. Supports Markdown.' => 'Inhoud van de aankondiging. Ondersteunt Markdown.',
+    'Heading of the flash message.' => 'Kop van het flash-bericht.',
+    'Optionally include details below the heading. Supports Markdown and HTML.' => 'Optioneel details onder de kop opnemen. Ondersteunt Markdown en HTML.',
+    'Optionally include a heading above the body.' => 'Optioneel een kop boven de inhoud opnemen.',
+    'Body of the SMS (text message). Plain text only.' => 'Inhoud van het sms-bericht. Alleen platte tekst.',
+    'Body of the Pushover notification. Plain text only.' => 'Inhoud van de Pushover-melding. Alleen platte tekst.',
+    'Subject line of the email.' => 'Onderwerpregel van de e-mail.',
+    'Body of the email. Supports HTML.' => 'Inhoud van de e-mail. Ondersteunt HTML.',
+    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Inhoud van het Slack-bericht. Ondersteunt [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting)-syntax.',
+    'Optionally override the app\'s display name.' => 'Optioneel de weergavenaam van de app overschrijven.',
+    'Optionally override the app\'s icon with a URL.' => 'Optioneel het pictogram van de app overschrijven met een URL.',
+    'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'Optioneel het pictogram van de app overschrijven met een emoji. Alleen gebruikt wanneer Bot Icon URL leeg is.',
 ];

@@ -17,6 +17,7 @@
 {% include 'notifier/notifications/_edit/event/entries' %}
 {% include 'notifier/notifications/_edit/event/assets' %}
 {% include 'notifier/notifications/_edit/event/users' %}
+{% include 'notifier/notifications/_edit/event/feed' %}
 {% include 'notifier/notifications/_edit/event/craft-commerce-orders' %}
 {% include 'notifier/notifications/_edit/event/craft-commerce-products' %}
 {% include 'notifier/notifications/_edit/event/digital-products-products' %}
@@ -31,6 +32,16 @@
 }
 .notifier-date-reached .text {
     width: 4em;
+}
+/* Each .event-type-* wrapper is a flex item of .flex-fields, so a child's
+   bottom margin cannot collapse out of it. When the only visible direct
+   child is the Event dropdown (no event chosen yet, or no follow-up fields
+   shown), that dropdown's margin-bottom becomes trapped empty space inside
+   the wrapper. Zero it when no visible following sibling exists; once a
+   toggle wrapper or <hr> becomes visible, the selector stops matching and
+   the normal inter-field margin returns. */
+[class^="event-type-"] > .field:not(:has(~ :not(.hidden):not([type="hidden"]))) {
+    margin-bottom: 0;
 }
 {% endcss %}
 

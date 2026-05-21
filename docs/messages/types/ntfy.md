@@ -18,10 +18,7 @@ If you're self-hosting ntfy and/or have an access token, add that info to the sa
 
 ## Config
 
-<img class="dropshadow" src="/images/messages/ntfy-config.png" alt="" style="width:671px; margin-top:10px">
-
-<!--@include: @/messages/types/_docs-links.md-->
-<!--@include: @/messages/types/_queue-link.md-->
+<img class="dropshadow" src="/images/messages/ntfy-config.png" alt="" style="width:640px; margin-top:10px">
 
 ### Priority
 
@@ -31,13 +28,17 @@ Sets how prominently the notification displays, from 1 (lowest) to 5 (highest). 
 
 Adds emoji to the notification. Enter a comma-separated list of [emoji shortcodes](https://docs.ntfy.sh/emojis/).
 
+### Link URL
+
+Attaches a URL to the notification. Tapping the notification will open that URL on the recipient's device.
+
+<!--@include: @/messages/types/_docs-links.md-->
+
 ### Enable Markdown
 
 Renders the body as Markdown. Some ntfy clients (like the web app) will properly format Markdown syntax, while others (like the iOS app) do not support it and will show the raw text.
 
-### Link URL
-
-Attaches a URL to the notification. Tapping the notification will open that URL on the recipient's device.
+<!--@include: @/messages/types/_queue-link.md-->
 
 ## Examples
 

@@ -13,6 +13,7 @@ Enter a custom Twig snippet to determine who will receive the message.
     {{ codeEditor.textAreaField({
         label: "Twig Snippet to Determine Recipients"|t('notifier'),
         instructions: instructions|t('notifier'),
+        tip: templatingTip,
         placeholder: placeholder,
         id: 'config-recipients-dynamic-recipients',
         name: 'recipientsConfig[dynamicRecipients]',

@@ -10,7 +10,7 @@ Posts **a flash message** when the notification event is triggered.
 
 ## Config
 
-<img class="dropshadow" src="/images/messages/flash-config.png" alt="" style="width:650px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/flash-config.png" alt="" style="width:640px; margin-top:10px">
 
 <!--@include: @/messages/types/_docs-links.md-->
 

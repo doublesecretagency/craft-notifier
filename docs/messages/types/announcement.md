@@ -12,7 +12,7 @@ Announcements are posted in the upper-right corner of the control panel for each
 
 ## Config
 
-<img class="dropshadow" src="/images/messages/announcement-config.png" alt="" style="width:650px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/announcement-config.png" alt="" style="width:640px; margin-top:10px">
 
 <!--@include: @/messages/types/_docs-links.md-->
 

@@ -82,4 +82,34 @@ class ManualConsoleControllerTest extends TestCase
         // element before dispatching.
         $this->assertStringContainsString('getManualNotifications(', $this->controllerSource);
     }
+
+    public function testSendCapturesEnvelopeCountFromMessagesSend(): void
+    {
+        // The return value of Messages::send() must drive the success / failure
+        // exit, not get discarded.
+        $this->assertMatchesRegularExpression(
+            '/\$count\s*=\s*[^;]*messages->send\(/',
+            $this->controllerSource
+        );
+    }
+
+    public function testSendReportsFailureWhenZeroEnvelopesSent(): void
+    {
+        // A zero-envelope outcome writes a stderr warning and returns a non-OK
+        // exit code so scripts and humans both notice the silent skip.
+        $this->assertMatchesRegularExpression(
+            '/if \(0 === \$count\)[\s\S]*?stderr\([\s\S]*?ExitCode::UNSPECIFIED_ERROR/',
+            $this->controllerSource
+        );
+    }
+
+    public function testSendFailureMessagePointsAtTheNotificationLog(): void
+    {
+        // The failure text names the Notification Log so the operator knows
+        // where to dig.
+        $this->assertStringContainsString(
+            'Notification was not sent. Check the Notification Log for details.',
+            $this->controllerSource
+        );
+    }
 }

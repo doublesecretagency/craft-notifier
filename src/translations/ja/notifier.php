@@ -52,6 +52,10 @@ return [
     'Users Event'                    => 'ユーザーイベント',
     'Ungrouped Users'                => 'グループ外のユーザー',
 
+    // Feed
+    'Feed Event' => 'フィードイベント',
+    'Feed URL' => 'フィード URL',
+    'The URL of the RSS, Atom, or JSON feed to watch.' => '監視する RSS、Atom、または JSON フィードの URL。',
     // Field and element conditions
     'Field Conditions'             => 'フィールド条件',
     'Send the message only when the saved element matches the following conditions.' => '保存された要素が次の条件に一致する場合にのみメッセージを送信します。',
@@ -120,7 +124,7 @@ return [
     'Message Type'                       => 'メッセージタイプ',
     'What type of message will be sent?' => 'どのタイプのメッセージが送信されますか?',
     'Send Message via Queue'             => 'キュー経由でメッセージを送信',
-    'Should the message be sent via the [jobs queue]({queueUrl})?' => 'メッセージは [ジョブキュー]({queueUrl}) 経由で送信しますか?',
+    '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[テンプレート]({templatingUrl}) と [特殊変数]({variablesUrl}) もサポートされています。',
     'Send immediately' => '即時送信',
     'Add to queue' => 'キューに追加',
 
@@ -145,7 +149,6 @@ return [
 
     // Message tab: Pushover fields
     "Field containing each user's Pushover key" => 'ユーザーの Pushover キーフィールド',
-    'The Pushover application token is configured in [Settings → Pushover](url).' => 'Pushover アプリケーショントークンは [設定 → Pushover](url) で設定します。',
 
     // Message tab: ntfy fields
     'Priority'           => '優先度',
@@ -155,6 +158,8 @@ return [
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack メッセージ本文',
+    'Bot Icon URL' => 'アイコンURL',
+    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => 'このメッセージの横に表示するアイコンのURL。空欄の場合はチャンネルのデフォルトを使用します。',
 
     // Message tab: Bluesky fields
     'Post Body' => '投稿本文',
@@ -249,10 +254,25 @@ return [
 
     // Settings: Slack
     'Slack Channels' => 'Slack チャンネル',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`、`chat:write.customize`、`chat:write.public` のスコープを持つ [Slack アプリ](https://api.slack.com/apps) を作成し、投稿したい各チャンネルに対して行を追加します。通知の設定時に、各チャンネルが **Recipients** タブで受信者として利用可能になります。ボットトークンは秘密情報なので、`.env` 変数に保存し、その変数を参照してください(例: `$SLACK_BOT_TOKEN`)。トークンを直接貼り付けないでください。',
     'Channels'       => 'チャンネル',
     'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => '各 Slack チャンネルには独自の Incoming Webhook URL が必要です。保存後、**Test** ボタンで簡単な動作確認を行えます。',
-    'Webhook URL'    => 'Webhook URL',
     'Add a channel'  => 'チャンネルを追加',
+    'Bot Token' => 'ボットトークン',
+    'Channel ID' => 'チャンネルID',
+    'Bot Emoji' => 'アイコン絵文字',
+    'Bot Name' => 'ユーザー名',
+    'Show link previews' => 'リンクプレビューを表示',
+    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => 'このメッセージの横に表示する絵文字ショートコード（例: `:rocket:`）。アイコンURLが空の場合のみ使用されます。',
+    "A display name for this message. Leave blank to use the app's default." => 'このメッセージの表示名。空欄の場合はアプリのデフォルトを使用します。',
+    'Whether Slack should unfurl link previews for URLs in the message body.' => 'メッセージ本文のURLに対してSlackがリンクプレビューを展開するかどうか。',
+    'Not a valid Bot Token. Must start with `xoxb-`.' => '有効なボットトークンではありません。`xoxb-`で始まる必要があります。',
+    'Not a valid Channel ID. Must look like `C01234ABCD`.' => '有効なチャンネルIDではありません。`C01234ABCD`のような形式である必要があります。',
+    'Unable to send Slack message, no bot token.' => 'Slackメッセージを送信できません: ボットトークンがありません。',
+    'Unable to send Slack message, no channel ID.' => 'Slackメッセージを送信できません: チャンネルIDがありません。',
+    'Recipient "{name}" has no Slack bot token.' => '受信者「{name}」にSlackボットトークンがありません。',
+    'Recipient "{name}" has no Slack channel ID.' => '受信者「{name}」にSlackチャンネルIDがありません。',
+    'Slack rejected the message: {error}' => 'Slackがメッセージを拒否しました: {error}',
     'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'まず保存して行を永続化してから、その **Test** ボタンをクリックして Slack に対する簡易チェックを実行します。',
 
     // Settings: Bluesky
@@ -292,6 +312,10 @@ return [
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.'          => '{recipient} に {messageType} を送信中。',
     'Adding message to queue.'                       => 'メッセージをキューに追加中。',
+    'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.' => 'フィードを解析できません。PHP の `simplexml` および `libxml` 拡張機能が必要です。',
+    'Unable to parse the feed.' => 'フィードを解析できません。',
+    'Unable to fetch the feed: {message}' => 'フィードを取得できません: {message}',
+    'Initial feed scan failed: {message}' => '初回のフィードスキャンに失敗しました: {message}',
     'Sending message immediately (bypassing queue).' => 'メッセージを即時送信中(キューをバイパス)。',
     'Log events deleted.'                            => 'ログイベントを削除しました。',
     'notification'                                   => '通知',
@@ -332,10 +356,7 @@ return [
     'Successfully sent ntfy message to topic "{topic}".'     => 'トピック「{topic}」に ntfy メッセージを正常に送信しました。',
 
     // Outbound: Slack log messages
-    'Unable to send Slack message, no webhook URL.' => 'Slack メッセージを送信できません。Webhook URL がありません。',
-    'Unable to send Slack message, webhook URL is not valid.' => 'Slack メッセージを送信できません。Webhook URL が無効です。',
     'Unable to send Slack message, body is empty.'  => 'Slack メッセージを送信できません。本文が空です。',
-    'Slack POST failed (HTTP {status}): {reason}'   => 'Slack POST が失敗しました (HTTP {status}): {reason}',
     'Slack POST failed: {reason}'                   => 'Slack POST が失敗しました: {reason}',
     'Successfully sent Slack message to "{label}".' => '"{label}" に Slack メッセージを正常に送信しました。',
 
@@ -357,7 +378,6 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => '受信者「{name}」に関連付けられたユーザーがないため、Pushover メッセージを送信できません。',
     '[SKIPPED] User "{name}" has no Pushover key.'   => '[スキップ] ユーザー「{name}」には Pushover キーがありません。',
     'Recipient "{name}" has no ntfy topic.'          => '受信者「{name}」には ntfy トピックがありません。',
-    'Recipient "{name}" has no Slack webhook URL.'   => '受信者「{name}」には Slack Webhook URL がありません。',
     'Recipient "{name}" has no Bluesky credentials.' => '受信者「{name}」には Bluesky の認証情報がありません。',
 
     // Errors / exceptions
@@ -382,7 +402,6 @@ return [
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => '投稿元にしたい Bluesky アカウントを追加します。各アカウントは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
     "Click any row's **Test** button to confirm the account authenticates." => '任意の行の **Test** ボタンをクリックして、アカウントが認証されることを確認します。',
-    "Add an [Incoming Webhook](https://api.slack.com/messaging/webhooks) for each Slack channel you'd like to post into. Each webhook becomes available as a recipient on the **Recipients** tab when configuring a notification. A webhook URL is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$SLACK_WEBHOOK_URL`) rather than pasting the URL directly." => '投稿先にしたい Slack チャンネルごとに [Incoming Webhook](https://api.slack.com/messaging/webhooks) を追加します。各 Webhook は通知の設定時に **受信者** タブで受信者として利用できるようになります。Webhook URL は機密情報であるため、URL を直接貼り付けるのではなく、`.env` 変数に保存し、その変数(例: `$SLACK_WEBHOOK_URL`)を参照してください。',
     "Click any row's **Test** button to send a quick test message to that channel." => '任意の行の **Test** ボタンをクリックして、そのチャンネルに簡単なテストメッセージを送信します。',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => '任意。該当する場合は自前ホストの ntfy インスタンスを指定します。デフォルトは `https://ntfy.sh` です。',
     'Optional, required for protected topics or self-hosted instances with auth.' => '任意。保護されたトピックや認証付きの自前ホストインスタンスでは必要です。',
@@ -390,7 +409,6 @@ return [
     "Click any row's **Test** button to send a quick test message to that topic." => '任意の行の **Test** ボタンをクリックして、そのトピックに簡単なテストメッセージを送信します。',
     'Enable Markdown' => 'Markdown を有効化',
     'Link URL' => 'リンク URL',
-    'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => '有効な Webhook URL ではありません。https://hooks.slack.com/services/ で始まる必要があります。',
 
     // Manual triggers
     'Send Notification'                                            => '通知を送信',
@@ -398,6 +416,7 @@ return [
     'Are you sure you want to send this notification?'             => 'この通知を送信してもよろしいですか？',
     'This notification cannot be triggered manually.'              => 'この通知は手動でトリガーできません。',
     'This notification no longer applies to the selected element.' => 'この通知は選択された要素には適用されなくなりました。',
+    'Notification was not sent. Check the Notification Log for details.' => '通知は送信されませんでした。詳細は通知ログをご確認ください。',
     'Notification sent.'                                           => '通知を送信しました。',
     'Element not found'                                            => '要素が見つかりません',
     'Trigger Label'                                                => 'トリガーのラベル',
@@ -416,4 +435,41 @@ return [
     'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'スケジュール実行のWebリクエストを認証するための共有シークレット。Webエンドポイント経由でスケジュールを起動する場合のみ必要です。',
     'Scheduled-Run Token' => 'スケジュール実行トークン',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => '各リクエストとともに X-Notifier-Token ヘッダーまたは token ボディパラメータとして送信されます。',
+    'Pushover Title' => 'Pushover タイトル',
+    'Pushover Body' => 'Pushover 本文',
+    'ntfy Title' => 'ntfy タイトル',
+    'ntfy Body' => 'ntfy 本文',
+    'ntfy Link URL' => 'ntfy リンク URL',
+    'Render Link Previews' => 'リンクプレビューを表示',
+    'Don\'t unfurl' => '展開しない',
+    'Expand link previews' => 'リンクプレビューを展開',
+    'Regular text only' => '通常のテキストのみ',
+    'Markdown enabled' => 'Markdown 有効',
+    'Dynamic Pushover Title' => '動的な Pushover タイトル',
+    'Dynamic Subject Line' => '動的な件名',
+    'Dynamic Bot Name' => '動的なボット名',
+    'Dynamic ntfy Title' => '動的な ntfy タイトル',
+    'Dynamic Announcement Title' => '動的なアナウンスタイトル',
+    'Dynamic Flash Message Title' => '動的なフラッシュメッセージのタイトル',
+    'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'プレーンテキスト、最大 300 文字。URL と `@handle.tld` のメンションは自動的にリンクになります。',
+    'Whether to automatically generate a preview card when a URL is included in the post body.' => '投稿本文に URL が含まれる場合、自動的にプレビューカードを生成します。',
+    'Whether the message be sent via the [jobs queue]({queueUrl}).' => 'メッセージを [ジョブキュー]({queueUrl}) 経由で送信するかどうか。',
+    'Priority level of the ntfy message.' => 'ntfy メッセージの優先度レベル。',
+    'Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/).' => 'オプションでカンマ区切りの [絵文字ショートコード](https://docs.ntfy.sh/emojis/) を含めます。',
+    'Body of the ntfy notification.' => 'ntfy 通知の本文。',
+    'Optionally open a URL when the notification is clicked.' => 'オプションで、通知がクリックされたときに URL を開きます。',
+    'Whether to parse the body as Markdown in supported clients.' => '対応クライアントで本文を Markdown として解析するかどうか。',
+    'Heading of the announcement.' => 'アナウンスの見出し。',
+    'Body of the announcement. Supports Markdown.' => 'アナウンスの本文。Markdown をサポート。',
+    'Heading of the flash message.' => 'フラッシュメッセージの見出し。',
+    'Optionally include details below the heading. Supports Markdown and HTML.' => 'オプションで見出しの下に詳細を含めます。Markdown と HTML をサポート。',
+    'Optionally include a heading above the body.' => 'オプションで本文の上に見出しを含めます。',
+    'Body of the SMS (text message). Plain text only.' => 'SMS (テキストメッセージ) の本文。プレーンテキストのみ。',
+    'Body of the Pushover notification. Plain text only.' => 'Pushover 通知の本文。プレーンテキストのみ。',
+    'Subject line of the email.' => 'メールの件名。',
+    'Body of the email. Supports HTML.' => 'メールの本文。HTML をサポート。',
+    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Slack メッセージの本文。[Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) 構文をサポート。',
+    'Optionally override the app\'s display name.' => 'オプションでアプリの表示名を上書きします。',
+    'Optionally override the app\'s icon with a URL.' => 'オプションでアプリのアイコンを URL で上書きします。',
+    'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'オプションでアプリのアイコンを絵文字で上書きします。Bot Icon URL が空のときのみ使用されます。',
 ];

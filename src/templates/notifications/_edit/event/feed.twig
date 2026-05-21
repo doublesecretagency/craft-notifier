@@ -1,0 +1,14 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-feed hidden">
+    {{ forms.textField({
+        label: 'Feed URL'|t('notifier'),
+        instructions: 'The URL of the RSS, Atom, or JSON feed to watch.'|t('notifier'),
+        id: 'eventConfig-feedUrl',
+        name: 'eventConfig[feedUrl]',
+        value: notification.eventConfig.feedUrl ?? '',
+        placeholder: 'https://example.com/feed.xml',
+    }) }}
+    {# Hard-coded event since "Feed" only has one trigger (included last for CSS reasons) #}
+    <input type="hidden" name="event[feed]" value="new-item">
+</div>

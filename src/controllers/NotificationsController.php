@@ -298,7 +298,6 @@ class NotificationsController extends Controller
      * @throws BadRequestHttpException
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
-     * @since 3.0.0
      */
     public function actionTest(): Response
     {
@@ -353,7 +352,6 @@ class NotificationsController extends Controller
      * @throws BadRequestHttpException
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
-     * @since 3.0.0
      */
     public function actionSendManual(): Response
     {
@@ -405,7 +403,17 @@ class NotificationsController extends Controller
 
         // Send the Notification for the element
         $event = new Event(['sender' => $element]);
-        NotifierPlugin::getInstance()->messages->send($notification, $event, ['object' => $element]);
+        $count = NotifierPlugin::getInstance()->messages->send($notification, $event, ['object' => $element]);
+
+        // If nothing actually went out, surface that explicitly
+        if (0 === $count) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier',
+                    'Notification was not sent. Check the Notification Log for details.'
+                ),
+            ]);
+        }
 
         // Report success
         return $this->asJson([

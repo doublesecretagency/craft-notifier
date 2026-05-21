@@ -14,15 +14,19 @@ You will need to [run the schedule](/getting-started/run-the-schedule) on a recu
 
 ## The events
 
-Two trigger events send on a schedule.
+Three trigger events send on a schedule.
+
+### [When an entry changes from Pending to Live](/events/types/entries/pending-to-live)
+
+Fires the moment a future-dated entry's Post Date passes and its status becomes Live. Entries only.
 
 ### [When a scheduled date is reached](/events/types/entries/date-reached)
 
 Fires a chosen number of days before, on, or after a date, such as an entry's Post Date or Expiry Date. Available for every event type.
 
-### [When an entry changes from Pending to Live](/events/types/entries/pending-to-live)
+### [When a new RSS feed item is found](/events/types/feed/)
 
-Fires the moment a future-dated entry's Post Date passes and its status becomes Live. Entries only.
+Fires once for each new item that appears in an external **RSS**, **Atom**, or **JSON** feed. Available under the [RSS/JSON Feed](/events/types/feed/) event type.
 
 ## Setting it up
 

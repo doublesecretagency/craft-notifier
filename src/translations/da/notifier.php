@@ -52,6 +52,10 @@ return [
     'Users Event'                    => 'Brugerhændelse',
     'Ungrouped Users'                => 'Brugere uden gruppe',
 
+    // Feed
+    'Feed Event' => 'Feed-hændelse',
+    'Feed URL' => 'Feed-URL',
+    'The URL of the RSS, Atom, or JSON feed to watch.' => "URL'en til RSS-, Atom- eller JSON-feedet, der skal overvåges.",
     // Field and element conditions
     'Field Conditions'             => 'Feltbetingelser',
     'Send the message only when the saved element matches the following conditions.' => 'Send kun beskeden, når det gemte element opfylder følgende betingelser.',
@@ -120,7 +124,7 @@ return [
     'Message Type'                       => 'Beskedtype',
     'What type of message will be sent?' => 'Hvilken type besked sendes?',
     'Send Message via Queue'             => 'Send besked via kø',
-    'Should the message be sent via the [jobs queue]({queueUrl})?' => 'Skal beskeden sendes via [jobkøen]({queueUrl})?',
+    '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Templating]({templatingUrl}) og [specialvariabler]({variablesUrl}) understøttes også.',
     'Send immediately' => 'Send med det samme',
     'Add to queue' => 'Føj til kø',
 
@@ -145,7 +149,6 @@ return [
 
     // Message tab: Pushover fields
     "Field containing each user's Pushover key" => 'Brugerens Pushover-nøglefelt',
-    'The Pushover application token is configured in [Settings → Pushover](url).' => 'Pushover-applikationstoken konfigureres i [Indstillinger → Pushover](url).',
 
     // Message tab: ntfy fields
     'Priority'           => 'Prioritet',
@@ -155,6 +158,8 @@ return [
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack-beskedtekst',
+    'Bot Icon URL' => 'Ikon-URL',
+    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => 'En URL til ikonet, der skal vises ved siden af denne besked. Lad være tomt for at bruge kanalens standard.',
 
     // Message tab: Bluesky fields
     'Post Body' => 'Indlægstekst',
@@ -249,10 +254,25 @@ return [
 
     // Settings: Slack
     'Slack Channels' => 'Slack-kanaler',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Opret en [Slack-app](https://api.slack.com/apps) med scopes `chat:write`, `chat:write.customize` og `chat:write.public`, og tilføj derefter en række for hver kanal, du gerne vil sende beskeder til. Hver kanal bliver tilgængelig som modtager på fanen **Recipients** ved konfiguration af en notifikation. Et bot-token er en hemmelighed, så gem det i en `.env`-variabel og henvis til den variabel (f.eks. `$SLACK_BOT_TOKEN`) i stedet for at indsætte tokenet direkte.',
     'Channels'       => 'Kanaler',
     'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => 'Hver Slack-kanal har brug for sin egen Incoming Webhook-URL. Brug knappen **Test** til at udføre en hurtig kontrol efter gemning.',
-    'Webhook URL'    => 'Webhook-URL',
     'Add a channel'  => 'Tilføj en kanal',
+    'Bot Token' => 'Bot-token',
+    'Channel ID' => 'Kanal-ID',
+    'Bot Emoji' => 'Ikon-emoji',
+    'Bot Name' => 'Brugernavn',
+    'Show link previews' => 'Vis linkforhåndsvisninger',
+    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => 'En emoji-shortcode, der vises ved siden af denne besked, f.eks. `:rocket:`. Bruges kun, når ikon-URL er tom.',
+    "A display name for this message. Leave blank to use the app's default." => 'Et visningsnavn til denne besked. Lad være tomt for at bruge appens standard.',
+    'Whether Slack should unfurl link previews for URLs in the message body.' => "Om Slack skal vise linkforhåndsvisninger for URL'er i beskedteksten.",
+    'Not a valid Bot Token. Must start with `xoxb-`.' => 'Ugyldigt bot-token. Skal starte med `xoxb-`.',
+    'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Ugyldigt kanal-ID. Skal ligne `C01234ABCD`.',
+    'Unable to send Slack message, no bot token.' => 'Kan ikke sende Slack-besked: intet bot-token.',
+    'Unable to send Slack message, no channel ID.' => 'Kan ikke sende Slack-besked: intet kanal-ID.',
+    'Recipient "{name}" has no Slack bot token.' => 'Modtageren "{name}" har intet Slack bot-token.',
+    'Recipient "{name}" has no Slack channel ID.' => 'Modtageren "{name}" har intet Slack kanal-ID.',
+    'Slack rejected the message: {error}' => 'Slack afviste beskeden: {error}',
     'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'Gem først for at gemme en række, og klik derefter på dens **Test**-knap for at udføre en hurtig kontrol mod Slack.',
 
     // Settings: Bluesky
@@ -292,6 +312,10 @@ return [
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.'          => 'Sender {messageType} til {recipient}.',
     'Adding message to queue.'                       => 'Tilføjer besked til køen.',
+    'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.' => 'Kan ikke parse feedet. PHP-udvidelserne `simplexml` og `libxml` er påkrævet.',
+    'Unable to parse the feed.' => 'Kan ikke parse feedet.',
+    'Unable to fetch the feed: {message}' => 'Kan ikke hente feedet: {message}',
+    'Initial feed scan failed: {message}' => 'Indledende feed-scanning mislykkedes: {message}',
     'Sending message immediately (bypassing queue).' => 'Sender beskeden med det samme (springer køen over).',
     'Log events deleted.'                            => 'Loghændelser slettet.',
     'notification'                                   => 'notifikation',
@@ -332,10 +356,7 @@ return [
     'Successfully sent ntfy message to topic "{topic}".'     => 'ntfy-besked sendt til emnet "{topic}".',
 
     // Outbound: Slack log messages
-    'Unable to send Slack message, no webhook URL.' => 'Kan ikke sende Slack-besked: ingen webhook-URL.',
-    'Unable to send Slack message, webhook URL is not valid.' => 'Kan ikke sende Slack-besked: webhook-URL er ikke gyldig.',
     'Unable to send Slack message, body is empty.'  => 'Kan ikke sende Slack-besked: teksten er tom.',
-    'Slack POST failed (HTTP {status}): {reason}'   => 'Slack POST mislykkedes (HTTP {status}): {reason}',
     'Slack POST failed: {reason}'                   => 'Slack POST mislykkedes: {reason}',
     'Successfully sent Slack message to "{label}".' => 'Slack-besked sendt til "{label}".',
 
@@ -357,7 +378,6 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => 'Modtageren "{name}" har ingen tilknyttet bruger; kan ikke sende Pushover-besked.',
     '[SKIPPED] User "{name}" has no Pushover key.'   => '[OVERSPRUNGET] Brugeren "{name}" har ingen Pushover-nøgle.',
     'Recipient "{name}" has no ntfy topic.'          => 'Modtageren "{name}" har intet ntfy-emne.',
-    'Recipient "{name}" has no Slack webhook URL.'   => 'Modtageren "{name}" har ingen Slack-webhook-URL.',
     'Recipient "{name}" has no Bluesky credentials.' => 'Modtageren "{name}" har ingen Bluesky-legitimationsoplysninger.',
 
     // Errors / exceptions
@@ -382,7 +402,6 @@ return [
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Tilføj de Bluesky-konti, du vil udgive fra. Hver konto bliver tilgængelig som modtager på fanen **Modtagere**, når du konfigurerer en notifikation.',
     "Click any row's **Test** button to confirm the account authenticates." => 'Klik på en vilkårlig rækkes **Test**-knap for at bekræfte, at kontoen kan godkendes.',
-    "Add an [Incoming Webhook](https://api.slack.com/messaging/webhooks) for each Slack channel you'd like to post into. Each webhook becomes available as a recipient on the **Recipients** tab when configuring a notification. A webhook URL is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$SLACK_WEBHOOK_URL`) rather than pasting the URL directly." => 'Tilføj en [Incoming Webhook](https://api.slack.com/messaging/webhooks) for hver Slack-kanal, du vil udgive til. Hver webhook bliver tilgængelig som modtager på fanen **Modtagere**, når du konfigurerer en notifikation. En webhook-URL er en hemmelighed, så gem den i en `.env`-variabel og henvis til den variabel (f.eks. `$SLACK_WEBHOOK_URL`) i stedet for at indsætte URL-adressen direkte.',
     "Click any row's **Test** button to send a quick test message to that channel." => 'Klik på en vilkårlig rækkes **Test**-knap for at sende en hurtig testbesked til den kanal.',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => 'Valgfrit, peg på en selvhostet ntfy-instans (hvis relevant). Standard er `https://ntfy.sh`.',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'Valgfrit, kræves til beskyttede emner eller selvhostede instanser med godkendelse.',
@@ -390,7 +409,6 @@ return [
     "Click any row's **Test** button to send a quick test message to that topic." => 'Klik på en vilkårlig rækkes **Test**-knap for at sende en hurtig testbesked til det emne.',
     'Enable Markdown' => 'Aktivér Markdown',
     'Link URL' => 'Link-URL',
-    'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => 'Ikke en gyldig Webhook-URL. Skal starte med https://hooks.slack.com/services/',
 
     // Manual triggers
     'Send Notification'                                            => 'Send notifikation',
@@ -398,6 +416,7 @@ return [
     'Are you sure you want to send this notification?'             => 'Er du sikker på, at du vil sende denne notifikation?',
     'This notification cannot be triggered manually.'              => 'Denne notifikation kan ikke udløses manuelt.',
     'This notification no longer applies to the selected element.' => 'Denne notifikation gælder ikke længere for det valgte element.',
+    'Notification was not sent. Check the Notification Log for details.' => 'Notifikationen blev ikke sendt. Tjek Notifikationslog for detaljer.',
     'Notification sent.'                                           => 'Notifikation sendt.',
     'Element not found'                                            => 'Element ikke fundet',
     'Trigger Label'                                                => 'Udløser-etiket',
@@ -416,4 +435,41 @@ return [
     'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Delt hemmelighed til at autentificere planlagte kørselsanmodninger over web. Kræves kun, når tidsplanen udløses via webendpointet.',
     'Scheduled-Run Token' => 'Token til planlagt kørsel',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Sendes med hver forespørgsel som headeren X-Notifier-Token eller som parameteren token i brødteksten.',
+    'Pushover Title' => 'Pushover-titel',
+    'Pushover Body' => 'Pushover-tekst',
+    'ntfy Title' => 'ntfy-titel',
+    'ntfy Body' => 'ntfy-tekst',
+    'ntfy Link URL' => 'ntfy-link-URL',
+    'Render Link Previews' => 'Vis linkforhåndsvisninger',
+    'Don\'t unfurl' => 'Foldé ikke ud',
+    'Expand link previews' => 'Udvid linkforhåndsvisninger',
+    'Regular text only' => 'Kun almindelig tekst',
+    'Markdown enabled' => 'Markdown aktiveret',
+    'Dynamic Pushover Title' => 'Dynamisk Pushover-titel',
+    'Dynamic Subject Line' => 'Dynamisk emnelinje',
+    'Dynamic Bot Name' => 'Dynamisk botnavn',
+    'Dynamic ntfy Title' => 'Dynamisk ntfy-titel',
+    'Dynamic Announcement Title' => 'Dynamisk annonceringstitel',
+    'Dynamic Flash Message Title' => 'Dynamisk flash-besked-titel',
+    'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Ren tekst, maks. 300 tegn. URL\'er og `@handle.tld`-omtaler bliver automatisk links.',
+    'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Generér automatisk et forhåndsvisningskort, når der er en URL i indlæggets tekst.',
+    'Whether the message be sent via the [jobs queue]({queueUrl}).' => 'Om beskeden skal sendes via [job-køen]({queueUrl}).',
+    'Priority level of the ntfy message.' => 'Prioritetsniveau for ntfy-beskeden.',
+    'Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/).' => 'Inkludér eventuelt komma-separerede [emoji-koder](https://docs.ntfy.sh/emojis/).',
+    'Body of the ntfy notification.' => 'Indhold i ntfy-notifikationen.',
+    'Optionally open a URL when the notification is clicked.' => 'Åbn eventuelt en URL, når notifikationen klikkes.',
+    'Whether to parse the body as Markdown in supported clients.' => 'Om brødteksten skal læses som Markdown i klienter, der understøtter det.',
+    'Heading of the announcement.' => 'Overskrift på annonceringen.',
+    'Body of the announcement. Supports Markdown.' => 'Indhold i annonceringen. Understøtter Markdown.',
+    'Heading of the flash message.' => 'Overskrift på flash-beskeden.',
+    'Optionally include details below the heading. Supports Markdown and HTML.' => 'Inkludér eventuelt detaljer under overskriften. Understøtter Markdown og HTML.',
+    'Optionally include a heading above the body.' => 'Inkludér eventuelt en overskrift over indholdet.',
+    'Body of the SMS (text message). Plain text only.' => 'Indhold i SMS\'en (tekstbesked). Kun ren tekst.',
+    'Body of the Pushover notification. Plain text only.' => 'Indhold i Pushover-notifikationen. Kun ren tekst.',
+    'Subject line of the email.' => 'Emnelinje på e-mailen.',
+    'Body of the email. Supports HTML.' => 'Indhold i e-mailen. Understøtter HTML.',
+    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Indhold i Slack-beskeden. Understøtter [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting)-syntaks.',
+    'Optionally override the app\'s display name.' => 'Overskriv eventuelt appens visningsnavn.',
+    'Optionally override the app\'s icon with a URL.' => 'Overskriv eventuelt appens ikon med en URL.',
+    'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'Overskriv eventuelt appens ikon med en emoji. Bruges kun, når Bot Icon URL er tom.',
 ];

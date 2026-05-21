@@ -239,7 +239,7 @@ class SettingsProvidersController extends Controller
     }
 
     /**
-     * Send a test message to a specific Slack webhook.
+     * Send a test message to a specific Slack channel via chat.postMessage.
      *
      * @return Response
      */
@@ -248,27 +248,43 @@ class SettingsProvidersController extends Controller
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 
-        // Resolve the posted value (supports a $ENV_VAR reference)
-        $webhookUrl = App::parseEnv((string) $this->request->getRequiredBodyParam('webhookUrl'));
+        // Resolve the posted bot token (supports a $ENV_VAR reference)
+        $botToken = App::parseEnv((string) $this->request->getRequiredBodyParam('botToken'));
 
-        // Validate
-        if (!OutboundSlack::isValidWebhookUrl($webhookUrl)) {
-            return $this->asJson(['success' => false, 'message' => Craft::t('notifier', "Not a valid Webhook URL. Must start with https://hooks.slack.com/services/")]);
+        // Resolve the posted channel ID (also supports a $ENV_VAR reference)
+        $channelId = App::parseEnv(trim((string) $this->request->getRequiredBodyParam('channelId')));
+
+        // If the bot token isn't valid, bail
+        if (!OutboundSlack::isValidBotToken($botToken)) {
+            return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Not a valid Bot Token. Must start with `xoxb-`.')]);
+        }
+
+        // If the channel ID isn't valid, bail
+        if (!OutboundSlack::isValidChannelId($channelId)) {
+            return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Not a valid Channel ID. Must look like `C01234ABCD`.')]);
         }
 
         try {
             $client = Craft::createGuzzleClient();
-            $response = $client->post($webhookUrl, [
-                'headers'     => ['Content-Type' => 'application/json'],
-                'json'        => ['text' => 'Notifier test message.', 'mrkdwn' => true],
+            $response = $client->post('https://slack.com/api/chat.postMessage', [
+                'headers'     => [
+                    'Authorization' => 'Bearer ' . $botToken,
+                    'Content-Type'  => 'application/json; charset=utf-8',
+                ],
+                'json'        => [
+                    'channel' => $channelId,
+                    'text'    => 'Notifier test message.',
+                    'mrkdwn'  => true,
+                ],
                 'http_errors' => false,
                 'timeout'     => 10,
             ]);
-            $status = $response->getStatusCode();
-            $body = trim((string) $response->getBody());
+            $decoded = json_decode((string) $response->getBody(), true);
 
-            if (200 !== $status || 'ok' !== $body) {
-                return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'HTTP {status}: {body}', ['status' => $status, 'body' => $body])]);
+            // If Slack rejected the message, surface the error code
+            if (!is_array($decoded) || true !== ($decoded['ok'] ?? false)) {
+                $error = ($decoded['error'] ?? 'unknown');
+                return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Slack rejected the message: {error}', ['error' => $error])]);
             }
         } catch (Throwable $e) {
             return $this->asJson(['success' => false, 'message' => $e->getMessage()]);

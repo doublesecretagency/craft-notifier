@@ -52,6 +52,10 @@ return [
     'Users Event'                    => 'Användarhändelse',
     'Ungrouped Users'                => 'Användare utan grupp',
 
+    // Feed
+    'Feed Event' => 'Flödeshändelse',
+    'Feed URL' => 'Flödes-URL',
+    'The URL of the RSS, Atom, or JSON feed to watch.' => 'URL till RSS-, Atom- eller JSON-flödet som ska bevakas.',
     // Field and element conditions
     'Field Conditions'             => 'Fältvillkor',
     'Send the message only when the saved element matches the following conditions.' => 'Skicka meddelandet endast när det sparade elementet uppfyller följande villkor.',
@@ -120,7 +124,7 @@ return [
     'Message Type'                       => 'Meddelandetyp',
     'What type of message will be sent?' => 'Vilken typ av meddelande ska skickas?',
     'Send Message via Queue'             => 'Skicka meddelandet via kö',
-    'Should the message be sent via the [jobs queue]({queueUrl})?' => 'Ska meddelandet skickas via [jobbkön]({queueUrl})?',
+    '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Templating]({templatingUrl}) och [specialvariabler]({variablesUrl}) stöds också.',
     'Send immediately' => 'Skicka direkt',
     'Add to queue' => 'Lägg till i kö',
 
@@ -145,7 +149,6 @@ return [
 
     // Message tab: Pushover fields
     "Field containing each user's Pushover key" => 'Användarens Pushover-nyckelfält',
-    'The Pushover application token is configured in [Settings → Pushover](url).' => 'Pushover-applikationstoken konfigureras i [Inställningar → Pushover](url).',
 
     // Message tab: ntfy fields
     'Priority'           => 'Prioritet',
@@ -155,6 +158,8 @@ return [
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack-meddelandetext',
+    'Bot Icon URL' => 'Ikon-URL',
+    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => 'En URL för ikonen som ska visas bredvid meddelandet. Lämna tomt för att använda kanalens standard.',
 
     // Message tab: Bluesky fields
     'Post Body' => 'Inläggstext',
@@ -249,10 +254,25 @@ return [
 
     // Settings: Slack
     'Slack Channels' => 'Slack-kanaler',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Skapa en [Slack-app](https://api.slack.com/apps) med scope-en `chat:write`, `chat:write.customize` och `chat:write.public`, och lägg sedan till en rad för varje kanal du vill posta i. Varje kanal blir tillgänglig som mottagare på fliken **Recipients** när du konfigurerar en notifikation. En bot-token är en hemlighet, så lagra den i en `.env`-variabel och referera till den variabeln (t.ex. `$SLACK_BOT_TOKEN`) istället för att klistra in tokenet direkt.',
     'Channels'       => 'Kanaler',
     'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => 'Varje Slack-kanal behöver sin egen Incoming Webhook-URL. Använd knappen **Test** för en snabbkoll efter att du sparat.',
-    'Webhook URL'    => 'Webbhook-URL',
     'Add a channel'  => 'Lägg till en kanal',
+    'Bot Token' => 'Bot-token',
+    'Channel ID' => 'Kanal-ID',
+    'Bot Emoji' => 'Ikon-emoji',
+    'Bot Name' => 'Användarnamn',
+    'Show link previews' => 'Visa länkförhandsvisningar',
+    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => 'En emoji-genväg som visas bredvid det här meddelandet, t.ex. `:rocket:`. Används endast när ikon-URL är tom.',
+    "A display name for this message. Leave blank to use the app's default." => 'Ett visningsnamn för det här meddelandet. Lämna tomt för att använda appens standard.',
+    'Whether Slack should unfurl link previews for URLs in the message body.' => 'Om Slack ska visa länkförhandsvisningar för URL:er i meddelandetexten.',
+    'Not a valid Bot Token. Must start with `xoxb-`.' => 'Ogiltigt bot-token. Måste börja med `xoxb-`.',
+    'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Ogiltigt kanal-ID. Måste se ut som `C01234ABCD`.',
+    'Unable to send Slack message, no bot token.' => 'Kan inte skicka Slack-meddelande: inget bot-token.',
+    'Unable to send Slack message, no channel ID.' => 'Kan inte skicka Slack-meddelande: inget kanal-ID.',
+    'Recipient "{name}" has no Slack bot token.' => 'Mottagaren "{name}" har inget Slack-bot-token.',
+    'Recipient "{name}" has no Slack channel ID.' => 'Mottagaren "{name}" har inget Slack-kanal-ID.',
+    'Slack rejected the message: {error}' => 'Slack avvisade meddelandet: {error}',
     'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'Spara först för att behålla en rad, och klicka sedan på dess **Test**-knapp för att göra en snabbkoll mot Slack.',
 
     // Settings: Bluesky
@@ -292,6 +312,10 @@ return [
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.'          => 'Skickar {messageType} till {recipient}.',
     'Adding message to queue.'                       => 'Lägger till meddelandet i kön.',
+    'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.' => 'Kan inte tolka flödet. PHP-tilläggen `simplexml` och `libxml` krävs.',
+    'Unable to parse the feed.' => 'Kan inte tolka flödet.',
+    'Unable to fetch the feed: {message}' => 'Kan inte hämta flödet: {message}',
+    'Initial feed scan failed: {message}' => 'Inledande genomsökning av flödet misslyckades: {message}',
     'Sending message immediately (bypassing queue).' => 'Skickar meddelandet direkt (köen kringgås).',
     'Log events deleted.'                            => 'Logghändelser borttagna.',
     'notification'                                   => 'avisering',
@@ -332,10 +356,7 @@ return [
     'Successfully sent ntfy message to topic "{topic}".'     => 'ntfy-meddelande skickat till ämnet "{topic}".',
 
     // Outbound: Slack log messages
-    'Unable to send Slack message, no webhook URL.' => 'Det går inte att skicka Slack-meddelande: ingen webbhook-URL.',
-    'Unable to send Slack message, webhook URL is not valid.' => 'Det går inte att skicka Slack-meddelande: webbhook-URL är inte giltig.',
     'Unable to send Slack message, body is empty.'  => 'Det går inte att skicka Slack-meddelande: innehållet är tomt.',
-    'Slack POST failed (HTTP {status}): {reason}'   => 'Slack POST misslyckades (HTTP {status}): {reason}',
     'Slack POST failed: {reason}'                   => 'Slack POST misslyckades: {reason}',
     'Successfully sent Slack message to "{label}".' => 'Slack-meddelande skickat till "{label}".',
 
@@ -357,7 +378,6 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => 'Mottagaren "{name}" har ingen kopplad användare; Pushover-meddelandet kan inte skickas.',
     '[SKIPPED] User "{name}" has no Pushover key.'   => '[ÖVERHOPPAD] Användaren "{name}" har ingen Pushover-nyckel.',
     'Recipient "{name}" has no ntfy topic.'          => 'Mottagaren "{name}" har inget ntfy-ämne.',
-    'Recipient "{name}" has no Slack webhook URL.'   => 'Mottagaren "{name}" har ingen Slack-webbhook-URL.',
     'Recipient "{name}" has no Bluesky credentials.' => 'Mottagaren "{name}" har inga Bluesky-uppgifter.',
 
     // Errors / exceptions
@@ -382,7 +402,6 @@ return [
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Lägg till de Bluesky-konton du vill publicera från. Varje konto blir tillgängligt som mottagare på fliken **Mottagare** när du konfigurerar en avisering.',
     "Click any row's **Test** button to confirm the account authenticates." => 'Klicka på **Test**-knappen på valfri rad för att bekräfta att kontot autentiseras.',
-    "Add an [Incoming Webhook](https://api.slack.com/messaging/webhooks) for each Slack channel you'd like to post into. Each webhook becomes available as a recipient on the **Recipients** tab when configuring a notification. A webhook URL is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$SLACK_WEBHOOK_URL`) rather than pasting the URL directly." => 'Lägg till en [Incoming Webhook](https://api.slack.com/messaging/webhooks) för varje Slack-kanal du vill publicera till. Varje webhook blir tillgänglig som mottagare på fliken **Mottagare** när du konfigurerar en avisering. En webhook-URL är en hemlighet, så lagra den i en `.env`-variabel och referera till den variabeln (t.ex. `$SLACK_WEBHOOK_URL`) i stället för att klistra in URL:en direkt.',
     "Click any row's **Test** button to send a quick test message to that channel." => 'Klicka på **Test**-knappen på valfri rad för att skicka ett snabbt testmeddelande till den kanalen.',
     'Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`.' => 'Valfritt, peka på en självhostad ntfy-instans (om aktuellt). Standard `https://ntfy.sh`.',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'Valfritt, krävs för skyddade ämnen eller självhostade instanser med autentisering.',
@@ -390,7 +409,6 @@ return [
     "Click any row's **Test** button to send a quick test message to that topic." => 'Klicka på **Test**-knappen på valfri rad för att skicka ett snabbt testmeddelande till det ämnet.',
     'Enable Markdown' => 'Aktivera Markdown',
     'Link URL' => 'Länk-URL',
-    'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => 'Ingen giltig webhook-URL. Måste börja med https://hooks.slack.com/services/',
 
     // Manual triggers
     'Send Notification'                                            => 'Skicka avisering',
@@ -398,6 +416,7 @@ return [
     'Are you sure you want to send this notification?'             => 'Är du säker på att du vill skicka den här aviseringen?',
     'This notification cannot be triggered manually.'              => 'Den här aviseringen kan inte utlösas manuellt.',
     'This notification no longer applies to the selected element.' => 'Den här aviseringen gäller inte längre det valda elementet.',
+    'Notification was not sent. Check the Notification Log for details.' => 'Aviseringen skickades inte. Se Aviseringsloggen för mer information.',
     'Notification sent.'                                           => 'Avisering skickad.',
     'Element not found'                                            => 'Elementet hittades inte',
     'Trigger Label'                                                => 'Etikett för utlösare',
@@ -416,4 +435,41 @@ return [
     'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Delad hemlighet för att autentisera webbförfrågningar för schemalagd körning. Krävs endast när schemat utlöses via webbslutpunkten.',
     'Scheduled-Run Token' => 'Token för schemalagd körning',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Skickas med varje förfrågan som X-Notifier-Token-rubrik eller token-parameter i kroppen.',
+    'Pushover Title' => 'Pushover-titel',
+    'Pushover Body' => 'Pushover-innehåll',
+    'ntfy Title' => 'ntfy-titel',
+    'ntfy Body' => 'ntfy-innehåll',
+    'ntfy Link URL' => 'ntfy-länk-URL',
+    'Render Link Previews' => 'Visa länkförhandsgranskningar',
+    'Don\'t unfurl' => 'Expandera inte',
+    'Expand link previews' => 'Expandera länkförhandsgranskningar',
+    'Regular text only' => 'Endast vanlig text',
+    'Markdown enabled' => 'Markdown aktiverat',
+    'Dynamic Pushover Title' => 'Dynamisk Pushover-titel',
+    'Dynamic Subject Line' => 'Dynamisk ämnesrad',
+    'Dynamic Bot Name' => 'Dynamiskt botnamn',
+    'Dynamic ntfy Title' => 'Dynamisk ntfy-titel',
+    'Dynamic Announcement Title' => 'Dynamisk meddelandetitel',
+    'Dynamic Flash Message Title' => 'Dynamisk Flash-meddelandetitel',
+    'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Vanlig text, max 300 tecken. URL:er och `@handle.tld`-omnämnanden länkas automatiskt.',
+    'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Generera automatiskt ett förhandsgranskningskort när inläggets text innehåller en URL.',
+    'Whether the message be sent via the [jobs queue]({queueUrl}).' => 'Om meddelandet ska skickas via [jobbkön]({queueUrl}).',
+    'Priority level of the ntfy message.' => 'Prioritetsnivå för ntfy-meddelandet.',
+    'Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/).' => 'Inkludera eventuellt kommaseparerade [emoji-koder](https://docs.ntfy.sh/emojis/).',
+    'Body of the ntfy notification.' => 'Innehåll i ntfy-aviseringen.',
+    'Optionally open a URL when the notification is clicked.' => 'Öppna eventuellt en URL när aviseringen klickas.',
+    'Whether to parse the body as Markdown in supported clients.' => 'Om innehållet ska tolkas som Markdown i klienter som stöder det.',
+    'Heading of the announcement.' => 'Rubrik på meddelandet.',
+    'Body of the announcement. Supports Markdown.' => 'Innehåll i meddelandet. Stöder Markdown.',
+    'Heading of the flash message.' => 'Rubrik på flash-meddelandet.',
+    'Optionally include details below the heading. Supports Markdown and HTML.' => 'Inkludera eventuellt detaljer under rubriken. Stöder Markdown och HTML.',
+    'Optionally include a heading above the body.' => 'Inkludera eventuellt en rubrik ovanför innehållet.',
+    'Body of the SMS (text message). Plain text only.' => 'Innehåll i SMS:et (textmeddelande). Endast vanlig text.',
+    'Body of the Pushover notification. Plain text only.' => 'Innehåll i Pushover-aviseringen. Endast vanlig text.',
+    'Subject line of the email.' => 'Ämnesrad för e-postmeddelandet.',
+    'Body of the email. Supports HTML.' => 'Innehåll i e-postmeddelandet. Stöder HTML.',
+    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Innehåll i Slack-meddelandet. Stöder [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting)-syntax.',
+    'Optionally override the app\'s display name.' => 'Skriv eventuellt över appens visningsnamn.',
+    'Optionally override the app\'s icon with a URL.' => 'Skriv eventuellt över appens ikon med en URL.',
+    'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'Skriv eventuellt över appens ikon med en emoji. Används endast när Bot Icon URL är tom.',
 ];

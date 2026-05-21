@@ -52,6 +52,10 @@ return [
     'Users Event'                    => 'Kullanıcı olayı',
     'Ungrouped Users'                => 'Grupsuz kullanıcılar',
 
+    // Feed
+    'Feed Event' => 'Besleme Olayı',
+    'Feed URL' => "Besleme URL'si",
+    'The URL of the RSS, Atom, or JSON feed to watch.' => "İzlenecek RSS, Atom veya JSON beslemesinin URL'si.",
     // Field and element conditions
     'Field Conditions'             => 'Alan koşulları',
     'Send the message only when the saved element matches the following conditions.' => 'Mesajı yalnızca kaydedilen öğe aşağıdaki koşulları karşıladığında gönder.',
@@ -120,7 +124,7 @@ return [
     'Message Type'                       => 'Mesaj türü',
     'What type of message will be sent?' => 'Hangi tür mesaj gönderilecek?',
     'Send Message via Queue'             => 'Mesajı kuyruk üzerinden gönder',
-    'Should the message be sent via the [jobs queue]({queueUrl})?' => 'Mesaj [iş kuyruğu]({queueUrl}) üzerinden mi gönderilsin?',
+    '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Şablonlama]({templatingUrl}) ve [özel değişkenler]({variablesUrl}) de desteklenir.',
     'Send immediately' => 'Hemen gönder',
     'Add to queue' => 'Kuyruğa ekle',
 
@@ -145,7 +149,6 @@ return [
 
     // Message tab: Pushover fields
     "Field containing each user's Pushover key" => 'Kullanıcının Pushover anahtar alanı',
-    'The Pushover application token is configured in [Settings → Pushover](url).' => 'Pushover uygulama anahtarı [Ayarlar → Pushover](url) bölümünde yapılandırılır.',
 
     // Message tab: ntfy fields
     'Priority'           => 'Öncelik',
@@ -155,6 +158,8 @@ return [
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack mesaj gövdesi',
+    'Bot Icon URL' => "Simge URL'si",
+    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => "Bu mesajın yanında gösterilecek simgenin URL'si. Kanalın varsayılanını kullanmak için boş bırakın.",
 
     // Message tab: Bluesky fields
     'Post Body' => 'Gönderi gövdesi',
@@ -249,10 +254,25 @@ return [
 
     // Settings: Slack
     'Slack Channels' => 'Slack kanalları',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`, `chat:write.customize` ve `chat:write.public` kapsamlarına sahip bir [Slack uygulaması](https://api.slack.com/apps) oluşturun, ardından paylaşım yapmak istediğiniz her kanal için bir satır ekleyin. Bir bildirim yapılandırılırken her kanal **Recipients** sekmesinde alıcı olarak kullanılabilir hale gelir. Bot belirteci bir sırdır, bu nedenle onu doğrudan yapıştırmak yerine bir `.env` değişkeninde saklayın ve o değişkene başvurun (örn. `$SLACK_BOT_TOKEN`).',
     'Channels'       => 'Kanallar',
     'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => "Her Slack kanalı kendi Gelen Web Kancası URL'sine ihtiyaç duyar. Kaydettikten sonra hızlı bir kontrol için **Test** düğmesini kullanın.",
-    'Webhook URL'    => "Web kancası URL'si",
     'Add a channel'  => 'Bir kanal ekle',
+    'Bot Token' => 'Bot Belirteci',
+    'Channel ID' => 'Kanal Kimliği',
+    'Bot Emoji' => 'Simge Emojisi',
+    'Bot Name' => 'Kullanıcı Adı',
+    'Show link previews' => 'Bağlantı önizlemelerini göster',
+    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => "Bu mesajın yanında gösterilecek emoji kısayolu, örn. `:rocket:`. Yalnızca Simge URL'si boş olduğunda kullanılır.",
+    "A display name for this message. Leave blank to use the app's default." => 'Bu mesaj için bir görünen ad. Uygulamanın varsayılanını kullanmak için boş bırakın.',
+    'Whether Slack should unfurl link previews for URLs in the message body.' => "Slack'in mesaj gövdesindeki URL'ler için bağlantı önizlemelerini gösterip göstermeyeceği.",
+    'Not a valid Bot Token. Must start with `xoxb-`.' => 'Geçerli bir Bot Belirteci değil. `xoxb-` ile başlamalıdır.',
+    'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Geçerli bir Kanal Kimliği değil. `C01234ABCD` gibi görünmelidir.',
+    'Unable to send Slack message, no bot token.' => 'Slack mesajı gönderilemiyor: bot belirteci yok.',
+    'Unable to send Slack message, no channel ID.' => 'Slack mesajı gönderilemiyor: kanal kimliği yok.',
+    'Recipient "{name}" has no Slack bot token.' => 'Alıcı "{name}" Slack bot belirtecine sahip değil.',
+    'Recipient "{name}" has no Slack channel ID.' => 'Alıcı "{name}" Slack kanal kimliğine sahip değil.',
+    'Slack rejected the message: {error}' => 'Slack mesajı reddetti: {error}',
     'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'Önce kaydedip satırı kalıcı hale getirin, ardından Slack üzerinde hızlı bir kontrol için **Test** düğmesine tıklayın.',
 
     // Settings: Bluesky
@@ -292,6 +312,10 @@ return [
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.'          => '{recipient} alıcısına {messageType} gönderiliyor.',
     'Adding message to queue.'                       => 'Mesaj kuyruğa ekleniyor.',
+    'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.' => 'Akış ayrıştırılamıyor. PHP `simplexml` ve `libxml` uzantıları gereklidir.',
+    'Unable to parse the feed.' => 'Akış ayrıştırılamıyor.',
+    'Unable to fetch the feed: {message}' => 'Akış alınamıyor: {message}',
+    'Initial feed scan failed: {message}' => 'İlk akış taraması başarısız: {message}',
     'Sending message immediately (bypassing queue).' => 'Mesaj hemen gönderiliyor (kuyruk atlanıyor).',
     'Log events deleted.'                            => 'Günlük olayları silindi.',
     'notification'                                   => 'bildirim',
@@ -332,10 +356,7 @@ return [
     'Successfully sent ntfy message to topic "{topic}".'     => '"{topic}" konusuna ntfy mesajı başarıyla gönderildi.',
 
     // Outbound: Slack log messages
-    'Unable to send Slack message, no webhook URL.' => "Slack mesajı gönderilemiyor: web kancası URL'si yok.",
-    'Unable to send Slack message, webhook URL is not valid.' => "Slack mesajı gönderilemiyor: web kancası URL'si geçerli değil.",
     'Unable to send Slack message, body is empty.'  => 'Slack mesajı gönderilemiyor: gövde boş.',
-    'Slack POST failed (HTTP {status}): {reason}'   => 'Slack POST başarısız (HTTP {status}): {reason}',
     'Slack POST failed: {reason}'                   => 'Slack POST başarısız: {reason}',
     'Successfully sent Slack message to "{label}".' => "\"{label}\"'a Slack mesajı başarıyla gönderildi.",
 
@@ -357,7 +378,6 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => '"{name}" alıcısı için ilişkilendirilmiş bir Kullanıcı yok; Pushover mesajı gönderilemez.',
     '[SKIPPED] User "{name}" has no Pushover key.'   => '[ATLANDI] "{name}" kullanıcısının Pushover anahtarı yok.',
     'Recipient "{name}" has no ntfy topic.'          => '"{name}" alıcısının ntfy konusu yok.',
-    'Recipient "{name}" has no Slack webhook URL.'   => "\"{name}\" alıcısının Slack web kancası URL'si yok.",
     'Recipient "{name}" has no Bluesky credentials.' => '"{name}" alıcısının Bluesky kimlik bilgileri yok.',
 
     // Errors / exceptions
@@ -382,7 +402,6 @@ return [
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Gönderim yapmak istediğiniz Bluesky hesaplarını ekleyin. Bir bildirim yapılandırırken her hesap **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
     "Click any row's **Test** button to confirm the account authenticates." => 'Hesabın kimlik doğrulamasından geçtiğini onaylamak için herhangi bir satırın **Test** düğmesine tıklayın.',
-    "Add an [Incoming Webhook](https://api.slack.com/messaging/webhooks) for each Slack channel you'd like to post into. Each webhook becomes available as a recipient on the **Recipients** tab when configuring a notification. A webhook URL is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$SLACK_WEBHOOK_URL`) rather than pasting the URL directly." => "Gönderim yapmak istediğiniz her Slack kanalı için bir [Gelen Web Kancası](https://api.slack.com/messaging/webhooks) ekleyin. Bir bildirim yapılandırırken her web kancası **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir. Bir web kancası URL'si gizli bir bilgidir; bu nedenle URL'yi doğrudan yapıştırmak yerine bir `.env` değişkeninde saklayın ve o değişkene (örn. `\$SLACK_WEBHOOK_URL`) başvurun.",
     "Click any row's **Test** button to send a quick test message to that channel." => 'O kanala hızlı bir test mesajı göndermek için herhangi bir satırın **Test** düğmesine tıklayın.',
     'Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`.' => 'İsteğe bağlı, kendi sunucunuzda barındırdığınız bir ntfy örneğini gösterin (geçerliyse). Varsayılan `https://ntfy.sh`.',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'İsteğe bağlı, korumalı konular veya kimlik doğrulamalı kendi sunucunuzda barındırdığınız örnekler için gereklidir.',
@@ -390,7 +409,6 @@ return [
     "Click any row's **Test** button to send a quick test message to that topic." => 'O konuya hızlı bir test mesajı göndermek için herhangi bir satırın **Test** düğmesine tıklayın.',
     'Enable Markdown' => 'Markdown\'ı etkinleştir',
     'Link URL' => "Bağlantı URL'si",
-    'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => "Geçerli bir web kancası URL'si değil. https://hooks.slack.com/services/ ile başlamalı.",
 
     // Manual triggers
     'Send Notification'                                            => 'Bildirim gönder',
@@ -398,6 +416,7 @@ return [
     'Are you sure you want to send this notification?'             => 'Bu bildirimi göndermek istediğinizden emin misiniz?',
     'This notification cannot be triggered manually.'              => 'Bu bildirim manuel olarak tetiklenemez.',
     'This notification no longer applies to the selected element.' => 'Bu bildirim artık seçili öğeye uygulanmıyor.',
+    'Notification was not sent. Check the Notification Log for details.' => 'Bildirim gönderilmedi. Ayrıntılar için Bildirim günlüğüne bakın.',
     'Notification sent.'                                           => 'Bildirim gönderildi.',
     'Element not found'                                            => 'Öğe bulunamadı',
     'Trigger Label'                                                => 'Tetikleyici etiketi',
@@ -416,4 +435,41 @@ return [
     'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Zamanlanmış çalıştırma web isteklerinin kimliğini doğrulamak için paylaşılan gizli anahtar. Yalnızca zamanlama web uç noktası üzerinden tetiklendiğinde gereklidir.',
     'Scheduled-Run Token' => 'Zamanlanmış çalıştırma belirteci',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Her istekle birlikte X-Notifier-Token başlığı veya token gövde parametresi olarak gönderilir.',
+    'Pushover Title' => 'Pushover Başlık',
+    'Pushover Body' => 'Pushover Gövde',
+    'ntfy Title' => 'ntfy Başlık',
+    'ntfy Body' => 'ntfy Gövde',
+    'ntfy Link URL' => 'ntfy Bağlantı URL\'si',
+    'Render Link Previews' => 'Bağlantı önizlemelerini göster',
+    'Don\'t unfurl' => 'Genişletme',
+    'Expand link previews' => 'Bağlantı önizlemelerini genişlet',
+    'Regular text only' => 'Yalnızca düz metin',
+    'Markdown enabled' => 'Markdown etkin',
+    'Dynamic Pushover Title' => 'Dinamik Pushover Başlık',
+    'Dynamic Subject Line' => 'Dinamik Konu Satırı',
+    'Dynamic Bot Name' => 'Dinamik Bot Adı',
+    'Dynamic ntfy Title' => 'Dinamik ntfy Başlık',
+    'Dynamic Announcement Title' => 'Dinamik Duyuru Başlığı',
+    'Dynamic Flash Message Title' => 'Dinamik Flash Mesaj Başlığı',
+    'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Düz metin, en fazla 300 karakter. URL\'ler ve `@handle.tld` etiketlemeleri otomatik olarak bağlantıya dönüşür.',
+    'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Gönderi gövdesinde bir URL olduğunda otomatik olarak önizleme kartı oluşturur.',
+    'Whether the message be sent via the [jobs queue]({queueUrl}).' => 'Mesajın [iş kuyruğu]({queueUrl}) üzerinden gönderilip gönderilmeyeceği.',
+    'Priority level of the ntfy message.' => 'ntfy mesajının öncelik seviyesi.',
+    'Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/).' => 'İsteğe bağlı olarak virgülle ayrılmış [emoji kısa kodları](https://docs.ntfy.sh/emojis/) ekleyin.',
+    'Body of the ntfy notification.' => 'ntfy bildiriminin gövdesi.',
+    'Optionally open a URL when the notification is clicked.' => 'İsteğe bağlı olarak, bildirime tıklandığında bir URL açın.',
+    'Whether to parse the body as Markdown in supported clients.' => 'Gövdenin desteklenen istemcilerde Markdown olarak işlenip işlenmeyeceği.',
+    'Heading of the announcement.' => 'Duyurunun başlığı.',
+    'Body of the announcement. Supports Markdown.' => 'Duyurunun gövdesi. Markdown\'ı destekler.',
+    'Heading of the flash message.' => 'Flash mesajının başlığı.',
+    'Optionally include details below the heading. Supports Markdown and HTML.' => 'İsteğe bağlı olarak başlığın altına ayrıntı ekleyin. Markdown ve HTML\'i destekler.',
+    'Optionally include a heading above the body.' => 'İsteğe bağlı olarak gövdenin üstüne bir başlık ekleyin.',
+    'Body of the SMS (text message). Plain text only.' => 'SMS (kısa mesaj) gövdesi. Yalnızca düz metin.',
+    'Body of the Pushover notification. Plain text only.' => 'Pushover bildiriminin gövdesi. Yalnızca düz metin.',
+    'Subject line of the email.' => 'E-postanın konu satırı.',
+    'Body of the email. Supports HTML.' => 'E-postanın gövdesi. HTML\'i destekler.',
+    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Slack mesajının gövdesi. [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) söz dizimini destekler.',
+    'Optionally override the app\'s display name.' => 'İsteğe bağlı olarak uygulamanın görünen adını geçersiz kılın.',
+    'Optionally override the app\'s icon with a URL.' => 'İsteğe bağlı olarak uygulamanın simgesini bir URL ile geçersiz kılın.',
+    'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'İsteğe bağlı olarak uygulamanın simgesini bir emoji ile geçersiz kılın. Yalnızca Bot Icon URL boşken kullanılır.',
 ];

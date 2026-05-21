@@ -13,22 +13,24 @@
 
     <hr>
 
-    {% include 'notifier/notifications/_edit/message/docs-links' %}
-
-    {{ forms.textField({
+    {{ codeEditor.textAreaField({
         label: "Flash Message Title"|t('notifier'),
-        instructions: "Primary message, displayed in bold.",
+        instructions: "Heading of the flash message."|t('notifier'),
+        tip: templatingTip,
+        placeholder: "Dynamic Flash Message Title"|t('notifier'),
+        rows: 1,
         id: 'messageConfig-flashTitle',
         name: 'messageConfig[flashTitle]',
         value: (notification.messageConfig.flashTitle ?? null),
         errors: notification.getErrors('messageConfig[flashTitle]'),
-    }) }}
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
     {{ codeEditor.textAreaField({
         label: "Flash Message Details"|t('notifier'),
-        instructions: "Optional message details. Markdown and HTML are supported.",
+        instructions: "Optionally include details below the heading. Supports Markdown and HTML."|t('notifier'),
+        tip: templatingTip,
         placeholder: commonPlaceholder,
-        rows: 2,
+        rows: 3,
         id: 'messageConfig-flashDetails',
         name: 'messageConfig[flashDetails]',
         value: (notification.messageConfig.flashDetails ?? null),

@@ -70,10 +70,14 @@ class CredentialUidLookupTest extends TestCase
         );
     }
 
-    public function testSlackResolverPopulatesWebhookUrl(): void
+    public function testSlackResolverPopulatesBotTokenAndChannelId(): void
     {
         $this->assertMatchesRegularExpression(
-            "/'slackWebhookUrl'\s*=>\s*\\\$row\['webhookUrl'\]/",
+            "/'slackBotToken'\s*=>\s*\\\$row\['botToken'\]/",
+            $this->recipientsSource
+        );
+        $this->assertMatchesRegularExpression(
+            "/'slackChannelId'\s*=>\s*\\\$row\['channelId'\]/",
             $this->recipientsSource
         );
     }

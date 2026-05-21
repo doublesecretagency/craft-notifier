@@ -2,29 +2,29 @@
 namespace doublesecretagency\notifier\tests\unit;
 
 use craft\db\Migration;
-use doublesecretagency\notifier\migrations\m260519_120000_scheduledhistory;
+use doublesecretagency\notifier\migrations\m260519_120000_trackscheduled;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 /**
- * Structural tests for the scheduled history migration.
+ * Structural tests for the schedule tracking migration.
  *
- * The `notifier_scheduledhistory` table holds the per-notification window
+ * The `notifier_trackscheduled` table holds the per-notification window
  * timestamp (`lastRunAt`) the runner advances on every run. The unique
  * index keeps it one-row-per-notification, and the foreign key cleans the
  * cursor up when its notification is hard-deleted.
  */
-class ScheduledHistoryMigrationTest extends TestCase
+class ScheduleTrackingMigrationTest extends TestCase
 {
     private string $migrationSource;
     private ReflectionClass $reflection;
 
     protected function setUp(): void
     {
-        $path = dirname(__DIR__, 2) . '/src/migrations/m260519_120000_scheduledhistory.php';
+        $path = dirname(__DIR__, 2) . '/src/migrations/m260519_120000_trackscheduled.php';
         $this->assertTrue(file_exists($path), "Migration should exist at: $path");
         $this->migrationSource = file_get_contents($path);
-        $this->reflection = new ReflectionClass(m260519_120000_scheduledhistory::class);
+        $this->reflection = new ReflectionClass(m260519_120000_trackscheduled::class);
     }
 
     // ========================================================================= //
@@ -46,10 +46,10 @@ class ScheduledHistoryMigrationTest extends TestCase
     // Table schema
     // ========================================================================= //
 
-    public function testCreatesScheduledHistoryTable(): void
+    public function testCreatesScheduleTrackingTable(): void
     {
         $this->assertStringContainsString(
-            '{{%notifier_scheduledhistory}}',
+            '{{%notifier_trackscheduled}}',
             $this->migrationSource
         );
     }

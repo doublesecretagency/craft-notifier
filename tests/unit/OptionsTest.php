@@ -91,11 +91,14 @@ class OptionsTest extends TestCase
         // The order is load-bearing - the CP dropdown renders options in
         // source order. The canonical sequence is documented in the
         // events-bundle-tier-2 plan; this assertion is the enforcement.
+        // RSS Feed slots in after the native trio and before the Craft
+        // Commerce optgroup since it has no third-party plugin dependency.
         $this->assertSame(
             [
                 'entries',
                 'assets',
                 'users',
+                'feed',
                 'craft-commerce-orders',
                 'craft-commerce-products',
                 'digital-products-products',
@@ -505,7 +508,12 @@ class OptionsTest extends TestCase
     {
         // date-reached sits directly above manually-triggered, so the two
         // non-Yii triggers close out every element-type list together.
+        // RSS Feed is the lone exception: it has no element subject and
+        // ships with only one event of its own.
         foreach (Options::ALL_EVENTS as $key => $events) {
+            if ('feed' === $key) {
+                continue;
+            }
             $secondToLast = $events[count($events) - 2];
             $this->assertSame('date-reached', $secondToLast['value'],
                 "date-reached must be the second-to-last sub-event under '{$key}'");
@@ -523,6 +531,59 @@ class OptionsTest extends TestCase
                 }
             }
         }
+    }
+
+    // ========================================================================= //
+    // ALL_EVENTS coverage: RSS Feed event type
+    // ========================================================================= //
+
+    public function testFeedAppearsInAllThreeEventTypeLookups(): void
+    {
+        // RSS Feed is a top-level event type with no third-party plugin
+        // dependency, so it must appear in every lookup.
+        $this->assertArrayHasKey('feed', Options::EVENT_TYPE);
+        $this->assertArrayHasKey('feed', Options::EVENT_TYPE_GROUPED);
+        $this->assertArrayHasKey('feed', Options::ALL_EVENTS);
+    }
+
+    public function testFeedLabelIsExact(): void
+    {
+        // The user-visible label is pinned so CP drift is caught early.
+        $this->assertSame('RSS/JSON Feed', Options::EVENT_TYPE['feed']);
+        $this->assertSame('RSS/JSON Feed', Options::EVENT_TYPE_GROUPED['feed']);
+    }
+
+    public function testFeedShipsExactlyOneEvent(): void
+    {
+        // There is one event under RSS Feed: "When a new RSS feed item is found".
+        // Adding a sibling event later means revisiting the CP template.
+        $events = Options::ALL_EVENTS['feed'];
+        $this->assertCount(1, $events);
+        $this->assertSame('new-item', $events[0]['value']);
+        $this->assertSame('When a new RSS feed item is found', $events[0]['label']);
+    }
+
+    public function testFeedEventHasNoEventClass(): void
+    {
+        // The RSS event is poll-driven, not backed by a Yii event, so no class.
+        $events = Options::ALL_EVENTS['feed'];
+        $this->assertArrayNotHasKey('class', $events[0]);
+    }
+
+    public function testFeedSlotsBetweenUsersAndCommerceOrders(): void
+    {
+        // In the dropdown's grouped form, RSS Feed sits with the native trio
+        // immediately above the first plugin optgroup (Craft Commerce).
+        $keys = array_keys(Options::EVENT_TYPE_GROUPED);
+        $rssIndex = array_search('feed', $keys, true);
+        $usersIndex = array_search('users', $keys, true);
+        $this->assertNotFalse($rssIndex);
+        $this->assertNotFalse($usersIndex);
+        $this->assertGreaterThan($usersIndex, $rssIndex);
+        // The next entry must be the Craft Commerce optgroup divider.
+        $next = $keys[$rssIndex + 1];
+        $this->assertIsInt($next);
+        $this->assertSame('Craft Commerce', Options::EVENT_TYPE_GROUPED[$next]['optgroup']);
     }
 
     public function testEntriesOffersPendingToLive(): void

@@ -111,9 +111,10 @@ class SettingsProvidersControllerTest extends TestCase
         );
     }
 
-    public function testTestSlackValidatesWebhookHost(): void
+    public function testTestSlackValidatesBotTokenAndChannelId(): void
     {
-        $this->assertStringContainsString('OutboundSlack::isValidWebhookUrl(', $this->controllerSource);
+        $this->assertStringContainsString('OutboundSlack::isValidBotToken(', $this->controllerSource);
+        $this->assertStringContainsString('OutboundSlack::isValidChannelId(', $this->controllerSource);
     }
 
     public function testTestBlueskyUsesCreateSession(): void

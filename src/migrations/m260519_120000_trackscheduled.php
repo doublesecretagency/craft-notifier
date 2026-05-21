@@ -14,9 +14,9 @@ namespace doublesecretagency\notifier\migrations;
 use craft\db\Migration;
 
 /**
- * m260519_120000_scheduledhistory migration
+ * m260519_120000_trackscheduled migration
  *
- * Creates the table that records when each scheduled notification was last
+ * Creates the table that tracks when each scheduled notification was last
  * run. The schedule runner reads each row's `lastRunAt`, finds any elements
  * whose date crossed since then, sends a message for each, and advances
  * the timestamp. That timestamp is what guarantees each crossing fires
@@ -24,13 +24,13 @@ use craft\db\Migration;
  *
  * @since 3.0.0
  */
-class m260519_120000_scheduledhistory extends Migration
+class m260519_120000_trackscheduled extends Migration
 {
 
     /**
-     * @var string The scheduled history table name.
+     * @var string The schedule tracking table name.
      */
-    private const SCHEDULED_HISTORY = '{{%notifier_scheduledhistory}}';
+    private const TRACK_SCHEDULED = '{{%notifier_trackscheduled}}';
 
     /**
      * @inheritdoc
@@ -38,22 +38,22 @@ class m260519_120000_scheduledhistory extends Migration
     public function safeUp(): bool
     {
         // If the table already exists, bail
-        if ($this->db->tableExists(self::SCHEDULED_HISTORY)) {
+        if ($this->db->tableExists(self::TRACK_SCHEDULED)) {
             return true;
         }
 
-        // Create the scheduled history table
-        $this->createTable(self::SCHEDULED_HISTORY, [
+        // Create the schedule tracking table
+        $this->createTable(self::TRACK_SCHEDULED, [
             'id'             => $this->primaryKey(),
             'notificationId' => $this->integer()->notNull(),
             'lastRunAt'      => $this->dateTime()->notNull(),
         ]);
 
-        // Only one row per notification
-        $this->createIndex(null, self::SCHEDULED_HISTORY, ['notificationId'], true);
+        // One row per notification
+        $this->createIndex(null, self::TRACK_SCHEDULED, ['notificationId'], true);
 
-        // Remove this row if its notification is hard-deleted
-        $this->addForeignKey(null, self::SCHEDULED_HISTORY, ['notificationId'], '{{%notifier_notifications}}', ['id'], 'CASCADE');
+        // Drop the row when its notification is hard-deleted
+        $this->addForeignKey(null, self::TRACK_SCHEDULED, ['notificationId'], '{{%notifier_notifications}}', ['id'], 'CASCADE');
 
         return true;
     }
@@ -63,7 +63,7 @@ class m260519_120000_scheduledhistory extends Migration
      */
     public function safeDown(): bool
     {
-        $this->dropTableIfExists(self::SCHEDULED_HISTORY);
+        $this->dropTableIfExists(self::TRACK_SCHEDULED);
         return true;
     }
 

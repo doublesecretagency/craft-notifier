@@ -14,24 +14,27 @@ Before posting messages to Bluesky, add at least one account via [Settings → B
 
 ## Config
 
-<img class="dropshadow" src="/images/messages/bluesky-config.png" alt="" style="width:647px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/bluesky-config.png" alt="" style="width:640px; margin-top:10px">
 
 <!--@include: @/messages/types/_docs-links.md-->
+
+### Generate Link Preview
+
+This toggle (enabled by default) controls whether Notifier will attempt to generate a _rich preview card_ based on the first link in the post. The preview card will show the linked page's title, description, and image.
+
+Turn the toggle off to post plain links with no card.
+
 <!--@include: @/messages/types/_queue-link.md-->
 
-### Auto-linked URLs and mentions
-
-URLs and `@handle.tld` mentions in the post body link automatically. Hashtags do not.
+## Formatting
 
 ### Character limit
 
 Bluesky limits posts to 300 characters. Notifier truncates anything longer.
 
-## Generate Link Preview
+### Auto-linked URLs and mentions
 
-This toggle (enabled by default) controls whether Notifier will attempt to generate a _rich preview card_ based on the first link in the post. The preview card will show the linked page's title, description, and image.
-
-Turn the toggle off to post plain links with no card.
+URLs and `@handle.tld` mentions in the post body link automatically. Hashtags do not.
 
 ## Examples
 

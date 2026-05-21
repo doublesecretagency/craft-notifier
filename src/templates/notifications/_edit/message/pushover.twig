@@ -13,13 +13,12 @@
 
     <hr>
 
-    {% include 'notifier/notifications/_edit/message/docs-links' %}
-
     {{ codeEditor.textAreaField({
-        label: "Title"|t('notifier'),
-        instructions: "Optional title shown above the body on the recipient's device.",
-        placeholder: commonPlaceholder,
-        rows: 2,
+        label: "Pushover Title"|t('notifier'),
+        instructions: "Optionally include a heading above the body."|t('notifier'),
+        tip: templatingTip,
+        placeholder: "Dynamic Pushover Title"|t('notifier'),
+        rows: 1,
         id: 'messageConfig-pushoverTitle',
         name: 'messageConfig[pushoverTitle]',
         value: (notification.messageConfig.pushoverTitle ?? null),
@@ -27,8 +26,9 @@
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
     {{ codeEditor.textAreaField({
-        label: "Body"|t('notifier'),
-        instructions: "Body of the Pushover notification. Plain text. HTML / Markdown are not rendered.",
+        label: "Pushover Body"|t('notifier'),
+        instructions: "Body of the Pushover notification. Plain text only."|t('notifier'),
+        tip: templatingTip,
         placeholder: commonPlaceholder,
         rows: 4,
         id: 'messageConfig-pushoverBody',
@@ -37,8 +37,6 @@
         errors: notification.getErrors('messageConfig[pushoverBody]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
-    <p class="instructions">{{ "The Pushover application token is configured in [Settings → Pushover](url)."|t('notifier', { url: url('settings/plugins/notifier/pushover') })|md }}</p>
-
     <hr>
 
     {{ forms.lightswitchField({
@@ -46,8 +44,8 @@
         instructions: queueInstructions,
         id: 'messageConfig-pushoverQueue',
         name: 'messageConfig[pushoverQueue]',
-        offLabel: 'Send immediately'|t('notifier'),
-        onLabel: 'Add to queue'|t('notifier'),
+        offLabel: "Send immediately"|t('notifier'),
+        onLabel: "Add to queue"|t('notifier'),
         on: (notification.messageConfig.pushoverQueue ?? true),
     }) }}
 </div>

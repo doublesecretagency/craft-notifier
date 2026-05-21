@@ -31,9 +31,14 @@ class Install extends Migration
     const LOG = '{{%notifier_log}}';
 
     /**
-     * @var string The scheduled history table name.
+     * @var string The schedule tracking table name.
      */
-    const SCHEDULED_HISTORY = '{{%notifier_scheduledhistory}}';
+    const TRACK_SCHEDULED = '{{%notifier_trackscheduled}}';
+
+    /**
+     * @var string The feed tracking table name.
+     */
+    const TRACK_FEEDS = '{{%notifier_trackfeeds}}';
 
     /**
      * @inheritdoc
@@ -49,7 +54,8 @@ class Install extends Migration
      */
     public function safeDown(): void
     {
-        $this->dropTableIfExists(self::SCHEDULED_HISTORY);
+        $this->dropTableIfExists(self::TRACK_FEEDS);
+        $this->dropTableIfExists(self::TRACK_SCHEDULED);
         $this->dropTableIfExists(self::LOG);
         $this->dropTableIfExists(self::NOTIFICATIONS);
     }
@@ -65,7 +71,7 @@ class Install extends Migration
                 'id'               => $this->integer()->notNull(),
                 'description'      => $this->string(),
                 'eventType'        => $this->string(),
-                'event'            => $this->string(),
+                'event'             => $this->string(),
                 'eventConfig'      => $this->text(),
                 'messageType'      => $this->string(),
                 'messageConfig'    => $this->text(),
@@ -95,13 +101,23 @@ class Install extends Migration
         }
 
         // If table does not already exist, create it
-        if (!$this->db->tableExists(self::SCHEDULED_HISTORY)) {
-            $this->createTable(self::SCHEDULED_HISTORY, [
+        if (!$this->db->tableExists(self::TRACK_SCHEDULED)) {
+            $this->createTable(self::TRACK_SCHEDULED, [
                 'id'             => $this->primaryKey(),
                 'notificationId' => $this->integer()->notNull(),
                 'lastRunAt'      => $this->dateTime()->notNull(),
             ]);
-            $this->createIndex(null, self::SCHEDULED_HISTORY, ['notificationId'], true);
+            $this->createIndex(null, self::TRACK_SCHEDULED, ['notificationId'], true);
+        }
+
+        // If table does not already exist, create it
+        if (!$this->db->tableExists(self::TRACK_FEEDS)) {
+            $this->createTable(self::TRACK_FEEDS, [
+                'id'             => $this->primaryKey(),
+                'notificationId' => $this->integer()->notNull(),
+                'itemId'         => $this->string(255)->notNull(),
+            ]);
+            $this->createIndex(null, self::TRACK_FEEDS, ['notificationId', 'itemId'], true);
         }
     }
 
@@ -116,8 +132,11 @@ class Install extends Migration
         // Relate Logs to Notifications
         $this->addForeignKey(null, self::LOG, ['notificationId'], self::NOTIFICATIONS, ['id'], 'SET NULL');
 
-        // Relate Scheduled History to Notifications
-        $this->addForeignKey(null, self::SCHEDULED_HISTORY, ['notificationId'], self::NOTIFICATIONS, ['id'], 'CASCADE');
+        // Relate Schedule Tracking to Notifications
+        $this->addForeignKey(null, self::TRACK_SCHEDULED, ['notificationId'], self::NOTIFICATIONS, ['id'], 'CASCADE');
+
+        // Relate Feed Tracking to Notifications
+        $this->addForeignKey(null, self::TRACK_FEEDS, ['notificationId'], self::NOTIFICATIONS, ['id'], 'CASCADE');
     }
 
 }

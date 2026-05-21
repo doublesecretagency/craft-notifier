@@ -1,7 +1,7 @@
 {% import '_includes/forms' as forms %}
 
 <h2>{{ "Slack Channels"|t('notifier') }}</h2>
-<p>{{ "Add an [Incoming Webhook](https://api.slack.com/messaging/webhooks) for each Slack channel you'd like to post into. Each webhook becomes available as a recipient on the **Recipients** tab when configuring a notification. A webhook URL is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_WEBHOOK_URL`) rather than pasting the URL directly."|t('notifier')|md }}</p>
+<p>{{ "Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you'd like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly."|t('notifier')|md }}</p>
 <div class="pane notifier-named-list">
     {{ forms.editableTableField({
         label: "Channels"|t('notifier'),
@@ -12,14 +12,20 @@
             label: {
                 heading: "Label"|t('notifier'),
                 type: 'singleline',
-                width: '30%',
+                width: '25%',
                 placeholder: '#channelname',
             },
-            webhookUrl: {
-                heading: "Webhook URL"|t('notifier'),
+            botToken: {
+                heading: "Bot Token"|t('notifier'),
                 type: 'singleline',
-                width: '50%',
-                placeholder: '$SLACK_WEBHOOK_URL',
+                width: '35%',
+                placeholder: '$SLACK_BOT_TOKEN',
+            },
+            channelId: {
+                heading: "Channel ID"|t('notifier'),
+                type: 'singleline',
+                width: '20%',
+                placeholder: '$SLACK_CHANNEL_ID',
             },
             uid: {
                 heading: '',

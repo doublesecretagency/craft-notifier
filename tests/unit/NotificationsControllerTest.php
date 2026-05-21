@@ -263,6 +263,36 @@ class NotificationsControllerTest extends TestCase
         );
     }
 
+    public function testSendManualActionCapturesEnvelopeCountFromMessagesSend(): void
+    {
+        // The return value of Messages::send() must drive the response, not get
+        // discarded behind an unconditional success payload.
+        $this->assertMatchesRegularExpression(
+            '/actionSendManual[\s\S]*?\$count\s*=\s*[^;]*messages->send\(/',
+            $this->controllerSource
+        );
+    }
+
+    public function testSendManualActionReportsFailureWhenZeroEnvelopesSent(): void
+    {
+        // A zero-envelope outcome must respond with success:false so the JS
+        // surfaces an error toast instead of the misleading "sent" toast.
+        $this->assertMatchesRegularExpression(
+            "/actionSendManual[\s\S]*?if \(0 === \\\$count\)[\s\S]*?'success' => false/",
+            $this->controllerSource
+        );
+    }
+
+    public function testSendManualActionFailureMessagePointsAtTheNotificationLog(): void
+    {
+        // The failure text names the Notification Log so the operator knows
+        // where to dig.
+        $this->assertStringContainsString(
+            'Notification was not sent. Check the Notification Log for details.',
+            $this->controllerSource
+        );
+    }
+
     // ========================================================================= //
     // Helper methods
     // ========================================================================= //

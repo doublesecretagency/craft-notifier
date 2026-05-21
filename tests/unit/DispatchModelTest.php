@@ -150,7 +150,7 @@ class DispatchModelTest extends TestCase
     public function testConfigureByMessageTypeHandlesAllChannels(): void
     {
         // Every supported channel must appear as a case in configureByMessageType().
-        foreach (['email', 'sms', 'announcement', 'flash', 'pushover', 'ntfy', 'slack', 'bluesky'] as $channel) {
+        foreach (['email', 'announcement', 'flash', 'sms', 'pushover', 'ntfy', 'slack', 'bluesky'] as $channel) {
             $this->assertMatchesRegularExpression(
                 "/case\s+'{$channel}':/",
                 $this->dispatchSource,

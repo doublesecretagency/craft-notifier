@@ -41,7 +41,8 @@ class RecipientModelTest extends TestCase
         $this->assertNull($recipient->emailAddress);
         $this->assertNull($recipient->phoneNumber);
         $this->assertNull($recipient->topic);
-        $this->assertNull($recipient->slackWebhookUrl);
+        $this->assertNull($recipient->slackBotToken);
+        $this->assertNull($recipient->slackChannelId);
         $this->assertNull($recipient->slackChannelLabel);
         $this->assertNull($recipient->blueskyHandle);
         $this->assertNull($recipient->blueskyAppPassword);

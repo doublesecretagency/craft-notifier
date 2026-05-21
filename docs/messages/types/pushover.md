@@ -20,7 +20,7 @@ Before sending Pushover messages, set the Application API Token via [Settings â†
 
 For each Pushover notification, be sure to specify the **field containing each user's Pushover key**.
 
-<img class="dropshadow" src="/images/messages/pushover-config.png" alt="" style="width:647px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/pushover-config.png" alt="" style="width:640px; margin-top:10px">
 
 <!--@include: @/messages/types/_docs-links.md-->
 <!--@include: @/messages/types/_queue-link.md-->

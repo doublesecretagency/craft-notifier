@@ -48,9 +48,9 @@ class Messages extends Component
      * @param Notification $notification
      * @param Event $event
      * @param array $data
-     * @return void
+     * @return int Number of envelopes successfully handed off (queued or directly sent).
      */
-    public function send(Notification $notification, Event $event, array $data = []): void
+    public function send(Notification $notification, Event $event, array $data = []): int
     {
         // Configure new dispatch message
         $dispatch = new Dispatch([
@@ -61,14 +61,14 @@ class Messages extends Component
 
         // If dispatch doesn't align with event config, bail
         if (!$dispatch->filterByEventType()) {
-            return;
+            return 0;
         }
 
         // Configure envelopes and whether to use the queue
         $dispatch->configureByMessageType();
 
-        // Send all compiled envelopes
-        $dispatch->sendEnvelopes();
+        // Send all compiled envelopes, returning the count of successful ones
+        return $dispatch->sendEnvelopes();
     }
 
     /**
@@ -81,7 +81,6 @@ class Messages extends Component
      *
      * @param Notification $notification
      * @return Dispatch The populated dispatch (envelopes attached) for caller introspection.
-     * @since 3.0.0
      */
     public function sendTest(Notification $notification): Dispatch
     {
@@ -113,7 +112,6 @@ class Messages extends Component
      *
      * @param ElementInterface $element
      * @return Notification[] Notifications which can be manually triggered for this element.
-     * @since 3.0.0
      */
     public function getManualNotifications(ElementInterface $element): array
     {
@@ -154,13 +152,25 @@ class Messages extends Component
      * Get all Notifications driven by the scheduled run.
      *
      * @return Notification[] Notifications using a time-based trigger event.
-     * @since 3.0.0
      */
     public function getScheduledNotifications(): array
     {
         // Get all notifications using a time-based trigger event
         return Notification::find()
             ->where(['event' => ['date-reached', 'pending-to-live']])
+            ->all();
+    }
+
+    /**
+     * Get all Notifications driven by RSS/JSON feed polling.
+     *
+     * @return Notification[] Notifications using the RSS/JSON Feed event type.
+     */
+    public function getFeedNotifications(): array
+    {
+        // Get all notifications using the RSS/JSON Feed event type
+        return Notification::find()
+            ->where(['eventType' => 'feed'])
             ->all();
     }
 

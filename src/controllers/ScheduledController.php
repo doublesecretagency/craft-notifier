@@ -87,10 +87,23 @@ class ScheduledController extends Controller
      */
     public function actionRun(): Response
     {
-        // Run the schedule and return the summary as JSON
-        return $this->asJson(
-            NotifierPlugin::getInstance()->scheduleRunner->run()
-        );
+        // Get the plugin instance
+        $plugin = NotifierPlugin::getInstance();
+
+        // Run the schedule runner
+        $summary = $plugin->scheduleRunner->run();
+
+        // Run the feed runner
+        $feed = $plugin->feedRunner->run();
+
+        // Merge the feed runner's results into the summary
+        $summary['notifications'] += $feed['notifications'];
+        $summary['dispatched']    += $feed['dispatched'];
+        $summary['sent']          += $feed['sent'];
+        $summary['errors']        = array_merge($summary['errors'], $feed['errors']);
+
+        // Return the merged summary as JSON
+        return $this->asJson($summary);
     }
 
 }

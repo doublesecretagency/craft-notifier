@@ -33,14 +33,14 @@ class ScheduleRunner extends Component
 {
 
     /**
-     * @var string The scheduled history table name.
+     * @var string The schedule tracking table name.
      */
-    private const TABLE = '{{%notifier_scheduledhistory}}';
+    private const TABLE = '{{%notifier_trackscheduled}}';
 
     /**
      * Run the schedule.
      *
-     * @return array Summary with run/sent counts and any errors.
+     * @return array Summary with notification / dispatched / sent counts and any errors.
      */
     public function run(): array
     {
@@ -48,7 +48,7 @@ class ScheduleRunner extends Component
         $now = new DateTime('now', new DateTimeZone('UTC'));
 
         // Initialize the run summary
-        $summary = ['notifications' => 0, 'sent' => 0, 'errors' => []];
+        $summary = ['notifications' => 0, 'dispatched' => 0, 'sent' => 0, 'errors' => []];
 
         // Loop through every scheduled notification
         foreach (NotifierPlugin::getInstance()->messages->getScheduledNotifications() as $notification) {
@@ -58,7 +58,11 @@ class ScheduleRunner extends Component
 
             // Run it, catching any per-notification failure
             try {
-                $summary['sent'] += $this->_runNotification($notification, $now);
+                // Get the dispatched and sent counts from this notification's run
+                [$dispatched, $sent] = $this->_runNotification($notification, $now);
+                // Merge the counts into the run summary
+                $summary['dispatched'] += $dispatched;
+                $summary['sent']       += $sent;
             } catch (Throwable $e) {
                 $summary['errors'][] = "Notification {$notification->id}: {$e->getMessage()}";
             }
@@ -114,9 +118,9 @@ class ScheduleRunner extends Component
      *
      * @param Notification $notification
      * @param DateTime $now
-     * @return int Number of elements dispatched.
+     * @return array{0:int,1:int} Tuple of [dispatched elements, successful envelope sends].
      */
-    private function _runNotification(Notification $notification, DateTime $now): int
+    private function _runNotification(Notification $notification, DateTime $now): array
     {
         // Get the database service
         $db = Craft::$app->getDb();
@@ -144,7 +148,7 @@ class ScheduleRunner extends Component
             } catch (IntegrityException) {
                 // Another ping already created this notification's row
             }
-            return 0;
+            return [0, 0];
         }
 
         // Claim this run window (compare-and-swap guards against concurrent pings)
@@ -158,7 +162,7 @@ class ScheduleRunner extends Component
 
         // If another ping already claimed this window, bail
         if (0 === $claimed) {
-            return 0;
+            return [0, 0];
         }
 
         // Resolve the effective date config
@@ -166,7 +170,7 @@ class ScheduleRunner extends Component
 
         // If the config is incomplete, bail
         if (!$config) {
-            return 0;
+            return [0, 0];
         }
 
         // Determine the date range to look for on this run
@@ -213,16 +217,16 @@ class ScheduleRunner extends Component
      * @param string $field Date field to compare ('postDate', 'expiryDate', or a custom field handle).
      * @param DateTime $start Start of the date-field window (exclusive).
      * @param DateTime $end End of the date-field window (inclusive).
-     * @return int Number of elements dispatched.
+     * @return array{0:int,1:int} Tuple of [dispatched elements, successful envelope sends].
      */
-    private function _dispatchMatches(Notification $notification, string $field, DateTime $start, DateTime $end): int
+    private function _dispatchMatches(Notification $notification, string $field, DateTime $start, DateTime $end): array
     {
         // Resolve the element class for this notification's event type
         $elementClass = NotifierPlugin::getInstance()->events->getElementClassForEventType($notification->eventType);
 
         // If the event type is unsupported, bail
         if (!$elementClass) {
-            return 0;
+            return [0, 0];
         }
 
         // Build the element query
@@ -245,19 +249,20 @@ class ScheduleRunner extends Component
             "<= {$endParam}",
         ]);
 
-        // Initialize the dispatch count
-        $count = 0;
+        // Initialize the dispatched and sent counts
+        $dispatched = 0;
+        $sent = 0;
 
         // Loop through every matching element
         foreach ($query->all() as $element) {
-            // Dispatch the notification for this element
+            // Dispatch the notification for this element and capture the envelope count
             $event = new Event(['sender' => $element]);
-            NotifierPlugin::getInstance()->messages->send($notification, $event, ['object' => $element]);
-            $count++;
+            $sent += NotifierPlugin::getInstance()->messages->send($notification, $event, ['object' => $element]);
+            $dispatched++;
         }
 
-        // Return the dispatch count
-        return $count;
+        // Return the dispatched and sent counts
+        return [$dispatched, $sent];
     }
 
 }

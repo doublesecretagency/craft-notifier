@@ -72,7 +72,6 @@ class Events extends Component
      *     );
      * }
      * ```
-     * @since 1.1.0
      */
     public const EVENT_REGISTER_FILTER_TYPES = 'registerFilterTypes';
 

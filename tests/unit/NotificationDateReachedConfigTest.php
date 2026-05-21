@@ -59,15 +59,15 @@ class NotificationDateReachedConfigTest extends TestCase
     {
         // afterSave guarantees the scheduled-history row for a scheduled
         // notification, rather than leaving it to the runner's lazy seed.
-        $this->assertStringContainsString('_ensureScheduledHistory(', $this->notificationSource);
-        $this->assertStringContainsString('{{%notifier_scheduledhistory}}', $this->notificationSource);
+        $this->assertStringContainsString('_ensureScheduleTracking(', $this->notificationSource);
+        $this->assertStringContainsString('{{%notifier_trackscheduled}}', $this->notificationSource);
     }
 
     public function testScheduledHistorySeedGuardsOnScheduledEvents(): void
     {
         // Only date-reached and pending-to-live get a cursor row.
         $this->assertMatchesRegularExpression(
-            "/_ensureScheduledHistory[\s\S]*?'date-reached'[\s\S]*?'pending-to-live'/",
+            "/_ensureScheduleTracking[\s\S]*?'date-reached'[\s\S]*?'pending-to-live'/",
             $this->notificationSource
         );
     }
@@ -77,7 +77,7 @@ class NotificationDateReachedConfigTest extends TestCase
         // An existing cursor must be left untouched; re-seeding it would reset
         // the run window and re-fire past crossings.
         $this->assertMatchesRegularExpression(
-            "/_ensureScheduledHistory[\s\S]*?->exists\(\)/",
+            "/_ensureScheduleTracking[\s\S]*?->exists\(\)/",
             $this->notificationSource
         );
     }

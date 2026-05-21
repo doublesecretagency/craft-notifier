@@ -327,7 +327,8 @@ class Recipients extends Component
                 return new Recipient([
                     'name'              => $row['label'] ?? null,
                     'slackChannelLabel' => $row['label'] ?? null,
-                    'slackWebhookUrl'   => $row['webhookUrl'] ?? null,
+                    'slackBotToken'     => $row['botToken'] ?? null,
+                    'slackChannelId'    => $row['channelId'] ?? null,
                 ]);
             }
         );

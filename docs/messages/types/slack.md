@@ -8,23 +8,44 @@ Posts **a message to one or more Slack channels** when the notification event is
 
 <img class="dropshadow" src="/images/messages/slack-example.png" alt="" style="width:393px; margin-top:10px">
 
-Slack uses "Incoming Webhooks" to route messages to individual channels.
-
-Each webhook is bound to a _specific channel_ from the moment it is created. If you need to add a new channel, it means you'll need to create an additional webhook for it. Each channel will have its own webhook URL.
+Slack uses a Slack app's bot token to post to individual channels. One bot token can post to as many channels as the bot has access to.
 
 :::warning At least one channel is required
 Before sending Slack messages, add at least one Slack Channel via [Settings → Slack](/getting-started/integrations/slack).
 :::
 
 :::tip Slack Throttling
-Slack throttles each webhook to roughly one message per second, so a burst of notifications may not all get through.
+Slack throttles each channel to roughly one message per second, so a burst of notifications may not all get through.
 :::
 
 ## Config
 
-<img class="dropshadow" src="/images/messages/slack-config.png" alt="" style="width:647px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/slack-config.png" alt="" style="width:640px; margin-top:10px">
+
+### Bot Name
+
+The bot's display name (e.g. "My Notification Bot") can be overridden when the message is sent. The display name can be dynamically specified via Twig, so each individual message could post under a different name.
+
+Leave blank to use the app's default name.
+
+### Bot Icon URL
+
+The bot's icon can be overridden when the message is sent. Must supply a complete URL for a publicly accessible image (beginning with `http(s)`). The URL can be dynamically specified via Twig, so each individual message could use a different icon.
+
+Leave blank to use the app's default icon.
+
+### Bot Emoji
+
+The bot's icon can be overridden when the message is sent, using a simple emoji (e.g. `:rocket:`) instead of an image. The emoji shortcode can be dynamically specified via Twig, so each individual message could use a different emoji.
+
+Used only when **Bot Icon URL** is empty. Leave blank to use the app's default icon.
 
 <!--@include: @/messages/types/_docs-links.md-->
+
+### Render Link Previews
+
+Whether Slack should unfurl link previews for URLs in the message body. On by default.
+
 <!--@include: @/messages/types/_queue-link.md-->
 
 ## mrkdwn Syntax
@@ -68,4 +89,12 @@ Here are some of the most useful tokens:
 {% endif %}
 
 <!here> Order {{ order.shortNumber }} for {{ order.totalPrice|currency }} just placed.
+```
+
+**Dynamic bot icon via RSS feed**
+
+Set the **Bot Icon URL** with Twig, using the enclosure URL of each individual feed [item](/events/types/feed/#item-tags):
+
+```twig
+{{ item.enclosure.url ?? '' }}
 ```

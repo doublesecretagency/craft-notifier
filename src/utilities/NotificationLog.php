@@ -171,28 +171,39 @@ class NotificationLog extends Utility
             ->setTimezone($utc)
             ->format('Y-m-d H:i:s');
 
-        // Get all envelopes on selected day
-        $envelopes = Log::find()
-            ->where(['type' => 'envelope'])
-            ->andWhere(['>=', 'dateCreated', $startOfDay])
+        // Get every row for the day in chronological order
+        /** @var Log[] $rows */
+        $rows = Log::find()
+            ->where(['>=', 'dateCreated', $startOfDay])
             ->andWhere(['<',  'dateCreated', $startOfNextDay])
             ->orderBy('id')
             ->all();
 
-        // Log each individual envelope
-        /** @var Log $envelope */
-        foreach ($envelopes as $envelope) {
+        // Loop through every row
+        foreach ($rows as $row) {
 
-            // Get all logs for each envelope
-            $envelopeLog = Log::find()
-                ->where(['envelopeId' => $envelope->id])
-                ->orderBy('id')
-                ->all();
+            // If the row is an envelope, attach its children
+            if ('envelope' === $row->type) {
+                $envelopeLog = Log::find()
+                    ->where(['envelopeId' => $row->id])
+                    ->orderBy('id')
+                    ->all();
+                $dayLog[] = [
+                    'envelope' => $row,
+                    'logs'     => $envelopeLog,
+                ];
+                continue;
+            }
 
-            // Add to day log
+            // If the row is a child of an envelope, skip it
+            if (null !== $row->envelopeId) {
+                continue;
+            }
+
+            // Otherwise, render as a standalone leaf
             $dayLog[] = [
-                'envelope' => $envelope,
-                'logs' => $envelopeLog
+                'envelope' => $row,
+                'logs'     => [],
             ];
 
         }

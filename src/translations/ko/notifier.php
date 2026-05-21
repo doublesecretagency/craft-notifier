@@ -52,6 +52,10 @@ return [
     'Users Event'                    => '사용자 이벤트',
     'Ungrouped Users'                => '그룹 없는 사용자',
 
+    // Feed
+    'Feed Event' => '피드 이벤트',
+    'Feed URL' => '피드 URL',
+    'The URL of the RSS, Atom, or JSON feed to watch.' => '모니터링할 RSS, Atom 또는 JSON 피드의 URL입니다.',
     // Field and element conditions
     'Field Conditions'             => '필드 조건',
     'Send the message only when the saved element matches the following conditions.' => '저장된 요소가 다음 조건과 일치하는 경우에만 메시지를 보냅니다.',
@@ -120,7 +124,7 @@ return [
     'Message Type'                       => '메시지 유형',
     'What type of message will be sent?' => '어떤 유형의 메시지가 전송됩니까?',
     'Send Message via Queue'             => '대기열을 통해 메시지 보내기',
-    'Should the message be sent via the [jobs queue]({queueUrl})?' => '메시지를 [작업 대기열]({queueUrl})을 통해 보내야 합니까?',
+    '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[템플릿]({templatingUrl})과 [특수 변수]({variablesUrl})도 지원됩니다.',
     'Send immediately' => '즉시 전송',
     'Add to queue' => '대기열에 추가',
 
@@ -145,7 +149,6 @@ return [
 
     // Message tab: Pushover fields
     "Field containing each user's Pushover key" => '사용자의 Pushover 키 필드',
-    'The Pushover application token is configured in [Settings → Pushover](url).' => 'Pushover 애플리케이션 토큰은 [설정 → Pushover](url)에서 구성합니다.',
 
     // Message tab: ntfy fields
     'Priority'           => '우선순위',
@@ -155,6 +158,8 @@ return [
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack 메시지 본문',
+    'Bot Icon URL' => '아이콘 URL',
+    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => '이 메시지 옆에 표시할 아이콘의 URL. 비워두면 채널의 기본값을 사용합니다.',
 
     // Message tab: Bluesky fields
     'Post Body' => '게시물 본문',
@@ -249,10 +254,25 @@ return [
 
     // Settings: Slack
     'Slack Channels' => 'Slack 채널',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`, `chat:write.customize`, `chat:write.public` 스코프가 있는 [Slack 앱](https://api.slack.com/apps)을 만든 다음, 게시하려는 각 채널에 대한 행을 추가하세요. 알림을 구성할 때 각 채널은 **Recipients** 탭에서 수신자로 사용할 수 있습니다. 봇 토큰은 비밀이므로, 토큰을 직접 붙여넣지 말고 `.env` 변수에 저장한 다음 해당 변수(예: `$SLACK_BOT_TOKEN`)를 참조하세요.',
     'Channels'       => '채널',
     'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => '각 Slack 채널에는 자체 Incoming Webhook URL 이 필요합니다. 저장 후 **Test** 버튼을 사용하여 빠른 점검을 실행하세요.',
-    'Webhook URL'    => '웹훅 URL',
     'Add a channel'  => '채널 추가',
+    'Bot Token' => '봇 토큰',
+    'Channel ID' => '채널 ID',
+    'Bot Emoji' => '아이콘 이모지',
+    'Bot Name' => '사용자 이름',
+    'Show link previews' => '링크 미리보기 표시',
+    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => '이 메시지 옆에 표시할 이모지 단축 코드, 예: `:rocket:`. 아이콘 URL이 비어 있을 때만 사용됩니다.',
+    "A display name for this message. Leave blank to use the app's default." => '이 메시지의 표시 이름. 비워두면 앱의 기본값을 사용합니다.',
+    'Whether Slack should unfurl link previews for URLs in the message body.' => 'Slack이 메시지 본문의 URL에 대해 링크 미리보기를 펼칠지 여부입니다.',
+    'Not a valid Bot Token. Must start with `xoxb-`.' => '유효하지 않은 봇 토큰입니다. `xoxb-`로 시작해야 합니다.',
+    'Not a valid Channel ID. Must look like `C01234ABCD`.' => '유효하지 않은 채널 ID입니다. `C01234ABCD`와 같은 형식이어야 합니다.',
+    'Unable to send Slack message, no bot token.' => 'Slack 메시지를 보낼 수 없습니다: 봇 토큰이 없습니다.',
+    'Unable to send Slack message, no channel ID.' => 'Slack 메시지를 보낼 수 없습니다: 채널 ID가 없습니다.',
+    'Recipient "{name}" has no Slack bot token.' => '수신자 "{name}"에게 Slack 봇 토큰이 없습니다.',
+    'Recipient "{name}" has no Slack channel ID.' => '수신자 "{name}"에게 Slack 채널 ID가 없습니다.',
+    'Slack rejected the message: {error}' => 'Slack이 메시지를 거부했습니다: {error}',
     'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => '먼저 저장하여 행을 유지한 다음 해당 **Test** 버튼을 클릭하여 Slack 에 대한 간단한 점검을 수행합니다.',
 
     // Settings: Bluesky
@@ -292,6 +312,10 @@ return [
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.'          => '{recipient} 에게 {messageType} 을(를) 보내는 중입니다.',
     'Adding message to queue.'                       => '메시지를 대기열에 추가하는 중입니다.',
+    'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.' => '피드를 구문 분석할 수 없습니다. PHP의 `simplexml` 및 `libxml` 확장이 필요합니다.',
+    'Unable to parse the feed.' => '피드를 구문 분석할 수 없습니다.',
+    'Unable to fetch the feed: {message}' => '피드를 가져올 수 없습니다: {message}',
+    'Initial feed scan failed: {message}' => '초기 피드 스캔에 실패했습니다: {message}',
     'Sending message immediately (bypassing queue).' => '메시지를 즉시 보냅니다 (대기열 우회).',
     'Log events deleted.'                            => '로그 이벤트가 삭제되었습니다.',
     'notification'                                   => '알림',
@@ -332,10 +356,7 @@ return [
     'Successfully sent ntfy message to topic "{topic}".'     => '토픽 "{topic}" 에 ntfy 메시지를 성공적으로 보냈습니다.',
 
     // Outbound: Slack log messages
-    'Unable to send Slack message, no webhook URL.' => 'Slack 메시지를 보낼 수 없습니다: 웹훅 URL 이 없습니다.',
-    'Unable to send Slack message, webhook URL is not valid.' => 'Slack 메시지를 보낼 수 없습니다: 웹훅 URL 이 유효하지 않습니다.',
     'Unable to send Slack message, body is empty.'  => 'Slack 메시지를 보낼 수 없습니다: 본문이 비어 있습니다.',
-    'Slack POST failed (HTTP {status}): {reason}'   => 'Slack POST 실패 (HTTP {status}): {reason}',
     'Slack POST failed: {reason}'                   => 'Slack POST 실패: {reason}',
     'Successfully sent Slack message to "{label}".' => '"{label}" 에 Slack 메시지를 성공적으로 보냈습니다.',
 
@@ -357,7 +378,6 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => '수신자 "{name}" 에 연결된 사용자가 없어 Pushover 메시지를 보낼 수 없습니다.',
     '[SKIPPED] User "{name}" has no Pushover key.'   => '[건너뜀] 사용자 "{name}" 에 Pushover 키가 없습니다.',
     'Recipient "{name}" has no ntfy topic.'          => '수신자 "{name}" 에 ntfy 토픽이 없습니다.',
-    'Recipient "{name}" has no Slack webhook URL.'   => '수신자 "{name}" 에 Slack 웹훅 URL 이 없습니다.',
     'Recipient "{name}" has no Bluesky credentials.' => '수신자 "{name}" 에 Bluesky 자격 증명이 없습니다.',
 
     // Errors / exceptions
@@ -382,7 +402,6 @@ return [
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => '게시할 때 사용할 Bluesky 계정을 추가하세요. 각 계정은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
     "Click any row's **Test** button to confirm the account authenticates." => '아무 행의 **Test** 버튼을 클릭하여 계정이 인증되는지 확인하세요.',
-    "Add an [Incoming Webhook](https://api.slack.com/messaging/webhooks) for each Slack channel you'd like to post into. Each webhook becomes available as a recipient on the **Recipients** tab when configuring a notification. A webhook URL is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$SLACK_WEBHOOK_URL`) rather than pasting the URL directly." => '게시할 각 Slack 채널에 대해 [Incoming Webhook](https://api.slack.com/messaging/webhooks) 을 추가하세요. 각 웹훅은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다. 웹훅 URL 은 비밀이므로 URL 을 직접 붙여넣지 말고 `.env` 변수에 저장한 다음 해당 변수(예: `$SLACK_WEBHOOK_URL`)를 참조하세요.',
     "Click any row's **Test** button to send a quick test message to that channel." => '아무 행의 **Test** 버튼을 클릭하여 해당 채널에 빠른 테스트 메시지를 보내세요.',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => '선택 사항. 해당하는 경우 자체 호스팅 ntfy 인스턴스를 지정하세요. 기본값은 `https://ntfy.sh` 입니다.',
     'Optional, required for protected topics or self-hosted instances with auth.' => '선택 사항. 보호된 토픽이나 인증이 있는 자체 호스팅 인스턴스에 필요합니다.',
@@ -390,7 +409,6 @@ return [
     "Click any row's **Test** button to send a quick test message to that topic." => '아무 행의 **Test** 버튼을 클릭하여 해당 토픽에 빠른 테스트 메시지를 보내세요.',
     'Enable Markdown' => 'Markdown 활성화',
     'Link URL' => '링크 URL',
-    'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => '유효한 웹훅 URL 이 아닙니다. https://hooks.slack.com/services/ 로 시작해야 합니다.',
 
     // Manual triggers
     'Send Notification'                                            => '알림 보내기',
@@ -398,6 +416,7 @@ return [
     'Are you sure you want to send this notification?'             => '이 알림을 보내시겠습니까?',
     'This notification cannot be triggered manually.'              => '이 알림은 수동으로 트리거할 수 없습니다.',
     'This notification no longer applies to the selected element.' => '이 알림은 더 이상 선택한 요소에 적용되지 않습니다.',
+    'Notification was not sent. Check the Notification Log for details.' => '알림이 전송되지 않았습니다. 자세한 내용은 알림 로그를 확인하세요.',
     'Notification sent.'                                           => '알림을 보냈습니다.',
     'Element not found'                                            => '요소를 찾을 수 없습니다',
     'Trigger Label'                                                => '트리거 레이블',
@@ -416,4 +435,41 @@ return [
     'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => '예약 실행 웹 요청을 인증하기 위한 공유 비밀입니다. 일정이 웹 엔드포인트를 통해 트리거되는 경우에만 필요합니다.',
     'Scheduled-Run Token' => '예약 실행 토큰',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => '각 요청과 함께 X-Notifier-Token 헤더 또는 token 본문 매개변수로 전송됩니다.',
+    'Pushover Title' => 'Pushover 제목',
+    'Pushover Body' => 'Pushover 본문',
+    'ntfy Title' => 'ntfy 제목',
+    'ntfy Body' => 'ntfy 본문',
+    'ntfy Link URL' => 'ntfy 링크 URL',
+    'Render Link Previews' => '링크 미리보기 표시',
+    'Don\'t unfurl' => '펼치지 않기',
+    'Expand link previews' => '링크 미리보기 펼치기',
+    'Regular text only' => '일반 텍스트만',
+    'Markdown enabled' => 'Markdown 활성화',
+    'Dynamic Pushover Title' => '동적 Pushover 제목',
+    'Dynamic Subject Line' => '동적 제목 줄',
+    'Dynamic Bot Name' => '동적 봇 이름',
+    'Dynamic ntfy Title' => '동적 ntfy 제목',
+    'Dynamic Announcement Title' => '동적 공지 제목',
+    'Dynamic Flash Message Title' => '동적 플래시 메시지 제목',
+    'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => '일반 텍스트, 최대 300자. URL과 `@handle.tld` 멘션은 자동으로 링크됩니다.',
+    'Whether to automatically generate a preview card when a URL is included in the post body.' => '게시물 본문에 URL이 포함되어 있을 때 미리보기 카드를 자동으로 생성합니다.',
+    'Whether the message be sent via the [jobs queue]({queueUrl}).' => '메시지를 [작업 큐]({queueUrl})를 통해 보낼지 여부.',
+    'Priority level of the ntfy message.' => 'ntfy 메시지의 우선 순위.',
+    'Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/).' => '선택적으로 쉼표로 구분된 [이모지 단축 코드](https://docs.ntfy.sh/emojis/)를 포함합니다.',
+    'Body of the ntfy notification.' => 'ntfy 알림의 본문.',
+    'Optionally open a URL when the notification is clicked.' => '선택적으로 알림을 클릭했을 때 URL을 엽니다.',
+    'Whether to parse the body as Markdown in supported clients.' => '지원되는 클라이언트에서 본문을 Markdown으로 처리할지 여부.',
+    'Heading of the announcement.' => '공지의 제목.',
+    'Body of the announcement. Supports Markdown.' => '공지의 본문. Markdown을 지원합니다.',
+    'Heading of the flash message.' => '플래시 메시지의 제목.',
+    'Optionally include details below the heading. Supports Markdown and HTML.' => '선택적으로 제목 아래에 세부 정보를 포함합니다. Markdown과 HTML을 지원합니다.',
+    'Optionally include a heading above the body.' => '선택적으로 본문 위에 제목을 포함합니다.',
+    'Body of the SMS (text message). Plain text only.' => 'SMS(문자 메시지)의 본문. 일반 텍스트만 지원됩니다.',
+    'Body of the Pushover notification. Plain text only.' => 'Pushover 알림의 본문. 일반 텍스트만 지원됩니다.',
+    'Subject line of the email.' => '이메일의 제목 줄.',
+    'Body of the email. Supports HTML.' => '이메일의 본문. HTML을 지원합니다.',
+    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Slack 메시지의 본문. [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) 문법을 지원합니다.',
+    'Optionally override the app\'s display name.' => '선택적으로 앱의 표시 이름을 재정의합니다.',
+    'Optionally override the app\'s icon with a URL.' => '선택적으로 앱의 아이콘을 URL로 재정의합니다.',
+    'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => '선택적으로 앱의 아이콘을 이모지로 재정의합니다. Bot Icon URL이 비어 있을 때만 사용됩니다.',
 ];

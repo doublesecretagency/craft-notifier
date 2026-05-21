@@ -121,10 +121,21 @@ JS, [static::class]);
         // Get the messages service
         $messages = NotifierPlugin::getInstance()->messages;
 
+        // Accumulate the envelope count across every selected element
+        $totalSent = 0;
+
         // Loop over selected elements
         foreach ($query->all() as $element) {
-            // Send the notification
-            $messages->send($notification, new Event(['sender' => $element]), ['object' => $element]);
+            // Send the notification, summing the envelope count
+            $totalSent += $messages->send($notification, new Event(['sender' => $element]), ['object' => $element]);
+        }
+
+        // If nothing actually went out, surface that explicitly
+        if (0 === $totalSent) {
+            $this->setMessage(Craft::t('notifier',
+                'Notification was not sent. Check the Notification Log for details.'
+            ));
+            return false;
         }
 
         // Report success

@@ -7,7 +7,9 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 /**
- * Pure-unit + source-level tests for the OutboundSlack envelope.
+ * Pure-unit + source-level tests for the OutboundSlack envelope, which posts
+ * to Slack's chat.postMessage Web API endpoint with per-message icon, emoji,
+ * username, and link-unfurl overrides.
  */
 class OutboundSlackTest extends TestCase
 {
@@ -19,6 +21,10 @@ class OutboundSlackTest extends TestCase
         $this->assertTrue(file_exists($path), "OutboundSlack.php should exist at: $path");
         $this->slackSource = file_get_contents($path);
     }
+
+    // ========================================================================= //
+    // Class shape
+    // ========================================================================= //
 
     public function testExtendsBaseEnvelope(): void
     {
@@ -37,48 +43,86 @@ class OutboundSlackTest extends TestCase
     {
         $env = new OutboundSlack();
 
-        $this->assertNull($env->webhookUrl);
+        $this->assertNull($env->botToken);
+        $this->assertNull($env->channelId);
         $this->assertNull($env->label);
         $this->assertSame('', $env->body);
+        $this->assertSame('', $env->iconUrl);
+        $this->assertSame('', $env->iconEmoji);
+        $this->assertSame('', $env->username);
+        $this->assertTrue($env->unfurlLinks);
     }
 
     public function testConstructorHydratesAllProperties(): void
     {
         $env = new OutboundSlack([
-            'webhookUrl' => 'https://hooks.slack.com/services/T0/B0/X0',
-            'label'      => 'engineering',
-            'body'       => '*hello*',
+            'botToken'    => 'xoxb-fake-token',
+            'channelId'   => 'C01234ABCD',
+            'label'       => '#engineering',
+            'body'        => '*hello*',
+            'iconUrl'     => 'https://example.com/icon.png',
+            'iconEmoji'   => ':rocket:',
+            'username'    => 'Notifier',
+            'unfurlLinks' => false,
         ]);
 
-        $this->assertSame('https://hooks.slack.com/services/T0/B0/X0', $env->webhookUrl);
-        $this->assertSame('engineering', $env->label);
+        $this->assertSame('xoxb-fake-token', $env->botToken);
+        $this->assertSame('C01234ABCD', $env->channelId);
+        $this->assertSame('#engineering', $env->label);
         $this->assertSame('*hello*', $env->body);
+        $this->assertSame('https://example.com/icon.png', $env->iconUrl);
+        $this->assertSame(':rocket:', $env->iconEmoji);
+        $this->assertSame('Notifier', $env->username);
+        $this->assertFalse($env->unfurlLinks);
     }
 
     // ========================================================================= //
-    // Webhook URL validation (pure unit)
+    // Bot token validation (pure unit)
     // ========================================================================= //
 
-    public function testValidWebhookUrlAccepted(): void
+    public function testValidBotTokenAccepted(): void
     {
-        $this->assertTrue(OutboundSlack::isValidWebhookUrl('https://hooks.slack.com/services/T0/B0/X0'));
+        $this->assertTrue(OutboundSlack::isValidBotToken('xoxb-1234567890-abcdefg'));
     }
 
-    public function testValidationRejectsNonSlackHost(): void
+    public function testBotTokenValidationRejectsOtherPrefixes(): void
     {
-        $this->assertFalse(OutboundSlack::isValidWebhookUrl('https://hooks.evil.com/services/x'));
-        $this->assertFalse(OutboundSlack::isValidWebhookUrl('https://slack.com/foo'));
+        $this->assertFalse(OutboundSlack::isValidBotToken('xoxp-not-a-bot-token'));
+        $this->assertFalse(OutboundSlack::isValidBotToken('xapp-app-token'));
+        $this->assertFalse(OutboundSlack::isValidBotToken('https://hooks.slack.com/services/x'));
     }
 
-    public function testValidationRejectsHttp(): void
+    public function testBotTokenValidationRejectsEmpty(): void
     {
-        $this->assertFalse(OutboundSlack::isValidWebhookUrl('http://hooks.slack.com/services/T0/B0/X0'));
+        $this->assertFalse(OutboundSlack::isValidBotToken(null));
+        $this->assertFalse(OutboundSlack::isValidBotToken(''));
     }
 
-    public function testValidationRejectsEmpty(): void
+    // ========================================================================= //
+    // Channel ID validation (pure unit)
+    // ========================================================================= //
+
+    public function testValidChannelIdAccepted(): void
     {
-        $this->assertFalse(OutboundSlack::isValidWebhookUrl(null));
-        $this->assertFalse(OutboundSlack::isValidWebhookUrl(''));
+        $this->assertTrue(OutboundSlack::isValidChannelId('C01234ABCD'));
+        $this->assertTrue(OutboundSlack::isValidChannelId('C9KJK3D26'));
+        // D = DM, G = group
+        $this->assertTrue(OutboundSlack::isValidChannelId('D01234ABCD'));
+        $this->assertTrue(OutboundSlack::isValidChannelId('G01234ABCD'));
+    }
+
+    public function testChannelIdValidationRejectsBadPrefixesAndShapes(): void
+    {
+        $this->assertFalse(OutboundSlack::isValidChannelId('A01234ABCD'));   // wrong prefix
+        $this->assertFalse(OutboundSlack::isValidChannelId('#engineering')); // a label, not an ID
+        $this->assertFalse(OutboundSlack::isValidChannelId('C012-34-ABCD')); // hyphens not allowed
+        $this->assertFalse(OutboundSlack::isValidChannelId('c01234ABCD'));   // lowercase prefix
+    }
+
+    public function testChannelIdValidationRejectsEmpty(): void
+    {
+        $this->assertFalse(OutboundSlack::isValidChannelId(null));
+        $this->assertFalse(OutboundSlack::isValidChannelId(''));
     }
 
     // ========================================================================= //
@@ -90,22 +134,42 @@ class OutboundSlackTest extends TestCase
         $this->assertStringContainsString('Craft::createGuzzleClient()', $this->slackSource);
     }
 
-    public function testSendPostsJsonWithMrkdwn(): void
+    public function testSendPostsToChatPostMessageEndpoint(): void
     {
-        $this->assertStringContainsString("'mrkdwn' => true", $this->slackSource);
-        $this->assertStringContainsString("'text'", $this->slackSource);
+        $this->assertStringContainsString("'https://slack.com/api/chat.postMessage'", $this->slackSource);
     }
 
-    public function testSendValidatesWebhookHost(): void
+    public function testSendUsesAuthorizationBearerHeader(): void
     {
-        // Must invoke isValidWebhookUrl before posting
-        $this->assertStringContainsString('isValidWebhookUrl(', $this->slackSource);
+        // Authorization: Bearer {botToken} after env-var resolution
+        $this->assertMatchesRegularExpression(
+            "/'Authorization'\s*=>\s*'Bearer\s*'\s*\.\s*\\\$botToken/",
+            $this->slackSource
+        );
     }
 
-    public function testSendChecksStatusAndOkBody(): void
+    public function testSendPayloadIncludesChannelAndMrkdwn(): void
     {
-        // Slack returns 200 + "ok"
-        $this->assertMatchesRegularExpression('/200\s*!==\s*\$status\s*\|\|\s*[\'"]ok[\'"]\s*!==\s*\$rawBody/', $this->slackSource);
+        // The base payload always includes the (resolved) channel, text, and mrkdwn.
+        $this->assertMatchesRegularExpression(
+            "/\\\$payload\s*=\s*\[\s*'channel'\s*=>\s*\\\$channelId,\s*'text'\s*=>\s*\\\$this->body,\s*'mrkdwn'\s*=>\s*true,?\s*\]/",
+            $this->slackSource
+        );
+    }
+
+    public function testSendSuccessChecksOkTrue(): void
+    {
+        // Slack returns {"ok": true, ...} on success
+        $this->assertMatchesRegularExpression(
+            "/true\s*!==\s*\(\\\$decoded\['ok'\]\s*\?\?\s*false\)/",
+            $this->slackSource
+        );
+    }
+
+    public function testSendLogsSlackErrorOnFailure(): void
+    {
+        // On failure, surface decoded.error in the notification log
+        $this->assertStringContainsString("'Slack rejected the message:", $this->slackSource);
     }
 
     public function testSendLogsSuccessAndError(): void
@@ -117,28 +181,75 @@ class OutboundSlackTest extends TestCase
         );
     }
 
-    public function testSendDoesNotLogTheWebhookUrl(): void
+    public function testSendDoesNotLogTheBotToken(): void
     {
-        // Defense-in-depth: the URL should never end up in a log message.
-        // Verify log message strings don't reference the webhook URL directly.
-        $this->assertStringNotContainsString('$this->webhookUrl}', $this->slackSource);
+        // Defense-in-depth: the bot token must never appear in a log message.
+        $this->assertStringNotContainsString('$this->botToken}', $this->slackSource);
     }
 
-    public function testSendBailsWhenWebhookUrlMissing(): void
+    public function testSendBailsWhenBotTokenMissing(): void
     {
-        // send() must bail (and log) before posting when the resolved webhook URL is empty
-        $this->assertMatchesRegularExpression('/if\s*\(\s*!\$webhookUrl\s*\)/', $this->slackSource);
+        // send() must bail when the resolved bot token is empty
+        $this->assertMatchesRegularExpression('/if\s*\(\s*!\$botToken\s*\)/', $this->slackSource);
     }
 
-    public function testSendResolvesWebhookUrlViaEnvParse(): void
+    public function testSendBailsWhenChannelIdMissing(): void
     {
-        // The webhook URL is resolved through App::parseEnv() so a $ENV_VAR reference works
-        $this->assertStringContainsString('App::parseEnv($this->webhookUrl)', $this->slackSource);
+        // The bail is on the resolved local, so a $ENV_VAR that resolves to empty also bails.
+        $this->assertMatchesRegularExpression('/if\s*\(\s*!\$channelId\s*\)/', $this->slackSource);
+    }
+
+    public function testSendResolvesBotTokenViaEnvParse(): void
+    {
+        // Bot token is resolved through App::parseEnv() so a $ENV_VAR reference works
+        $this->assertStringContainsString('App::parseEnv($this->botToken)', $this->slackSource);
+    }
+
+    public function testSendResolvesChannelIdViaEnvParse(): void
+    {
+        // Channel ID is also resolved through App::parseEnv() so a $ENV_VAR reference works
+        $this->assertStringContainsString('App::parseEnv($this->channelId)', $this->slackSource);
     }
 
     public function testSendBailsWhenBodyEmpty(): void
     {
-        // A whitespace-only body must short-circuit before the POST
         $this->assertStringContainsString("'' === trim(\$this->body)", $this->slackSource);
+    }
+
+    // ========================================================================= //
+    // Conditional payload fields
+    // ========================================================================= //
+
+    public function testIconUrlIsIncludedInPayloadWhenSet(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/if\s*\(\s*''\s*!==\s*\\\$this->iconUrl\s*\)\s*\{[\s\S]*?\\\$payload\['icon_url'\]\s*=\s*\\\$this->iconUrl[\s\S]*?\}/",
+            $this->slackSource
+        );
+    }
+
+    public function testIconEmojiIsIncludedInPayloadWhenSet(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/if\s*\(\s*''\s*!==\s*\\\$this->iconEmoji\s*\)\s*\{[\s\S]*?\\\$payload\['icon_emoji'\]\s*=\s*\\\$this->iconEmoji[\s\S]*?\}/",
+            $this->slackSource
+        );
+    }
+
+    public function testUsernameIsIncludedInPayloadWhenSet(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/if\s*\(\s*''\s*!==\s*\\\$this->username\s*\)\s*\{[\s\S]*?\\\$payload\['username'\]\s*=\s*\\\$this->username[\s\S]*?\}/",
+            $this->slackSource
+        );
+    }
+
+    public function testUnfurlsAreSuppressedWhenLightswitchIsOff(): void
+    {
+        // When unfurlLinks is false, the payload turns off BOTH unfurl_links and unfurl_media.
+        $this->assertMatchesRegularExpression(
+            "/if\s*\(\s*!\\\$this->unfurlLinks\s*\)\s*\{[\s\S]*?\\\$payload\['unfurl_links'\]\s*=\s*false[\s\S]*?\\\$payload\['unfurl_media'\]\s*=\s*false[\s\S]*?\}/",
+            $this->slackSource
+        );
     }
 }

@@ -50,15 +50,20 @@ export default defineConfig({
           },
           {
             items: [
-              {text: 'Entries',          link: '/events/types/entries/'},
-              {text: 'Assets',           link: '/events/types/assets/'},
-              {text: 'Users',            link: '/events/types/users/'},
+              {text: 'Entries', link: '/events/types/entries/'},
+              {text: 'Assets',  link: '/events/types/assets/'},
+              {text: 'Users',   link: '/events/types/users/'},
             ]
           },
           {
             items: [
-              {text: 'Craft Commerce',   link: '/events/types/craft-commerce/'},
-              {text: 'Digital Products', link: '/events/types/digital-products/'},
+              {text: 'RSS/JSON Feed', link: '/events/types/feed/'},
+            ]
+          },
+          {
+            items: [
+              {text: 'Craft Commerce',    link: '/events/types/craft-commerce/'},
+              {text: 'Digital Products',  link: '/events/types/digital-products/'},
               {text: 'Solspace Calendar', link: '/events/types/solspace-calendar/'},
             ]
           },
@@ -77,9 +82,13 @@ export default defineConfig({
           {
             items: [
               {text: 'Email',              link: '/messages/types/email'},
-              {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
               {text: 'Announcement',       link: '/messages/types/announcement'},
               {text: 'Flash Message',      link: '/messages/types/flash'},
+            ]
+          },
+          {
+            items: [
+              {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
               {text: 'Pushover',           link: '/messages/types/pushover'},
               {text: 'ntfy',               link: '/messages/types/ntfy'},
               {text: 'Slack',              link: '/messages/types/slack'},
@@ -119,9 +128,9 @@ export default defineConfig({
           },
           {
             items: [
-              {text: 'ntfy Topics',       link: '/recipients/types/ntfy-topics'},
-              {text: 'Slack Channels',    link: '/recipients/types/slack-channels'},
-              {text: 'Bluesky Accounts',  link: '/recipients/types/bluesky-accounts'},
+              {text: 'ntfy Topics',      link: '/recipients/types/ntfy-topics'},
+              {text: 'Slack Channels',   link: '/recipients/types/slack-channels'},
+              {text: 'Bluesky Accounts', link: '/recipients/types/bluesky-accounts'},
             ]
           },
         ]
@@ -260,6 +269,7 @@ export default defineConfig({
                     {text: 'User is restored',             link: '/events/types/users/user-restored'},
                   ]
                 },
+                {text: 'RSS/JSON Feed', link: '/events/types/feed/'},
                 {text: 'Craft Commerce', link: '/events/types/craft-commerce/', collapsed: true,
                   items: [
                     {text: 'Order is completed',  link: '/events/types/craft-commerce/order-completed'},
@@ -300,9 +310,9 @@ export default defineConfig({
             {text: 'All Message Types',      link: '/messages/types/',
               items: [
                 {text: 'Email',              link: '/messages/types/email'},
-                {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
                 {text: 'Announcement',       link: '/messages/types/announcement'},
                 {text: 'Flash Message',      link: '/messages/types/flash'},
+                {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
                 {text: 'Pushover',           link: '/messages/types/pushover'},
                 {text: 'ntfy',               link: '/messages/types/ntfy'},
                 {text: 'Slack',              link: '/messages/types/slack'},

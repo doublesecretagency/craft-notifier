@@ -57,9 +57,14 @@ class Recipient extends Model
     public ?string $topic = null;
 
     /**
-     * @var string|null Slack Incoming Webhook URL. May be a $ENV_VAR reference, resolved at send time.
+     * @var string|null Slack bot token (xoxb-...). May be a $ENV_VAR reference, resolved at send time.
      */
-    public ?string $slackWebhookUrl = null;
+    public ?string $slackBotToken = null;
+
+    /**
+     * @var string|null Slack channel ID (e.g. "C01234ABCD"). May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $slackChannelId = null;
 
     /**
      * @var string|null Slack channel label (e.g. "#engineering").

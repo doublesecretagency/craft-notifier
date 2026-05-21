@@ -7,6 +7,7 @@
 - Added support for sending [ntfy](https://plugins.doublesecretagency.com/notifier/messages/types/ntfy) notifications via [ntfy.sh](https://ntfy.sh).
 - Added support for posting [Slack](https://plugins.doublesecretagency.com/notifier/messages/types/slack) messages via [Incoming Webhooks](https://api.slack.com/messaging/webhooks).
 - Added support for publishing [Bluesky](https://plugins.doublesecretagency.com/notifier/messages/types/bluesky) posts via the [ATProto](https://atproto.com) API.
+- Added the ability to track an [RSS/JSON Feed](https://plugins.doublesecretagency.com/notifier/events/types/feed/). ([#10](https://github.com/doublesecretagency/craft-notifier/issues/10))
 - Added the ability to [manually send](https://plugins.doublesecretagency.com/notifier/events/manual-sending) a notification on demand, against a specific element.
 - Added the ability to [schedule sending](https://plugins.doublesecretagency.com/notifier/events/scheduled-sending) of time-based notifications. ([#10](https://github.com/doublesecretagency/craft-notifier/issues/10))
 - Added trigger event ["When a scheduled date is reached"](https://plugins.doublesecretagency.com/notifier/events/types/entries/date-reached). ([#10](https://github.com/doublesecretagency/craft-notifier/issues/10))

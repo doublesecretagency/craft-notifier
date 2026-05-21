@@ -2,22 +2,25 @@
 {% import 'codeeditor/codeEditor' as codeEditor %}
 
 <div class="message-type-announcement hidden">
+
     <hr>
 
-    {% include 'notifier/notifications/_edit/message/docs-links' %}
-
-    {{ forms.textField({
+    {{ codeEditor.textAreaField({
         label: "Announcement Title"|t('notifier'),
-        instructions: "First line of the announcement, in larger bold letters.",
+        instructions: "Heading of the announcement."|t('notifier'),
+        tip: templatingTip,
+        placeholder: "Dynamic Announcement Title"|t('notifier'),
+        rows: 1,
         id: 'messageConfig-announcementTitle',
         name: 'messageConfig[announcementTitle]',
         value: (notification.messageConfig.announcementTitle ?? null),
         errors: notification.getErrors('messageConfig[announcementTitle]'),
-    }) }}
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
     {{ codeEditor.textAreaField({
         label: "Announcement Message"|t('notifier'),
-        instructions: "Main body of the announcement. Markdown is supported.",
+        instructions: "Body of the announcement. Supports Markdown."|t('notifier'),
+        tip: templatingTip,
         placeholder: commonPlaceholder,
         rows: 3,
         id: 'messageConfig-announcementMessage',

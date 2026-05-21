@@ -145,4 +145,50 @@ class NotificationLogUtilityTest extends TestCase
         $this->assertTrue($method->isPrivate());
         $this->assertTrue($method->isStatic());
     }
+
+    // ========================================================================= //
+    // Standalone notification-level entries surface in the day view
+    // ========================================================================= //
+
+    public function testDayQueryDoesNotFilterByEnvelopeType(): void
+    {
+        // The day query must NOT pre-filter to `type=envelope`, otherwise
+        // notification-level warnings (recipient skipped, no phone, etc.)
+        // never reach the utility and silently confuse the operator.
+        $this->assertStringNotContainsString(
+            "->where(['type' => 'envelope'])",
+            $this->utilitySource
+        );
+    }
+
+    public function testEnvelopeRowsStillAttachChildLogs(): void
+    {
+        // Envelope rows must still gather their own children by envelopeId so
+        // the existing grouped-by-envelope rendering keeps working.
+        $this->assertMatchesRegularExpression(
+            "/'envelope' === \\\$row->type[\s\S]*?->where\\(\\['envelopeId' => \\\$row->id\\]\\)/",
+            $this->utilitySource
+        );
+    }
+
+    public function testChildLogRowsAreNotRenderedTwice(): void
+    {
+        // A row with a non-null envelopeId is already attached under its
+        // parent envelope; skip it during the top-level walk so it isn't
+        // also rendered as a standalone leaf.
+        $this->assertMatchesRegularExpression(
+            '/null !== \$row->envelopeId[\s\S]*?continue;/',
+            $this->utilitySource
+        );
+    }
+
+    public function testStandaloneEntriesRenderAsLeaves(): void
+    {
+        // Notification-level entries (no envelopeId, not envelope type) get
+        // pushed onto the day log as a leaf, no children attached.
+        $this->assertMatchesRegularExpression(
+            "/'envelope' => \\\$row[\s\S]*?'logs'\\s*=>\\s*\\[\\]/",
+            $this->utilitySource
+        );
+    }
 }

@@ -128,4 +128,38 @@ class SendNotificationActionTest extends TestCase
         // one-item dropdown menu.
         $this->assertStringContainsString('1 === count($notifications)', $this->actionSource);
     }
+
+    // ========================================================================= //
+    // Zero-envelope feedback
+    // ========================================================================= //
+
+    public function testPerformActionAccumulatesEnvelopeCount(): void
+    {
+        // Each Messages::send() returns the envelope count; the action sums
+        // them so the success/failure flash reflects what actually went out.
+        $this->assertMatchesRegularExpression(
+            '/\$totalSent\s*\+=\s*\$messages->send\(/',
+            $this->actionSource
+        );
+    }
+
+    public function testPerformActionReturnsFalseWhenZeroEnvelopesSent(): void
+    {
+        // A zero-envelope outcome must surface as a failure flash so the
+        // operator notices instead of trusting a misleading "sent" message.
+        $this->assertMatchesRegularExpression(
+            '/if \(0 === \$totalSent\)[\s\S]*?return false;/',
+            $this->actionSource
+        );
+    }
+
+    public function testZeroEnvelopeFlashPointsAtTheNotificationLog(): void
+    {
+        // The failure flash names the Notification Log so the operator knows
+        // where to dig for the actual skip reason.
+        $this->assertStringContainsString(
+            'Notification was not sent. Check the Notification Log for details.',
+            $this->actionSource
+        );
+    }
 }

@@ -140,7 +140,11 @@
             return { topic: readInputValue(row, '[topic]'), uid: readInputValue(row, '[uid]') };
         }
         if ('slack' === provider) {
-            return { webhookUrl: readInputValue(row, '[webhookUrl]'), uid: readInputValue(row, '[uid]') };
+            return {
+                botToken: readInputValue(row, '[botToken]'),
+                channelId: readInputValue(row, '[channelId]'),
+                uid: readInputValue(row, '[uid]')
+            };
         }
         if ('bluesky' === provider) {
             return {

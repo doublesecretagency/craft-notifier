@@ -89,6 +89,7 @@ use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\Events;
 use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
+use doublesecretagency\notifier\services\FeedRunner;
 use doublesecretagency\notifier\services\ScheduleRunner;
 use doublesecretagency\notifier\utilities\NotificationLog;
 use doublesecretagency\notifier\web\twig\Extension;
@@ -103,6 +104,7 @@ use yii\base\Event;
  * @property Messages $messages
  * @property Recipients $recipients
  * @property ScheduleRunner $scheduleRunner
+ * @property FeedRunner $feedRunner
  */
 class NotifierPlugin extends Plugin
 {
@@ -159,6 +161,7 @@ class NotifierPlugin extends Plugin
             'messages' => Messages::class,
             'recipients' => Recipients::class,
             'scheduleRunner' => ScheduleRunner::class,
+            'feedRunner' => FeedRunner::class,
         ]);
 
         // Redirect after plugin is installed

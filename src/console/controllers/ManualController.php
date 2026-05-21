@@ -78,7 +78,13 @@ class ManualController extends Controller
 
         // Send the Notification for the element
         $event = new Event(['sender' => $element]);
-        NotifierPlugin::getInstance()->messages->send($notification, $event, ['object' => $element]);
+        $count = NotifierPlugin::getInstance()->messages->send($notification, $event, ['object' => $element]);
+
+        // If nothing actually went out, surface that explicitly
+        if (0 === $count) {
+            $this->stderr("Notification was not sent. Check the Notification Log for details." . PHP_EOL, Console::FG_RED);
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
 
         // Report success
         $this->stdout("Notification sent." . PHP_EOL, Console::FG_GREEN);

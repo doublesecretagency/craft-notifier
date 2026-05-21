@@ -21,6 +21,7 @@ use craft\helpers\StringHelper;
 use craft\web\View;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\exceptions\RequiredFieldEmptyException;
 use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\jobs\SendMessage;
 use doublesecretagency\notifier\NotifierPlugin;
@@ -59,7 +60,6 @@ class Dispatch extends Model
 
     /**
      * @var bool Whether this dispatch was triggered by a manual "Send Test" action.
-     * @since 3.0.0
      */
     public bool $isTest = false;
 
@@ -92,8 +92,13 @@ class Dispatch extends Model
      */
     public function filterByEventType(): bool
     {
-        // If this is a scheduled event, bypass event-type filters
+        // If this is a scheduled event, bail successfully
         if (in_array($this->notification->event, ['date-reached', 'pending-to-live'], true)) {
+            return true;
+        }
+
+        // If this is a feed event, bail successfully
+        if ('feed' === $this->notification->eventType) {
             return true;
         }
 
@@ -626,6 +631,8 @@ class Dispatch extends Model
 
             // Attempt to parse message body
             try {
+                // Body is required by Twilio's SMS API
+                $this->_requireFieldNotEmpty('smsMessage', 'Body');
                 // Parse text
                 $message = $this->_parseTwig($config, $this->notification->messageConfig['smsMessage'] ?? null);
                 // No parse error by default
@@ -907,6 +914,8 @@ class Dispatch extends Model
 
             // Attempt to parse message body and title
             try {
+                // Body is required by the Pushover API
+                $this->_requireFieldNotEmpty('pushoverBody', 'Body');
                 $title = $this->_parseTwig($config, $this->notification->messageConfig['pushoverTitle'] ?? '');
                 $body  = $this->_parseTwig($config, $this->notification->messageConfig['pushoverBody']  ?? '');
                 $parseError = null;
@@ -1053,7 +1062,7 @@ class Dispatch extends Model
      */
     private function _compileSlack(): array
     {
-        // Get Slack webhook recipients
+        // Get Slack channel recipients
         $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
 
         // Initialize outbound messages
@@ -1069,19 +1078,31 @@ class Dispatch extends Model
         // Get generic recipient name
         $genericRecipient = $this->notification->getTaskRecipient();
 
+        // Whether link previews are enabled (default to true)
+        $unfurlLinks = (bool) ($this->notification->messageConfig['slackUnfurlLinks'] ?? true);
+
         // Loop through all recipients
         foreach ($recipients as $recipient) {
 
-            // If the recipient has no webhook URL, log and skip
-            if (!$recipient->slackWebhookUrl) {
+            // If the recipient has no bot token, log and skip
+            if (!$recipient->slackBotToken) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no Slack webhook URL.',
+                    'Recipient "{name}" has no Slack bot token.',
                     ['name' => ($recipient->slackChannelLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
                 continue;
             }
 
-            // Set job info (avoid leaking the webhook URL into the log)
+            // If the recipient has no channel ID, log and skip
+            if (!$recipient->slackChannelId) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no Slack channel ID.',
+                    ['name' => ($recipient->slackChannelLabel ?? $recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info (avoid leaking the bot token into the log)
             $displayLabel = ($recipient->slackChannelLabel ?? 'a Slack channel');
             $jobInfo = [
                 'messageType' => 'a Slack message',
@@ -1093,27 +1114,45 @@ class Dispatch extends Model
                 'recipient' => $recipient,
             ]);
 
-            // Attempt to parse message body
+            // Attempt to parse the body, icon URL, icon emoji, and username
             try {
-                $body = $this->_parseTwig($config, $this->notification->messageConfig['slackBody'] ?? '');
+                // Body is required by Slack's chat.postMessage API (when no blocks/attachments)
+                $this->_requireFieldNotEmpty('slackBody', 'Body');
+                $body      = $this->_parseTwig($config, $this->notification->messageConfig['slackBody']      ?? '');
+                $iconUrl   = trim($this->_parseTwig($config, $this->notification->messageConfig['slackIcon']     ?? ''));
+                $iconEmoji = trim($this->_parseTwig($config, $this->notification->messageConfig['slackEmoji']    ?? ''));
+                $username  = trim($this->_parseTwig($config, $this->notification->messageConfig['slackUsername'] ?? ''));
                 $parseError = null;
             } catch (Exception|Throwable $e) {
-                $body = ($this->notification->messageConfig['slackBody'] ?? '');
+                $body      = ($this->notification->messageConfig['slackBody']      ?? '');
+                $iconUrl   = trim((string) ($this->notification->messageConfig['slackIcon']     ?? ''));
+                $iconEmoji = trim((string) ($this->notification->messageConfig['slackEmoji']    ?? ''));
+                $username  = trim((string) ($this->notification->messageConfig['slackUsername'] ?? ''));
                 $parseError = $e;
             }
 
             // Get message details
             $details = [
-                'webhookUrl' => $recipient->slackWebhookUrl,
-                'label'      => $recipient->slackChannelLabel,
-                'body'       => $body,
+                'botToken'    => $recipient->slackBotToken,
+                'channelId'   => $recipient->slackChannelId,
+                'label'       => $recipient->slackChannelLabel,
+                'body'        => $body,
+                'iconUrl'     => $iconUrl,
+                'iconEmoji'   => $iconEmoji,
+                'username'    => $username,
+                'unfurlLinks' => $unfurlLinks,
             ];
 
-            // Log envelope with the label only (not the URL, to keep credentials out of the log)
+            // Log envelope with the label only (not the bot token, to keep credentials out of the log)
             $envelopeId = $this->notification->log->envelope($jobInfo, [
-                'label' => $recipient->slackChannelLabel,
-                'body'  => $body,
-                'isTest' => $this->isTest,
+                'label'       => $recipient->slackChannelLabel,
+                'channelId'   => $recipient->slackChannelId,
+                'body'        => $body,
+                'iconUrl'     => $iconUrl,
+                'iconEmoji'   => $iconEmoji,
+                'username'    => $username,
+                'unfurlLinks' => $unfurlLinks,
+                'isTest'      => $this->isTest,
             ]);
 
             // If a parsing error occurred, log and skip
@@ -1286,16 +1325,38 @@ class Dispatch extends Model
     // ========================================================================= //
 
     /**
+     * Throw if a required messageConfig field is missing or empty.
+     *
+     * @param string $key The messageConfig key to validate.
+     * @param string $label The user-facing label for the error message.
+     * @return void
+     * @throws RequiredFieldEmptyException If the field is missing, null, or only whitespace.
+     */
+    private function _requireFieldNotEmpty(string $key, string $label): void
+    {
+        // Read the field value as a trimmed string
+        $value = trim((string) ($this->notification->messageConfig[$key] ?? ''));
+
+        // If the value is empty, throw a typed exception
+        if ('' === $value) {
+            throw new RequiredFieldEmptyException("{$label} is empty.");
+        }
+    }
+
+    /**
      * Parse all Twig tags embedded within text.
      *
      * @param array $config
-     * @param string $text
+     * @param string|null $text Optional source text; null and empty render as empty string.
      * @return string
      * @throws Exception
      * @throws Throwable
      */
-    private function _parseTwig(array $config, string $text): string
+    private function _parseTwig(array $config, ?string $text): string
     {
+        // Coerce null to empty string; optional fields routinely pass missing values
+        $text = (string) $text;
+
         // Extract config variables
         extract($config);
 
@@ -1340,22 +1401,27 @@ class Dispatch extends Model
      */
     private function _logError(Exception|Throwable $e, int $envelopeId): void
     {
-        // If message was skipped intentionally
+        // If message was skipped intentionally, log a warning and bail
         if (is_a($e, RuntimeError::class)) {
             // Log a warning
             $message = $this->_cleanError("[SKIPPED] {$e->getMessage()}");
             $this->notification->log->warning($message, $envelopeId);
-        } else {
-            // Compile the error
-            $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
-            // If message contains "is not allowed in"
-            if (str_contains($message, 'is not allowed in')) {
-                // Append link to sandbox documentation
-                $message .= ' Learn how to [configure the Twig sandbox](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox).';
-            }
-            // Log the error
-            $this->notification->log->error($message, $envelopeId);
+            return;
         }
+        // If a required field was empty, log an error and bail
+        if (is_a($e, RequiredFieldEmptyException::class)) {
+            $this->notification->log->error("[TWIG ERROR] {$e->getMessage()}", $envelopeId);
+            return;
+        }
+        // Otherwise treat as a Twig parse error
+        $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
+        // If message contains "is not allowed in"
+        if (str_contains($message, 'is not allowed in')) {
+            // Append link to sandbox documentation
+            $message .= ' Learn how to [configure the Twig sandbox](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox).';
+        }
+        // Log the error
+        $this->notification->log->error($message, $envelopeId);
     }
 
     /**
@@ -1461,10 +1527,13 @@ class Dispatch extends Model
     /**
      * Send all compiled envelopes.
      *
-     * @return void
+     * @return int Number of envelopes successfully handed off (queued or directly sent).
      */
-    public function sendEnvelopes(): void
+    public function sendEnvelopes(): int
     {
+        // Initialize the count of successful envelopes
+        $count = 0;
+
         // Loop through each envelope
         foreach ($this->envelopes as $envelope) {
             // If invalid envelope, skip it
@@ -1475,13 +1544,25 @@ class Dispatch extends Model
             if ($this->useQueue) {
                 // Add message to the queue
                 $this->notification->log->info(Craft::t('notifier', 'Adding message to queue.'), $envelope->envelopeId);
-                Queue::push(new SendMessage(['envelope' => $envelope]));
+                try {
+                    Queue::push(new SendMessage(['envelope' => $envelope]));
+                    // Successfully queued, count it
+                    $count++;
+                } catch (Throwable) {
+                    // Queue push failed; don't count this envelope
+                }
             } else {
                 // Send message immediately
                 $this->notification->log->info(Craft::t('notifier', 'Sending message immediately (bypassing queue).'), $envelope->envelopeId);
-                $envelope->send();
+                // Send returns true on success
+                if ($envelope->send()) {
+                    $count++;
+                }
             }
         }
+
+        // Return the count of successful envelopes
+        return $count;
     }
 
 }

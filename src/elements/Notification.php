@@ -34,6 +34,7 @@ use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\models\NotificationLog;
 use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\records\Notification as NotificationRecord;
+use Throwable;
 use yii\base\Event;
 use yii\base\Exception as BaseException;
 use yii\db\IntegrityException;
@@ -239,12 +240,7 @@ class Notification extends Element
      * Ensure the saving user holds the `notifier-editDynamicRecipients` permission
      * when the Notification uses the Dynamic Recipients recipient type.
      *
-     * The CP template hides the dropdown option from unpermitted users; this
-     * server-side check catches crafted POSTs that bypass the UI gate.
-     *
-     * Skipped for non-CP requests (console commands, queue workers, programmatic
-     * saves from other plugins) since those contexts have no user identity to
-     * check against and are assumed trusted.
+     * Server-side gate catching crafted POSTs that bypass the CP template's hidden dropdown.
      *
      * @return void
      */
@@ -613,6 +609,17 @@ class Notification extends Element
                 $record->id = $this->id;
             }
 
+            // Capture the previously-saved Event Type
+            $oldEventType = $record->eventType;
+
+            // Decode the previously-saved eventConfig (raw JSON string when freshly loaded)
+            $oldEventConfig = is_string($record->eventConfig)
+                ? (json_decode($record->eventConfig, true) ?: [])
+                : (is_array($record->eventConfig) ? $record->eventConfig : []);
+
+            // Extract the previously-saved Feed URL
+            $oldFeedUrl = trim((string) ($oldEventConfig['feedUrl'] ?? ''));
+
             // Get request service
             $request = Craft::$app->getRequest();
 
@@ -684,8 +691,19 @@ class Notification extends Element
             // Save the notification
             $record->save(false);
 
-            // Ensure scheduled notifications have a scheduled history row
-            $this->_ensureScheduledHistory($record->event);
+            // Sync the Event Type from the just-saved record
+            $this->eventType = $record->eventType;
+
+            // Sync the eventConfig (normalize to an array if the record holds the JSON string)
+            $this->eventConfig = is_array($record->eventConfig)
+                ? $record->eventConfig
+                : (json_decode((string) $record->eventConfig, true) ?: []);
+
+            // Ensure scheduled notifications have a schedule tracking row
+            $this->_ensureScheduleTracking($record->event);
+
+            // Ensure feed notifications are seeded against their current Feed URL
+            $this->_ensureFeedSeeding($oldEventType, $oldFeedUrl);
         }
 
         parent::afterSave($isNew);
@@ -764,25 +782,20 @@ class Notification extends Element
     // ========================================================================= //
 
     /**
-     * Ensure a scheduled notification has a row in the scheduled history table.
-     *
-     * Each scheduled notification has a row in `notifier_scheduledhistory`
-     * that records the moment of its most recent run. Creating the row here,
-     * on save, closes the gap before the first scheduled run, and re-creates
-     * the row if it is ever removed.
+     * Ensure a scheduled notification has a row in the schedule tracking table.
      *
      * @param string|null $event The notification's saved event.
      * @return void
      */
-    private function _ensureScheduledHistory(?string $event): void
+    private function _ensureScheduleTracking(?string $event): void
     {
         // If this isn't a scheduled event, bail
         if (!in_array($event, ['date-reached', 'pending-to-live'], true)) {
             return;
         }
 
-        // Scheduled history table
-        $table = '{{%notifier_scheduledhistory}}';
+        // Schedule tracking table
+        $table = '{{%notifier_trackscheduled}}';
 
         // Whether a matching row already exists for this notification
         $exists = (new Query())
@@ -805,6 +818,51 @@ class Notification extends Element
                 ->execute();
         } catch (IntegrityException) {
             // A concurrent save already seeded the row
+        }
+    }
+
+    /**
+     * Run the save-time seed flow for a feed notification.
+     *
+     * @param string|null $oldEventType The previously-saved Event Type (null for new notifications).
+     * @param string $oldFeedUrl The previously-saved Feed URL (empty for new notifications).
+     * @return void
+     */
+    private function _ensureFeedSeeding(?string $oldEventType, string $oldFeedUrl): void
+    {
+        // If this is a draft or revision, bail (only canonical saves run the seed flow)
+        if ($this->getIsDraft() || $this->getIsRevision()) {
+            return;
+        }
+
+        // If this isn't currently a feed notification, bail
+        if ('feed' !== $this->eventType) {
+            return;
+        }
+
+        // Read the current Feed URL
+        $newFeedUrl = trim((string) ($this->eventConfig['feedUrl'] ?? ''));
+
+        // If no Feed URL is configured, bail
+        if ('' === $newFeedUrl) {
+            return;
+        }
+
+        // Run the seed flow, catching any failure so the save itself never fails
+        try {
+            // If reactivating feed or swapping the Feed URL, wipe the stale tracking history
+            if ('feed' !== $oldEventType || $oldFeedUrl !== $newFeedUrl) {
+                NotifierPlugin::getInstance()->feedRunner->wipeHistory($this->id);
+            }
+
+            // Attempt the initial seed (idempotent; no-ops if already seeded)
+            NotifierPlugin::getInstance()->feedRunner->seedNotification($this);
+        } catch (Throwable $e) {
+            // Log the failure but don't block the save
+            $this->log->error(Craft::t('notifier',
+                'Initial feed scan failed: {message}',
+                ['message' => $e->getMessage()]
+            ));
         }
     }
 

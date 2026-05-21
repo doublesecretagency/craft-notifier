@@ -52,6 +52,10 @@ return [
     'Users Event'                    => '用户事件',
     'Ungrouped Users'                => '未分组用户',
 
+    // Feed
+    'Feed Event' => 'Feed 事件',
+    'Feed URL' => 'Feed URL',
+    'The URL of the RSS, Atom, or JSON feed to watch.' => '要监控的 RSS、Atom 或 JSON Feed 的 URL。',
     // Field and element conditions
     'Field Conditions'             => '字段条件',
     'Send the message only when the saved element matches the following conditions.' => '仅在保存的元素符合以下条件时发送消息。',
@@ -120,7 +124,7 @@ return [
     'Message Type'                       => '消息类型',
     'What type of message will be sent?' => '将发送什么类型的消息?',
     'Send Message via Queue'             => '通过队列发送消息',
-    'Should the message be sent via the [jobs queue]({queueUrl})?' => '是否通过[作业队列]({queueUrl})发送消息?',
+    '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '也支持[模板]({templatingUrl})和[特殊变量]({variablesUrl})。',
     'Send immediately' => '立即发送',
     'Add to queue' => '加入队列',
 
@@ -145,7 +149,6 @@ return [
 
     // Message tab: Pushover fields
     "Field containing each user's Pushover key" => '用户的 Pushover 密钥字段',
-    'The Pushover application token is configured in [Settings → Pushover](url).' => 'Pushover 应用令牌在[设置 → Pushover](url)中配置。',
 
     // Message tab: ntfy fields
     'Priority'           => '优先级',
@@ -155,6 +158,8 @@ return [
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack 消息正文',
+    'Bot Icon URL' => '图标 URL',
+    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => '在此消息旁显示的图标的 URL。留空以使用频道默认值。',
 
     // Message tab: Bluesky fields
     'Post Body' => '帖子正文',
@@ -249,10 +254,25 @@ return [
 
     // Settings: Slack
     'Slack Channels' => 'Slack 频道',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '创建一个具有 `chat:write`、`chat:write.customize` 和 `chat:write.public` 权限范围的 [Slack 应用](https://api.slack.com/apps),然后为你想发布消息的每个频道添加一行。配置通知时,每个频道都可在 **Recipients** 标签页中作为收件人使用。机器人令牌是机密,因此请将其存储在 `.env` 变量中并引用该变量(例如 `$SLACK_BOT_TOKEN`),而不是直接粘贴令牌。',
     'Channels'       => '频道',
     'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => '每个 Slack 频道需要自己的 Incoming Webhook URL。保存后,使用 **Test** 按钮进行快速检查。',
-    'Webhook URL'    => 'Webhook URL',
     'Add a channel'  => '添加频道',
+    'Bot Token' => '机器人令牌',
+    'Channel ID' => '频道 ID',
+    'Bot Emoji' => '图标表情',
+    'Bot Name' => '用户名',
+    'Show link previews' => '显示链接预览',
+    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => '在此消息旁显示的表情快捷码，例如 `:rocket:`。仅在图标 URL 为空时使用。',
+    "A display name for this message. Leave blank to use the app's default." => '此消息的显示名称。留空以使用应用的默认值。',
+    'Whether Slack should unfurl link previews for URLs in the message body.' => 'Slack 是否应展开消息正文中 URL 的链接预览。',
+    'Not a valid Bot Token. Must start with `xoxb-`.' => '无效的机器人令牌。必须以 `xoxb-` 开头。',
+    'Not a valid Channel ID. Must look like `C01234ABCD`.' => '无效的频道 ID。必须类似 `C01234ABCD`。',
+    'Unable to send Slack message, no bot token.' => '无法发送 Slack 消息：没有机器人令牌。',
+    'Unable to send Slack message, no channel ID.' => '无法发送 Slack 消息:没有频道 ID。',
+    'Recipient "{name}" has no Slack bot token.' => '收件人 "{name}" 没有 Slack 机器人令牌。',
+    'Recipient "{name}" has no Slack channel ID.' => '收件人 "{name}" 没有 Slack 频道 ID。',
+    'Slack rejected the message: {error}' => 'Slack 拒绝了消息：{error}',
     'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => '先保存以保留一行,然后点击其 **Test** 按钮对 Slack 进行快速检查。',
 
     // Settings: Bluesky
@@ -292,6 +312,10 @@ return [
     // Runtime / log feedback
     'Sending {messageType} to {recipient}.'          => '正在向 {recipient} 发送 {messageType}。',
     'Adding message to queue.'                       => '正在将消息添加到队列。',
+    'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.' => '无法解析订阅源。需要 PHP 的 `simplexml` 和 `libxml` 扩展。',
+    'Unable to parse the feed.' => '无法解析订阅源。',
+    'Unable to fetch the feed: {message}' => '无法获取订阅源：{message}',
+    'Initial feed scan failed: {message}' => '首次订阅源扫描失败：{message}',
     'Sending message immediately (bypassing queue).' => '立即发送消息(绕过队列)。',
     'Log events deleted.'                            => '日志事件已删除。',
     'notification'                                   => '通知',
@@ -332,10 +356,7 @@ return [
     'Successfully sent ntfy message to topic "{topic}".'     => '已成功发送 ntfy 消息到主题 "{topic}"。',
 
     // Outbound: Slack log messages
-    'Unable to send Slack message, no webhook URL.' => '无法发送 Slack 消息:没有 webhook URL。',
-    'Unable to send Slack message, webhook URL is not valid.' => '无法发送 Slack 消息:webhook URL 无效。',
     'Unable to send Slack message, body is empty.'  => '无法发送 Slack 消息:正文为空。',
-    'Slack POST failed (HTTP {status}): {reason}'   => 'Slack POST 失败 (HTTP {status}):{reason}',
     'Slack POST failed: {reason}'                   => 'Slack POST 失败:{reason}',
     'Successfully sent Slack message to "{label}".' => '已成功发送 Slack 消息到 "{label}"。',
 
@@ -357,7 +378,6 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => '收件人 "{name}" 没有关联的用户;无法发送 Pushover 消息。',
     '[SKIPPED] User "{name}" has no Pushover key.'   => '[已跳过] 用户 "{name}" 没有 Pushover 密钥。',
     'Recipient "{name}" has no ntfy topic.'          => '收件人 "{name}" 没有 ntfy 主题。',
-    'Recipient "{name}" has no Slack webhook URL.'   => '收件人 "{name}" 没有 Slack webhook URL。',
     'Recipient "{name}" has no Bluesky credentials.' => '收件人 "{name}" 没有 Bluesky 凭据。',
 
     // Errors / exceptions
@@ -382,7 +402,6 @@ return [
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => '添加您希望用于发布的 Bluesky 账号。配置通知时,每个账号都可在**收件人**选项卡中作为收件人使用。',
     "Click any row's **Test** button to confirm the account authenticates." => '点击任意行的 **Test** 按钮以确认该账号能通过认证。',
-    'Add an [Incoming Webhook](https://api.slack.com/messaging/webhooks) for each Slack channel you\'d like to post into. Each webhook becomes available as a recipient on the **Recipients** tab when configuring a notification. A webhook URL is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_WEBHOOK_URL`) rather than pasting the URL directly.' => '为每个要发布到的 Slack 频道添加一个 [Incoming Webhook](https://api.slack.com/messaging/webhooks)。配置通知时，每个 webhook 都会作为收件人显示在 **Recipients** 选项卡中。webhook URL 是机密信息，因此请将其保存在 `.env` 变量中，并引用该变量（例如 `$SLACK_WEBHOOK_URL`），而不是直接粘贴 URL。',
     "Click any row's **Test** button to send a quick test message to that channel." => '点击任意行的 **Test** 按钮以向该频道发送快速测试消息。',
     'Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`.' => '可选,指向自托管的 ntfy 实例(如适用)。默认为 `https://ntfy.sh`。',
     'Optional, required for protected topics or self-hosted instances with auth.' => '可选,用于受保护主题或带身份验证的自托管实例时必填。',
@@ -390,7 +409,6 @@ return [
     "Click any row's **Test** button to send a quick test message to that topic." => '点击任意行的 **Test** 按钮以向该主题发送快速测试消息。',
     'Enable Markdown' => '启用 Markdown',
     'Link URL' => '链接 URL',
-    'Not a valid Webhook URL. Must start with https://hooks.slack.com/services/' => 'Webhook URL 无效。必须以 https://hooks.slack.com/services/ 开头。',
 
     // Manual triggers
     'Send Notification'                                            => '发送通知',
@@ -398,6 +416,7 @@ return [
     'Are you sure you want to send this notification?'             => '确定要发送此通知吗？',
     'This notification cannot be triggered manually.'              => '此通知无法手动触发。',
     'This notification no longer applies to the selected element.' => '此通知不再适用于所选元素。',
+    'Notification was not sent. Check the Notification Log for details.' => '通知未发送。详情请查看通知日志。',
     'Notification sent.'                                           => '通知已发送。',
     'Element not found'                                            => '未找到元素',
     'Trigger Label'                                                => '触发标签',
@@ -416,4 +435,41 @@ return [
     'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => '用于验证定时运行 Web 请求的共享密钥。仅在通过 Web 端点触发计划时才需要。',
     'Scheduled-Run Token' => '定时运行令牌',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => '随每个请求一起发送,作为 X-Notifier-Token 标头或 token 主体参数。',
+    'Pushover Title' => 'Pushover 标题',
+    'Pushover Body' => 'Pushover 正文',
+    'ntfy Title' => 'ntfy 标题',
+    'ntfy Body' => 'ntfy 正文',
+    'ntfy Link URL' => 'ntfy 链接 URL',
+    'Render Link Previews' => '显示链接预览',
+    'Don\'t unfurl' => '不展开',
+    'Expand link previews' => '展开链接预览',
+    'Regular text only' => '仅纯文本',
+    'Markdown enabled' => 'Markdown 已启用',
+    'Dynamic Pushover Title' => '动态 Pushover 标题',
+    'Dynamic Subject Line' => '动态主题行',
+    'Dynamic Bot Name' => '动态 Bot 名称',
+    'Dynamic ntfy Title' => '动态 ntfy 标题',
+    'Dynamic Announcement Title' => '动态公告标题',
+    'Dynamic Flash Message Title' => '动态 Flash 消息标题',
+    'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => '纯文本,最多 300 个字符。URL 和 `@handle.tld` 提及会自动转为链接。',
+    'Whether to automatically generate a preview card when a URL is included in the post body.' => '当帖子正文包含 URL 时,自动生成预览卡片。',
+    'Whether the message be sent via the [jobs queue]({queueUrl}).' => '是否通过[任务队列]({queueUrl})发送消息。',
+    'Priority level of the ntfy message.' => 'ntfy 消息的优先级。',
+    'Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/).' => '可选填入逗号分隔的[emoji 短代码](https://docs.ntfy.sh/emojis/)。',
+    'Body of the ntfy notification.' => 'ntfy 通知的正文。',
+    'Optionally open a URL when the notification is clicked.' => '可选在点击通知时打开一个 URL。',
+    'Whether to parse the body as Markdown in supported clients.' => '是否在受支持的客户端中将正文解析为 Markdown。',
+    'Heading of the announcement.' => '公告的标题。',
+    'Body of the announcement. Supports Markdown.' => '公告的正文。支持 Markdown。',
+    'Heading of the flash message.' => 'Flash 消息的标题。',
+    'Optionally include details below the heading. Supports Markdown and HTML.' => '可选在标题下方添加详细信息。支持 Markdown 和 HTML。',
+    'Optionally include a heading above the body.' => '可选在正文上方添加标题。',
+    'Body of the SMS (text message). Plain text only.' => 'SMS(短信)正文。仅纯文本。',
+    'Body of the Pushover notification. Plain text only.' => 'Pushover 通知的正文。仅纯文本。',
+    'Subject line of the email.' => '电子邮件主题。',
+    'Body of the email. Supports HTML.' => '电子邮件正文。支持 HTML。',
+    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Slack 消息正文。支持 [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) 语法。',
+    'Optionally override the app\'s display name.' => '可选覆盖应用的显示名称。',
+    'Optionally override the app\'s icon with a URL.' => '可选用 URL 覆盖应用的图标。',
+    'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => '可选用 emoji 覆盖应用的图标。仅在 Bot Icon URL 为空时使用。',
 ];

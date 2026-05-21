@@ -17,16 +17,17 @@
 
     <hr>
 
-    {% include 'notifier/notifications/_edit/message/docs-links' %}
-
-    {{ forms.textField({
+    {{ codeEditor.textAreaField({
         label: "Email Subject"|t('notifier'),
-        instructions: "Subject line of outgoing email.",
+        instructions: "Subject line of the email."|t('notifier'),
+        tip: templatingTip,
+        placeholder: "Dynamic Subject Line"|t('notifier'),
+        rows: 1,
         id: 'messageConfig-emailSubject',
         name: 'messageConfig[emailSubject]',
         value: (notification.messageConfig.emailSubject ?? null),
         errors: notification.getErrors('messageConfig[emailSubject]'),
-    }) }}
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
     {# Email Body field with Rich Text / Code toggle #}
     <div id="email-message-field" class="field" data-mode="{{ mode }}">
@@ -37,7 +38,7 @@
                 <button type="button" class="btn small{% if mode == 'code' %} active{% endif %}" data-mode="code">{{ "Code"|t('notifier') }}</button>
             </div>
         </div>
-        <div class="instructions"><p>{{ "Body of outgoing email. You can use <a href=\"https://plugins.doublesecretagency.com/notifier/messages/variables\" target=\"_blank\">special variables</a>, or even <a href=\"https://plugins.doublesecretagency.com/notifier/messages/skip\" target=\"_blank\">skip recipients</a>."|t('notifier')|raw }}</p></div>
+        <div class="instructions"><p>{{ "Body of the email. Supports HTML."|t('notifier') }}</p></div>
         <div class="input ltr">
 
             {# Mode persistence #}
@@ -93,6 +94,12 @@
             {% endif %}
 
         </div>
+        {# Replicate the notice block that Cp::_noticeHtml() produces for tip: on standard fields #}
+        <p class="notice has-icon">
+            <span class="icon" aria-hidden="true"></span>
+            <span class="visually-hidden">{{ 'Tip:'|t('app') }}</span>
+            <span>{{ templatingTip|md(inlineOnly=true) }}</span>
+        </p>
     </div>
 
     <hr>
@@ -102,8 +109,8 @@
         instructions: queueInstructions,
         id: 'messageConfig-emailQueue',
         name: 'messageConfig[emailQueue]',
-        offLabel: 'Send immediately'|t('notifier'),
-        onLabel: 'Add to queue'|t('notifier'),
+        offLabel: "Send immediately"|t('notifier'),
+        onLabel: "Add to queue"|t('notifier'),
         on: (notification.messageConfig.emailQueue ?? true),
     }) }}
 </div>

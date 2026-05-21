@@ -98,7 +98,7 @@ class Settings extends Model
     // ========================================================================= //
 
     /**
-     * @var array Named list of Slack channels. Each row: ['uid' => string, 'label' => string, 'webhookUrl' => string]. The webhookUrl may be a $ENV_VAR reference, resolved at send time.
+     * @var array Named list of Slack channels. Each row: ['uid' => string, 'label' => string, 'botToken' => string, 'channelId' => string]. The botToken may be a $ENV_VAR reference, resolved at send time.
      */
     public array $slackChannels = [];
 

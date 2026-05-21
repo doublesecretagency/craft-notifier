@@ -3,9 +3,12 @@
 
 <div class="message-type-slack hidden">
 
+    <hr>
+
     {{ codeEditor.textAreaField({
         label: "Slack Message Body"|t('notifier'),
-        instructions: "Use [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax, e.g. `*bold*`, `_italic_`, `` `code` ``, etc.",
+        instructions: "Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax."|t('notifier'),
+        tip: templatingTip,
         placeholder: commonPlaceholder,
         rows: 5,
         id: 'messageConfig-slackBody',
@@ -14,17 +17,63 @@
         errors: notification.getErrors('messageConfig[slackBody]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
-    {% include 'notifier/notifications/_edit/message/docs-links' %}
+    <hr>
+
+    {{ codeEditor.textAreaField({
+        label: "Bot Name"|t('notifier'),
+        instructions: "Optionally override the app's display name."|t('notifier'),
+        tip: templatingTip,
+        placeholder: "Dynamic Bot Name"|t('notifier'),
+        rows: 1,
+        id: 'messageConfig-slackUsername',
+        name: 'messageConfig[slackUsername]',
+        value: (notification.messageConfig.slackUsername ?? null),
+        errors: notification.getErrors('messageConfig[slackUsername]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {{ codeEditor.textAreaField({
+        label: "Bot Icon URL"|t('notifier'),
+        instructions: "Optionally override the app's icon with a URL."|t('notifier'),
+        tip: templatingTip,
+        placeholder: 'https://example.com/icon.png',
+        rows: 1,
+        id: 'messageConfig-slackIcon',
+        name: 'messageConfig[slackIcon]',
+        value: (notification.messageConfig.slackIcon ?? null),
+        errors: notification.getErrors('messageConfig[slackIcon]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {{ codeEditor.textAreaField({
+        label: "Bot Emoji"|t('notifier'),
+        instructions: "Optionally override the app's icon with an emoji. Used only when Bot Icon URL is empty."|t('notifier'),
+        tip: templatingTip,
+        placeholder: ':rocket:',
+        rows: 1,
+        id: 'messageConfig-slackEmoji',
+        name: 'messageConfig[slackEmoji]',
+        value: (notification.messageConfig.slackEmoji ?? null),
+        errors: notification.getErrors('messageConfig[slackEmoji]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
     <hr>
+
+    {{ forms.lightswitchField({
+        label: "Render Link Previews"|t('notifier'),
+        instructions: "Whether Slack should unfurl link previews for URLs in the message body."|t('notifier'),
+        id: 'messageConfig-slackUnfurlLinks',
+        name: 'messageConfig[slackUnfurlLinks]',
+        offLabel: "Don't unfurl"|t('notifier'),
+        onLabel: "Expand link previews"|t('notifier'),
+        on: (notification.messageConfig.slackUnfurlLinks ?? true),
+    }) }}
 
     {{ forms.lightswitchField({
         label: "Send Message via Queue"|t('notifier'),
         instructions: queueInstructions,
         id: 'messageConfig-slackQueue',
         name: 'messageConfig[slackQueue]',
-        offLabel: 'Send immediately'|t('notifier'),
-        onLabel: 'Add to queue'|t('notifier'),
+        offLabel: "Send immediately"|t('notifier'),
+        onLabel: "Add to queue"|t('notifier'),
         on: (notification.messageConfig.slackQueue ?? true),
     }) }}
 </div>

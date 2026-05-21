@@ -25,11 +25,12 @@ abstract class Options
         'entries'                   => 'Entries',
         'assets'                    => 'Assets',
         'users'                     => 'Users',
-        'craft-commerce-orders'           => 'Commerce Orders',
-        'craft-commerce-products'         => 'Commerce Products',
-        'digital-products-products'          => 'Digital Products',
-        'digital-products-licenses'  => 'Digital Product Licenses',
-        'solspace-calendar-events'           => 'Solspace Calendar',
+        'feed'                      => 'RSS/JSON Feed',
+        'craft-commerce-orders'     => 'Commerce Orders',
+        'craft-commerce-products'   => 'Commerce Products',
+        'digital-products-products' => 'Digital Products',
+        'digital-products-licenses' => 'Digital Product Licenses',
+        'solspace-calendar-events'  => 'Solspace Calendar',
     ];
 
     /**
@@ -39,11 +40,12 @@ abstract class Options
         'entries' => 'Entries',
         'assets'  => 'Assets',
         'users'   => 'Users',
+        'feed'    => 'RSS/JSON Feed',
         ['optgroup' => 'Craft Commerce'],
         'craft-commerce-orders'   => 'Commerce Orders',
         'craft-commerce-products' => 'Commerce Products',
         ['optgroup' => 'Digital Products'],
-        'digital-products-products'         => 'Products',
+        'digital-products-products' => 'Products',
         'digital-products-licenses' => 'Licenses',
         ['optgroup' => 'Solspace Calendar'],
         'solspace-calendar-events' => 'Calendar Events',
@@ -164,6 +166,12 @@ abstract class Options
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
+            ],
+        ],
+        'feed' => [
+            [
+                'label' => 'When a new RSS feed item is found',
+                'value' => 'new-item'
             ],
         ],
         'craft-commerce-orders' => [
@@ -293,9 +301,9 @@ abstract class Options
      */
     public const MESSAGE_TYPE = [
         'email'        => 'Email',
-        'sms'          => 'SMS (Text Message)',
         'announcement' => 'Announcement',
         'flash'        => 'Flash Message',
+        'sms'          => 'SMS (Text Message)',
         'pushover'     => 'Pushover',
         'ntfy'         => 'ntfy',
         'slack'        => 'Slack',
@@ -307,9 +315,9 @@ abstract class Options
      */
     public const MESSAGE_TYPE_ICON = [
         'email'        => 'envelope',
-        'sms'          => 'comment-dots',
         'announcement' => 'gift',
         'flash'        => 'bolt',
+        'sms'          => 'comment-dots',
         'pushover'     => 'mobile-screen',
         'ntfy'         => 'angle-right',
         'slack'        => 'slack',
@@ -347,9 +355,9 @@ abstract class Options
      */
     public const ALLOWED_RECIPIENT_TYPES = [
         'email'        => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users', 'dynamic-recipients'],
-        'sms'          => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users', 'dynamic-recipients'],
         'announcement' => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users'],
         'flash'        => ['current-user'],
+        'sms'          => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users', 'dynamic-recipients'],
         'pushover'     => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users', 'dynamic-recipients'],
         'ntfy'         => ['ntfy-topics'],
         'slack'        => ['slack-channels'],

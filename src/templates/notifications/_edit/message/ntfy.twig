@@ -5,7 +5,7 @@
 
     {{ forms.selectField({
         label: "Priority"|t('notifier'),
-        instructions: "Priority level of the ntfy message.",
+        instructions: "Priority level of the ntfy message."|t('notifier'),
         id: 'messageConfig-ntfyPriority',
         name: 'messageConfig[ntfyPriority]',
         value: (notification.messageConfig.ntfyPriority ?? '3'),
@@ -14,7 +14,7 @@
 
     {{ forms.textField({
         label: "Tags"|t('notifier'),
-        instructions: "Optional, comma-separated. Examples: `warning,fire,bell`. See [ntfy emoji shortcodes](https://docs.ntfy.sh/emojis/).",
+        instructions: "Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/)."|t('notifier'),
         id: 'messageConfig-ntfyTags',
         name: 'messageConfig[ntfyTags]',
         value: (notification.messageConfig.ntfyTags ?? null),
@@ -23,13 +23,12 @@
 
     <hr>
 
-    {% include 'notifier/notifications/_edit/message/docs-links' %}
-
     {{ codeEditor.textAreaField({
-        label: "Title"|t('notifier'),
-        instructions: "Optional title shown above the message body in the ntfy client.",
-        placeholder: commonPlaceholder,
-        rows: 2,
+        label: "ntfy Title"|t('notifier'),
+        instructions: "Optionally include a heading above the body."|t('notifier'),
+        tip: templatingTip,
+        placeholder: "Dynamic ntfy Title"|t('notifier'),
+        rows: 1,
         id: 'messageConfig-ntfyTitle',
         name: 'messageConfig[ntfyTitle]',
         value: (notification.messageConfig.ntfyTitle ?? null),
@@ -37,8 +36,9 @@
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
     {{ codeEditor.textAreaField({
-        label: "Body"|t('notifier'),
-        instructions: "Body of the ntfy push notification.",
+        label: "ntfy Body"|t('notifier'),
+        instructions: "Body of the ntfy notification."|t('notifier'),
+        tip: templatingTip,
         placeholder: commonPlaceholder,
         rows: 4,
         id: 'messageConfig-ntfyBody',
@@ -47,19 +47,12 @@
         errors: notification.getErrors('messageConfig[ntfyBody]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
-    {{ forms.lightswitchField({
-        label: "Enable Markdown"|t('notifier'),
-        instructions: "When enabled, the body is rendered as Markdown by clients which support it.",
-        id: 'messageConfig-ntfyMarkdown',
-        name: 'messageConfig[ntfyMarkdown]',
-        on: (notification.messageConfig.ntfyMarkdown ?? true),
-    }) }}
-
     {{ codeEditor.textAreaField({
-        label: "Link URL"|t('notifier'),
-        instructions: "When tapped, the notification can optionally open a URL.",
+        label: "ntfy Link URL"|t('notifier'),
+        instructions: "Optionally open a URL when the notification is clicked."|t('notifier'),
+        tip: templatingTip,
         placeholder: '{{ entry.url }}',
-        rows: 2,
+        rows: 1,
         id: 'messageConfig-ntfyClickUrl',
         name: 'messageConfig[ntfyClickUrl]',
         value: (notification.messageConfig.ntfyClickUrl ?? null),
@@ -69,12 +62,22 @@
     <hr>
 
     {{ forms.lightswitchField({
+        label: "Enable Markdown"|t('notifier'),
+        instructions: "Whether to parse the body as Markdown in supported clients."|t('notifier'),
+        id: 'messageConfig-ntfyMarkdown',
+        name: 'messageConfig[ntfyMarkdown]',
+        offLabel: "Regular text only"|t('notifier'),
+        onLabel: "Markdown enabled"|t('notifier'),
+        on: (notification.messageConfig.ntfyMarkdown ?? true),
+    }) }}
+
+    {{ forms.lightswitchField({
         label: "Send Message via Queue"|t('notifier'),
         instructions: queueInstructions,
         id: 'messageConfig-ntfyQueue',
         name: 'messageConfig[ntfyQueue]',
-        offLabel: 'Send immediately'|t('notifier'),
-        onLabel: 'Add to queue'|t('notifier'),
+        offLabel: "Send immediately"|t('notifier'),
+        onLabel: "Add to queue"|t('notifier'),
         on: (notification.messageConfig.ntfyQueue ?? true),
     }) }}
 </div>

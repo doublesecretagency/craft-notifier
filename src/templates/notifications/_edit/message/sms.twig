@@ -13,11 +13,10 @@
 
     <hr>
 
-    {% include 'notifier/notifications/_edit/message/docs-links' %}
-
     {{ codeEditor.textAreaField({
         label: "SMS Message Body"|t('notifier'),
-        instructions: "Message to send via SMS (text message). Plain text only. Markdown and HTML are not supported.",
+        instructions: "Body of the SMS (text message). Plain text only."|t('notifier'),
+        tip: templatingTip,
         placeholder: commonPlaceholder,
         rows: 3,
         id: 'messageConfig-smsMessage',
@@ -33,8 +32,8 @@
         instructions: queueInstructions,
         id: 'messageConfig-smsQueue',
         name: 'messageConfig[smsQueue]',
-        offLabel: 'Send immediately'|t('notifier'),
-        onLabel: 'Add to queue'|t('notifier'),
+        offLabel: "Send immediately"|t('notifier'),
+        onLabel: "Add to queue"|t('notifier'),
         on: (notification.messageConfig.smsQueue ?? true),
     }) }}
 </div>

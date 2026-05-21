@@ -3,11 +3,12 @@
 
 <div class="message-type-bluesky hidden">
 
-    {% include 'notifier/notifications/_edit/message/docs-links' %}
+    <hr>
 
     {{ codeEditor.textAreaField({
         label: "Post Body"|t('notifier'),
-        instructions: "Plain text up to 300 characters; longer posts are truncated. URLs and `@handle.tld` mentions auto-link.",
+        instructions: "Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically."|t('notifier'),
+        tip: templatingTip,
         placeholder: commonPlaceholder,
         rows: 5,
         id: 'messageConfig-blueskyBody',
@@ -16,9 +17,11 @@
         errors: notification.getErrors('messageConfig[blueskyBody]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
+    <hr>
+
     {{ forms.lightswitchField({
         label: "Generate Link Preview"|t('notifier'),
-        instructions: "When the post body contains a URL, automatically generate a preview card with the linked page's image, title, and description."|t('notifier'),
+        instructions: "Whether to automatically generate a preview card when a URL is included in the post body."|t('notifier'),
         id: 'messageConfig-blueskyLinkCard',
         name: 'messageConfig[blueskyLinkCard]',
         offLabel: 'No card'|t('notifier'),
@@ -26,15 +29,13 @@
         on: (notification.messageConfig.blueskyLinkCard ?? true),
     }) }}
 
-    <hr>
-
     {{ forms.lightswitchField({
         label: "Send Message via Queue"|t('notifier'),
         instructions: queueInstructions,
         id: 'messageConfig-blueskyQueue',
         name: 'messageConfig[blueskyQueue]',
-        offLabel: 'Send immediately'|t('notifier'),
-        onLabel: 'Add to queue'|t('notifier'),
+        offLabel: "Send immediately"|t('notifier'),
+        onLabel: "Add to queue"|t('notifier'),
         on: (notification.messageConfig.blueskyQueue ?? true),
     }) }}
 </div>

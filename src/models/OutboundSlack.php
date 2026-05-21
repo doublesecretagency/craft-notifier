@@ -27,12 +27,17 @@ class OutboundSlack extends BaseEnvelope
 {
 
     /**
-     * @var string|null Slack Incoming Webhook URL. May be a $ENV_VAR reference, resolved at send time.
+     * @var string|null Slack bot token (xoxb-...). May be a $ENV_VAR reference, resolved at send time.
      */
-    public ?string $webhookUrl = null;
+    public ?string $botToken = null;
 
     /**
-     * @var string|null Friendly name for the webhook (e.g. "#engineering").
+     * @var string|null Slack channel ID (e.g. "C01234ABCD").
+     */
+    public ?string $channelId = null;
+
+    /**
+     * @var string|null Friendly name for the channel (e.g. "#engineering").
      */
     public ?string $label = null;
 
@@ -42,7 +47,27 @@ class OutboundSlack extends BaseEnvelope
     public string $body = '';
 
     /**
-     * Send the Slack message via Incoming Webhook.
+     * @var string Rendered icon URL. Empty when the channel default should be used.
+     */
+    public string $iconUrl = '';
+
+    /**
+     * @var string Rendered icon emoji shortcode (e.g. ":rocket:"). Used only when iconUrl is empty.
+     */
+    public string $iconEmoji = '';
+
+    /**
+     * @var string Rendered display name. Empty when the app's default name should be used.
+     */
+    public string $username = '';
+
+    /**
+     * @var bool Whether Slack should unfurl link previews for URLs in the body.
+     */
+    public bool $unfurlLinks = true;
+
+    /**
+     * Send the Slack message via the chat.postMessage Web API.
      *
      * @return bool
      */
@@ -57,18 +82,21 @@ class OutboundSlack extends BaseEnvelope
             return false;
         }
 
-        // Resolve the webhook URL (supports a $ENV_VAR reference)
-        $webhookUrl = App::parseEnv($this->webhookUrl);
+        // Resolve the bot token (supports a $ENV_VAR reference)
+        $botToken = App::parseEnv($this->botToken);
 
-        // If webhook URL is missing, log error and bail
-        if (!$webhookUrl) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Slack message, no webhook URL.'), $this->envelopeId);
+        // If the bot token is missing, log error and bail
+        if (!$botToken) {
+            $notification->log->error(Craft::t('notifier', 'Unable to send Slack message, no bot token.'), $this->envelopeId);
             return false;
         }
 
-        // If webhook URL is not valid, log error and bail
-        if (!static::isValidWebhookUrl($webhookUrl)) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Slack message, webhook URL is not valid.'), $this->envelopeId);
+        // Resolve the channel ID (supports a $ENV_VAR reference)
+        $channelId = App::parseEnv($this->channelId);
+
+        // If the channel ID is missing, log error and bail
+        if (!$channelId) {
+            $notification->log->error(Craft::t('notifier', 'Unable to send Slack message, no channel ID.'), $this->envelopeId);
             return false;
         }
 
@@ -79,7 +107,7 @@ class OutboundSlack extends BaseEnvelope
         }
 
         // Resolve a display label for log lines
-        $displayLabel = ($this->label ?: 'webhook');
+        $displayLabel = ($this->label ?: $channelId);
 
         // Attempt to send via Guzzle
         try {
@@ -87,33 +115,63 @@ class OutboundSlack extends BaseEnvelope
             // Get the Guzzle client
             $client = Craft::createGuzzleClient();
 
-            // POST to the webhook URL
-            $response = $client->post($webhookUrl, [
-                'headers'     => ['Content-Type' => 'application/json'],
-                'json'        => [
-                    'text'   => $this->body,
-                    'mrkdwn' => true,
+            // Build the chat.postMessage payload
+            $payload = [
+                'channel' => $channelId,
+                'text'    => $this->body,
+                'mrkdwn'  => true,
+            ];
+
+            // If an icon URL is set, include it (takes precedence over icon_emoji)
+            if ('' !== $this->iconUrl) {
+                $payload['icon_url'] = $this->iconUrl;
+            }
+
+            // If an icon emoji is set, include it (used only when icon_url is absent)
+            if ('' !== $this->iconEmoji) {
+                $payload['icon_emoji'] = $this->iconEmoji;
+            }
+
+            // If a username override is set, include it
+            if ('' !== $this->username) {
+                $payload['username'] = $this->username;
+            }
+
+            // If link previews are disabled, suppress them on the Slack side
+            if (!$this->unfurlLinks) {
+                $payload['unfurl_links'] = false;
+                $payload['unfurl_media'] = false;
+            }
+
+            // POST to chat.postMessage
+            $response = $client->post('https://slack.com/api/chat.postMessage', [
+                'headers'     => [
+                    'Authorization' => 'Bearer ' . $botToken,
+                    'Content-Type'  => 'application/json; charset=utf-8',
                 ],
+                'json'        => $payload,
                 'http_errors' => false,
                 'timeout'     => 15,
             ]);
 
             // Inspect response
             $status = $response->getStatusCode();
-            $rawBody = trim((string) $response->getBody());
+            $rawBody = (string) $response->getBody();
+            $decoded = json_decode($rawBody, true);
 
-            // Slack returns 200 with body "ok" on success
-            if (200 !== $status || 'ok' !== $rawBody) {
-                $notification->log->error(Craft::t('notifier', 'Slack POST failed (HTTP {status}): {reason}', ['status' => $status, 'reason' => $rawBody]), $this->envelopeId);
+            // If Slack rejected the message, log the error code and bail
+            if (!is_array($decoded) || true !== ($decoded['ok'] ?? false)) {
+                $error = (is_array($decoded) ? ($decoded['error'] ?? 'unknown') : "HTTP {$status}");
+                $notification->log->error(Craft::t('notifier', 'Slack rejected the message: {error}', ['error' => $error]), $this->envelopeId);
                 return false;
             }
 
         } catch (GuzzleException|Throwable $exception) {
 
-            // Set error message
+            // Get the error message (or fall back to a JSON encoded version)
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
-            // Log error message
+            // Log the error message
             $notification->log->error(Craft::t('notifier', 'Slack POST failed: {reason}', ['reason' => $message]), $this->envelopeId);
 
             // Return failure
@@ -130,20 +188,37 @@ class OutboundSlack extends BaseEnvelope
     // ========================================================================= //
 
     /**
-     * Validate that a webhook URL is on the canonical Slack incoming-webhook host.
+     * Validate that a value looks like a Slack bot token (xoxb-...).
      *
-     * @param string|null $url
+     * @param string|null $token
      * @return bool
      */
-    public static function isValidWebhookUrl(?string $url): bool
+    public static function isValidBotToken(?string $token): bool
     {
-        // If no URL, mark invalid
-        if (!$url) {
+        // If no token, mark invalid
+        if (!$token) {
             return false;
         }
 
-        // Enforce Slack's documented webhook host
-        return (bool) preg_match('#^https://hooks\.slack\.com/services/#', $url);
+        // Enforce Slack's documented bot token prefix
+        return str_starts_with($token, 'xoxb-');
+    }
+
+    /**
+     * Validate that a value looks like a Slack channel/DM/group ID.
+     *
+     * @param string|null $channelId
+     * @return bool
+     */
+    public static function isValidChannelId(?string $channelId): bool
+    {
+        // If no channel ID, mark invalid
+        if (!$channelId) {
+            return false;
+        }
+
+        // Slack channel IDs start with C (channel), D (DM), or G (private group)
+        return (bool) preg_match('/^[CDG][A-Z0-9]+$/', $channelId);
     }
 
 }
