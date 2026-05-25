@@ -2,14 +2,14 @@ import { defineConfig } from 'vitepress';
 
 const metaUrl = 'https://plugins.doublesecretagency.com/notifier/';
 const metaTitle = 'Notifier plugin for Craft CMS';
-const metaDescription = 'Send custom Twig messages when Craft events are triggered.';
+const metaDescription = 'First-class Notifications for Craft CMS';
 const metaImage = 'https://plugins.doublesecretagency.com/notifier/images/meta/notifier.png';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
 
   title: "Notifier plugin",
-  description: "Send custom Twig messages when Craft events are triggered.",
+  description: "First-class Notifications for Craft CMS",
 
   head: [
     ['meta', {'name': 'og:type', 'content': 'website'}],

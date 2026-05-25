@@ -1,5 +1,5 @@
 ---
-description: Send custom Twig messages when Craft events are triggered.
+description: First-class Notifications for Craft CMS
 # meta:
 # - property: og:type
 #   content: website
@@ -8,7 +8,7 @@ description: Send custom Twig messages when Craft events are triggered.
 # - property: og:title
 #   content: Notifier plugin for Craft CMS
 # - property: og:description
-#   content: Send custom Twig messages when Craft events are triggered.
+#   content: First-class Notifications for Craft CMS
 # - property: og:image
 #   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier.png
 # - property: twitter:card
@@ -18,7 +18,7 @@ description: Send custom Twig messages when Craft events are triggered.
 # - property: twitter:title
 #   content: Notifier plugin for Craft CMS
 # - property: twitter:description
-#   content: Send custom Twig messages when Craft events are triggered.
+#   content: First-class Notifications for Craft CMS
 # - property: twitter:image
 #   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier.png
 
@@ -28,7 +28,7 @@ layout: home
 hero:
   name: "Notifier"
   text: "plugin for Craft CMS"
-  tagline: "Send custom Twig messages when Craft events are triggered."
+  tagline: "First-class Notifications for Craft CMS"
   image:
     src: /images/meta/notifier.png
     alt: Notifier plugin for Craft CMS

@@ -1,6 +1,6 @@
 {
     "name": "doublesecretagency/craft-notifier",
-    "description": "Send custom Twig messages when Craft events are triggered.",
+    "description": "First-class Notifications for Craft CMS",
     "type": "craft-plugin",
     "version": "2.1.0",
     "keywords": [

@@ -11,7 +11,7 @@
     
 ---
 
-**A super-flexible notification hub for Craft CMS!**
+**First-class Notifications for Craft CMS**
 
 It can be best explained with the following formula:
 

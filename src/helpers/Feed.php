@@ -4,7 +4,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * Send custom Twig messages when Craft events are triggered.
+ * First-class Notifications for Craft CMS
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
