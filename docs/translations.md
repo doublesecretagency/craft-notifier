@@ -10,7 +10,6 @@ Notifier provides translations for the following locales:
 |:---|:---|:---|
 | `da` | Dansk | Danish |
 | `de` | Deutsch | German |
-| `en` | English | English |
 | `es` | Español | Spanish |
 | `fi` | Suomi | Finnish |
 | `fr` | Français | French |

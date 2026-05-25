@@ -8,7 +8,7 @@ If using [Slack](https://slack.com) to post channel messages, you'll first need 
 
 ### Create a Slack app
 
-<img class="dropshadow" src="/images/getting-started/integrations/slack-apps.png" alt="Screenshot of Slack's Incoming Webhooks configuration" style="width:1036px; margin-top:17px; margin-bottom:27px">
+<img class="dropshadow" src="/images/getting-started/integrations/slack-apps.png" alt="Screenshot of the Your Apps page at api.slack.com/apps" style="width:1036px; margin-top:17px; margin-bottom:27px">
 
 1. Go to [api.slack.com/apps](https://api.slack.com/apps) and click **Create New App** → **From scratch** (or pick an existing app).
 2. In the sidebar, open **OAuth & Permissions**.

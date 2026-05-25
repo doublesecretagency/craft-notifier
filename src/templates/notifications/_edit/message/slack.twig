@@ -7,7 +7,7 @@
 
     {{ codeEditor.textAreaField({
         label: "Slack Message Body"|t('notifier'),
-        instructions: "Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax."|t('notifier'),
+        instructions: "Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_."|t('notifier'),
         tip: templatingTip,
         placeholder: commonPlaceholder,
         rows: 5,
@@ -16,6 +16,26 @@
         value: (notification.messageConfig.slackBody ?? null),
         errors: notification.getErrors('messageConfig[slackBody]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {{ forms.lightswitchField({
+        label: "Render Message Body as HTML"|t('notifier'),
+        instructions: "Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML."|t('notifier'),
+        id: 'messageConfig-slackBodyFormat',
+        name: 'messageConfig[slackBodyFormat]',
+        offLabel: "mrkdwn only"|t('notifier'),
+        onLabel: "mrkdwn + HTML"|t('notifier'),
+        on: ((notification.messageConfig.slackBodyFormat ?? 'markdown') == 'html'),
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: "Render Link Previews"|t('notifier'),
+        instructions: "Whether Slack should unfurl link previews for URLs in the message body."|t('notifier'),
+        id: 'messageConfig-slackUnfurlLinks',
+        name: 'messageConfig[slackUnfurlLinks]',
+        offLabel: "Don't unfurl"|t('notifier'),
+        onLabel: "Expand link previews"|t('notifier'),
+        on: (notification.messageConfig.slackUnfurlLinks ?? true),
+    }) }}
 
     <hr>
 
@@ -56,16 +76,6 @@
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
     <hr>
-
-    {{ forms.lightswitchField({
-        label: "Render Link Previews"|t('notifier'),
-        instructions: "Whether Slack should unfurl link previews for URLs in the message body."|t('notifier'),
-        id: 'messageConfig-slackUnfurlLinks',
-        name: 'messageConfig[slackUnfurlLinks]',
-        offLabel: "Don't unfurl"|t('notifier'),
-        onLabel: "Expand link previews"|t('notifier'),
-        on: (notification.messageConfig.slackUnfurlLinks ?? true),
-    }) }}
 
     {{ forms.lightswitchField({
         label: "Send Message via Queue"|t('notifier'),

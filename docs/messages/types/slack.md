@@ -22,6 +22,14 @@ Slack throttles each channel to roughly one message per second, so a burst of no
 
 <img class="dropshadow" src="/images/messages/slack-config.png" alt="" style="width:640px; margin-top:10px">
 
+### Render Message Body as HTML
+
+By default, the body is parsed as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting). When enabled, many HTML tags will also be parsed.
+
+### Render Link Previews
+
+Whether Slack should unfurl link previews for URLs in the message body. On by default.
+
 ### Bot Name
 
 The bot's display name (e.g. "My Notification Bot") can be overridden when the message is sent. The display name can be dynamically specified via Twig, so each individual message could post under a different name.
@@ -42,15 +50,11 @@ Used only when **Bot Icon URL** is empty. Leave blank to use the app's default i
 
 <!--@include: @/messages/types/_docs-links.md-->
 
-### Render Link Previews
-
-Whether Slack should unfurl link previews for URLs in the message body. On by default.
-
 <!--@include: @/messages/types/_queue-link.md-->
 
 ## mrkdwn Syntax
 
-Slack uses its own lightweight markup called [**mrkdwn**](https://api.slack.com/reference/surfaces/formatting), which differs from standard Markdown.
+Slack uses its own lightweight markup called [**mrkdwn**](https://docs.slack.dev/messaging/formatting-message-text/#formatting), which differs from standard Markdown.
 
 Here are some of the most useful tokens:
 

@@ -23,6 +23,7 @@ use doublesecretagency\notifier\base\EnvelopeInterface;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\exceptions\RequiredFieldEmptyException;
 use doublesecretagency\notifier\filters\FilterInterface;
+use doublesecretagency\notifier\helpers\SlackMrkdwn;
 use doublesecretagency\notifier\jobs\SendMessage;
 use doublesecretagency\notifier\NotifierPlugin;
 use nystudio107\crafttwigsandbox\web\SandboxView;
@@ -1122,6 +1123,10 @@ class Dispatch extends Model
                 $iconUrl   = trim($this->_parseTwig($config, $this->notification->messageConfig['slackIcon']     ?? ''));
                 $iconEmoji = trim($this->_parseTwig($config, $this->notification->messageConfig['slackEmoji']    ?? ''));
                 $username  = trim($this->_parseTwig($config, $this->notification->messageConfig['slackUsername'] ?? ''));
+                // If the author opted into HTML mode, convert to Slack mrkdwn before sending
+                if ('html' === ($this->notification->messageConfig['slackBodyFormat'] ?? 'markdown')) {
+                    $body = SlackMrkdwn::fromHtml($body);
+                }
                 $parseError = null;
             } catch (Exception|Throwable $e) {
                 $body      = ($this->notification->messageConfig['slackBody']      ?? '');

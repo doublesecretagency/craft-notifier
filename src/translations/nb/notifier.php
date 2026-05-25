@@ -53,7 +53,6 @@ return [
     'Ungrouped Users'                => 'Brukere uten gruppe',
 
     // Feed
-    'Feed Event' => 'Feed-hendelse',
     'Feed URL' => 'Feed-URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'URL-en til RSS-, Atom- eller JSON-feeden som skal overvåkes.',
     // Field and element conditions
@@ -153,24 +152,18 @@ return [
     // Message tab: ntfy fields
     'Priority'           => 'Prioritet',
     'Tags'               => 'Etiketter',
-    'Click URL'          => 'Klikk-URL',
-    'Render as Markdown' => 'Gjengi som Markdown',
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack-meldingstekst',
     'Bot Icon URL' => 'Ikon-URL',
-    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => 'En URL for ikonet som vises ved siden av denne meldingen. La være tomt for å bruke kanalens standard.',
 
     // Message tab: Bluesky fields
     'Post Body' => 'Innleggstekst',
     'Generate Link Preview' => 'Generer lenkeforhåndsvisning',
-    "When the post body contains a URL, automatically generate a preview card with the linked page's image, title, and description." => 'Når innleggsteksten inneholder en URL, legges det ved et forhåndsvisningskort med tittel, beskrivelse og bilde fra den lenkede siden.',
     'No card' => 'Ingen kort',
     'Generate preview card' => 'Generer forhåndsvisningskort',
 
     // Message tab: Title / Body / Trix toolbar
-    'Title'         => 'Tittel',
-    'Body'          => 'Tekst',
     'Rich Text'     => 'Rik tekst',
     'Bold'          => 'Fet',
     'Italic'        => 'Kursiv',
@@ -182,7 +175,6 @@ return [
     'Code'          => 'Kode',
     'Undo'          => 'Angre',
     'Redo'          => 'Gjør om',
-    'Body of outgoing email. You can use <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">special variables</a>, or even <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">skip recipients</a>.' => 'Innholdet i den utgående e-posten. Du kan bruke <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">spesialvariabler</a>, eller til og med <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">hoppe over mottakere</a>.',
 
     // Recipients tab: common
     'Recipients Type'                             => 'Mottakertype',
@@ -241,30 +233,21 @@ return [
     // Settings: ntfy
     'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh er en gratis HTTP-basert push-varslingstjeneste. Abonnenter mottar meldinger i ntfy-appen, på nettet eller via en kompatibel klient ved å bli med på et emne.',
     'Server URL'   => 'Server-URL',
-    'Defaults to https://ntfy.sh. Point at a self-hosted ntfy instance if applicable.' => 'Standard er https://ntfy.sh. Pek på en selvhostet ntfy-instans hvis aktuelt.',
     'Access token' => 'Tilgangstoken',
-    'Optional. Required for protected topics or self-hosted instances with auth.' => 'Valgfritt. Kreves for beskyttede emner eller selvhostede instanser med autentisering.',
     'ntfy Topics'  => 'ntfy-emner',
-    'Named list of ntfy topics. Each topic becomes selectable on the notification edit screen.' => 'Navngitt liste over ntfy-emner. Hvert emne kan velges på redigeringsskjermen for varslet.',
     'Topics'       => 'Emner',
-    'Add one row per topic name. Use the **Test** button to send a quick test message to the topic.' => 'Legg til én rad per emnenavn. Bruk **Test**-knappen for å sende en rask testmelding til emnet.',
     'Topic'        => 'Emne',
     'Add a topic'  => 'Legg til et emne',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against ntfy.' => 'Lagre først for å bevare en rad, og klikk deretter på **Test**-knappen for å utføre en rask sjekk mot ntfy.',
 
     // Settings: Slack
     'Slack Channels' => 'Slack-kanaler',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Opprett en [Slack-app](https://api.slack.com/apps) med scope-ene `chat:write`, `chat:write.customize` og `chat:write.public`, og legg så til en rad for hver kanal du vil poste i. Hver kanal blir tilgjengelig som mottaker på fanen **Recipients** når du konfigurerer en notifikasjon. Et bot-token er en hemmelighet, så lagre det i en `.env`-variabel og referer til den variabelen (f.eks. `$SLACK_BOT_TOKEN`) i stedet for å lime inn tokenet direkte.',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Opprett en [Slack-app](https://api.slack.com/apps) med scope-ene `chat:write`, `chat:write.customize` og `chat:write.public`, og legg så til en rad for hver kanal du vil poste i. Hver kanal blir tilgjengelig som mottaker på fanen **Mottakere** når du konfigurerer en notifikasjon. Et bot-token er en hemmelighet, så lagre det i en `.env`-variabel og referer til den variabelen (f.eks. `$SLACK_BOT_TOKEN`) i stedet for å lime inn tokenet direkte.',
     'Channels'       => 'Kanaler',
-    'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => 'Hver Slack-kanal trenger sin egen Incoming Webhook-URL. Bruk **Test**-knappen for å utføre en rask sjekk etter lagring.',
     'Add a channel'  => 'Legg til en kanal',
     'Bot Token' => 'Bot-token',
     'Channel ID' => 'Kanal-ID',
     'Bot Emoji' => 'Ikon-emoji',
     'Bot Name' => 'Brukernavn',
-    'Show link previews' => 'Vis koblingsforhåndsvisninger',
-    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => 'En emoji-snarvei som vises ved siden av denne meldingen, f.eks. `:rocket:`. Brukes bare når ikon-URL er tom.',
-    "A display name for this message. Leave blank to use the app's default." => 'Et visningsnavn for denne meldingen. La være tomt for å bruke appens standard.',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'Om Slack skal vise koblingsforhåndsvisninger for URL-er i meldingsteksten.',
     'Not a valid Bot Token. Must start with `xoxb-`.' => 'Ugyldig bot-token. Må starte med `xoxb-`.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Ugyldig kanal-ID. Må se ut som `C01234ABCD`.',
@@ -273,21 +256,17 @@ return [
     'Recipient "{name}" has no Slack bot token.' => 'Mottakeren "{name}" har ingen Slack bot-token.',
     'Recipient "{name}" has no Slack channel ID.' => 'Mottakeren "{name}" har ingen Slack kanal-ID.',
     'Slack rejected the message: {error}' => 'Slack avviste meldingen: {error}',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'Lagre først for å bevare en rad, og klikk deretter på **Test**-knappen for å utføre en rask sjekk mot Slack.',
 
     // Settings: Bluesky
     "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => '[Bluesky](https://bsky.app)-innlegg publiseres til den konfigurerte kontoens feed via ATProto-API. App-passord genereres på [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). Et app-passord er en hemmelighet, så lagre det i en `.env`-variabel og referer til den variabelen (f.eks. `$BLUESKY_APP_PASSWORD`) i stedet for å lime inn passordet direkte.',
     'PDS URL'          => 'PDS-URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'Standard er https://bsky.social. Pek på en egendefinert PDS hvis installasjonen din federerer.',
     'Bluesky Accounts' => 'Bluesky-kontoer',
-    'Named list of Bluesky accounts. Each account becomes selectable on the notification edit screen.' => 'Navngitt liste over Bluesky-kontoer. Hver konto kan velges på redigeringsskjermen for varslet.',
     'Accounts'         => 'Kontoer',
-    'Add one row per Bluesky account. Use **Test** to verify the credentials authenticate.' => 'Legg til én rad per Bluesky-konto. Bruk **Test** for å bekrefte at legitimasjonen autentiseres.',
     'Label'            => 'Etikett',
     'Handle'           => 'Handle',
     'App password'     => 'App-passord',
     'Add an account'   => 'Legg til en konto',
-    'Save first to persist a row, then click its **Test** button to verify the credentials authenticate.' => 'Lagre først for å bevare en rad, og klikk deretter på **Test**-knappen for å bekrefte at legitimasjonen autentiseres.',
 
     // Test notification (UI)
     'Send a test message'           => 'Send en testmelding',
@@ -304,7 +283,6 @@ return [
     'Test message from Notifier.'             => 'Testmelding fra Notifier.',
     'HTTP {status}'                           => 'HTTP {status}',
     'Test message sent successfully.'         => 'Testmelding sendt.',
-    'HTTP {status}: {body}'                   => 'HTTP {status}: {body}',
     'Handle and app password are required.'   => 'Handle og app-passord kreves.',
     'Authentication failed.'                  => 'Autentisering mislyktes.',
     'Successfully authenticated. No messages were posted.' => 'Autentisering vellykket. Ingen meldinger ble publisert.',
@@ -349,7 +327,6 @@ return [
     'Successfully sent Pushover message!'                        => 'Pushover-melding sendt!',
 
     // Outbound: ntfy log messages
-    'Unable to send ntfy message, no server URL configured.' => 'Kan ikke sende ntfy-melding: ingen server-URL konfigurert.',
     'Unable to send ntfy message, no topic specified.'       => 'Kan ikke sende ntfy-melding: intet emne angitt.',
     'ntfy POST failed with HTTP {status}: {reason}'          => 'ntfy POST mislyktes med HTTP {status}: {reason}',
     'ntfy POST failed: {reason}'                             => 'ntfy POST mislyktes: {reason}',
@@ -408,7 +385,6 @@ return [
     "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Legg til ntfy-emnene du vil sende meldinger til. Hvert emne blir tilgjengelig som mottaker på **Mottakere**-fanen når du konfigurerer et varsel.',
     "Click any row's **Test** button to send a quick test message to that topic." => 'Klikk på **Test**-knappen på en rad for å sende en rask testmelding til det emnet.',
     'Enable Markdown' => 'Aktiver Markdown',
-    'Link URL' => 'Lenke-URL',
 
     // Manual triggers
     'Send Notification'                                            => 'Send varsel',
@@ -428,7 +404,6 @@ return [
     'days after'                                                  => 'dager etter',
     'Relevant Date'                                               => 'Relevant dato',
     'Send the notification relative to a chosen date.'            => 'Send varselet i forhold til en valgt dato.',
-    "Fires when an entry's Post Date passes and it becomes Live." => 'Utløses når en oppførings publiseringsdato nås, og den blir live.',
 
     // Scheduled sending
     'Scheduled Sending' => 'Planlagt sending',
@@ -468,8 +443,13 @@ return [
     'Body of the Pushover notification. Plain text only.' => 'Innhold i Pushover-varselet. Kun ren tekst.',
     'Subject line of the email.' => 'Emnelinje for e-posten.',
     'Body of the email. Supports HTML.' => 'Innhold i e-posten. Støtter HTML.',
-    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Innhold i Slack-meldingen. Støtter [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting)-syntaks.',
     'Optionally override the app\'s display name.' => 'Overstyr eventuelt appens visningsnavn.',
     'Optionally override the app\'s icon with a URL.' => 'Overstyr eventuelt appens ikon med en URL.',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'Overstyr eventuelt appens ikon med en emoji. Brukes kun når Bot Icon URL er tomt.',
+    'Invalid Slack body format.' => 'Ugyldig Slack-innholdsformat.',
+    'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => 'Støtter standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)-syntaks. Støtter valgfritt HTML _(se nedenfor)_.',
+    'Render Message Body as HTML' => 'Vis meldingsinnhold som HTML',
+    'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => 'Velg om kun [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) skal parses, eller om HTML også skal parses.',
+    'mrkdwn only' => 'kun mrkdwn',
+    'mrkdwn + HTML' => 'mrkdwn + HTML',
 ];

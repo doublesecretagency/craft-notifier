@@ -53,7 +53,6 @@ return [
     'Ungrouped Users'                => 'Grupsuz kullanıcılar',
 
     // Feed
-    'Feed Event' => 'Besleme Olayı',
     'Feed URL' => "Besleme URL'si",
     'The URL of the RSS, Atom, or JSON feed to watch.' => "İzlenecek RSS, Atom veya JSON beslemesinin URL'si.",
     // Field and element conditions
@@ -153,24 +152,18 @@ return [
     // Message tab: ntfy fields
     'Priority'           => 'Öncelik',
     'Tags'               => 'Etiketler',
-    'Click URL'          => "Tıklama URL'si",
-    'Render as Markdown' => 'Markdown olarak görüntüle',
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack mesaj gövdesi',
     'Bot Icon URL' => "Simge URL'si",
-    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => "Bu mesajın yanında gösterilecek simgenin URL'si. Kanalın varsayılanını kullanmak için boş bırakın.",
 
     // Message tab: Bluesky fields
     'Post Body' => 'Gönderi gövdesi',
     'Generate Link Preview' => 'Bağlantı önizlemesi oluştur',
-    "When the post body contains a URL, automatically generate a preview card with the linked page's image, title, and description." => 'Gönderi gövdesi bir URL içerdiğinde, bağlantılı sayfanın başlığını, açıklamasını ve görselini içeren bir önizleme kartı eklenir.',
     'No card' => 'Kart yok',
     'Generate preview card' => 'Önizleme kartı oluştur',
 
     // Message tab: Title / Body / Trix toolbar
-    'Title'         => 'Başlık',
-    'Body'          => 'Gövde',
     'Rich Text'     => 'Zengin metin',
     'Bold'          => 'Kalın',
     'Italic'        => 'İtalik',
@@ -182,7 +175,6 @@ return [
     'Code'          => 'Kod',
     'Undo'          => 'Geri al',
     'Redo'          => 'Yinele',
-    'Body of outgoing email. You can use <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">special variables</a>, or even <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">skip recipients</a>.' => 'Giden e-postanın gövdesi. <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">Özel değişkenler</a> kullanabilir, hatta <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">alıcıları atlayabilirsiniz</a>.',
 
     // Recipients tab: common
     'Recipients Type'                             => 'Alıcı türü',
@@ -241,30 +233,21 @@ return [
     // Settings: ntfy
     'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => "ntfy.sh, ücretsiz HTTP tabanlı bir anlık bildirim hizmetidir. Aboneler bir konuya katılarak mesajları ntfy uygulamasında, web'de veya uyumlu herhangi bir istemcide alır.",
     'Server URL'   => "Sunucu URL'si",
-    'Defaults to https://ntfy.sh. Point at a self-hosted ntfy instance if applicable.' => 'Varsayılan https://ntfy.sh. Geçerliyse kendi sunucunuzda barındırdığınız bir ntfy örneğini gösterin.',
     'Access token' => 'Erişim anahtarı',
-    'Optional. Required for protected topics or self-hosted instances with auth.' => 'İsteğe bağlı. Korumalı konular veya kimlik doğrulamalı kendi sunucunuzda barındırdığınız örnekler için gereklidir.',
     'ntfy Topics'  => 'ntfy konuları',
-    'Named list of ntfy topics. Each topic becomes selectable on the notification edit screen.' => 'Adlandırılmış ntfy konuları listesi. Her konu bildirim düzenleme ekranında seçilebilir hale gelir.',
     'Topics'       => 'Konular',
-    'Add one row per topic name. Use the **Test** button to send a quick test message to the topic.' => 'Her konu adı için bir satır ekleyin. Konuya hızlı bir test mesajı göndermek için **Test** düğmesini kullanın.',
     'Topic'        => 'Konu',
     'Add a topic'  => 'Bir konu ekle',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against ntfy.' => 'Önce kaydedip satırı kalıcı hale getirin, ardından ntfy üzerinde hızlı bir kontrol için **Test** düğmesine tıklayın.',
 
     // Settings: Slack
     'Slack Channels' => 'Slack kanalları',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`, `chat:write.customize` ve `chat:write.public` kapsamlarına sahip bir [Slack uygulaması](https://api.slack.com/apps) oluşturun, ardından paylaşım yapmak istediğiniz her kanal için bir satır ekleyin. Bir bildirim yapılandırılırken her kanal **Recipients** sekmesinde alıcı olarak kullanılabilir hale gelir. Bot belirteci bir sırdır, bu nedenle onu doğrudan yapıştırmak yerine bir `.env` değişkeninde saklayın ve o değişkene başvurun (örn. `$SLACK_BOT_TOKEN`).',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`, `chat:write.customize` ve `chat:write.public` kapsamlarına sahip bir [Slack uygulaması](https://api.slack.com/apps) oluşturun, ardından paylaşım yapmak istediğiniz her kanal için bir satır ekleyin. Bir bildirim yapılandırılırken her kanal **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir. Bot belirteci bir sırdır, bu nedenle onu doğrudan yapıştırmak yerine bir `.env` değişkeninde saklayın ve o değişkene başvurun (örn. `$SLACK_BOT_TOKEN`).',
     'Channels'       => 'Kanallar',
-    'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => "Her Slack kanalı kendi Gelen Web Kancası URL'sine ihtiyaç duyar. Kaydettikten sonra hızlı bir kontrol için **Test** düğmesini kullanın.",
     'Add a channel'  => 'Bir kanal ekle',
     'Bot Token' => 'Bot Belirteci',
     'Channel ID' => 'Kanal Kimliği',
     'Bot Emoji' => 'Simge Emojisi',
     'Bot Name' => 'Kullanıcı Adı',
-    'Show link previews' => 'Bağlantı önizlemelerini göster',
-    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => "Bu mesajın yanında gösterilecek emoji kısayolu, örn. `:rocket:`. Yalnızca Simge URL'si boş olduğunda kullanılır.",
-    "A display name for this message. Leave blank to use the app's default." => 'Bu mesaj için bir görünen ad. Uygulamanın varsayılanını kullanmak için boş bırakın.',
     'Whether Slack should unfurl link previews for URLs in the message body.' => "Slack'in mesaj gövdesindeki URL'ler için bağlantı önizlemelerini gösterip göstermeyeceği.",
     'Not a valid Bot Token. Must start with `xoxb-`.' => 'Geçerli bir Bot Belirteci değil. `xoxb-` ile başlamalıdır.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Geçerli bir Kanal Kimliği değil. `C01234ABCD` gibi görünmelidir.',
@@ -273,21 +256,17 @@ return [
     'Recipient "{name}" has no Slack bot token.' => 'Alıcı "{name}" Slack bot belirtecine sahip değil.',
     'Recipient "{name}" has no Slack channel ID.' => 'Alıcı "{name}" Slack kanal kimliğine sahip değil.',
     'Slack rejected the message: {error}' => 'Slack mesajı reddetti: {error}',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'Önce kaydedip satırı kalıcı hale getirin, ardından Slack üzerinde hızlı bir kontrol için **Test** düğmesine tıklayın.',
 
     // Settings: Bluesky
     "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => "[Bluesky](https://bsky.app) gönderileri ATProto API üzerinden yapılandırılmış hesabın akışına yayımlanır. Uygulama parolaları [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords) adresinde oluşturulur. Bir uygulama parolası gizli bir bilgidir; bu nedenle parolayı doğrudan yapıştırmak yerine bir `.env` değişkeninde saklayın ve o değişkene (örn. `\$BLUESKY_APP_PASSWORD`) başvurun.",
     'PDS URL'          => "PDS URL'si",
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => "Varsayılan https://bsky.social. Kurulumunuz federasyon yapıyorsa özel bir PDS'i gösterin.",
     'Bluesky Accounts' => 'Bluesky hesapları',
-    'Named list of Bluesky accounts. Each account becomes selectable on the notification edit screen.' => 'Adlandırılmış Bluesky hesapları listesi. Her hesap bildirim düzenleme ekranında seçilebilir hale gelir.',
     'Accounts'         => 'Hesaplar',
-    'Add one row per Bluesky account. Use **Test** to verify the credentials authenticate.' => "Her Bluesky hesabı için bir satır ekleyin. Kimlik bilgilerinin doğrulanıp doğrulanmadığını görmek için **Test**'i kullanın.",
     'Label'            => 'Etiket',
     'Handle'           => 'Tanıtıcı',
     'App password'     => 'Uygulama parolası',
     'Add an account'   => 'Bir hesap ekle',
-    'Save first to persist a row, then click its **Test** button to verify the credentials authenticate.' => 'Önce kaydedip satırı kalıcı hale getirin, ardından kimlik bilgilerinin doğrulanıp doğrulanmadığını görmek için **Test** düğmesine tıklayın.',
 
     // Test notification (UI)
     'Send a test message'           => 'Bir test mesajı gönder',
@@ -304,7 +283,6 @@ return [
     'Test message from Notifier.'             => "Notifier'dan test mesajı.",
     'HTTP {status}'                           => 'HTTP {status}',
     'Test message sent successfully.'         => 'Test mesajı başarıyla gönderildi.',
-    'HTTP {status}: {body}'                   => 'HTTP {status}: {body}',
     'Handle and app password are required.'   => 'Tanıtıcı ve uygulama parolası gerekli.',
     'Authentication failed.'                  => 'Kimlik doğrulama başarısız.',
     'Successfully authenticated. No messages were posted.' => 'Kimlik doğrulama başarılı. Hiçbir mesaj gönderilmedi.',
@@ -349,7 +327,6 @@ return [
     'Successfully sent Pushover message!'                        => 'Pushover mesajı başarıyla gönderildi!',
 
     // Outbound: ntfy log messages
-    'Unable to send ntfy message, no server URL configured.' => "ntfy mesajı gönderilemiyor: sunucu URL'si yapılandırılmamış.",
     'Unable to send ntfy message, no topic specified.'       => 'ntfy mesajı gönderilemiyor: konu belirtilmedi.',
     'ntfy POST failed with HTTP {status}: {reason}'          => 'ntfy POST HTTP {status} ile başarısız: {reason}',
     'ntfy POST failed: {reason}'                             => 'ntfy POST başarısız: {reason}',
@@ -408,7 +385,6 @@ return [
     'Add the ntfy topics you\'d like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Mesaj göndermek istediğiniz ntfy konularını ekleyin. Bir bildirim yapılandırırken her konu **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
     "Click any row's **Test** button to send a quick test message to that topic." => 'O konuya hızlı bir test mesajı göndermek için herhangi bir satırın **Test** düğmesine tıklayın.',
     'Enable Markdown' => 'Markdown\'ı etkinleştir',
-    'Link URL' => "Bağlantı URL'si",
 
     // Manual triggers
     'Send Notification'                                            => 'Bildirim gönder',
@@ -428,7 +404,6 @@ return [
     'days after'                                                  => 'gün sonra',
     'Relevant Date'                                               => 'İlgili Tarih',
     'Send the notification relative to a chosen date.'            => 'Bildirimi seçilen bir tarihe göre gönderin.',
-    "Fires when an entry's Post Date passes and it becomes Live." => 'Bir girdinin yayın tarihi geldiğinde ve yayına geçtiğinde tetiklenir.',
 
     // Scheduled sending
     'Scheduled Sending' => 'Zamanlanmış gönderim',
@@ -468,8 +443,13 @@ return [
     'Body of the Pushover notification. Plain text only.' => 'Pushover bildiriminin gövdesi. Yalnızca düz metin.',
     'Subject line of the email.' => 'E-postanın konu satırı.',
     'Body of the email. Supports HTML.' => 'E-postanın gövdesi. HTML\'i destekler.',
-    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Slack mesajının gövdesi. [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) söz dizimini destekler.',
     'Optionally override the app\'s display name.' => 'İsteğe bağlı olarak uygulamanın görünen adını geçersiz kılın.',
     'Optionally override the app\'s icon with a URL.' => 'İsteğe bağlı olarak uygulamanın simgesini bir URL ile geçersiz kılın.',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'İsteğe bağlı olarak uygulamanın simgesini bir emoji ile geçersiz kılın. Yalnızca Bot Icon URL boşken kullanılır.',
+    'Invalid Slack body format.' => 'Geçersiz Slack gövde biçimi.',
+    'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => 'Standart [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) sözdizimini destekler. Opsiyonel olarak HTML\'i destekler _(aşağıya bakın)_.',
+    'Render Message Body as HTML' => 'Mesaj gövdesini HTML olarak işle',
+    'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => 'Yalnızca [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) olarak mı yoksa ayrıca HTML olarak da mı işlensin.',
+    'mrkdwn only' => 'yalnızca mrkdwn',
+    'mrkdwn + HTML' => 'mrkdwn + HTML',
 ];

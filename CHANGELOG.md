@@ -5,7 +5,7 @@
 ### Added
 - Added support for sending [Pushover](https://plugins.doublesecretagency.com/notifier/messages/types/pushover) notifications via [Pushover](https://pushover.net). ([#19](https://github.com/doublesecretagency/craft-notifier/issues/19))
 - Added support for sending [ntfy](https://plugins.doublesecretagency.com/notifier/messages/types/ntfy) notifications via [ntfy.sh](https://ntfy.sh).
-- Added support for posting [Slack](https://plugins.doublesecretagency.com/notifier/messages/types/slack) messages via [Incoming Webhooks](https://api.slack.com/messaging/webhooks).
+- Added support for posting [Slack](https://plugins.doublesecretagency.com/notifier/messages/types/slack) messages via [chat.postMessage](https://docs.slack.dev/reference/methods/chat.postMessage).
 - Added support for publishing [Bluesky](https://plugins.doublesecretagency.com/notifier/messages/types/bluesky) posts via the [ATProto](https://atproto.com) API.
 - Added the ability to track an [RSS/JSON Feed](https://plugins.doublesecretagency.com/notifier/events/types/feed/). ([#10](https://github.com/doublesecretagency/craft-notifier/issues/10))
 - Added the ability to [manually send](https://plugins.doublesecretagency.com/notifier/events/manual-sending) a notification on demand, against a specific element.

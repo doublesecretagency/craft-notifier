@@ -53,7 +53,6 @@ return [
     'Ungrouped Users'                => 'Käyttäjät ilman ryhmää',
 
     // Feed
-    'Feed Event' => 'Syötteen tapahtuma',
     'Feed URL' => 'Syötteen URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'Seurattavan RSS-, Atom- tai JSON-syötteen URL.',
     // Field and element conditions
@@ -153,24 +152,18 @@ return [
     // Message tab: ntfy fields
     'Priority'           => 'Prioriteetti',
     'Tags'               => 'Tunnisteet',
-    'Click URL'          => 'Klikkaus-URL',
-    'Render as Markdown' => 'Renderöi Markdownina',
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack-viestin sisältö',
     'Bot Icon URL' => 'Kuvakkeen URL',
-    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => 'URL kuvakkeelle, joka näytetään tämän viestin vieressä. Jätä tyhjäksi käyttääksesi kanavan oletusta.',
 
     // Message tab: Bluesky fields
     'Post Body' => 'Julkaisun sisältö',
     'Generate Link Preview' => 'Luo linkin esikatselu',
-    "When the post body contains a URL, automatically generate a preview card with the linked page's image, title, and description." => 'Kun julkaisun sisältö sisältää URL-osoitteen, siihen liitetään esikatselukortti, jossa näkyy linkitetyn sivun otsikko, kuvaus ja kuva.',
     'No card' => 'Ei korttia',
     'Generate preview card' => 'Luo esikatselukortti',
 
     // Message tab: Title / Body / Trix toolbar
-    'Title'         => 'Otsikko',
-    'Body'          => 'Sisältö',
     'Rich Text'     => 'Rikastettu teksti',
     'Bold'          => 'Lihavoitu',
     'Italic'        => 'Kursivoitu',
@@ -182,7 +175,6 @@ return [
     'Code'          => 'Koodi',
     'Undo'          => 'Kumoa',
     'Redo'          => 'Tee uudelleen',
-    'Body of outgoing email. You can use <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">special variables</a>, or even <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">skip recipients</a>.' => 'Lähtevän sähköpostin sisältö. Voit käyttää <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">erityismuuttujia</a> tai jopa <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">ohittaa vastaanottajia</a>.',
 
     // Recipients tab: common
     'Recipients Type'                             => 'Vastaanottajatyyppi',
@@ -241,30 +233,21 @@ return [
     // Settings: ntfy
     'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh on ilmainen HTTP-pohjainen push-ilmoituspalvelu. Tilaajat saavat viestit ntfy-sovelluksessa, verkossa tai missä tahansa yhteensopivassa asiakassovelluksessa liittymällä aiheeseen.',
     'Server URL'   => 'Palvelimen URL',
-    'Defaults to https://ntfy.sh. Point at a self-hosted ntfy instance if applicable.' => 'Oletus on https://ntfy.sh. Osoita itse isännöityyn ntfy-instanssiin tarvittaessa.',
     'Access token' => 'Käyttötunniste',
-    'Optional. Required for protected topics or self-hosted instances with auth.' => 'Valinnainen. Pakollinen suojattuihin aiheisiin tai itse isännöityihin instansseihin, joissa on todennus.',
     'ntfy Topics'  => 'ntfy-aiheet',
-    'Named list of ntfy topics. Each topic becomes selectable on the notification edit screen.' => 'Nimettyjen ntfy-aiheiden luettelo. Jokainen aihe on valittavissa ilmoituksen muokkausnäytöltä.',
     'Topics'       => 'Aiheet',
-    'Add one row per topic name. Use the **Test** button to send a quick test message to the topic.' => 'Lisää yksi rivi aihettä kohti. Käytä **Test**-painiketta lähettääksesi nopean testiviestin aiheelle.',
     'Topic'        => 'Aihe',
     'Add a topic'  => 'Lisää aihe',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against ntfy.' => 'Tallenna ensin, jotta rivi pysyy, ja napsauta sitten sen **Test**-painiketta tehdäksesi pikatestin ntfy:tä vasten.',
 
     // Settings: Slack
     'Slack Channels' => 'Slack-kanavat',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Luo [Slack-sovellus](https://api.slack.com/apps), jolla on oikeudet `chat:write`, `chat:write.customize` ja `chat:write.public`, ja lisää sitten rivi jokaiselle kanavalle, johon haluat lähettää viestejä. Jokainen kanava tulee saataville vastaanottajaksi **Recipients**-välilehdellä, kun määrität ilmoituksen. Bot-token on salainen, joten tallenna se `.env`-muuttujaan ja viittaa siihen (esim. `$SLACK_BOT_TOKEN`) sen sijaan, että liittäisit tokenin suoraan.',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Luo [Slack-sovellus](https://api.slack.com/apps), jolla on oikeudet `chat:write`, `chat:write.customize` ja `chat:write.public`, ja lisää sitten rivi jokaiselle kanavalle, johon haluat lähettää viestejä. Jokainen kanava tulee saataville vastaanottajaksi **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen. Bot-token on salainen, joten tallenna se `.env`-muuttujaan ja viittaa siihen (esim. `$SLACK_BOT_TOKEN`) sen sijaan, että liittäisit tokenin suoraan.',
     'Channels'       => 'Kanavat',
-    'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => 'Jokaisella Slack-kanavalla on oltava oma Incoming Webhook -URL. Käytä **Test**-painiketta nopeaan tarkistukseen tallennuksen jälkeen.',
     'Add a channel'  => 'Lisää kanava',
     'Bot Token' => 'Bot-token',
     'Channel ID' => 'Kanavan tunnus',
     'Bot Emoji' => 'Kuvakkeen emoji',
     'Bot Name' => 'Käyttäjänimi',
-    'Show link previews' => 'Näytä linkkien esikatselut',
-    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => 'Emoji-lyhennekoodi, joka näytetään tämän viestin vieressä, esim. `:rocket:`. Käytetään vain, kun kuvakkeen URL on tyhjä.',
-    "A display name for this message. Leave blank to use the app's default." => 'Tämän viestin näyttönimi. Jätä tyhjäksi käyttääksesi sovelluksen oletusta.',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'Pitäisikö Slackin avata linkkien esikatselut viestin sisällön URL-osoitteille.',
     'Not a valid Bot Token. Must start with `xoxb-`.' => 'Virheellinen bot-token. Täytyy alkaa `xoxb-`.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Virheellinen kanavan tunnus. Pitää näyttää `C01234ABCD`.',
@@ -273,21 +256,17 @@ return [
     'Recipient "{name}" has no Slack bot token.' => 'Vastaanottajalla "{name}" ei ole Slack-bot-tokenia.',
     'Recipient "{name}" has no Slack channel ID.' => 'Vastaanottajalla "{name}" ei ole Slack-kanavan tunnusta.',
     'Slack rejected the message: {error}' => 'Slack hylkäsi viestin: {error}',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'Tallenna ensin, jotta rivi pysyy, ja napsauta sitten sen **Test**-painiketta tehdäksesi pikatestin Slackiä vasten.',
 
     // Settings: Bluesky
     "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => '[Bluesky](https://bsky.app)-julkaisut julkaistaan määritetyn tilin syötteeseen ATProto-API:n kautta. Sovellussalasanat luodaan osoitteessa [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). Sovellussalasana on salaisuus, joten tallenna se `.env`-muuttujaan ja viittaa kyseiseen muuttujaan (esim. `$BLUESKY_APP_PASSWORD`) sen sijaan, että liittäisit salasanan suoraan.',
     'PDS URL'          => 'PDS-URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'Oletus on https://bsky.social. Osoita mukautettuun PDS-instanssiin, jos asennuksesi federoituu.',
     'Bluesky Accounts' => 'Bluesky-tilit',
-    'Named list of Bluesky accounts. Each account becomes selectable on the notification edit screen.' => 'Nimettyjen Bluesky-tilien luettelo. Jokainen tili on valittavissa ilmoituksen muokkausnäytöltä.',
     'Accounts'         => 'Tilit',
-    'Add one row per Bluesky account. Use **Test** to verify the credentials authenticate.' => 'Lisää yksi rivi Bluesky-tiliä kohti. Käytä **Test**iä tarkistaaksesi, että tunnistetiedot toimivat.',
     'Label'            => 'Otsikko',
     'Handle'           => 'Tunnus',
     'App password'     => 'Sovellussalasana',
     'Add an account'   => 'Lisää tili',
-    'Save first to persist a row, then click its **Test** button to verify the credentials authenticate.' => 'Tallenna ensin, jotta rivi pysyy, ja napsauta sitten sen **Test**-painiketta tarkistaaksesi, että tunnistetiedot toimivat.',
 
     // Test notification (UI)
     'Send a test message'           => 'Lähetä testiviesti',
@@ -304,7 +283,6 @@ return [
     'Test message from Notifier.'             => 'Testiviesti Notifierista.',
     'HTTP {status}'                           => 'HTTP {status}',
     'Test message sent successfully.'         => 'Testiviesti lähetetty onnistuneesti.',
-    'HTTP {status}: {body}'                   => 'HTTP {status}: {body}',
     'Handle and app password are required.'   => 'Tunnus ja sovellussalasana ovat pakollisia.',
     'Authentication failed.'                  => 'Todennus epäonnistui.',
     'Successfully authenticated. No messages were posted.' => 'Todennus onnistui. Viestejä ei lähetetty.',
@@ -349,7 +327,6 @@ return [
     'Successfully sent Pushover message!'                        => 'Pushover-viesti lähetetty!',
 
     // Outbound: ntfy log messages
-    'Unable to send ntfy message, no server URL configured.' => 'ntfy-viestiä ei voi lähettää: palvelimen URL puuttuu.',
     'Unable to send ntfy message, no topic specified.'       => 'ntfy-viestiä ei voi lähettää: aihetta ei ole määritetty.',
     'ntfy POST failed with HTTP {status}: {reason}'          => 'ntfy POST epäonnistui HTTP {status}: {reason}',
     'ntfy POST failed: {reason}'                             => 'ntfy POST epäonnistui: {reason}',
@@ -401,14 +378,13 @@ return [
 
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Lisää Bluesky-tilit, joilta haluat julkaista. Kukin tili on käytettävissä vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
-    "Click any row's **Test** button to confirm the account authenticates." => 'Napsauta minkä tahansa rivin **Test**-painiketta varmistaaksesi, että tili tunnistautuu.',
-    "Click any row's **Test** button to send a quick test message to that channel." => 'Napsauta minkä tahansa rivin **Test**-painiketta lähettääksesi nopean testiviestin kyseiselle kanavalle.',
+    "Click any row's **Test** button to confirm the account authenticates." => 'Napsauta minkä tahansa rivin **Testi**-painiketta varmistaaksesi, että tili tunnistautuu.',
+    "Click any row's **Test** button to send a quick test message to that channel." => 'Napsauta minkä tahansa rivin **Testi**-painiketta lähettääksesi nopean testiviestin kyseiselle kanavalle.',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => 'Valinnainen, osoita itse isännöityyn ntfy-instanssiin (tarvittaessa). Oletus on `https://ntfy.sh`.',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'Valinnainen, pakollinen suojattuihin aiheisiin tai itse isännöityihin instansseihin, joissa on todennus.',
     "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Lisää ntfy-aiheet, joihin haluat lähettää viestejä. Kukin aihe on käytettävissä vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
-    "Click any row's **Test** button to send a quick test message to that topic." => 'Napsauta minkä tahansa rivin **Test**-painiketta lähettääksesi nopean testiviestin kyseiselle aiheelle.',
+    "Click any row's **Test** button to send a quick test message to that topic." => 'Napsauta minkä tahansa rivin **Testi**-painiketta lähettääksesi nopean testiviestin kyseiselle aiheelle.',
     'Enable Markdown' => 'Ota Markdown käyttöön',
-    'Link URL' => 'Linkin URL',
 
     // Manual triggers
     'Send Notification'                                            => 'Lähetä ilmoitus',
@@ -428,7 +404,6 @@ return [
     'days after'                                                  => 'päivää jälkeen',
     'Relevant Date'                                               => 'Olennainen päivämäärä',
     'Send the notification relative to a chosen date.'            => 'Lähetä ilmoitus suhteessa valittuun päivämäärään.',
-    "Fires when an entry's Post Date passes and it becomes Live." => 'Laukeaa, kun merkinnän julkaisupäivä koittaa ja se muuttuu julkaistuksi.',
 
     // Scheduled sending
     'Scheduled Sending' => 'Ajastettu lähetys',
@@ -468,8 +443,13 @@ return [
     'Body of the Pushover notification. Plain text only.' => 'Pushover-ilmoituksen sisältö. Vain tavallinen teksti.',
     'Subject line of the email.' => 'Sähköpostin aiherivi.',
     'Body of the email. Supports HTML.' => 'Sähköpostin sisältö. Tukee HTML:ää.',
-    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Slack-viestin sisältö. Tukee [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) -syntaksia.',
     'Optionally override the app\'s display name.' => 'Korvaa halutessasi sovelluksen näyttönimi.',
     'Optionally override the app\'s icon with a URL.' => 'Korvaa halutessasi sovelluksen kuvake URL:lla.',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'Korvaa halutessasi sovelluksen kuvake emojilla. Käytetään vain, kun Bot Icon URL on tyhjä.',
+    'Invalid Slack body format.' => 'Virheellinen Slack-sisältömuoto.',
+    'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => 'Tukee tavallista [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) -syntaksia. Tukee valinnaisesti HTML:ää _(katso alla)_.',
+    'Render Message Body as HTML' => 'Renderöi viestin sisältö HTML:nä',
+    'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => 'Käsitelläänkö vain [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) vai myös HTML.',
+    'mrkdwn only' => 'vain mrkdwn',
+    'mrkdwn + HTML' => 'mrkdwn + HTML',
 ];

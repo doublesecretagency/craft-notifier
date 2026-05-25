@@ -19,7 +19,7 @@ Many control panel fields also accept an `$ENV_VAR` reference, so you can keep s
 Most settings can be configured in either place. The exceptions:
 
 **Control panel only:**
-- Slack webhooks (per-channel)
+- Slack bot tokens (per-channel)
 - ntfy topics (per-topic)
 - Bluesky accounts (per-account)
 

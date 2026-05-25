@@ -53,7 +53,6 @@ return [
     'Ungrouped Users'                => 'グループ外のユーザー',
 
     // Feed
-    'Feed Event' => 'フィードイベント',
     'Feed URL' => 'フィード URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '監視する RSS、Atom、または JSON フィードの URL。',
     // Field and element conditions
@@ -153,24 +152,18 @@ return [
     // Message tab: ntfy fields
     'Priority'           => '優先度',
     'Tags'               => 'タグ',
-    'Click URL'          => 'クリック URL',
-    'Render as Markdown' => 'Markdown としてレンダリング',
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack メッセージ本文',
     'Bot Icon URL' => 'アイコンURL',
-    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => 'このメッセージの横に表示するアイコンのURL。空欄の場合はチャンネルのデフォルトを使用します。',
 
     // Message tab: Bluesky fields
     'Post Body' => '投稿本文',
     'Generate Link Preview' => 'リンクプレビューを生成',
-    "When the post body contains a URL, automatically generate a preview card with the linked page's image, title, and description." => '投稿本文に URL が含まれている場合、リンク先ページのタイトル、説明、画像を含むプレビューカードを添付します。',
     'No card' => 'カードなし',
     'Generate preview card' => 'プレビューカードを生成',
 
     // Message tab: Title / Body / Trix toolbar
-    'Title'         => 'タイトル',
-    'Body'          => '本文',
     'Rich Text'     => 'リッチテキスト',
     'Bold'          => '太字',
     'Italic'        => '斜体',
@@ -182,7 +175,6 @@ return [
     'Code'          => 'コード',
     'Undo'          => '元に戻す',
     'Redo'          => 'やり直し',
-    'Body of outgoing email. You can use <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">special variables</a>, or even <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">skip recipients</a>.' => '送信メールの本文。<a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">特殊変数</a>を使用したり、<a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">受信者をスキップ</a>することもできます。',
 
     // Recipients tab: common
     'Recipients Type'                             => '受信者タイプ',
@@ -241,30 +233,21 @@ return [
     // Settings: ntfy
     'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh は無料の HTTP ベースのプッシュ通知サービスです。購読者はトピックに参加することで、ntfy アプリ、ウェブ、または互換クライアントでメッセージを受け取ります。',
     'Server URL'   => 'サーバー URL',
-    'Defaults to https://ntfy.sh. Point at a self-hosted ntfy instance if applicable.' => 'デフォルトは https://ntfy.sh です。該当する場合は自前ホストの ntfy インスタンスを指定してください。',
     'Access token' => 'アクセストークン',
-    'Optional. Required for protected topics or self-hosted instances with auth.' => '任意。保護されたトピックや認証付き自前ホストインスタンスでは必要です。',
     'ntfy Topics'  => 'ntfy トピック',
-    'Named list of ntfy topics. Each topic becomes selectable on the notification edit screen.' => 'ntfy トピックの名前付きリスト。各トピックは通知編集画面で選択できるようになります。',
     'Topics'       => 'トピック',
-    'Add one row per topic name. Use the **Test** button to send a quick test message to the topic.' => 'トピック名ごとに 1 行追加します。**Test** ボタンを使ってトピックに簡単なテストメッセージを送信できます。',
     'Topic'        => 'トピック',
     'Add a topic'  => 'トピックを追加',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against ntfy.' => 'まず保存して行を永続化してから、その **Test** ボタンをクリックして ntfy に対する簡易チェックを実行します。',
 
     // Settings: Slack
     'Slack Channels' => 'Slack チャンネル',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`、`chat:write.customize`、`chat:write.public` のスコープを持つ [Slack アプリ](https://api.slack.com/apps) を作成し、投稿したい各チャンネルに対して行を追加します。通知の設定時に、各チャンネルが **Recipients** タブで受信者として利用可能になります。ボットトークンは秘密情報なので、`.env` 変数に保存し、その変数を参照してください(例: `$SLACK_BOT_TOKEN`)。トークンを直接貼り付けないでください。',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`、`chat:write.customize`、`chat:write.public` のスコープを持つ [Slack アプリ](https://api.slack.com/apps) を作成し、投稿したい各チャンネルに対して行を追加します。通知の設定時に、各チャンネルが **受信者** タブで受信者として利用可能になります。ボットトークンは秘密情報なので、`.env` 変数に保存し、その変数を参照してください(例: `$SLACK_BOT_TOKEN`)。トークンを直接貼り付けないでください。',
     'Channels'       => 'チャンネル',
-    'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => '各 Slack チャンネルには独自の Incoming Webhook URL が必要です。保存後、**Test** ボタンで簡単な動作確認を行えます。',
     'Add a channel'  => 'チャンネルを追加',
     'Bot Token' => 'ボットトークン',
     'Channel ID' => 'チャンネルID',
     'Bot Emoji' => 'アイコン絵文字',
     'Bot Name' => 'ユーザー名',
-    'Show link previews' => 'リンクプレビューを表示',
-    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => 'このメッセージの横に表示する絵文字ショートコード（例: `:rocket:`）。アイコンURLが空の場合のみ使用されます。',
-    "A display name for this message. Leave blank to use the app's default." => 'このメッセージの表示名。空欄の場合はアプリのデフォルトを使用します。',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'メッセージ本文のURLに対してSlackがリンクプレビューを展開するかどうか。',
     'Not a valid Bot Token. Must start with `xoxb-`.' => '有効なボットトークンではありません。`xoxb-`で始まる必要があります。',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => '有効なチャンネルIDではありません。`C01234ABCD`のような形式である必要があります。',
@@ -273,21 +256,17 @@ return [
     'Recipient "{name}" has no Slack bot token.' => '受信者「{name}」にSlackボットトークンがありません。',
     'Recipient "{name}" has no Slack channel ID.' => '受信者「{name}」にSlackチャンネルIDがありません。',
     'Slack rejected the message: {error}' => 'Slackがメッセージを拒否しました: {error}',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'まず保存して行を永続化してから、その **Test** ボタンをクリックして Slack に対する簡易チェックを実行します。',
 
     // Settings: Bluesky
     "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => '[Bluesky](https://bsky.app) の投稿は ATProto API を介して設定されたアカウントのフィードに公開されます。アプリパスワードは [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords) で生成されます。アプリパスワードは機密情報であるため、パスワードを直接貼り付けるのではなく、`.env` 変数に保存し、その変数(例: `$BLUESKY_APP_PASSWORD`)を参照してください。',
     'PDS URL'          => 'PDS URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'デフォルトは https://bsky.social です。インストールがフェデレートしている場合はカスタム PDS を指定してください。',
     'Bluesky Accounts' => 'Bluesky アカウント',
-    'Named list of Bluesky accounts. Each account becomes selectable on the notification edit screen.' => 'Bluesky アカウントの名前付きリスト。各アカウントは通知編集画面で選択できるようになります。',
     'Accounts'         => 'アカウント',
-    'Add one row per Bluesky account. Use **Test** to verify the credentials authenticate.' => 'Bluesky アカウントごとに 1 行追加します。**Test** で資格情報が認証されるか確認できます。',
     'Label'            => 'ラベル',
     'Handle'           => 'ハンドル',
     'App password'     => 'アプリパスワード',
     'Add an account'   => 'アカウントを追加',
-    'Save first to persist a row, then click its **Test** button to verify the credentials authenticate.' => 'まず保存して行を永続化してから、その **Test** ボタンをクリックして資格情報が認証されるか確認します。',
 
     // Test notification (UI)
     'Send a test message'           => 'テストメッセージを送信',
@@ -304,7 +283,6 @@ return [
     'Test message from Notifier.'             => 'Notifier からのテストメッセージです。',
     'HTTP {status}'                           => 'HTTP {status}',
     'Test message sent successfully.'         => 'テストメッセージを正常に送信しました。',
-    'HTTP {status}: {body}'                   => 'HTTP {status}: {body}',
     'Handle and app password are required.'   => 'ハンドルとアプリパスワードは必須です。',
     'Authentication failed.'                  => '認証に失敗しました。',
     'Successfully authenticated. No messages were posted.' => '認証に成功しました。メッセージは投稿されていません。',
@@ -349,7 +327,6 @@ return [
     'Successfully sent Pushover message!'                        => 'Pushover メッセージを正常に送信しました!',
 
     // Outbound: ntfy log messages
-    'Unable to send ntfy message, no server URL configured.' => 'ntfy メッセージを送信できません。サーバー URL が設定されていません。',
     'Unable to send ntfy message, no topic specified.'       => 'ntfy メッセージを送信できません。トピックが指定されていません。',
     'ntfy POST failed with HTTP {status}: {reason}'          => 'ntfy POST が HTTP {status} で失敗しました: {reason}',
     'ntfy POST failed: {reason}'                             => 'ntfy POST が失敗しました: {reason}',
@@ -401,14 +378,13 @@ return [
 
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => '投稿元にしたい Bluesky アカウントを追加します。各アカウントは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
-    "Click any row's **Test** button to confirm the account authenticates." => '任意の行の **Test** ボタンをクリックして、アカウントが認証されることを確認します。',
-    "Click any row's **Test** button to send a quick test message to that channel." => '任意の行の **Test** ボタンをクリックして、そのチャンネルに簡単なテストメッセージを送信します。',
+    "Click any row's **Test** button to confirm the account authenticates." => '任意の行の **テスト** ボタンをクリックして、アカウントが認証されることを確認します。',
+    "Click any row's **Test** button to send a quick test message to that channel." => '任意の行の **テスト** ボタンをクリックして、そのチャンネルに簡単なテストメッセージを送信します。',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => '任意。該当する場合は自前ホストの ntfy インスタンスを指定します。デフォルトは `https://ntfy.sh` です。',
     'Optional, required for protected topics or self-hosted instances with auth.' => '任意。保護されたトピックや認証付きの自前ホストインスタンスでは必要です。',
     "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'メッセージの送信先にしたい ntfy トピックを追加します。各トピックは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
-    "Click any row's **Test** button to send a quick test message to that topic." => '任意の行の **Test** ボタンをクリックして、そのトピックに簡単なテストメッセージを送信します。',
+    "Click any row's **Test** button to send a quick test message to that topic." => '任意の行の **テスト** ボタンをクリックして、そのトピックに簡単なテストメッセージを送信します。',
     'Enable Markdown' => 'Markdown を有効化',
-    'Link URL' => 'リンク URL',
 
     // Manual triggers
     'Send Notification'                                            => '通知を送信',
@@ -428,7 +404,6 @@ return [
     'days after'                                                  => '日後',
     'Relevant Date'                                               => '関連する日付',
     'Send the notification relative to a chosen date.'            => '選択した日付を基準に通知を送信します。',
-    "Fires when an entry's Post Date passes and it becomes Live." => 'エントリの投稿日に達し、ライブになったときに実行されます。',
 
     // Scheduled sending
     'Scheduled Sending' => 'スケジュール送信',
@@ -468,8 +443,13 @@ return [
     'Body of the Pushover notification. Plain text only.' => 'Pushover 通知の本文。プレーンテキストのみ。',
     'Subject line of the email.' => 'メールの件名。',
     'Body of the email. Supports HTML.' => 'メールの本文。HTML をサポート。',
-    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Slack メッセージの本文。[Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) 構文をサポート。',
     'Optionally override the app\'s display name.' => 'オプションでアプリの表示名を上書きします。',
     'Optionally override the app\'s icon with a URL.' => 'オプションでアプリのアイコンを URL で上書きします。',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'オプションでアプリのアイコンを絵文字で上書きします。Bot Icon URL が空のときのみ使用されます。',
+    'Invalid Slack body format.' => 'Slackの本文形式が無効です。',
+    'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => '標準の[Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)構文をサポートします。オプションでHTMLもサポートします _(下記参照)_。',
+    'Render Message Body as HTML' => 'メッセージ本文をHTMLとしてレンダリング',
+    'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => '[Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)のみとして解析するか、HTMLも追加で解析するか。',
+    'mrkdwn only' => 'mrkdwnのみ',
+    'mrkdwn + HTML' => 'mrkdwn + HTML',
 ];

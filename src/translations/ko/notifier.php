@@ -53,7 +53,6 @@ return [
     'Ungrouped Users'                => '그룹 없는 사용자',
 
     // Feed
-    'Feed Event' => '피드 이벤트',
     'Feed URL' => '피드 URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '모니터링할 RSS, Atom 또는 JSON 피드의 URL입니다.',
     // Field and element conditions
@@ -153,24 +152,18 @@ return [
     // Message tab: ntfy fields
     'Priority'           => '우선순위',
     'Tags'               => '태그',
-    'Click URL'          => '클릭 URL',
-    'Render as Markdown' => 'Markdown 으로 렌더링',
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack 메시지 본문',
     'Bot Icon URL' => '아이콘 URL',
-    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => '이 메시지 옆에 표시할 아이콘의 URL. 비워두면 채널의 기본값을 사용합니다.',
 
     // Message tab: Bluesky fields
     'Post Body' => '게시물 본문',
     'Generate Link Preview' => '링크 미리보기 생성',
-    "When the post body contains a URL, automatically generate a preview card with the linked page's image, title, and description." => '게시물 본문에 URL이 포함되어 있으면 링크된 페이지의 제목, 설명, 이미지가 담긴 미리보기 카드를 첨부합니다.',
     'No card' => '카드 없음',
     'Generate preview card' => '미리보기 카드 생성',
 
     // Message tab: Title / Body / Trix toolbar
-    'Title'         => '제목',
-    'Body'          => '본문',
     'Rich Text'     => '서식 있는 텍스트',
     'Bold'          => '굵게',
     'Italic'        => '기울임꼴',
@@ -182,7 +175,6 @@ return [
     'Code'          => '코드',
     'Undo'          => '실행 취소',
     'Redo'          => '다시 실행',
-    'Body of outgoing email. You can use <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">special variables</a>, or even <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">skip recipients</a>.' => '발송 이메일의 본문입니다. <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">특수 변수</a>를 사용하거나 <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">수신자를 건너뛸</a> 수도 있습니다.',
 
     // Recipients tab: common
     'Recipients Type'                             => '수신자 유형',
@@ -241,30 +233,21 @@ return [
     // Settings: ntfy
     'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh 는 무료 HTTP 기반 푸시 알림 서비스입니다. 구독자는 토픽에 가입하여 ntfy 앱, 웹 또는 호환 클라이언트에서 메시지를 받습니다.',
     'Server URL'   => '서버 URL',
-    'Defaults to https://ntfy.sh. Point at a self-hosted ntfy instance if applicable.' => '기본값은 https://ntfy.sh 입니다. 해당하는 경우 자체 호스팅 ntfy 인스턴스를 지정하세요.',
     'Access token' => '액세스 토큰',
-    'Optional. Required for protected topics or self-hosted instances with auth.' => '선택 사항. 보호된 토픽이나 인증이 있는 자체 호스팅 인스턴스에 필요합니다.',
     'ntfy Topics'  => 'ntfy 토픽',
-    'Named list of ntfy topics. Each topic becomes selectable on the notification edit screen.' => '이름이 있는 ntfy 토픽 목록입니다. 각 토픽은 알림 편집 화면에서 선택할 수 있습니다.',
     'Topics'       => '토픽',
-    'Add one row per topic name. Use the **Test** button to send a quick test message to the topic.' => '토픽 이름별로 한 행을 추가하세요. **Test** 버튼을 사용하여 토픽에 빠른 테스트 메시지를 보낼 수 있습니다.',
     'Topic'        => '토픽',
     'Add a topic'  => '토픽 추가',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against ntfy.' => '먼저 저장하여 행을 유지한 다음 해당 **Test** 버튼을 클릭하여 ntfy 에 대한 간단한 점검을 수행합니다.',
 
     // Settings: Slack
     'Slack Channels' => 'Slack 채널',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`, `chat:write.customize`, `chat:write.public` 스코프가 있는 [Slack 앱](https://api.slack.com/apps)을 만든 다음, 게시하려는 각 채널에 대한 행을 추가하세요. 알림을 구성할 때 각 채널은 **Recipients** 탭에서 수신자로 사용할 수 있습니다. 봇 토큰은 비밀이므로, 토큰을 직접 붙여넣지 말고 `.env` 변수에 저장한 다음 해당 변수(예: `$SLACK_BOT_TOKEN`)를 참조하세요.',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`, `chat:write.customize`, `chat:write.public` 스코프가 있는 [Slack 앱](https://api.slack.com/apps)을 만든 다음, 게시하려는 각 채널에 대한 행을 추가하세요. 알림을 구성할 때 각 채널은 **수신자** 탭에서 수신자로 사용할 수 있습니다. 봇 토큰은 비밀이므로, 토큰을 직접 붙여넣지 말고 `.env` 변수에 저장한 다음 해당 변수(예: `$SLACK_BOT_TOKEN`)를 참조하세요.',
     'Channels'       => '채널',
-    'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => '각 Slack 채널에는 자체 Incoming Webhook URL 이 필요합니다. 저장 후 **Test** 버튼을 사용하여 빠른 점검을 실행하세요.',
     'Add a channel'  => '채널 추가',
     'Bot Token' => '봇 토큰',
     'Channel ID' => '채널 ID',
     'Bot Emoji' => '아이콘 이모지',
     'Bot Name' => '사용자 이름',
-    'Show link previews' => '링크 미리보기 표시',
-    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => '이 메시지 옆에 표시할 이모지 단축 코드, 예: `:rocket:`. 아이콘 URL이 비어 있을 때만 사용됩니다.',
-    "A display name for this message. Leave blank to use the app's default." => '이 메시지의 표시 이름. 비워두면 앱의 기본값을 사용합니다.',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'Slack이 메시지 본문의 URL에 대해 링크 미리보기를 펼칠지 여부입니다.',
     'Not a valid Bot Token. Must start with `xoxb-`.' => '유효하지 않은 봇 토큰입니다. `xoxb-`로 시작해야 합니다.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => '유효하지 않은 채널 ID입니다. `C01234ABCD`와 같은 형식이어야 합니다.',
@@ -273,21 +256,17 @@ return [
     'Recipient "{name}" has no Slack bot token.' => '수신자 "{name}"에게 Slack 봇 토큰이 없습니다.',
     'Recipient "{name}" has no Slack channel ID.' => '수신자 "{name}"에게 Slack 채널 ID가 없습니다.',
     'Slack rejected the message: {error}' => 'Slack이 메시지를 거부했습니다: {error}',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => '먼저 저장하여 행을 유지한 다음 해당 **Test** 버튼을 클릭하여 Slack 에 대한 간단한 점검을 수행합니다.',
 
     // Settings: Bluesky
     "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => '[Bluesky](https://bsky.app) 게시물은 ATProto API 를 통해 구성된 계정의 피드에 게시됩니다. 앱 비밀번호는 [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords) 에서 생성됩니다. 앱 비밀번호는 비밀이므로 비밀번호를 직접 붙여넣지 말고 `.env` 변수에 저장한 다음 해당 변수(예: `$BLUESKY_APP_PASSWORD`)를 참조하세요.',
     'PDS URL'          => 'PDS URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => '기본값은 https://bsky.social 입니다. 설치가 페더레이션된다면 사용자 정의 PDS 를 지정하세요.',
     'Bluesky Accounts' => 'Bluesky 계정',
-    'Named list of Bluesky accounts. Each account becomes selectable on the notification edit screen.' => '이름이 있는 Bluesky 계정 목록입니다. 각 계정은 알림 편집 화면에서 선택할 수 있습니다.',
     'Accounts'         => '계정',
-    'Add one row per Bluesky account. Use **Test** to verify the credentials authenticate.' => 'Bluesky 계정별로 한 행을 추가하세요. **Test** 를 사용하여 자격 증명이 인증되는지 확인할 수 있습니다.',
     'Label'            => '레이블',
     'Handle'           => '핸들',
     'App password'     => '앱 비밀번호',
     'Add an account'   => '계정 추가',
-    'Save first to persist a row, then click its **Test** button to verify the credentials authenticate.' => '먼저 저장하여 행을 유지한 다음 해당 **Test** 버튼을 클릭하여 자격 증명이 인증되는지 확인합니다.',
 
     // Test notification (UI)
     'Send a test message'           => '테스트 메시지 보내기',
@@ -304,7 +283,6 @@ return [
     'Test message from Notifier.'             => 'Notifier 의 테스트 메시지입니다.',
     'HTTP {status}'                           => 'HTTP {status}',
     'Test message sent successfully.'         => '테스트 메시지를 성공적으로 보냈습니다.',
-    'HTTP {status}: {body}'                   => 'HTTP {status}: {body}',
     'Handle and app password are required.'   => '핸들과 앱 비밀번호가 필요합니다.',
     'Authentication failed.'                  => '인증에 실패했습니다.',
     'Successfully authenticated. No messages were posted.' => '인증에 성공했습니다. 게시된 메시지가 없습니다.',
@@ -349,7 +327,6 @@ return [
     'Successfully sent Pushover message!'                        => 'Pushover 메시지를 성공적으로 보냈습니다!',
 
     // Outbound: ntfy log messages
-    'Unable to send ntfy message, no server URL configured.' => 'ntfy 메시지를 보낼 수 없습니다: 서버 URL 이 구성되지 않았습니다.',
     'Unable to send ntfy message, no topic specified.'       => 'ntfy 메시지를 보낼 수 없습니다: 토픽이 지정되지 않았습니다.',
     'ntfy POST failed with HTTP {status}: {reason}'          => 'ntfy POST 가 HTTP {status} 로 실패했습니다: {reason}',
     'ntfy POST failed: {reason}'                             => 'ntfy POST 실패: {reason}',
@@ -401,14 +378,13 @@ return [
 
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => '게시할 때 사용할 Bluesky 계정을 추가하세요. 각 계정은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
-    "Click any row's **Test** button to confirm the account authenticates." => '아무 행의 **Test** 버튼을 클릭하여 계정이 인증되는지 확인하세요.',
-    "Click any row's **Test** button to send a quick test message to that channel." => '아무 행의 **Test** 버튼을 클릭하여 해당 채널에 빠른 테스트 메시지를 보내세요.',
+    "Click any row's **Test** button to confirm the account authenticates." => '아무 행의 **테스트** 버튼을 클릭하여 계정이 인증되는지 확인하세요.',
+    "Click any row's **Test** button to send a quick test message to that channel." => '아무 행의 **테스트** 버튼을 클릭하여 해당 채널에 빠른 테스트 메시지를 보내세요.',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => '선택 사항. 해당하는 경우 자체 호스팅 ntfy 인스턴스를 지정하세요. 기본값은 `https://ntfy.sh` 입니다.',
     'Optional, required for protected topics or self-hosted instances with auth.' => '선택 사항. 보호된 토픽이나 인증이 있는 자체 호스팅 인스턴스에 필요합니다.',
     "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => '메시지를 보낼 ntfy 토픽을 추가하세요. 각 토픽은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
-    "Click any row's **Test** button to send a quick test message to that topic." => '아무 행의 **Test** 버튼을 클릭하여 해당 토픽에 빠른 테스트 메시지를 보내세요.',
+    "Click any row's **Test** button to send a quick test message to that topic." => '아무 행의 **테스트** 버튼을 클릭하여 해당 토픽에 빠른 테스트 메시지를 보내세요.',
     'Enable Markdown' => 'Markdown 활성화',
-    'Link URL' => '링크 URL',
 
     // Manual triggers
     'Send Notification'                                            => '알림 보내기',
@@ -428,7 +404,6 @@ return [
     'days after'                                                  => '일 후',
     'Relevant Date'                                               => '관련 날짜',
     'Send the notification relative to a chosen date.'            => '선택한 날짜를 기준으로 알림을 보냅니다.',
-    "Fires when an entry's Post Date passes and it becomes Live." => '항목의 게시일이 지나 라이브 상태가 되면 실행됩니다.',
 
     // Scheduled sending
     'Scheduled Sending' => '예약 발송',
@@ -468,8 +443,13 @@ return [
     'Body of the Pushover notification. Plain text only.' => 'Pushover 알림의 본문. 일반 텍스트만 지원됩니다.',
     'Subject line of the email.' => '이메일의 제목 줄.',
     'Body of the email. Supports HTML.' => '이메일의 본문. HTML을 지원합니다.',
-    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Slack 메시지의 본문. [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) 문법을 지원합니다.',
     'Optionally override the app\'s display name.' => '선택적으로 앱의 표시 이름을 재정의합니다.',
     'Optionally override the app\'s icon with a URL.' => '선택적으로 앱의 아이콘을 URL로 재정의합니다.',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => '선택적으로 앱의 아이콘을 이모지로 재정의합니다. Bot Icon URL이 비어 있을 때만 사용됩니다.',
+    'Invalid Slack body format.' => '잘못된 Slack 본문 형식입니다.',
+    'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => '표준 [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) 구문을 지원합니다. 선택적으로 HTML도 지원합니다 _(아래 참조)_.',
+    'Render Message Body as HTML' => '메시지 본문을 HTML로 렌더링',
+    'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => '[Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)으로만 파싱할지, HTML도 추가로 파싱할지 여부.',
+    'mrkdwn only' => 'mrkdwn만',
+    'mrkdwn + HTML' => 'mrkdwn + HTML',
 ];

@@ -53,7 +53,6 @@ return [
     'Ungrouped Users'                => '未分组用户',
 
     // Feed
-    'Feed Event' => 'Feed 事件',
     'Feed URL' => 'Feed URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '要监控的 RSS、Atom 或 JSON Feed 的 URL。',
     // Field and element conditions
@@ -153,24 +152,18 @@ return [
     // Message tab: ntfy fields
     'Priority'           => '优先级',
     'Tags'               => '标签',
-    'Click URL'          => '点击 URL',
-    'Render as Markdown' => '渲染为 Markdown',
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Slack 消息正文',
     'Bot Icon URL' => '图标 URL',
-    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => '在此消息旁显示的图标的 URL。留空以使用频道默认值。',
 
     // Message tab: Bluesky fields
     'Post Body' => '帖子正文',
     'Generate Link Preview' => '生成链接预览',
-    "When the post body contains a URL, automatically generate a preview card with the linked page's image, title, and description." => '当帖子正文包含 URL 时，附加一张预览卡片，显示所链接页面的标题、描述和图片。',
     'No card' => '无卡片',
     'Generate preview card' => '生成预览卡片',
 
     // Message tab: Title / Body / Trix toolbar
-    'Title'         => '标题',
-    'Body'          => '正文',
     'Rich Text'     => '富文本',
     'Bold'          => '粗体',
     'Italic'        => '斜体',
@@ -182,7 +175,6 @@ return [
     'Code'          => '代码',
     'Undo'          => '撤销',
     'Redo'          => '重做',
-    'Body of outgoing email. You can use <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">special variables</a>, or even <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">skip recipients</a>.' => '外发邮件正文。您可以使用<a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">特殊变量</a>,甚至<a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">跳过收件人</a>。',
 
     // Recipients tab: common
     'Recipients Type'                             => '收件人类型',
@@ -241,30 +233,21 @@ return [
     // Settings: ntfy
     'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh 是一个免费的基于 HTTP 的推送通知服务。订阅者通过加入主题在 ntfy 应用、网页或任何兼容客户端上接收消息。',
     'Server URL'   => '服务器 URL',
-    'Defaults to https://ntfy.sh. Point at a self-hosted ntfy instance if applicable.' => '默认为 https://ntfy.sh。如适用,可指向自托管的 ntfy 实例。',
     'Access token' => '访问令牌',
-    'Optional. Required for protected topics or self-hosted instances with auth.' => '可选。用于受保护主题或带身份验证的自托管实例时必填。',
     'ntfy Topics'  => 'ntfy 主题',
-    'Named list of ntfy topics. Each topic becomes selectable on the notification edit screen.' => '命名的 ntfy 主题列表。每个主题都可以在通知编辑界面中选择。',
     'Topics'       => '主题',
-    'Add one row per topic name. Use the **Test** button to send a quick test message to the topic.' => '每个主题名称添加一行。使用 **Test** 按钮向主题发送快速测试消息。',
     'Topic'        => '主题',
     'Add a topic'  => '添加主题',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against ntfy.' => '先保存以保留一行,然后点击其 **Test** 按钮对 ntfy 进行快速检查。',
 
     // Settings: Slack
     'Slack Channels' => 'Slack 频道',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '创建一个具有 `chat:write`、`chat:write.customize` 和 `chat:write.public` 权限范围的 [Slack 应用](https://api.slack.com/apps),然后为你想发布消息的每个频道添加一行。配置通知时,每个频道都可在 **Recipients** 标签页中作为收件人使用。机器人令牌是机密,因此请将其存储在 `.env` 变量中并引用该变量(例如 `$SLACK_BOT_TOKEN`),而不是直接粘贴令牌。',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '创建一个具有 `chat:write`、`chat:write.customize` 和 `chat:write.public` 权限范围的 [Slack 应用](https://api.slack.com/apps),然后为你想发布消息的每个频道添加一行。配置通知时,每个频道都可在 **收件人** 标签页中作为收件人使用。机器人令牌是机密,因此请将其存储在 `.env` 变量中并引用该变量(例如 `$SLACK_BOT_TOKEN`),而不是直接粘贴令牌。',
     'Channels'       => '频道',
-    'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => '每个 Slack 频道需要自己的 Incoming Webhook URL。保存后,使用 **Test** 按钮进行快速检查。',
     'Add a channel'  => '添加频道',
     'Bot Token' => '机器人令牌',
     'Channel ID' => '频道 ID',
     'Bot Emoji' => '图标表情',
     'Bot Name' => '用户名',
-    'Show link previews' => '显示链接预览',
-    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => '在此消息旁显示的表情快捷码，例如 `:rocket:`。仅在图标 URL 为空时使用。',
-    "A display name for this message. Leave blank to use the app's default." => '此消息的显示名称。留空以使用应用的默认值。',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'Slack 是否应展开消息正文中 URL 的链接预览。',
     'Not a valid Bot Token. Must start with `xoxb-`.' => '无效的机器人令牌。必须以 `xoxb-` 开头。',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => '无效的频道 ID。必须类似 `C01234ABCD`。',
@@ -273,21 +256,17 @@ return [
     'Recipient "{name}" has no Slack bot token.' => '收件人 "{name}" 没有 Slack 机器人令牌。',
     'Recipient "{name}" has no Slack channel ID.' => '收件人 "{name}" 没有 Slack 频道 ID。',
     'Slack rejected the message: {error}' => 'Slack 拒绝了消息：{error}',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => '先保存以保留一行,然后点击其 **Test** 按钮对 Slack 进行快速检查。',
 
     // Settings: Bluesky
     '[Bluesky](https://bsky.app) posts publish to the configured account\'s feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `$BLUESKY_APP_PASSWORD`) rather than pasting the password directly.' => '[Bluesky](https://bsky.app) 帖子通过 ATProto API 发布到所配置账户的信息流中。应用专用密码在 [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords) 生成。应用专用密码是机密信息，因此请将其保存在 `.env` 变量中，并引用该变量（例如 `$BLUESKY_APP_PASSWORD`），而不是直接粘贴密码。',
     'PDS URL'          => 'PDS URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => '默认为 https://bsky.social。如您的安装支持联邦,可指向自定义 PDS。',
     'Bluesky Accounts' => 'Bluesky 账号',
-    'Named list of Bluesky accounts. Each account becomes selectable on the notification edit screen.' => '命名的 Bluesky 账号列表。每个账号都可以在通知编辑界面中选择。',
     'Accounts'         => '账号',
-    'Add one row per Bluesky account. Use **Test** to verify the credentials authenticate.' => '每个 Bluesky 账号添加一行。使用 **Test** 验证凭据是否能通过认证。',
     'Label'            => '标签',
     'Handle'           => '句柄',
     'App password'     => '应用密码',
     'Add an account'   => '添加账号',
-    'Save first to persist a row, then click its **Test** button to verify the credentials authenticate.' => '先保存以保留一行,然后点击其 **Test** 按钮验证凭据是否能通过认证。',
 
     // Test notification (UI)
     'Send a test message'           => '发送测试消息',
@@ -304,7 +283,6 @@ return [
     'Test message from Notifier.'             => '来自 Notifier 的测试消息。',
     'HTTP {status}'                           => 'HTTP {status}',
     'Test message sent successfully.'         => '测试消息发送成功。',
-    'HTTP {status}: {body}'                   => 'HTTP {status}: {body}',
     'Handle and app password are required.'   => '句柄和应用密码为必填项。',
     'Authentication failed.'                  => '身份验证失败。',
     'Successfully authenticated. No messages were posted.' => '身份验证成功。未发布任何消息。',
@@ -349,7 +327,6 @@ return [
     'Successfully sent Pushover message!'                        => 'Pushover 消息发送成功!',
 
     // Outbound: ntfy log messages
-    'Unable to send ntfy message, no server URL configured.' => '无法发送 ntfy 消息:未配置服务器 URL。',
     'Unable to send ntfy message, no topic specified.'       => '无法发送 ntfy 消息:未指定主题。',
     'ntfy POST failed with HTTP {status}: {reason}'          => 'ntfy POST 失败,HTTP {status}:{reason}',
     'ntfy POST failed: {reason}'                             => 'ntfy POST 失败:{reason}',
@@ -401,14 +378,13 @@ return [
 
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => '添加您希望用于发布的 Bluesky 账号。配置通知时,每个账号都可在**收件人**选项卡中作为收件人使用。',
-    "Click any row's **Test** button to confirm the account authenticates." => '点击任意行的 **Test** 按钮以确认该账号能通过认证。',
-    "Click any row's **Test** button to send a quick test message to that channel." => '点击任意行的 **Test** 按钮以向该频道发送快速测试消息。',
+    "Click any row's **Test** button to confirm the account authenticates." => '点击任意行的 **测试** 按钮以确认该账号能通过认证。',
+    "Click any row's **Test** button to send a quick test message to that channel." => '点击任意行的 **测试** 按钮以向该频道发送快速测试消息。',
     'Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`.' => '可选,指向自托管的 ntfy 实例(如适用)。默认为 `https://ntfy.sh`。',
     'Optional, required for protected topics or self-hosted instances with auth.' => '可选,用于受保护主题或带身份验证的自托管实例时必填。',
     'Add the ntfy topics you\'d like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => '添加您希望发送消息的 ntfy 主题。配置通知时,每个主题都可在**收件人**选项卡中作为收件人使用。',
-    "Click any row's **Test** button to send a quick test message to that topic." => '点击任意行的 **Test** 按钮以向该主题发送快速测试消息。',
+    "Click any row's **Test** button to send a quick test message to that topic." => '点击任意行的 **测试** 按钮以向该主题发送快速测试消息。',
     'Enable Markdown' => '启用 Markdown',
-    'Link URL' => '链接 URL',
 
     // Manual triggers
     'Send Notification'                                            => '发送通知',
@@ -428,7 +404,6 @@ return [
     'days after'                                                  => '天后',
     'Relevant Date'                                               => '相关日期',
     'Send the notification relative to a chosen date.'            => '相对于选定日期发送通知。',
-    "Fires when an entry's Post Date passes and it becomes Live." => '当条目的发布日期到达并变为已发布状态时触发。',
 
     // Scheduled sending
     'Scheduled Sending' => '定时发送',
@@ -468,8 +443,13 @@ return [
     'Body of the Pushover notification. Plain text only.' => 'Pushover 通知的正文。仅纯文本。',
     'Subject line of the email.' => '电子邮件主题。',
     'Body of the email. Supports HTML.' => '电子邮件正文。支持 HTML。',
-    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Slack 消息正文。支持 [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) 语法。',
     'Optionally override the app\'s display name.' => '可选覆盖应用的显示名称。',
     'Optionally override the app\'s icon with a URL.' => '可选用 URL 覆盖应用的图标。',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => '可选用 emoji 覆盖应用的图标。仅在 Bot Icon URL 为空时使用。',
+    'Invalid Slack body format.' => '无效的 Slack 正文格式。',
+    'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => '支持标准 [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) 语法。可选支持 HTML _（见下文）_。',
+    'Render Message Body as HTML' => '将消息正文渲染为 HTML',
+    'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => '是否仅解析为 [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)，或同时解析为 HTML。',
+    'mrkdwn only' => '仅 mrkdwn',
+    'mrkdwn + HTML' => 'mrkdwn + HTML',
 ];

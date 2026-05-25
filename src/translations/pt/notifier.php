@@ -53,7 +53,6 @@ return [
     'Ungrouped Users'                => 'Utilizadores sem grupo',
 
     // Feed
-    'Feed Event' => 'Evento de feed',
     'Feed URL' => 'URL do feed',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'O URL do feed RSS, Atom ou JSON a monitorizar.',
     // Field and element conditions
@@ -153,24 +152,18 @@ return [
     // Message tab: ntfy fields
     'Priority'           => 'Prioridade',
     'Tags'               => 'Etiquetas',
-    'Click URL'          => 'URL de clique',
-    'Render as Markdown' => 'Renderizar como Markdown',
 
     // Message tab: Slack fields
     'Slack Message Body' => 'Corpo da mensagem Slack',
     'Bot Icon URL' => 'URL do ícone',
-    "A URL for the icon to display alongside this message. Leave blank to use the app's default." => 'Um URL para o ícone a apresentar junto desta mensagem. Deixe em branco para usar o padrão do canal.',
 
     // Message tab: Bluesky fields
     'Post Body' => 'Corpo da publicação',
     'Generate Link Preview' => 'Gerar pré-visualização da ligação',
-    "When the post body contains a URL, automatically generate a preview card with the linked page's image, title, and description." => 'Quando o corpo da publicação contém um URL, é anexado um cartão de pré-visualização com o título, a descrição e a imagem da página ligada.',
     'No card' => 'Sem cartão',
     'Generate preview card' => 'Gerar cartão de pré-visualização',
 
     // Message tab: Title / Body / Trix toolbar
-    'Title'         => 'Título',
-    'Body'          => 'Corpo',
     'Rich Text'     => 'Texto formatado',
     'Bold'          => 'Negrito',
     'Italic'        => 'Itálico',
@@ -182,7 +175,6 @@ return [
     'Code'          => 'Código',
     'Undo'          => 'Anular',
     'Redo'          => 'Refazer',
-    'Body of outgoing email. You can use <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">special variables</a>, or even <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">skip recipients</a>.' => 'Corpo do e-mail enviado. Pode usar <a href="https://plugins.doublesecretagency.com/notifier/messages/variables" target="_blank">variáveis especiais</a>, ou até <a href="https://plugins.doublesecretagency.com/notifier/messages/skip" target="_blank">ignorar destinatários</a>.',
 
     // Recipients tab: common
     'Recipients Type'                             => 'Tipo de destinatários',
@@ -241,30 +233,21 @@ return [
     // Settings: ntfy
     'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'O ntfy.sh é um serviço gratuito de notificações push baseado em HTTP. Os subscritores recebem mensagens na aplicação ntfy, na web ou em qualquer cliente compatível ao subscrever um tópico.',
     'Server URL'   => 'URL do servidor',
-    'Defaults to https://ntfy.sh. Point at a self-hosted ntfy instance if applicable.' => 'Predefinição https://ntfy.sh. Aponte para uma instância ntfy auto-hospedada, se aplicável.',
     'Access token' => 'Token de acesso',
-    'Optional. Required for protected topics or self-hosted instances with auth.' => 'Opcional. Necessário para tópicos protegidos ou instâncias auto-hospedadas com autenticação.',
     'ntfy Topics'  => 'Tópicos ntfy',
-    'Named list of ntfy topics. Each topic becomes selectable on the notification edit screen.' => 'Lista nomeada de tópicos ntfy. Cada tópico fica selecionável no ecrã de edição da notificação.',
     'Topics'       => 'Tópicos',
-    'Add one row per topic name. Use the **Test** button to send a quick test message to the topic.' => 'Adicione uma linha por nome de tópico. Use o botão **Test** para enviar uma mensagem de teste rápida ao tópico.',
     'Topic'        => 'Tópico',
     'Add a topic'  => 'Adicionar um tópico',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against ntfy.' => 'Guarde primeiro para preservar uma linha e clique no seu botão **Test** para realizar uma verificação rápida ao ntfy.',
 
     // Settings: Slack
     'Slack Channels' => 'Canais de Slack',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Crie uma [app Slack](https://api.slack.com/apps) com os scopes `chat:write`, `chat:write.customize` e `chat:write.public`, e depois adicione uma linha para cada canal onde queira publicar. Cada canal fica disponível como destinatário no separador **Recipients** ao configurar uma notificação. Um token do bot é um segredo, por isso guarde-o numa variável `.env` e referencie essa variável (por exemplo `$SLACK_BOT_TOKEN`) em vez de colar o token diretamente.',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Crie uma [app Slack](https://api.slack.com/apps) com os scopes `chat:write`, `chat:write.customize` e `chat:write.public`, e depois adicione uma linha para cada canal onde queira publicar. Cada canal fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação. Um token do bot é um segredo, por isso guarde-o numa variável `.env` e referencie essa variável (por exemplo `$SLACK_BOT_TOKEN`) em vez de colar o token diretamente.',
     'Channels'       => 'Canais',
-    'Each Slack channel needs its own Incoming Webhook URL. Use the **Test** button to fire a quick sanity check after saving.' => 'Cada canal Slack precisa do seu próprio URL Incoming Webhook. Use o botão **Test** para fazer uma verificação rápida após guardar.',
     'Add a channel'  => 'Adicionar um canal',
     'Bot Token' => 'Token do bot',
     'Channel ID' => 'ID do canal',
     'Bot Emoji' => 'Emoji do ícone',
     'Bot Name' => 'Nome de utilizador',
-    'Show link previews' => 'Mostrar pré-visualizações de ligações',
-    'An emoji shortcode to display alongside this message, e.g. `:rocket:`. Used only when Bot Icon URL is empty.' => 'Um shortcode de emoji para mostrar junto desta mensagem, por exemplo `:rocket:`. Usado apenas quando o URL do ícone está vazio.',
-    "A display name for this message. Leave blank to use the app's default." => 'Um nome a apresentar para esta mensagem. Deixe em branco para usar o padrão da aplicação.',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'Se o Slack deve apresentar pré-visualizações de ligações para URLs no corpo da mensagem.',
     'Not a valid Bot Token. Must start with `xoxb-`.' => 'Token do bot inválido. Deve começar com `xoxb-`.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'ID de canal inválido. Deve parecer-se com `C01234ABCD`.',
@@ -273,21 +256,17 @@ return [
     'Recipient "{name}" has no Slack bot token.' => 'O destinatário "{name}" não tem token do bot Slack.',
     'Recipient "{name}" has no Slack channel ID.' => 'O destinatário "{name}" não tem ID de canal do Slack.',
     'Slack rejected the message: {error}' => 'O Slack rejeitou a mensagem: {error}',
-    'Save first to persist a row, then click its **Test** button to fire a sanity check against Slack.' => 'Guarde primeiro para preservar uma linha e clique no seu botão **Test** para realizar uma verificação rápida ao Slack.',
 
     // Settings: Bluesky
     '[Bluesky](https://bsky.app) posts publish to the configured account\'s feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `$BLUESKY_APP_PASSWORD`) rather than pasting the password directly.' => 'As publicações do [Bluesky](https://bsky.app) são publicadas no feed da conta configurada através da API ATProto. As palavras-passe de aplicação são geradas em [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). Uma palavra-passe de aplicação é um segredo, por isso guarde-a numa variável `.env` e referencie essa variável (por exemplo, `$BLUESKY_APP_PASSWORD`) em vez de colar a palavra-passe diretamente.',
     'PDS URL'          => 'URL do PDS',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'Predefinição https://bsky.social. Aponte para um PDS personalizado se a sua instalação federar.',
     'Bluesky Accounts' => 'Contas Bluesky',
-    'Named list of Bluesky accounts. Each account becomes selectable on the notification edit screen.' => 'Lista nomeada de contas Bluesky. Cada conta fica selecionável no ecrã de edição da notificação.',
     'Accounts'         => 'Contas',
-    'Add one row per Bluesky account. Use **Test** to verify the credentials authenticate.' => 'Adicione uma linha por conta Bluesky. Use **Test** para verificar se as credenciais autenticam.',
     'Label'            => 'Etiqueta',
     'Handle'           => 'Identificador',
     'App password'     => 'Palavra-passe de aplicação',
     'Add an account'   => 'Adicionar uma conta',
-    'Save first to persist a row, then click its **Test** button to verify the credentials authenticate.' => 'Guarde primeiro para preservar uma linha e clique no seu botão **Test** para verificar se as credenciais autenticam.',
 
     // Test notification (UI)
     'Send a test message'           => 'Enviar uma mensagem de teste',
@@ -304,7 +283,6 @@ return [
     'Test message from Notifier.'             => 'Mensagem de teste do Notifier.',
     'HTTP {status}'                           => 'HTTP {status}',
     'Test message sent successfully.'         => 'Mensagem de teste enviada com sucesso.',
-    'HTTP {status}: {body}'                   => 'HTTP {status}: {body}',
     'Handle and app password are required.'   => 'O identificador e a palavra-passe de aplicação são obrigatórios.',
     'Authentication failed.'                  => 'Falha de autenticação.',
     'Successfully authenticated. No messages were posted.' => 'Autenticação bem-sucedida. Não foi publicada nenhuma mensagem.',
@@ -349,7 +327,6 @@ return [
     'Successfully sent Pushover message!'                        => 'Mensagem Pushover enviada com sucesso!',
 
     // Outbound: ntfy log messages
-    'Unable to send ntfy message, no server URL configured.' => 'Não é possível enviar a mensagem ntfy: URL do servidor não configurado.',
     'Unable to send ntfy message, no topic specified.'       => 'Não é possível enviar a mensagem ntfy: nenhum tópico especificado.',
     'ntfy POST failed with HTTP {status}: {reason}'          => 'POST ntfy falhou com HTTP {status}: {reason}',
     'ntfy POST failed: {reason}'                             => 'POST ntfy falhou: {reason}',
@@ -401,14 +378,13 @@ return [
 
     // Slack, ntfy, and Bluesky message types
     "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Adicione as contas Bluesky a partir das quais pretende publicar. Cada conta fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação.',
-    "Click any row's **Test** button to confirm the account authenticates." => 'Clique no botão **Test** de qualquer linha para confirmar que a conta autentica.',
-    "Click any row's **Test** button to send a quick test message to that channel." => 'Clique no botão **Test** de qualquer linha para enviar uma mensagem de teste rápida a esse canal.',
+    "Click any row's **Test** button to confirm the account authenticates." => 'Clique no botão **Testar** de qualquer linha para confirmar que a conta autentica.',
+    "Click any row's **Test** button to send a quick test message to that channel." => 'Clique no botão **Testar** de qualquer linha para enviar uma mensagem de teste rápida a esse canal.',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => 'Opcional. Aponte para uma instância ntfy auto-hospedada, se aplicável. Predefinição `https://ntfy.sh`.',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'Opcional. Necessário para tópicos protegidos ou instâncias auto-hospedadas com autenticação.',
     "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Adicione os tópicos ntfy para os quais pretende enviar mensagens. Cada tópico fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação.',
-    "Click any row's **Test** button to send a quick test message to that topic." => 'Clique no botão **Test** de qualquer linha para enviar uma mensagem de teste rápida a esse tópico.',
+    "Click any row's **Test** button to send a quick test message to that topic." => 'Clique no botão **Testar** de qualquer linha para enviar uma mensagem de teste rápida a esse tópico.',
     'Enable Markdown' => 'Ativar Markdown',
-    'Link URL' => 'URL da ligação',
 
     // Manual triggers
     'Send Notification'                                            => 'Enviar notificação',
@@ -428,7 +404,6 @@ return [
     'days after'                                                  => 'dias depois',
     'Relevant Date'                                               => 'Data relevante',
     'Send the notification relative to a chosen date.'            => 'Envie a notificação em relação a uma data escolhida.',
-    "Fires when an entry's Post Date passes and it becomes Live." => 'É acionado quando a data de publicação de uma entrada é atingida e ela fica ativa.',
 
     // Scheduled sending
     'Scheduled Sending' => 'Envio agendado',
@@ -468,8 +443,13 @@ return [
     'Body of the Pushover notification. Plain text only.' => 'Corpo da notificação Pushover. Apenas texto simples.',
     'Subject line of the email.' => 'Assunto do e-mail.',
     'Body of the email. Supports HTML.' => 'Corpo do e-mail. Compatível com HTML.',
-    'Body of the Slack message. Supports [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting) syntax.' => 'Corpo da mensagem Slack. Compatível com a sintaxe [Slack mrkdwn](https://api.slack.com/reference/surfaces/formatting).',
     'Optionally override the app\'s display name.' => 'Opcionalmente substitua o nome de apresentação da aplicação.',
     'Optionally override the app\'s icon with a URL.' => 'Opcionalmente substitua o ícone da aplicação por um URL.',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'Opcionalmente substitua o ícone da aplicação por um emoji. Utilizado apenas quando Bot Icon URL está vazio.',
+    'Invalid Slack body format.' => 'Formato de corpo Slack inválido.',
+    'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => 'Suporta a sintaxe [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) padrão. Opcionalmente suporta HTML _(ver abaixo)_.',
+    'Render Message Body as HTML' => 'Renderizar corpo da mensagem como HTML',
+    'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => 'Analisar apenas como [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), ou também como HTML.',
+    'mrkdwn only' => 'apenas mrkdwn',
+    'mrkdwn + HTML' => 'mrkdwn + HTML',
 ];

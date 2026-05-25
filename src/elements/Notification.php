@@ -233,6 +233,7 @@ class Notification extends Element
         return array_merge(parent::defineRules(), [
             ['recipientsType', 'validateDynamicRecipientsPermission'],
             ['messageConfig', 'validateEmailMessageMode'],
+            ['messageConfig', 'validateSlackBodyFormat'],
         ]);
     }
 
@@ -293,6 +294,39 @@ class Notification extends Element
 
         // Normalize so persistence is stable even when the value was missing
         $this->messageConfig['emailMessageMode'] = $mode;
+    }
+
+    /**
+     * Validate the Slack body format toggle.
+     *
+     * Accepts only 'markdown' (raw Slack mrkdwn) or 'html' (HTML converted
+     * to Slack mrkdwn at send time). The CP lightswitch posts '1' or '0',
+     * which we normalize to the string form here.
+     *
+     * @return void
+     */
+    public function validateSlackBodyFormat(): void
+    {
+        // Pull the saved value
+        $value = $this->messageConfig['slackBodyFormat'] ?? null;
+
+        // Normalize the lightswitch's '1' / '0' to a string mode
+        if ('1' === $value || 1 === $value || true === $value) {
+            $value = 'html';
+        } elseif (null === $value || '' === $value || '0' === $value || 0 === $value || false === $value) {
+            $value = 'markdown';
+        }
+
+        // If the value isn't one of the allowed strings, attach an error
+        if (!in_array($value, ['markdown', 'html'], true)) {
+            $this->addError('messageConfig', Craft::t('notifier',
+                'Invalid Slack body format.'
+            ));
+            return;
+        }
+
+        // Normalize so persistence is stable
+        $this->messageConfig['slackBodyFormat'] = $value;
     }
 
     /**
@@ -637,6 +671,12 @@ class Notification extends Element
                 $eventConfig      = $request->getBodyParam('eventConfig');
                 $messageType      = $request->getBodyParam('messageType');
                 $messageConfig    = $request->getBodyParam('messageConfig');
+                // Normalize the Slack body format lightswitch ('1' / '0') into 'html' / 'markdown'
+                if (is_array($messageConfig) && array_key_exists('slackBodyFormat', $messageConfig)) {
+                    $messageConfig['slackBodyFormat'] = (
+                        '1' === $messageConfig['slackBodyFormat'] || 1 === $messageConfig['slackBodyFormat'] || true === $messageConfig['slackBodyFormat']
+                    ) ? 'html' : 'markdown';
+                }
                 $recipientsType   = $request->getBodyParam('recipientsType');
                 $recipientsConfig = $request->getBodyParam('recipientsConfig');
 
