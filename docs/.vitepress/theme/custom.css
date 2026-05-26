@@ -14,3 +14,19 @@ img.dropshadow {
     border-radius: 0.30rem;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
+
+/* Enlarge the hero image on the home page */
+.VPHero .image-container {
+    max-width: 480px;
+    max-height: 480px;
+    transform: none;
+}
+.VPHero .VPImage.image-src {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+.VPHero .image-bg {
+    display: none;
+}

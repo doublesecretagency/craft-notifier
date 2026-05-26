@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress';
 const metaUrl = 'https://plugins.doublesecretagency.com/notifier/';
 const metaTitle = 'Notifier plugin for Craft CMS';
 const metaDescription = 'First-class Notifications for Craft CMS';
-const metaImage = 'https://plugins.doublesecretagency.com/notifier/images/meta/notifier.png';
+const metaImage = 'https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.png';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
