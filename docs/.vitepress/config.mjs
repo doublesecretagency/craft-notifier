@@ -26,6 +26,7 @@ export default defineConfig({
 
   base: '/notifier/',
   cleanUrls: true,
+  srcExclude: ['**/_*.md', '_*.md'],
 
   themeConfig: {
 
