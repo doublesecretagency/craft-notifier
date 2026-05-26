@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.0.0 - 2026-05-26
 
 ### Added
 - Added support for sending [Pushover](https://plugins.doublesecretagency.com/notifier/messages/types/pushover) notifications via [Pushover](https://pushover.net). ([#19](https://github.com/doublesecretagency/craft-notifier/issues/19))
