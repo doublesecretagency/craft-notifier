@@ -4,7 +4,7 @@ description: Notifier supports an assortment of recipient types. In addition to 
 
 # All Recipient Types
 
-<img class="dropshadow" src="/images/recipients/recipient-types.png" alt="" style="width:414px; margin-top:10px">
+<img class="dropshadow" src="/images/recipients/recipient-types.png" alt="" style="width:416px; margin-top:10px">
 
 :::warning Additional Filtering of Recipients
 Regardless of which recipients are specified, you can always [skip a message](/messages/skip) for individual recipients who fail to meet your custom criteria.

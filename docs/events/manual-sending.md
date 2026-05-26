@@ -6,7 +6,7 @@ description: Send a notification on demand from an element's edit screen, the el
 
 Most notifications fire automatically when a Craft event occurs. **Manually sending** is different. The notification waits until you send it yourself, against a specific element of your choosing.
 
-<img class="dropshadow" src="/images/events/event-manually-triggered.png" alt="" style="width:555px; margin-top:10px; margin-bottom: 22px">
+<img class="dropshadow" src="/images/events/event-manually-triggered.png" alt="" style="width:500px; margin-top:10px; margin-bottom: 22px">
 
 This is useful whenever a message shouldn't be tied to a save, a delete, or any other automatic event. Think of a "resend the welcome email" notification, or a "flag this entry for the team" notification. The message is ready to go, but it sends only when you say so.
 

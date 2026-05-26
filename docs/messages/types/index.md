@@ -4,7 +4,7 @@ description: Notifier supports a large collection of message types, including em
 
 # All Message Types
 
-<img class="dropshadow" src="/images/messages/message-types.png" alt="" style="width:415px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/message-types.png" alt="" style="width:416px; margin-top:10px">
 
 ## Craft Native
 
