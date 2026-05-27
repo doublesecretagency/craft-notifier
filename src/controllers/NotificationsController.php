@@ -18,6 +18,7 @@ use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\exceptions\TestPreflightException;
 use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\NotifierPlugin;
@@ -319,8 +320,17 @@ class NotificationsController extends Controller
             throw new NotFoundHttpException(Craft::t('notifier', 'Notification not found'));
         }
 
-        // Dispatch the test
-        $dispatch = NotifierPlugin::getInstance()->messages->sendTest($notification);
+        // Dispatch the test, aborting cleanly if the preflight fails
+        try {
+            $dispatch = NotifierPlugin::getInstance()->messages->sendTest($notification);
+        } catch (TestPreflightException $e) {
+            // Surface the reason as a CP error toast via the existing JS handler
+            return $this->asJson([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'envelopeCount' => 0,
+            ]);
+        }
 
         // Count compiled envelopes
         $envelopeCount = count(array_filter($dispatch->envelopes));

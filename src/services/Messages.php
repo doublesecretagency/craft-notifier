@@ -11,12 +11,24 @@
 
 namespace doublesecretagency\notifier\services;
 
+use Craft;
 use craft\base\Component;
 use craft\base\ElementInterface;
+use craft\commerce\elements\Order;
+use craft\commerce\elements\Product as CommerceProduct;
+use craft\digitalproducts\elements\License;
+use craft\digitalproducts\elements\Product as DigitalProduct;
+use craft\elements\Asset;
+use craft\elements\db\ElementQueryInterface;
+use craft\elements\Entry;
+use craft\elements\User;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\exceptions\TestPreflightException;
 use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\NotifierPlugin;
+use Solspace\Calendar\Elements\Event as CalendarEvent;
 use yii\base\Event;
+use yii\db\Expression;
 
 /**
  * Class Messages
@@ -72,26 +84,52 @@ class Messages extends Component
     }
 
     /**
-     * Send a test of a single Notification, simulating only the event itself.
+     * Send a test of a single Notification, populated with real data.
      *
-     * Bypasses event-type filters and condition gates so the operator can verify
-     * the configured message body and recipient strategy without waiting for a
-     * real Craft event to fire. The message body, recipients, queue setting,
-     * and channel all use the live Notification configuration.
+     * Grabs a random live item for feed events, or a random matching element
+     * for everything else. Throws if no data can be found.
      *
      * @param Notification $notification
      * @return Dispatch The populated dispatch (envelopes attached) for caller introspection.
+     * @throws TestPreflightException When no real data can be found for the test.
      */
     public function sendTest(Notification $notification): Dispatch
     {
         // Build a synthetic event so the dispatch pipeline has something to thread
-        $syntheticEvent = new Event(['sender' => null]);
+        $event = new Event(['sender' => null]);
+
+        // Resolve realistic Twig context, refusing to send if none can be found
+        if ('feed' === $notification->eventType) {
+            // Pull a random item from the live feed
+            $resolved = NotifierPlugin::getInstance()->feedRunner->getRandomItem($notification);
+            // If nothing was returned, the feed is unreachable, unparseable, or empty
+            if (null === $resolved) {
+                throw new TestPreflightException(Craft::t('notifier',
+                    'Unable to send test: the feed could not be read or has no items.'
+                ));
+            }
+            $data = $resolved;
+        } else {
+            // Pick a random element matching the configured filters
+            $element = $this->getRandomMatchingElement($notification);
+            // If no candidate element passed every gate, refuse to send
+            if (null === $element) {
+                throw new TestPreflightException(Craft::t('notifier',
+                    'Unable to send test: no element matches the configured filters.'
+                ));
+            }
+            // Mirror the real dispatch shape: stash the chosen element under 'object'
+            $data = ['object' => $element];
+            // Thread the element through the synthetic event too, so any
+            // recipient strategy that derefs the sender directly sees it
+            $event->sender = $element;
+        }
 
         // Configure new dispatch flagged as a test
         $dispatch = new Dispatch([
             'notification' => $notification,
-            'event' => $syntheticEvent,
-            'data' => [],
+            'event' => $event,
+            'data' => $data,
             'isTest' => true,
         ]);
 
@@ -105,6 +143,66 @@ class Messages extends Component
 
         // Return the populated dispatch so the caller can report envelope count
         return $dispatch;
+    }
+
+    /**
+     * Pick a random element matching this notification's filtering criteria.
+     *
+     * Used by the "Send a test message" button on element-backed notifications.
+     * Returns null when nothing in the system matches the configured filters.
+     *
+     * @param Notification $notification
+     * @return ElementInterface|null
+     */
+    public function getRandomMatchingElement(Notification $notification): ?ElementInterface
+    {
+        // Resolve the element class for this notification's event type
+        $elementClass = $this->_eventTypeToElementClass($notification->eventType);
+
+        // If the event type is unsupported, or its host plugin isn't installed, bail
+        if (!$elementClass) {
+            return null;
+        }
+
+        // Build a query restricted to the notification's eventConfig filters
+        $query = $this->_buildCandidateQuery($notification, $elementClass);
+
+        // Get the notification's element condition (if any)
+        $condition = $notification->getEventCondition();
+
+        // If a condition is configured, narrow the query to matching elements
+        if ($condition) {
+            $condition->modifyQuery($query);
+        }
+
+        // Pull a small random batch; not every candidate will pass the gate
+        $candidates = (clone $query)
+            ->orderBy(new Expression('RAND()'))
+            ->limit(20)
+            ->all();
+
+        // If no candidates were found, bail
+        if (!$candidates) {
+            return null;
+        }
+
+        // Walk candidates and return the first that passes the shared gate
+        foreach ($candidates as $candidate) {
+            // Build a one-off dispatch to validate via the shared filter gate
+            $dispatch = new Dispatch([
+                'notification' => $notification,
+                'event'        => new Event(['sender' => $candidate]),
+                'data'         => ['object' => $candidate],
+                'isTest'       => false,
+            ]);
+            // If this candidate passes every gate, use it
+            if ($dispatch->filterByEventType()) {
+                return $candidate;
+            }
+        }
+
+        // No candidate passed every gate, bail
+        return null;
     }
 
     /**
@@ -172,6 +270,109 @@ class Messages extends Component
         return Notification::find()
             ->where(['eventType' => 'feed'])
             ->all();
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Map a Notifier event type to its element class.
+     *
+     * Returns null when the event type is unrecognized or its host plugin
+     * isn't installed.
+     *
+     * @param string $eventType
+     * @return string|null Fully-qualified element class name.
+     */
+    private function _eventTypeToElementClass(string $eventType): ?string
+    {
+        // Core element types ship with Craft
+        $map = [
+            'entries' => Entry::class,
+            'assets'  => Asset::class,
+            'users'   => User::class,
+        ];
+
+        // Append third-party element types only when their plugin is installed
+        if (class_exists(Order::class)) {
+            $map['craft-commerce-orders']   = Order::class;
+            $map['craft-commerce-products'] = CommerceProduct::class;
+        }
+        if (class_exists(DigitalProduct::class)) {
+            $map['digital-products-products'] = DigitalProduct::class;
+            $map['digital-products-licenses'] = License::class;
+        }
+        if (class_exists(CalendarEvent::class)) {
+            $map['solspace-calendar-events'] = CalendarEvent::class;
+        }
+
+        return ($map[$eventType] ?? null);
+    }
+
+    /**
+     * Build a candidate element query for a notification's event type.
+     *
+     * Applies eventConfig restrictions where they map to query methods.
+     * The rest fall through to filterByEventType() for gating.
+     *
+     * @param Notification $notification
+     * @param string $elementClass
+     * @return ElementQueryInterface
+     */
+    private function _buildCandidateQuery(Notification $notification, string $elementClass): ElementQueryInterface
+    {
+        // Read the notification's eventConfig as a plain array
+        $eventConfig = ($notification->eventConfig ?? []);
+
+        // Start a base element query
+        /** @var ElementQueryInterface $query */
+        $query = $elementClass::find();
+
+        // Apply per-event-type restrictions
+        switch ($notification->eventType) {
+            case 'entries':
+                // Restrict to configured sections
+                if (!empty($eventConfig['sections'])) {
+                    $query->sectionId($eventConfig['sections']);
+                }
+                // Restrict to configured entry types
+                if (!empty($eventConfig['entryTypes'])) {
+                    $query->typeId($eventConfig['entryTypes']);
+                }
+                // Restrict to configured sites
+                if (!empty($eventConfig['sites'])) {
+                    $query->siteId($eventConfig['sites']);
+                }
+                break;
+            case 'assets':
+                // Restrict to configured volumes
+                if (!empty($eventConfig['volumes'])) {
+                    $query->volumeId($eventConfig['volumes']);
+                }
+                break;
+            case 'users':
+                // Strip the "Ungrouped" sentinel (0) from the configured group list
+                $groupIds = array_filter(($eventConfig['userGroups'] ?? []), static fn($g) => 0 !== (int) $g);
+
+                // If real groups are configured, restrict the query to them
+                if (!empty($groupIds)) {
+                    $query->groupId($groupIds);
+                }
+                break;
+            case 'craft-commerce-products':
+                // Restrict to configured Commerce product types
+                if (!empty($eventConfig['productTypes'])) {
+                    $query->typeId($eventConfig['productTypes']);
+                }
+                break;
+            case 'digital-products-products':
+                // Restrict to configured Digital Product types
+                if (!empty($eventConfig['digitalProductTypes'])) {
+                    $query->typeId($eventConfig['digitalProductTypes']);
+                }
+                break;
+        }
+
+        return $query;
     }
 
 }

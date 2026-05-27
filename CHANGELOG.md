@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Changed
+- "Send a test message" now tests against real data.
 - Hide the "Send a test message" button until notification has been saved at least once.
 
 ### Fixed

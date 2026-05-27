@@ -157,6 +157,40 @@ class FeedRunner extends Component
             ->execute();
     }
 
+    /**
+     * Fetch the live feed and return a random item with feed-level metadata.
+     *
+     * Used by the "Send a test message" button on feed notifications.
+     * Returns null when the feed can't be read or has no items.
+     *
+     * @param Notification $notification
+     * @return array|null Tuple of ['item' => array, 'feed' => array] or null.
+     */
+    public function getRandomItem(Notification $notification): ?array
+    {
+        // Fetch and parse the live feed
+        $parsed = $this->_fetchAndParse($notification);
+
+        // If the fetch or parse failed, bail
+        if (null === $parsed) {
+            return null;
+        }
+
+        // If the feed has no items, bail
+        if (empty($parsed['items'])) {
+            return null;
+        }
+
+        // Pick a random item from the live feed
+        $item = $parsed['items'][array_rand($parsed['items'])];
+
+        // Return the chosen item paired with feed-level metadata
+        return [
+            'item' => $item,
+            'feed' => $parsed['feed'],
+        ];
+    }
+
     // ========================================================================= //
 
     /**

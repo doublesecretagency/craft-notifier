@@ -270,10 +270,12 @@ return [
 
     // Test notification (UI)
     'Send a test message'           => 'Bir test mesajı gönder',
-    'Are you certain you want to send a test notification?\\n\\nThe configured message will be sent to the configured recipient(s).' => 'Bir test bildirimi göndermek istediğinizden emin misiniz?\\n\\nYapılandırılmış mesaj, yapılandırılmış alıcı(lar)a gönderilecektir.',
+    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => 'GERÇEK bir test bildirimi gönderilsin mi?\\n\\n⚠️ Gerçek verilerden rastgele bir örnek kullanır.\\n⚠️ Yapılandırılmış kanal üzerinden gerçek bir mesaj gönderir.\\n⚠️ Gerçek yapılandırılmış alıcılara teslim edilir.',
     'Test'                          => 'Test',
     'Test notification dispatched.' => 'Test bildirimi gönderildi.',
     'No messages were dispatched. Check the recipient configuration.' => 'Hiçbir mesaj gönderilmedi. Alıcı yapılandırmasını kontrol edin.',
+    'Unable to send test: the feed could not be read or has no items.' => 'Test gönderilemiyor: akış okunamadı veya öğe içermiyor.',
+    'Unable to send test: no element matches the configured filters.' => 'Test gönderilemiyor: yapılandırılan filtrelerle eşleşen öğe yok.',
 
     // Settings: save / test action responses
     "Couldn't save settings."                 => 'Ayarlar kaydedilemedi.',

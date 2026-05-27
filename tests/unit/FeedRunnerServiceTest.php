@@ -93,4 +93,58 @@ class FeedRunnerServiceTest extends TestCase
             $this->source
         );
     }
+
+    // ========================================================================= //
+    // getRandomItem, test-send Twig context provider
+    // ========================================================================= //
+
+    public function testHasGetRandomItemMethod(): void
+    {
+        // Messages::sendTest depends on this method for the feed branch.
+        $this->assertTrue($this->reflection->hasMethod('getRandomItem'));
+        $this->assertTrue($this->reflection->getMethod('getRandomItem')->isPublic());
+    }
+
+    public function testGetRandomItemSignature(): void
+    {
+        // getRandomItem(Notification $notification): ?array
+        $method = $this->reflection->getMethod('getRandomItem');
+        $params = $method->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertSame('notification', $params[0]->getName());
+        // Nullable array return because every failure path returns null
+        $returnType = $method->getReturnType();
+        $this->assertNotNull($returnType);
+        $this->assertSame('array', (string) $returnType->getName());
+        $this->assertTrue($returnType->allowsNull());
+    }
+
+    public function testGetRandomItemReusesFetchAndParse(): void
+    {
+        // The fetch / parse / logging behavior must not be duplicated; the
+        // test path delegates to the same private helper the live runner uses.
+        $this->assertMatchesRegularExpression(
+            '/getRandomItem[\s\S]*?\$this->_fetchAndParse\(/',
+            $this->source
+        );
+    }
+
+    public function testGetRandomItemPicksFromItemsArray(): void
+    {
+        // PHP's array_rand on $parsed['items'] is the chosen randomization.
+        $this->assertMatchesRegularExpression(
+            "/getRandomItem[\s\S]*?array_rand\(\\\$parsed\['items'\]\)/",
+            $this->source
+        );
+    }
+
+    public function testGetRandomItemReturnsItemAndFeedKeys(): void
+    {
+        // The return tuple mirrors FeedRunner::_send's payload so the test
+        // Twig context matches what a real dispatch would see.
+        $this->assertMatchesRegularExpression(
+            "/getRandomItem[\s\S]*?'item'\s*=>[\s\S]*?'feed'\s*=>/",
+            $this->source
+        );
+    }
 }

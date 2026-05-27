@@ -270,10 +270,12 @@ return [
 
     // Test notification (UI)
     'Send a test message'           => 'テストメッセージを送信',
-    'Are you certain you want to send a test notification?\\n\\nThe configured message will be sent to the configured recipient(s).' => 'テスト通知を送信してもよろしいですか?\\n\\n設定されたメッセージが設定された受信者に送信されます。',
+    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => '本当にテスト通知を送信しますか?\\n\\n⚠️ 実際のデータからランダムなサンプルを使用します。\\n⚠️ 設定されたチャネル経由で実際のメッセージを送信します。\\n⚠️ 実際の設定された受信者に配信されます。',
     'Test'                          => 'テスト',
     'Test notification dispatched.' => 'テスト通知を送信しました。',
     'No messages were dispatched. Check the recipient configuration.' => 'メッセージは送信されませんでした。受信者の設定を確認してください。',
+    'Unable to send test: the feed could not be read or has no items.' => 'テストを送信できません：フィードを読み取れないか、項目がありません。',
+    'Unable to send test: no element matches the configured filters.' => 'テストを送信できません：設定されたフィルターに一致する要素がありません。',
 
     // Settings: save / test action responses
     "Couldn't save settings."                 => '設定を保存できませんでした。',

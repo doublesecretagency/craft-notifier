@@ -3,7 +3,7 @@
     {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\TestNotificationAsset') %}
     <button type="button" class="btn"
             data-notifier-test-id="{{ notification.id }}"
-            data-notifier-test-confirm="{{ 'Are you certain you want to send a test notification?\n\nThe configured message will be sent to the configured recipient(s).'|t('notifier') }}">
+            data-notifier-test-confirm="{{ 'Send a REAL test notification?\n\n⚠️ Uses a random sample of real data.\n⚠️ Sends a real message via the configured channel.\n⚠️ Delivers to the real configured recipient(s).'|t('notifier') }}">
         {{ 'Send a test message'|t('notifier') }}
     </button>
 {% endif %}

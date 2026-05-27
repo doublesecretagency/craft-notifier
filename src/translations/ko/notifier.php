@@ -270,10 +270,12 @@ return [
 
     // Test notification (UI)
     'Send a test message'           => '테스트 메시지 보내기',
-    'Are you certain you want to send a test notification?\\n\\nThe configured message will be sent to the configured recipient(s).' => '테스트 알림을 보내시겠습니까?\\n\\n설정된 메시지가 설정된 수신자에게 전송됩니다.',
+    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => '정말로 테스트 알림을 보내시겠습니까?\\n\\n⚠️ 실제 데이터의 무작위 샘플을 사용합니다.\\n⚠️ 설정된 채널을 통해 실제 메시지를 전송합니다.\\n⚠️ 실제로 설정된 수신자에게 전달됩니다.',
     'Test'                          => '테스트',
     'Test notification dispatched.' => '테스트 알림이 발송되었습니다.',
     'No messages were dispatched. Check the recipient configuration.' => '전송된 메시지가 없습니다. 수신자 구성을 확인하세요.',
+    'Unable to send test: the feed could not be read or has no items.' => '테스트를 전송할 수 없습니다: 피드를 읽을 수 없거나 항목이 없습니다.',
+    'Unable to send test: no element matches the configured filters.' => '테스트를 전송할 수 없습니다: 구성된 필터와 일치하는 요소가 없습니다.',
 
     // Settings: save / test action responses
     "Couldn't save settings."                 => '설정을 저장할 수 없습니다.',

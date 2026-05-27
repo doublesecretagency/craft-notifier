@@ -270,10 +270,12 @@ return [
 
     // Test notification (UI)
     'Send a test message'           => 'Lähetä testiviesti',
-    'Are you certain you want to send a test notification?\\n\\nThe configured message will be sent to the configured recipient(s).' => 'Haluatko varmasti lähettää testi-ilmoituksen?\\n\\nMääritetty viesti lähetetään määritetyille vastaanottajille.',
+    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => 'Lähetetäänkö TODELLINEN testi-ilmoitus?\\n\\n⚠️ Käyttää satunnaista otosta todellisista tiedoista.\\n⚠️ Lähettää todellisen viestin määritetyn kanavan kautta.\\n⚠️ Toimitetaan todellisille määritetyille vastaanottajille.',
     'Test'                          => 'Testi',
     'Test notification dispatched.' => 'Testi-ilmoitus lähetetty.',
     'No messages were dispatched. Check the recipient configuration.' => 'Viestejä ei lähetetty. Tarkista vastaanottajakokoonpano.',
+    'Unable to send test: the feed could not be read or has no items.' => 'Testiä ei voi lähettää: syötettä ei voitu lukea tai siinä ei ole kohteita.',
+    'Unable to send test: no element matches the configured filters.' => 'Testiä ei voi lähettää: yksikään elementti ei vastaa määritettyjä suodattimia.',
 
     // Settings: save / test action responses
     "Couldn't save settings."                 => 'Asetuksia ei voitu tallentaa.',

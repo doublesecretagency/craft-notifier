@@ -186,6 +186,279 @@ class MessagesServiceTest extends TestCase
         $this->assertStringContainsString('$dispatch->sendEnvelopes()', $body);
     }
 
+    public function testSendTestBranchesOnFeedEventType(): void
+    {
+        // The feed branch pulls a random item from FeedRunner; the element
+        // branch falls through to getRandomMatchingElement.
+        $body = $this->_extractMethodBody('sendTest');
+        $this->assertMatchesRegularExpression(
+            "/'feed'\s*===\s*\\\$notification->eventType/",
+            $body
+        );
+    }
+
+    public function testSendTestCallsFeedRunnerGetRandomItem(): void
+    {
+        // The feed branch resolves Twig context via FeedRunner::getRandomItem
+        $body = $this->_extractMethodBody('sendTest');
+        $this->assertMatchesRegularExpression(
+            '/feedRunner->getRandomItem\(\$notification\)/',
+            $body
+        );
+    }
+
+    public function testSendTestCallsGetRandomMatchingElement(): void
+    {
+        // Element-backed event types resolve a real element via the picker
+        $body = $this->_extractMethodBody('sendTest');
+        $this->assertMatchesRegularExpression(
+            '/\$this->getRandomMatchingElement\(\$notification\)/',
+            $body
+        );
+    }
+
+    public function testSendTestThrowsPreflightOnFeedFailure(): void
+    {
+        // Feed branch throws TestPreflightException with a translated message
+        // when no item can be resolved.
+        $body = $this->_extractMethodBody('sendTest');
+        $this->assertMatchesRegularExpression(
+            '/throw\s+new\s+TestPreflightException\([\s\S]*?the feed could not be read or has no items/',
+            $body
+        );
+    }
+
+    public function testSendTestThrowsPreflightOnElementFailure(): void
+    {
+        // Element branch throws TestPreflightException when no candidate
+        // satisfies the configured filters.
+        $body = $this->_extractMethodBody('sendTest');
+        $this->assertMatchesRegularExpression(
+            '/throw\s+new\s+TestPreflightException\([\s\S]*?no element matches the configured filters/',
+            $body
+        );
+    }
+
+    public function testSendTestThreadsElementThroughEventSender(): void
+    {
+        // Recipient strategies that deref $event->sender directly should see
+        // the chosen element, mirroring a real dispatch.
+        $body = $this->_extractMethodBody('sendTest');
+        $this->assertStringContainsString('$event->sender = $element', $body);
+    }
+
+    // ========================================================================= //
+    // getRandomMatchingElement, picker for element-backed test sends
+    // ========================================================================= //
+
+    public function testHasGetRandomMatchingElementMethod(): void
+    {
+        $this->assertTrue($this->reflection->hasMethod('getRandomMatchingElement'));
+        $this->assertTrue($this->reflection->getMethod('getRandomMatchingElement')->isPublic());
+    }
+
+    public function testGetRandomMatchingElementSignature(): void
+    {
+        // getRandomMatchingElement(Notification $notification): ?ElementInterface
+        $method = $this->reflection->getMethod('getRandomMatchingElement');
+        $params = $method->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertSame('notification', $params[0]->getName());
+        // Nullable ElementInterface return; null when no candidate passes.
+        $returnType = $method->getReturnType();
+        $this->assertNotNull($returnType);
+        $this->assertSame('craft\\base\\ElementInterface', (string) $returnType->getName());
+        $this->assertTrue($returnType->allowsNull());
+    }
+
+    public function testGetRandomMatchingElementAppliesElementCondition(): void
+    {
+        // The notification's saved element condition (if any) narrows the query
+        // via the standard Craft modifyQuery API.
+        $body = $this->_extractMethodBody('getRandomMatchingElement');
+        $this->assertStringContainsString('$notification->getEventCondition()', $body);
+        $this->assertStringContainsString('$condition->modifyQuery($query)', $body);
+    }
+
+    public function testGetRandomMatchingElementUsesRandOrdering(): void
+    {
+        // A small RAND()-ordered batch is fetched so candidate validation
+        // can iterate until one passes filterByEventType.
+        $body = $this->_extractMethodBody('getRandomMatchingElement');
+        $this->assertMatchesRegularExpression(
+            "/new\s+Expression\('RAND\(\)'\)/",
+            $body
+        );
+        $this->assertMatchesRegularExpression(
+            '/->limit\(\s*\d+\s*\)/',
+            $body
+        );
+    }
+
+    public function testGetRandomMatchingElementValidatesViaSharedDispatchGate(): void
+    {
+        // The picker reuses Dispatch::filterByEventType as the truth gate
+        // for "would this element have been notified about?" — same pattern
+        // as getManualNotifications.
+        $body = $this->_extractMethodBody('getRandomMatchingElement');
+        $this->assertStringContainsString('new Dispatch(', $body);
+        $this->assertStringContainsString('->filterByEventType()', $body);
+    }
+
+    // ========================================================================= //
+    // _eventTypeToElementClass, event-type → element-class mapping
+    // ========================================================================= //
+
+    public function testHasEventTypeToElementClassHelper(): void
+    {
+        $this->assertTrue($this->reflection->hasMethod('_eventTypeToElementClass'));
+        $this->assertTrue($this->reflection->getMethod('_eventTypeToElementClass')->isPrivate());
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function coreEventTypeProvider(): array
+    {
+        // Core element types ship with Craft and never need class_exists gating.
+        return [
+            ['entries', 'Entry::class'],
+            ['assets',  'Asset::class'],
+            ['users',   'User::class'],
+        ];
+    }
+
+    /**
+     * @dataProvider coreEventTypeProvider
+     */
+    public function testEventTypeToElementClassMapsCoreType(string $eventType, string $classRef): void
+    {
+        $body = $this->_extractMethodBody('_eventTypeToElementClass');
+        $this->assertMatchesRegularExpression(
+            "/'{$eventType}'\s*=>\s*" . preg_quote($classRef, '/') . '/',
+            $body
+        );
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function thirdPartyClassExistsGuardProvider(): array
+    {
+        // One class_exists guard per host plugin (DP's two element types
+        // share a single DigitalProduct guard — they install together).
+        return [
+            ['Order'],          // Craft Commerce
+            ['DigitalProduct'], // Digital Products
+            ['CalendarEvent'],  // Solspace Calendar
+        ];
+    }
+
+    /**
+     * @dataProvider thirdPartyClassExistsGuardProvider
+     */
+    public function testEventTypeToElementClassGuardsOnClassExists(string $classAlias): void
+    {
+        $body = $this->_extractMethodBody('_eventTypeToElementClass');
+        $this->assertMatchesRegularExpression(
+            "/class_exists\({$classAlias}::class\)/",
+            $body
+        );
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function thirdPartyEventTypeProvider(): array
+    {
+        // Event type → element class assignment, one per supported type.
+        return [
+            ['craft-commerce-orders',     'Order'],
+            ['craft-commerce-products',   'CommerceProduct'],
+            ['digital-products-products', 'DigitalProduct'],
+            ['digital-products-licenses', 'License'],
+            ['solspace-calendar-events',  'CalendarEvent'],
+        ];
+    }
+
+    /**
+     * @dataProvider thirdPartyEventTypeProvider
+     */
+    public function testEventTypeToElementClassMapsThirdPartyType(string $eventType, string $classAlias): void
+    {
+        $body = $this->_extractMethodBody('_eventTypeToElementClass');
+        // Each event type → class mapping appears as an assignment, since
+        // each line lives inside a class_exists() conditional block.
+        $this->assertMatchesRegularExpression(
+            "/\\\$map\['{$eventType}'\]\s*=\s*{$classAlias}::class/",
+            $body
+        );
+    }
+
+    // ========================================================================= //
+    // _buildCandidateQuery, eventConfig → element-query restrictions
+    // ========================================================================= //
+
+    public function testHasBuildCandidateQueryHelper(): void
+    {
+        $this->assertTrue($this->reflection->hasMethod('_buildCandidateQuery'));
+        $this->assertTrue($this->reflection->getMethod('_buildCandidateQuery')->isPrivate());
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function candidateQueryRestrictionProvider(): array
+    {
+        // For each event type that has a query-level restriction, pin both
+        // the case label and the eventConfig key → query method mapping.
+        return [
+            // event type, eventConfig key, query method
+            ['entries',                   'sections',            'sectionId'],
+            ['entries',                   'entryTypes',          'typeId'],
+            ['entries',                   'sites',               'siteId'],
+            ['assets',                    'volumes',             'volumeId'],
+            ['users',                     'userGroups',          'groupId'],
+            ['craft-commerce-products',   'productTypes',        'typeId'],
+            ['digital-products-products', 'digitalProductTypes', 'typeId'],
+        ];
+    }
+
+    /**
+     * @dataProvider candidateQueryRestrictionProvider
+     */
+    public function testBuildCandidateQueryAppliesRestriction(string $eventType, string $configKey, string $queryMethod): void
+    {
+        $body = $this->_extractMethodBody('_buildCandidateQuery');
+        // The case label appears
+        $this->assertMatchesRegularExpression(
+            "/case\s+'{$eventType}'\s*:/",
+            $body
+        );
+        // The eventConfig key is read
+        $this->assertMatchesRegularExpression(
+            "/\\\$eventConfig\['{$configKey}'\]/",
+            $body
+        );
+        // The query method is called with that key's value
+        $this->assertMatchesRegularExpression(
+            "/->{$queryMethod}\(/",
+            $body
+        );
+    }
+
+    public function testBuildCandidateQueryStripsUngroupedSentinelForUsers(): void
+    {
+        // Users' eventConfig allows a sentinel "0" for "Ungrouped"; the
+        // picker drops it before applying groupId() so the query returns
+        // the broader pool and filterByEventType filters it down.
+        $body = $this->_extractMethodBody('_buildCandidateQuery');
+        $this->assertMatchesRegularExpression(
+            '/array_filter\(.*userGroups.*0\s*!==\s*\(int\)\s*\$g/',
+            $body
+        );
+    }
+
     // ========================================================================= //
     // getManualNotifications, manual-trigger membership resolution
     // ========================================================================= //

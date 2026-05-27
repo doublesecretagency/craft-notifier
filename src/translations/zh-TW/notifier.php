@@ -270,10 +270,12 @@ return [
 
     // Test notification (UI)
     'Send a test message'           => '傳送測試訊息',
-    'Are you certain you want to send a test notification?\\n\\nThe configured message will be sent to the configured recipient(s).' => '確定要傳送測試通知嗎?\\n\\n設定的訊息將傳送給設定的收件者。',
+    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => '傳送真實的測試通知?\\n\\n⚠️ 使用真實資料的隨機樣本。\\n⚠️ 透過設定的通道傳送真實訊息。\\n⚠️ 傳送給設定的真實收件者。',
     'Test'                          => '測試',
     'Test notification dispatched.' => '已傳送測試通知。',
     'No messages were dispatched. Check the recipient configuration.' => '未傳送任何訊息。請檢查收件者設定。',
+    'Unable to send test: the feed could not be read or has no items.' => '無法傳送測試:無法讀取訂閱源或沒有項目。',
+    'Unable to send test: no element matches the configured filters.' => '無法傳送測試:沒有元素符合設定的篩選器。',
 
     // Settings: save / test action responses
     "Couldn't save settings."                 => '無法儲存設定。',

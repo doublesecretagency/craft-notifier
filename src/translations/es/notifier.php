@@ -270,10 +270,12 @@ return [
 
     // Test notification (UI)
     'Send a test message'           => 'Enviar un mensaje de prueba',
-    'Are you certain you want to send a test notification?\\n\\nThe configured message will be sent to the configured recipient(s).' => '¿Está seguro de que desea enviar una notificación de prueba?\\n\\nEl mensaje configurado se enviará a los destinatarios configurados.',
+    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => '¿Enviar una notificación de prueba REAL?\\n\\n⚠️ Usa una muestra aleatoria de datos reales.\\n⚠️ Envía un mensaje real por el canal configurado.\\n⚠️ Se entrega a los destinatarios reales configurados.',
     'Test'                          => 'Probar',
     'Test notification dispatched.' => 'Notificación de prueba enviada.',
     'No messages were dispatched. Check the recipient configuration.' => 'No se enviaron mensajes. Compruebe la configuración de los destinatarios.',
+    'Unable to send test: the feed could not be read or has no items.' => 'No se puede enviar la prueba: no se pudo leer el feed o no contiene elementos.',
+    'Unable to send test: no element matches the configured filters.' => 'No se puede enviar la prueba: ningún elemento coincide con los filtros configurados.',
 
     // Settings: save / test action responses
     "Couldn't save settings."                 => 'No se pudo guardar la configuración.',

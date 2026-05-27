@@ -270,10 +270,12 @@ return [
 
     // Test notification (UI)
     'Send a test message'           => 'Send en testbesked',
-    'Are you certain you want to send a test notification?\\n\\nThe configured message will be sent to the configured recipient(s).' => 'Er du sikker på, at du vil sende en testnotifikation?\\n\\nDen konfigurerede besked sendes til de konfigurerede modtagere.',
+    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => 'Send en RIGTIG testnotifikation?\\n\\n⚠️ Bruger en tilfældig stikprøve af rigtige data.\\n⚠️ Sender en rigtig besked via den konfigurerede kanal.\\n⚠️ Leveres til de rigtige konfigurerede modtagere.',
     'Test'                          => 'Test',
     'Test notification dispatched.' => 'Testnotifikation afsendt.',
     'No messages were dispatched. Check the recipient configuration.' => 'Der blev ikke sendt nogen beskeder. Tjek modtagerkonfigurationen.',
+    'Unable to send test: the feed could not be read or has no items.' => 'Kan ikke sende test: feedet kunne ikke læses eller indeholder ingen elementer.',
+    'Unable to send test: no element matches the configured filters.' => 'Kan ikke sende test: ingen elementer matcher de konfigurerede filtre.',
 
     // Settings: save / test action responses
     "Couldn't save settings."                 => 'Kunne ikke gemme indstillingerne.',

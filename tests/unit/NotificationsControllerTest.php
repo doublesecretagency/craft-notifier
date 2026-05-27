@@ -207,6 +207,36 @@ class NotificationsControllerTest extends TestCase
         );
     }
 
+    public function testTestActionImportsTestPreflightException(): void
+    {
+        // The catch clause references the typed exception; the import must be present
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\exceptions\\TestPreflightException;',
+            $this->controllerSource
+        );
+    }
+
+    public function testTestActionCatchesTestPreflightException(): void
+    {
+        // sendTest() may throw when no viable Twig context can be resolved;
+        // the controller must surface the message as a JSON failure rather
+        // than letting the exception bubble to a 500
+        $this->assertMatchesRegularExpression(
+            '/actionTest[\s\S]*?try\s*\{[\s\S]*?messages->sendTest[\s\S]*?\}\s*catch\s*\(\s*TestPreflightException\s+\$e\s*\)/',
+            $this->controllerSource
+        );
+    }
+
+    public function testTestActionReturnsExceptionMessageInJson(): void
+    {
+        // The frontend JS reads response.message; the preflight branch must
+        // surface the exception's translated message verbatim
+        $this->assertMatchesRegularExpression(
+            "/actionTest[\s\S]*?catch[\s\S]*?'message'\s*=>\s*\\\$e->getMessage\(\)/",
+            $this->controllerSource
+        );
+    }
+
     // ========================================================================= //
     // Manual-send action
     // ========================================================================= //

@@ -270,10 +270,12 @@ return [
 
     // Test notification (UI)
     'Send a test message'           => '发送测试消息',
-    'Are you certain you want to send a test notification?\\n\\nThe configured message will be sent to the configured recipient(s).' => '确定要发送测试通知吗?\\n\\n配置的消息将发送给配置的收件人。',
+    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => '发送真实的测试通知?\\n\\n⚠️ 使用真实数据的随机样本。\\n⚠️ 通过配置的渠道发送真实消息。\\n⚠️ 发送给配置的真实收件人。',
     'Test'                          => '测试',
     'Test notification dispatched.' => '已发送测试通知。',
     'No messages were dispatched. Check the recipient configuration.' => '未发送任何消息。请检查收件人配置。',
+    'Unable to send test: the feed could not be read or has no items.' => '无法发送测试：无法读取订阅源或没有条目。',
+    'Unable to send test: no element matches the configured filters.' => '无法发送测试：没有元素与配置的筛选器匹配。',
 
     // Settings: save / test action responses
     "Couldn't save settings."                 => '无法保存设置。',
