@@ -1,5 +1,5 @@
 {# Render the test-send button into the CP screen's additional-buttons slot #}
-{% if notification.id and currentUser.can('notifier-testNotifications') %}
+{% if notification.id and not notification.isUnpublishedDraft and currentUser.can('notifier-testNotifications') %}
     {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\TestNotificationAsset') %}
     <button type="button" class="btn"
             data-notifier-test-id="{{ notification.id }}"

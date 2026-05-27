@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Changed
+- Hide the "Send a test message" button until notification has been saved at least once.
+
 ### Fixed
 - Protect against uninstalled plugins with remaining composer packages.
 
