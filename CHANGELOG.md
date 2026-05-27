@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Protect against uninstalled plugins with remaining composer packages.
+
 ## 3.0.1 - 2026-05-27
 
 ### Fixed

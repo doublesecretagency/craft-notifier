@@ -65,17 +65,17 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $allEvents = Options::ALL_EVENTS;
 
         // Hide Commerce Order events if Craft Commerce is not installed
-        if (!class_exists('craft\\commerce\\elements\\Order')) {
+        if (!$this->_pluginInstalled('craft\\commerce\\elements\\Order', 'commerce')) {
             unset($eventTypes['craft-commerce-orders'], $eventTypeGrouped['craft-commerce-orders'], $allEvents['craft-commerce-orders']);
         }
 
         // Hide Commerce Product events if Craft Commerce is not installed
-        if (!class_exists('craft\\commerce\\elements\\Product')) {
+        if (!$this->_pluginInstalled('craft\\commerce\\elements\\Product', 'commerce')) {
             unset($eventTypes['craft-commerce-products'], $eventTypeGrouped['craft-commerce-products'], $allEvents['craft-commerce-products']);
         }
 
         // Hide Digital Products events if the plugin is not installed
-        if (!class_exists('craft\\digitalproducts\\elements\\Product')) {
+        if (!$this->_pluginInstalled('craft\\digitalproducts\\elements\\Product', 'digital-products')) {
             unset(
                 $eventTypes['digital-products-products'],
                 $eventTypes['digital-products-licenses'],
@@ -87,7 +87,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         }
 
         // Hide Solspace Calendar events if the plugin is not installed
-        if (!class_exists('Solspace\\Calendar\\Elements\\Event')) {
+        if (!$this->_pluginInstalled('Solspace\\Calendar\\Elements\\Event', 'calendar')) {
             unset($eventTypes['solspace-calendar-events'], $eventTypeGrouped['solspace-calendar-events'], $allEvents['solspace-calendar-events']);
         }
 
@@ -216,6 +216,24 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
         // Return field options
         return $fieldOptions;
+    }
+
+    /**
+     * Check whether a third-party plugin is currently active.
+     *
+     * @param string $class FQCN to autoload-check.
+     * @param string $handle Craft plugin handle to runtime-check.
+     * @return bool
+     */
+    private function _pluginInstalled(string $class, string $handle): bool
+    {
+        // If the class is not loadable, bail
+        if (!class_exists($class)) {
+            return false;
+        }
+
+        // Check whether the plugin has a live, booted instance
+        return Craft::$app->getPlugins()->getPlugin($handle) !== null;
     }
 
     // ========================================================================= //
@@ -369,7 +387,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $productTypes = [];
 
         // If Craft Commerce is not installed, return empty
-        if (!class_exists('craft\\commerce\\Plugin')) {
+        if (!$this->_pluginInstalled('craft\\commerce\\Plugin', 'commerce')) {
             return $productTypes;
         }
 
@@ -394,7 +412,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $productTypes = [];
 
         // If Digital Products is not installed, return empty
-        if (!class_exists('craft\\digitalproducts\\Plugin')) {
+        if (!$this->_pluginInstalled('craft\\digitalproducts\\Plugin', 'digital-products')) {
             return $productTypes;
         }
 
@@ -419,7 +437,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $calendars = [];
 
         // If Solspace Calendar is not installed, return empty
-        if (!class_exists('Solspace\\Calendar\\Calendar')) {
+        if (!$this->_pluginInstalled('Solspace\\Calendar\\Calendar', 'calendar')) {
             return $calendars;
         }
 
