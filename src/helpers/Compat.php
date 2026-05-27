@@ -97,4 +97,32 @@ abstract class Compat
         return static::isCraft5() ? 'metaSidebarTemplate' : 'sidebarTemplate';
     }
 
+    /**
+     * Resolve the correct condition-rules registration event name for the active Craft version.
+     *
+     * Craft 5 dispatches `BaseCondition::EVENT_REGISTER_CONDITION_RULES` (`'registerConditionRules'`).
+     * Craft 4 dispatched `BaseCondition::EVENT_REGISTER_CONDITION_RULE_TYPES` (`'registerConditionRuleTypes'`).
+     *
+     * @return string
+     */
+    public static function conditionRulesEventName(): string
+    {
+        return static::isCraft5() ? 'registerConditionRules' : 'registerConditionRuleTypes';
+    }
+
+    /**
+     * Resolve the correct event property name carrying the condition rules array.
+     *
+     * Craft 5's `RegisterConditionRulesEvent` exposes `$conditionRules`.
+     * Craft 4's `RegisterConditionRuleTypesEvent` exposed `$conditionRuleTypes`.
+     *
+     * Read and write through the resolved name: `$event->{Compat::conditionRulesPropertyName()}`.
+     *
+     * @return string
+     */
+    public static function conditionRulesPropertyName(): string
+    {
+        return static::isCraft5() ? 'conditionRules' : 'conditionRuleTypes';
+    }
+
 }

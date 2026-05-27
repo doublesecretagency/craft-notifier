@@ -501,10 +501,12 @@ class Notification extends Element
         // Render as a <div>; the edit page is already a <form> and nested forms break htmx
         $condition->mainTag = 'div';
 
-        // Scope to selected entry types when present, otherwise fall back to all layouts
-        $layouts = $this->_resolveConditionFieldLayouts($forEventType);
-        if ($layouts) {
-            $condition->setFieldLayouts($layouts);
+        // Scope to selected entry types when present (Craft 5 only; Craft 4 falls back to all layouts)
+        if (Compat::isCraft5()) {
+            $layouts = $this->_resolveConditionFieldLayouts($forEventType);
+            if ($layouts) {
+                $condition->setFieldLayouts($layouts);
+            }
         }
 
         return $condition;

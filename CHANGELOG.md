@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Improved Craft 4 compatibility.
+
 ## 3.0.0 - 2026-05-26
 
 ### Added

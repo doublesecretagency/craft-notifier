@@ -16,7 +16,6 @@ use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\base\Model;
 use craft\base\Plugin;
-use craft\base\conditions\BaseCondition;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\Product as CommerceProduct;
 use craft\digitalproducts\elements\License;
@@ -28,7 +27,6 @@ use craft\events\DefineMenuItemsEvent;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterElementActionsEvent;
-use craft\events\RegisterConditionRulesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\UrlHelper;
@@ -621,14 +619,11 @@ JS, [
             TextFieldConditionRule::class        => NotifierTextFieldConditionRule::class,
             LightswitchFieldConditionRule::class => NotifierLightswitchFieldConditionRule::class,
             NumberFieldConditionRule::class      => NotifierNumberFieldConditionRule::class,
-            MoneyFieldConditionRule::class       => NotifierMoneyFieldConditionRule::class,
             DateFieldConditionRule::class        => NotifierDateFieldConditionRule::class,
             OptionsFieldConditionRule::class     => NotifierOptionsFieldConditionRule::class,
             CountryFieldConditionRule::class     => NotifierCountryFieldConditionRule::class,
-            LinkFieldConditionRule::class        => NotifierLinkFieldConditionRule::class,
             RelationalFieldConditionRule::class  => NotifierRelationalFieldConditionRule::class,
             EmptyFieldConditionRule::class       => NotifierEmptyFieldConditionRule::class,
-            GeneratedFieldConditionRule::class   => NotifierGeneratedFieldConditionRule::class,
             // Native attribute rules
             TitleConditionRule::class            => NotifierTitleConditionRule::class,
             SlugConditionRule::class             => NotifierSlugConditionRule::class,
@@ -642,21 +637,32 @@ JS, [
             TypeConditionRule::class             => NotifierTypeConditionRule::class,
         ];
 
+        // Notifier subclasses for these extend Craft 5 only parent classes
+        if (Compat::isCraft5()) {
+            $swaps[MoneyFieldConditionRule::class]     = NotifierMoneyFieldConditionRule::class;
+            $swaps[LinkFieldConditionRule::class]      = NotifierLinkFieldConditionRule::class;
+            $swaps[GeneratedFieldConditionRule::class] = NotifierGeneratedFieldConditionRule::class;
+        }
+
+        // Get the property name carrying the rules array
+        $rulesProp = Compat::conditionRulesPropertyName();
+
+        // Closure stays untyped because event class differs between Craft 4 and 5
         Event::on(
             NotifierEntryCondition::class,
-            BaseCondition::EVENT_REGISTER_CONDITION_RULES,
-            static function (RegisterConditionRulesEvent $event) use ($swaps) {
+            Compat::conditionRulesEventName(),
+            static function ($event) use ($swaps, $rulesProp) {
                 // Walk the rules array and rewrite each entry's `class` when it's
                 // a Craft per-field rule we have a Notifier subclass for
-                foreach ($event->conditionRules as $i => $rule) {
+                foreach ($event->{$rulesProp} as $i => $rule) {
                     $class = (is_array($rule) ? ($rule['class'] ?? null) : $rule);
                     if (!$class || !isset($swaps[$class])) {
                         continue;
                     }
                     if (is_array($rule)) {
-                        $event->conditionRules[$i]['class'] = $swaps[$class];
+                        $event->{$rulesProp}[$i]['class'] = $swaps[$class];
                     } else {
-                        $event->conditionRules[$i] = $swaps[$class];
+                        $event->{$rulesProp}[$i] = $swaps[$class];
                     }
                 }
             }
