@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.0.2 - 2026-05-28
 
 ### Changed
 - "Send a test message" now tests against real data.
