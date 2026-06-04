@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -21,7 +21,8 @@ use Throwable;
 use yii\base\Exception;
 
 /**
- * m240310_192157_from_beta migration
+ * Upgrades installs from the beta schema.
+ *
  * @since 1.0.0
  */
 class m240310_192157_from_beta extends Migration

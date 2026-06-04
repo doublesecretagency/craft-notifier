@@ -4,7 +4,7 @@
 <div class="message-type-sms hidden">
     {{ forms.selectField({
         label: "User's Phone Number Field"|t('notifier'),
-        instructions: fieldInstructions|t('notifier', {'type' : 'phone number'}),
+        instructions: "Select which User field contains the recipient's phone number."|t('notifier'),
         id: 'messageConfig-smsField',
         name: 'messageConfig[smsField]',
         value: (notification.messageConfig.smsField ?? null),

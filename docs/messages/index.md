@@ -27,7 +27,7 @@ Your template is a standard Twig template, so you can use any normal Twig you'd 
 
 ## Customizing the message body
 
-Additionally, a collection of [special variables](/messages/variables) are available within the Twig context. These variables can be used to create highly customized notification messages.
+Additionally, a collection of [special variables](/messages/variables/) are available within the Twig context. These variables can be used to create highly customized notification messages.
 
 ## Stop a message from being sent
 

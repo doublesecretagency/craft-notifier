@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -21,19 +21,20 @@ use Twilio\Exceptions\TwilioException;
 use Twilio\Rest\Client;
 
 /**
- * Class OutboundSms
+ * Envelope for an outbound SMS (text) message.
+ *
  * @since 1.0.0
  */
 class OutboundSms extends BaseEnvelope
 {
 
     /**
-     * @var string|null
+     * @var string|null Recipient phone number.
      */
     public ?string $phoneNumber = null;
 
     /**
-     * @var string
+     * @var string Rendered message body.
      */
     public string $message = '';
 
@@ -56,7 +57,7 @@ class OutboundSms extends BaseEnvelope
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        // Check if any part of credentials are missing
+        // Initialize the list of missing credentials
         $missing = [];
 
         // Check each value exists
@@ -113,7 +114,7 @@ class OutboundSms extends BaseEnvelope
         // Attempt to send SMS message
         try {
 
-            // Initialize Twilio client
+            // Build the Twilio client
             $twilio = new Client(
                 App::parseEnv($settings->twilioAccountSid),
                 App::parseEnv($settings->twilioAuthToken)

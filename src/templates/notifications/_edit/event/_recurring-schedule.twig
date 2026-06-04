@@ -1,0 +1,172 @@
+{% import '_includes/forms' as forms %}
+
+{# Get the next-run preview #}
+{% set schedule = notifierNextRun(notification.eventConfig) %}
+
+{# Get the schedule config #}
+{% set config = schedule.config %}
+
+{# Set per-type field name to avoid collisions across multiple tabs #}
+{% set rsId = "recurringSchedule_#{eventType}" %}
+
+{# Days of the week (Craft translations, ISO-8601, 1=Monday) #}
+{% set daysOfWeek = {
+    1: 'Monday'|t('app'),
+    2: 'Tuesday'|t('app'),
+    3: 'Wednesday'|t('app'),
+    4: 'Thursday'|t('app'),
+    5: 'Friday'|t('app'),
+    6: 'Saturday'|t('app'),
+    7: 'Sunday'|t('app'),
+} %}
+
+{# Months of the year (Craft translations, 1=January) #}
+{% set monthsOfYear = {
+    1: 'January'|t('app'),
+    2: 'February'|t('app'),
+    3: 'March'|t('app'),
+    4: 'April'|t('app'),
+    5: 'May'|t('app'),
+    6: 'June'|t('app'),
+    7: 'July'|t('app'),
+    8: 'August'|t('app'),
+    9: 'September'|t('app'),
+    10: 'October'|t('app'),
+    11: 'November'|t('app'),
+    12: 'December'|t('app'),
+} %}
+
+{# Cadence summary words (singular, plural) per unit, mirrored by the JS #}
+{% set cadenceWords = {
+    daily:   ['day'|t('notifier'),   'days'|t('notifier')],
+    weekly:  ['week'|t('notifier'),  'weeks'|t('notifier')],
+    monthly: ['month'|t('notifier'), 'months'|t('notifier')],
+    yearly:  ['year'|t('notifier'),  'years'|t('notifier')],
+} %}
+{% set cadenceWord = (cadenceWords[config.frequency] ?? cadenceWords.weekly) %}
+{% set cadence = (config.interval == 1) ? cadenceWord[0] : "#{config.interval} #{cadenceWord[1]}" %}
+
+{% set scheduleInput %}
+    <div class="notifier-recurring-schedule" data-locale="{{ schedule.locale }}" data-timezone="{{ schedule.timezone }}" data-readonly="{{ (readOnly ?? false) ? '1' }}">
+        {# Interval count #}
+        <div class="notifier-recurring-interval">
+            <span class="notifier-recurring-label">{{ 'Every'|t('notifier') }}</span>
+            {{ forms.text({
+                type: 'number',
+                min: 1,
+                name: "#{rsId}[interval]",
+                value: config.interval,
+                disabled: (readOnly ?? false),
+            }) }}
+        </div>
+        {# Unit dropdown #}
+        <div class="notifier-recurring-frequency">
+            {{ forms.select({
+                name: "#{rsId}[frequency]",
+                value: config.frequency,
+                options: {
+                    daily: 'day(s)'|t('notifier'),
+                    weekly: 'week(s)'|t('notifier'),
+                    monthly: 'month(s)'|t('notifier'),
+                    yearly: 'year(s)'|t('notifier'),
+                },
+                disabled: (readOnly ?? false),
+            }) }}
+        </div>
+        {# Day of the week (visible only for weekly) #}
+        <div class="recurring-frequency-weekly {{ 'weekly' != config.frequency ? 'hidden' }}">
+            <span class="notifier-recurring-label">{{ 'on'|t('notifier') }}</span>
+            {{ forms.select({
+                name: "#{rsId}[dayOfWeek]",
+                value: config.dayOfWeek,
+                options: daysOfWeek,
+                disabled: (readOnly ?? false),
+            }) }}
+        </div>
+        {# Day of the month (visible only for monthly) #}
+        <div class="recurring-frequency-monthly {{ 'monthly' != config.frequency ? 'hidden' }}">
+            <span class="notifier-recurring-label">{{ 'on day'|t('notifier') }}</span>
+            {{ forms.text({
+                type: 'number',
+                min: 1,
+                max: 28,
+                name: "#{rsId}[dayOfMonth]",
+                value: config.dayOfMonth,
+                disabled: (readOnly ?? false),
+            }) }}
+        </div>
+        {# Month and day (visible only for yearly) #}
+        <div class="recurring-frequency-yearly {{ 'yearly' != config.frequency ? 'hidden' }}">
+            <span class="notifier-recurring-label">{{ 'on'|t('notifier') }}</span>
+            {{ forms.select({
+                name: "#{rsId}[pinMonth]",
+                value: config.pinMonth,
+                options: monthsOfYear,
+                disabled: (readOnly ?? false),
+            }) }}
+            {{ forms.text({
+                type: 'number',
+                min: 1,
+                max: 28,
+                name: "#{rsId}[dayOfMonth]",
+                value: config.dayOfMonth,
+                disabled: (readOnly ?? false),
+            }) }}
+        </div>
+        {# Time (always visible) #}
+        <span class="notifier-recurring-label">{{ 'at'|t('notifier') }}</span>
+        {{ forms.text({
+            type: 'time',
+            name: "#{rsId}[time]",
+            value: config.time,
+            disabled: (readOnly ?? false),
+        }) }}
+    </div>
+    {# Start date on its own line #}
+    <div class="notifier-recurring-start">
+        <span class="notifier-recurring-label">{{ 'Starting on'|t('notifier') }}</span>
+        {{ forms.text({
+            type: 'date',
+            name: "#{rsId}[startDate]",
+            value: (config.startDate ?: now|date('Y-m-d')),
+            disabled: (readOnly ?? false),
+        }) }}
+    </div>
+{% endset %}
+
+{# Wrap the field and the next-run preview so the JS can pair them #}
+<div class="notifier-recurring-wrapper">
+    <hr>
+    {{ forms.field({
+        label: 'Configure Recurring Schedule'|t('notifier'),
+        instructions: 'On what recurring schedule should the notification be sent?'|t('notifier'),
+        tip: 'System timezone set to {timezone}'|t('notifier', { timezone: schedule.timezone }),
+    }, scheduleInput) }}
+    {# Preview upcoming runs #}
+    <div class="notifier-recurring-next-title">{{ 'Notifications will be sent on the following schedule...'|t('notifier') }}</div>
+    <div class="notifier-recurring-next" data-iso="{{ schedule.iso }}">
+        <table class="notifier-recurring-runs">
+            <thead>
+                <tr>
+                    <th>{{ 'Day'|t('notifier') }}</th>
+                    <th>{{ 'Date'|t('notifier') }}</th>
+                    <th>{{ 'Time'|t('notifier') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {# First run is shown by default; the rest fill in as you edit #}
+                <tr>
+                    <td class="run-day">{{ schedule.iso|date('l', schedule.timezone) }}</td>
+                    <td class="run-date">{{ schedule.iso|date('F j, Y', schedule.timezone) }}</td>
+                    <td class="run-time">{{ schedule.iso|date('g:i A', schedule.timezone) }}</td>
+                </tr>
+                <tr><td class="run-day"></td><td class="run-date"></td><td class="run-time"></td></tr>
+                <tr><td class="run-day"></td><td class="run-date"></td><td class="run-time"></td></tr>
+                <tr><td class="run-day"></td><td class="run-date"></td><td class="run-time"></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="notifier-recurring-next-title">{{ '... and every {cadence} after that.'|t('notifier', {
+        cadence: "<span class=\"notifier-recurring-cadence\">#{cadence}</span>",
+    })|raw }}</div>
+</div>

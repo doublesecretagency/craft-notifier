@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -24,21 +24,34 @@ use yii\base\Event;
  */
 class NewElementFilter extends BaseElementFilter
 {
+
+    /**
+     * @inheritdoc
+     */
     public static function displayName(): string
     {
         return Craft::t('notifier', 'Element is new');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleYes(): string
     {
         return Craft::t('notifier', 'New elements only');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleNo(): string
     {
         return Craft::t('notifier', 'Existing elements only');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function check(Event $event, bool $value): bool
     {
         if (
@@ -50,4 +63,5 @@ class NewElementFilter extends BaseElementFilter
 
         return true;
     }
+
 }

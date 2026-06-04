@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,7 +15,7 @@ use craft\base\ComponentInterface;
 use yii\base\Event;
 
 /**
- * Filter Interface
+ * Contract for an event filter.
  *
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
@@ -61,7 +61,7 @@ interface FilterInterface extends ComponentInterface
     public static function defaultValue(): ?bool;
 
     /**
-     * Returns whether the filter should be shown for the given class and event.
+     * Whether the filter should be shown for the given class and event.
      *
      * @param string $class
      * @param string $event
@@ -70,7 +70,7 @@ interface FilterInterface extends ComponentInterface
     public static function show(string $class, string $event): bool;
 
     /**
-     * Returns whether the event passes the filter.
+     * Whether the event passes the filter.
      *
      * @param Event $event The event being filtered
      * @param bool $value The filter value

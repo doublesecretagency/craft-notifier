@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,16 +14,22 @@ namespace doublesecretagency\notifier\elements\db;
 use craft\elements\db\ElementQuery;
 
 /**
- * Notification query
+ * Element query for fetching notifications.
+ *
  * @since 1.0.0
  */
 class NotificationQuery extends ElementQuery
 {
 
+    /**
+     * @inheritdoc
+     */
     protected function beforePrepare(): bool
     {
+        // Join the notifications table
         $this->joinElementTable('{{%notifier_notifications}}');
 
+        // Select the notification columns
         $this->query->select([
             'notifier_notifications.id',
             'notifier_notifications.description',
@@ -34,9 +40,9 @@ class NotificationQuery extends ElementQuery
             'notifier_notifications.messageConfig',
             'notifier_notifications.recipientsType',
             'notifier_notifications.recipientsConfig',
-
         ]);
 
+        // Return the prepared query
         return parent::beforePrepare();
     }
 

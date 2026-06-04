@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,13 +14,7 @@ namespace doublesecretagency\notifier\migrations;
 use craft\db\Migration;
 
 /**
- * m260519_120000_trackscheduled migration
- *
- * Creates the table that tracks when each scheduled notification was last
- * run. The schedule runner reads each row's `lastRunAt`, finds any elements
- * whose date crossed since then, sends a message for each, and advances
- * the timestamp. That timestamp is what guarantees each crossing fires
- * exactly once.
+ * Creates the table that tracks when each scheduled notification last ran.
  *
  * @since 3.0.0
  */

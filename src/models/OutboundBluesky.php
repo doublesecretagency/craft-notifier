@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -27,7 +27,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use Throwable;
 
 /**
- * Class OutboundBluesky
+ * Envelope for an outbound Bluesky post.
+ *
  * @since 3.0.0
  */
 class OutboundBluesky extends BaseEnvelope
@@ -165,9 +166,7 @@ class OutboundBluesky extends BaseEnvelope
     // ========================================================================= //
 
     /**
-     * Stash for the most recent publish status code (used by retry-on-401 path).
-     *
-     * @var int|null
+     * @var int|null Most recent publish status code (used by the retry-on-401 path).
      */
     private ?int $_lastStatus = null;
 
@@ -332,7 +331,7 @@ class OutboundBluesky extends BaseEnvelope
                 $payload = Json::decodeIfJson($body);
                 $reason = (is_array($payload) ? ($payload['message'] ?? "HTTP {$status}") : "HTTP {$status}");
 
-                // For 401, surface as auth failure for log clarity
+                // For 401, log as an auth failure for clarity
                 if (401 === $status) {
                     $notification->log->error(Craft::t('notifier', 'Bluesky auth failed: {reason}', ['reason' => $reason]), $this->envelopeId);
                 } else {

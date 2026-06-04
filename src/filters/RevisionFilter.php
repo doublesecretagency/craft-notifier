@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -23,32 +23,51 @@ use craft\helpers\ElementHelper;
  */
 class RevisionFilter extends BaseElementFilter
 {
+
+    /**
+     * @inheritdoc
+     */
     public static function displayName(): string
     {
         return Craft::t('notifier', 'Element is a revision');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleYes(): string
     {
         return Craft::t('notifier', 'Must be a revision');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleNo(): string
     {
         return Craft::t('notifier', 'Must not be a revision');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleIgnore(): string
     {
         return Craft::t('notifier', 'Can be a revision or non-revision');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function defaultValue(): ?bool
     {
         // Prohibit revisions by default
         return false;
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function excludes(): array
     {
         return [
@@ -58,9 +77,13 @@ class RevisionFilter extends BaseElementFilter
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function checkElement(ElementInterface $element, bool $value): bool
     {
         $root = ElementHelper::rootElement($element);
         return $root->getIsRevision() === $value;
     }
+
 }

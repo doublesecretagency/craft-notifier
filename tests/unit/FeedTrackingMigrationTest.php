@@ -77,7 +77,7 @@ class FeedTrackingMigrationTest extends TestCase
     {
         // Tracking rows are append-only internal bookkeeping; no dateCreated /
         // dateUpdated / uid because they would never be read and the table
-        // can stay narrow. Mirrors the notifier_trackscheduled shape.
+        // can stay narrow. Mirrors the notifier_trackdates shape.
         $this->assertDoesNotMatchRegularExpression(
             "/'dateCreated'\s*=>/",
             $this->migrationSource

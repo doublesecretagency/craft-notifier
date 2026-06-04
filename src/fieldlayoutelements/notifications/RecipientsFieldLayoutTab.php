@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,7 +15,8 @@ use Craft;
 use craft\models\FieldLayoutTab;
 
 /**
- * Recipients field layout tab
+ * Recipients tab in the notification editor.
+ *
  * @since 1.1.0
  */
 class RecipientsFieldLayoutTab extends FieldLayoutTab

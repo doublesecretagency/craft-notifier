@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -16,11 +16,9 @@ use craft\elements\conditions\StatusConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedAttributeOperator;
 
 /**
- * Class NotifierStatusConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Status rule's operators.
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for the Status rule.
+ * @since 3.0.0
  */
 class NotifierStatusConditionRule extends StatusConditionRule
 {

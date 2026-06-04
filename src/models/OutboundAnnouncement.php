@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -19,7 +19,8 @@ use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\helpers\Notifier;
 
 /**
- * Class OutboundAnnouncement
+ * Envelope for an outbound announcement.
+ *
  * @since 1.0.0
  */
 class OutboundAnnouncement extends BaseEnvelope
@@ -36,12 +37,12 @@ class OutboundAnnouncement extends BaseEnvelope
     public ?int $pluginId = null;
 
     /**
-     * @var string
+     * @var string Announcement heading.
      */
     public string $title = '';
 
     /**
-     * @var string
+     * @var string Announcement body.
      */
     public string $message = '';
 

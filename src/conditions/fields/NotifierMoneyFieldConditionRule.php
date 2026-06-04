@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,11 +15,9 @@ use craft\fields\conditions\MoneyFieldConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedOperator;
 
 /**
- * Class NotifierMoneyFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Money field rule's operators.
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for Money field rules.
+ * @since 3.0.0
  */
 class NotifierMoneyFieldConditionRule extends MoneyFieldConditionRule
 {

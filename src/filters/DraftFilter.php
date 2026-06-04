@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -23,32 +23,51 @@ use craft\helpers\ElementHelper;
  */
 class DraftFilter extends BaseElementFilter
 {
+
+    /**
+     * @inheritdoc
+     */
     public static function displayName(): string
     {
         return Craft::t('notifier', 'Element is a draft');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleYes(): string
     {
         return Craft::t('notifier', 'Must be a draft');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleNo(): string
     {
         return Craft::t('notifier', 'Must not be a draft');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleIgnore(): string
     {
         return Craft::t('notifier', 'Can be a draft or non-draft');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function defaultValue(): ?bool
     {
         // Prohibit drafts by default
         return false;
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function excludes(): array
     {
         return [
@@ -57,9 +76,13 @@ class DraftFilter extends BaseElementFilter
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function checkElement(ElementInterface $element, bool $value): bool
     {
         $root = ElementHelper::rootElement($element);
         return $root->getIsDraft() === $value;
     }
+
 }

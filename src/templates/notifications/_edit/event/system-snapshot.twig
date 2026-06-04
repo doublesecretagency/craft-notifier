@@ -1,0 +1,20 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-system-snapshot hidden">
+    {{ forms.lightswitchField({
+        label: 'Send on a Recurring Schedule'|t('notifier'),
+        instructions: 'Whether the message should be sent on a schedule, or only triggered manually.'|t('notifier'),
+        tip: 'The message can always be sent using the "Send system snapshot" button above.'|t('notifier'),
+        id: 'recurring-system-snapshot',
+        name: 'recurring_system-snapshot',
+        offLabel: "Manual only"|t('notifier'),
+        onLabel: "Scheduled sending"|t('notifier'),
+        on: (notification.eventConfig.recurring ?? false),
+        toggle: 'recurring-schedule-system-snapshot',
+    }) }}
+    <div id="recurring-schedule-system-snapshot" class="{% if not (notification.eventConfig.recurring ?? false) %}hidden{% endif %}">
+        {% include 'notifier/notifications/_edit/event/_recurring-schedule' with { eventType: 'system-snapshot' } %}
+    </div>
+    {# Hidden input goes last so the first visible field keeps :first-child (and Craft's margin reset) #}
+    <input type="hidden" name="event[system-snapshot]" value="compile">
+</div>

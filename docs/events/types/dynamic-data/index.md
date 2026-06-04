@@ -1,0 +1,78 @@
+---
+description: Send a notification with data you build yourself in a Twig snippet.
+---
+
+# Dynamic Data
+
+Sends a compiled report with custom-crafted data, on demand and/or on a recurring schedule.
+
+<img class="dropshadow" src="/images/events/event-dynamic-data.png" alt="" style="width:646px; margin-top:10px; margin-bottom:36px">
+
+Dynamic Data lets you **construct a custom data set**. You write a Twig snippet which gathers whatever content you need, push the values into a `data` variable via the `{% setData %}` tag, then read them back within the message body.
+
+## Configuring Dynamic Data
+
+The snippet **must** call the `{% setData %}` tag at least once.
+
+For example, imagine our website has a _song catalog_. The following snippet would gather every song added within the past week, then build a list with each song, band, and album:
+
+**Dynamic data snippet:**
+
+```twig
+{# Get every song added in the past 7 days #}
+{% set songs = craft.entries
+    .section('songs')
+    .dateCreated('>= ' ~ now|date_modify('-7 days')|atom)
+    .all() %}
+
+{# Compile a list of recently added songs #}
+{% set recentSongs = [] %}
+{% for entry in songs %}
+    {% set recentSongs = recentSongs|merge([{
+        song: entry.title,
+        band: entry.band,
+        album: entry.album,
+    }]) %}
+{% endfor %}
+
+{# Prepare data for the message body #}
+{% setData {
+    recentSongs: recentSongs,
+} %}
+```
+
+Then within the message body, we can loop over the array data to list each song:
+
+**Message body snippet:**
+
+```twig
+New songs added this week:
+
+{% for item in data.recentSongs %}
+- {{ item.song }} by {{ item.band }} ({{ item.album }})
+{% endfor %}
+```
+
+### When `{% setData %}` is called multiple times
+
+You can call `{% setData %}` as many times as you'd like. Consecutive calls will _append_ to the `data` variable, so you can build it up in stages if needed. Matching keys will override previously set values.
+
+### When `{% setData %}` is never called
+
+If `{% setData %}` isn't called or the snippet fails to parse, the reason will be logged and Notifier will send **nothing**. Check the [Notification Log](/logging) when a scheduled run doesn't send a message.
+
+### When `{% setData %}` has no (or empty) parameter
+
+To deliberately send a message with an empty dataset, call `{% setData %}` with no value (or an empty value like `{% setData {} %}`).
+
+## Twig Variables
+
+Dynamic data set with `{% setData %}` will be available in the message template under the `data` Twig variable.
+
+See the [Dynamic Data variables](/messages/variables/dynamic-data) for usage and examples.
+
+<!--@include: @/events/types/_sending-reports.md-->
+
+## Permissions
+
+Dynamic data is only editable by users with the [Use the Dynamic Data type](/getting-started/permissions) permission enabled.

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -17,7 +17,8 @@ use craft\fieldlayoutelements\BaseNativeField;
 use doublesecretagency\notifier\elements\Notification;
 
 /**
- * Recipients field layout element
+ * Recipients settings field in the notification editor.
+ *
  * @since 1.1.0
  */
 class RecipientsFieldLayoutElement extends BaseNativeField

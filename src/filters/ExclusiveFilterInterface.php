@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -12,9 +12,7 @@
 namespace doublesecretagency\notifier\filters;
 
 /**
- * Exclusive Filter Interface
- *
- * This can be used by filters which should exclude other filters from being available when this filter is active and enabled.
+ * Marks a filter that excludes other filters while it is active.
  *
  * @see https://github.com/craftcms/webhooks
  * @since 1.1.0
@@ -22,7 +20,7 @@ namespace doublesecretagency\notifier\filters;
 interface ExclusiveFilterInterface extends FilterInterface
 {
     /**
-     * Returns any filters that should be disabled if this filter is active and enabled.
+     * Get any filters to disable while this filter is active and enabled.
      *
      * @return string[]
      */

@@ -60,7 +60,7 @@ class NotificationDateReachedConfigTest extends TestCase
         // afterSave guarantees the scheduled-history row for a scheduled
         // notification, rather than leaving it to the runner's lazy seed.
         $this->assertStringContainsString('_ensureScheduleTracking(', $this->notificationSource);
-        $this->assertStringContainsString('{{%notifier_trackscheduled}}', $this->notificationSource);
+        $this->assertStringContainsString('{{%notifier_trackdates}}', $this->notificationSource);
     }
 
     public function testScheduledHistorySeedGuardsOnScheduledEvents(): void

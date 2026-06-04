@@ -18,7 +18,7 @@ Activation is a separate trigger, the two notifications never fire together for 
 
 ## Twig variables
 
-The `object` variable (and its `user` alias) is the updated [User](https://docs.craftcms.com/api/v5/craft-elements-user.html). The pre-save copy is available as [`original`](/messages/variables#fetching-the-original-element), which is useful for change-detection.
+The `object` variable (and its `user` alias) is the updated [User](https://docs.craftcms.com/api/v5/craft-elements-user.html). The pre-save copy is available as [`original`](/messages/variables/element-events#fetching-the-original-element), which is useful for change-detection.
 
 ```twig
 {{ user.fullName }}'s profile was just updated.

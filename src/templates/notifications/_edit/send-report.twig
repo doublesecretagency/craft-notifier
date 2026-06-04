@@ -1,0 +1,13 @@
+{# Render the "Send" button for the report event types (always available once saved) #}
+{% if notification.id and not notification.isUnpublishedDraft and currentUser.can('notifier-sendManualNotifications') %}
+    {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\ReportNotificationAsset') %}
+    {# Per-type button label #}
+    {% set sendLabel = ('system-snapshot' == notification.eventType)
+        ? 'Send system snapshot'|t('notifier')
+        : 'Send data report'|t('notifier') %}
+    <button type="button" class="btn"
+            data-notifier-send-id="{{ notification.id }}"
+            data-notifier-send-confirm="{{ 'Are you sure you want to send this notification?'|t('notifier') }}">
+        {{ sendLabel }}
+    </button>
+{% endif %}

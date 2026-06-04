@@ -19,7 +19,7 @@ This event can be triggered by:
 
 ## Twig variables
 
-The `object` variable (and its `asset` alias) is the moved [Asset](https://docs.craftcms.com/api/v5/craft-elements-asset.html) at its new location. The pre-move copy is available as [`original`](/messages/variables#fetching-the-original-element), which carries the old `folder`, `volume`, and path values for before/after comparison.
+The `object` variable (and its `asset` alias) is the moved [Asset](https://docs.craftcms.com/api/v5/craft-elements-asset.html) at its new location. The pre-move copy is available as [`original`](/messages/variables/element-events#fetching-the-original-element), which carries the old `folder`, `volume`, and path values for before/after comparison.
 
 ```twig
 {{ asset.filename }} was moved from "{{ original.folder.name }}" to "{{ asset.folder.name }}".

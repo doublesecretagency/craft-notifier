@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -56,21 +56,21 @@ class NotificationEditReadOnlyTest extends TestCase
     // Filter button group: pointer-events guard in readonly stylesheet
     // ========================================================================= //
 
-    public function testIndexTemplatePinsBtngroupPointerEventsRule(): void
+    public function testReadonlyStylesheetPinsBtngroupPointerEventsRule(): void
     {
         // Without `pointer-events: none`, the filter button group still
         // accepts clicks even when the parent fieldset is disabled.
-        $source = self::read('src/templates/notifications/_edit/index.twig');
+        $source = self::read('src/web/assets/src/sass/notification-editor.scss');
         $this->assertMatchesRegularExpression(
             '/\.notifier-edit-fieldset--readonly\s+\.btngroup\s*\{[^}]*pointer-events:\s*none/s',
             $source
         );
     }
 
-    public function testIndexTemplateBtngroupRuleDimsAndShowsForbiddenCursor(): void
+    public function testReadonlyStylesheetBtngroupRuleDimsAndShowsForbiddenCursor(): void
     {
         // Visual cues that match the existing readonly idiom for native controls.
-        $source = self::read('src/templates/notifications/_edit/index.twig');
+        $source = self::read('src/web/assets/src/sass/notification-editor.scss');
         $this->assertMatchesRegularExpression(
             '/\.notifier-edit-fieldset--readonly\s+\.btngroup\s*\{[^}]*opacity:\s*0\.75/s',
             $source
@@ -85,13 +85,13 @@ class NotificationEditReadOnlyTest extends TestCase
     // Stray h3 separator: hidden in read-only mode
     // ========================================================================= //
 
-    public function testIndexTemplateDropsNestedCheckboxH3BorderInReadOnlyMode(): void
+    public function testReadonlyStylesheetDropsNestedCheckboxH3BorderInReadOnlyMode(): void
     {
         // The h3 carries a right border to separate the heading from the
         // "Select All" link. With the link absent in read-only mode, the
         // border becomes a stray vertical bar; the readonly stylesheet
         // must drop it.
-        $source = self::read('src/templates/notifications/_edit/index.twig');
+        $source = self::read('src/web/assets/src/sass/notification-editor.scss');
         $this->assertMatchesRegularExpression(
             '/\.notifier-edit-fieldset--readonly\s+\.nested-checkboxes\s+h3\s*\{[^}]*border-right:\s*0/s',
             $source

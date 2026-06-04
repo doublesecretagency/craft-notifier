@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -26,7 +26,8 @@ use yii\base\Event;
 use yii\db\IntegrityException;
 
 /**
- * Class ScheduleRunner
+ * Fires scheduled notifications once their target date is reached.
+ *
  * @since 3.0.0
  */
 class ScheduleRunner extends Component
@@ -35,7 +36,7 @@ class ScheduleRunner extends Component
     /**
      * @var string The schedule tracking table name.
      */
-    private const TABLE = '{{%notifier_trackscheduled}}';
+    private const TABLE = '{{%notifier_trackdates}}';
 
     /**
      * Run the schedule.
@@ -44,7 +45,7 @@ class ScheduleRunner extends Component
      */
     public function run(): array
     {
-        // Current moment, in UTC to match stored dates
+        // The current datetime, in UTC to match the stored dates
         $now = new DateTime('now', new DateTimeZone('UTC'));
 
         // Initialize the run summary
@@ -74,7 +75,7 @@ class ScheduleRunner extends Component
     }
 
     /**
-     * Compute the date range to look for on this run.
+     * Get the date range to look for on this run.
      *
      * The start is exclusive and the end is inclusive, so each date fires on exactly one run.
      *
@@ -118,14 +119,14 @@ class ScheduleRunner extends Component
      *
      * @param Notification $notification
      * @param DateTime $now
-     * @return array{0:int,1:int} Tuple of [dispatched elements, successful envelope sends].
+     * @return array Tuple of [dispatched elements, sent].
      */
     private function _runNotification(Notification $notification, DateTime $now): array
     {
         // Get the database service
         $db = Craft::$app->getDb();
 
-        // Format the current moment for the database
+        // Format the current datetime for the database
         $nowDb = Db::prepareDateForDb($now);
 
         // Get the last run time recorded for this notification
@@ -135,9 +136,9 @@ class ScheduleRunner extends Component
             ->where(['notificationId' => $notification->id])
             ->scalar();
 
-        // If this is the first run, record the starting point and dispatch nothing
+        // If this is the first run, record the starting point and bail
         if (false === $lastRunAt) {
-            // A concurrent ping racing the same insert is harmless
+            // An overlapping cron tick racing the same insert is harmless
             try {
                 $db->createCommand()
                     ->insert(self::TABLE, [
@@ -146,12 +147,12 @@ class ScheduleRunner extends Component
                     ])
                     ->execute();
             } catch (IntegrityException) {
-                // Another ping already created this notification's row
+                // Another cron tick already created this notification's row
             }
             return [0, 0];
         }
 
-        // Claim this run window (compare-and-swap guards against concurrent pings)
+        // Claim this run so two overlapping cron ticks can't both fire it
         $claimed = $db->createCommand()
             ->update(
                 self::TABLE,
@@ -160,12 +161,12 @@ class ScheduleRunner extends Component
             )
             ->execute();
 
-        // If another ping already claimed this window, bail
+        // If another cron tick already claimed this run, bail
         if (0 === $claimed) {
             return [0, 0];
         }
 
-        // Resolve the effective date config
+        // Get the effective date config
         $config = $this->_dateConfig($notification);
 
         // If the config is incomplete, bail
@@ -173,7 +174,7 @@ class ScheduleRunner extends Component
             return [0, 0];
         }
 
-        // Determine the date range to look for on this run
+        // Get the date range to look for on this run
         $previousRunAt = new DateTime($lastRunAt, new DateTimeZone('UTC'));
         [$start, $end] = static::targetDateRange($config['direction'], $config['offset'], $previousRunAt, $now);
 
@@ -182,7 +183,7 @@ class ScheduleRunner extends Component
     }
 
     /**
-     * Resolve the effective date config for a scheduled notification.
+     * Get the effective date config for a scheduled notification.
      *
      * @param Notification $notification
      * @return array|null Config with 'field', 'direction', 'offset'; null when incomplete.
@@ -211,17 +212,17 @@ class ScheduleRunner extends Component
     }
 
     /**
-     * Dispatch every element whose target date falls within the run window.
+     * Dispatch every element whose target date falls within the date range.
      *
      * @param Notification $notification
      * @param string $field Date field to compare ('postDate', 'expiryDate', or a custom field handle).
-     * @param DateTime $start Start of the date-field window (exclusive).
-     * @param DateTime $end End of the date-field window (inclusive).
-     * @return array{0:int,1:int} Tuple of [dispatched elements, successful envelope sends].
+     * @param DateTime $start Start of the date range (exclusive).
+     * @param DateTime $end End of the date range (inclusive).
+     * @return array Tuple of [dispatched elements, sent].
      */
     private function _dispatchMatches(Notification $notification, string $field, DateTime $start, DateTime $end): array
     {
-        // Resolve the element class for this notification's event type
+        // Get the element class for this notification's event type
         $elementClass = NotifierPlugin::getInstance()->events->getElementClassForEventType($notification->eventType);
 
         // If the event type is unsupported, bail
@@ -242,7 +243,7 @@ class ScheduleRunner extends Component
         $startParam = (clone $start)->setTimezone($tz)->format('Y-m-d H:i:s');
         $endParam = (clone $end)->setTimezone($tz)->format('Y-m-d H:i:s');
 
-        // Constrain to the target date window (open at start, closed at end)
+        // Constrain to the target date range (open at start, closed at end)
         $query->{$field}([
             'and',
             "> {$startParam}",

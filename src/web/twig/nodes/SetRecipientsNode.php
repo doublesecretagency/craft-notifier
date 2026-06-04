@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,7 +15,8 @@ use Twig\Compiler;
 use Twig\Node\Node;
 
 /**
- * Class SetRecipientsNode
+ * Compiled node for the {% setRecipients %} tag.
+ *
  * @since 3.0.0
  */
 class SetRecipientsNode extends Node

@@ -10,9 +10,7 @@ A future-dated entry stays at the `Pending` status until its Post Date arrives. 
 
 This trigger is functionally equivalent to a ["When a scheduled date is reached"](/events/types/entries/date-reached) notification set to `On` `Post Date`.
 
-:::warning Set up Scheduled Sending
-Before this trigger will fire, you will need to [run the schedule](/getting-started/run-the-schedule) on a recurring basis.
-:::
+<!--@include: @/events/types/_run-the-schedule.md-->
 
 ## Twig variables
 

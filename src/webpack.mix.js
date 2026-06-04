@@ -23,11 +23,16 @@ mix
     .js(`${src}/js/log.js`, `${dist}/js`)
     .js(`${src}/js/nested-checkboxes.js`, `${dist}/js`)
     .js(`${src}/js/test-notification.js`, `${dist}/js`)
+    .js(`${src}/js/report-notification.js`, `${dist}/js`)
+    .js(`${src}/js/event-editor.js`, `${dist}/js`)
+    .js(`${src}/js/notification-editor.js`, `${dist}/js`)
 
     // Compile all Sass
     .sass(`${src}/sass/filters.scss`, `${dist}/css`)
     .sass(`${src}/sass/log.scss`, `${dist}/css`)
     .sass(`${src}/sass/nested-checkboxes.scss`, `${dist}/css`)
+    .sass(`${src}/sass/event-editor.scss`, `${dist}/css`)
+    .sass(`${src}/sass/notification-editor.scss`, `${dist}/css`)
 
     // Disable build notifications
     .disableNotifications()

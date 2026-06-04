@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -47,7 +47,8 @@ use Solspace\Calendar\Elements\conditions\EventCondition as CalendarEventConditi
 use yii\base\Event;
 
 /**
- * Class Events
+ * Registers the events which trigger notifications.
+ *
  * @since 1.0.0
  */
 class Events extends Component
@@ -417,9 +418,9 @@ class Events extends Component
     // ========================================================================= //
 
     /**
-     * Returns all available filter classes.
+     * Get all available filter classes.
      *
-     * @return string[] The available field type classes
+     * @return string[] The available filter classes
      */
     public function getAllFilters(): array
     {
@@ -459,7 +460,7 @@ class Events extends Component
             // Plugins
             'craft-commerce-orders' => class_exists(OrderCondition::class) ? OrderCondition::class : null,
             'craft-commerce-products' => class_exists(CommerceProductCondition::class) ? CommerceProductCondition::class : null,
-            // Digital Products doesn't ship dedicated condition classes; null falls back to no Field Conditions slot
+            // Digital Products has no dedicated condition classes; null falls back to no Field Conditions slot
             'digital-products-products' => null,
             'digital-products-licenses' => null,
             'solspace-calendar-events' => class_exists(CalendarEventCondition::class) ? CalendarEventCondition::class : null,
@@ -468,7 +469,7 @@ class Events extends Component
     }
 
     /**
-     * Resolve an event type to its Craft element class for element conditions.
+     * Get the Craft element class for a given event type.
      *
      * Inverse of `getEventTypeForElement()`.
      *
@@ -493,7 +494,7 @@ class Events extends Component
     }
 
     /**
-     * Resolve an element to its Notifier event type for manual sending.
+     * Get the Notifier event type for a given element.
      *
      * Inverse of `getElementClassForEventType()`.
      *
@@ -516,6 +517,5 @@ class Events extends Component
             default => null,
         };
     }
-
 
 }

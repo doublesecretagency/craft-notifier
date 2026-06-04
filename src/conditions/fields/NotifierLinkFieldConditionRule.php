@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,11 +15,9 @@ use craft\fields\conditions\LinkFieldConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedOperator;
 
 /**
- * Class NotifierLinkFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Link field rule's operators.
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for Link field rules (also covers the deprecated Url alias).
+ * @since 3.0.0
  */
 class NotifierLinkFieldConditionRule extends LinkFieldConditionRule
 {

@@ -6,7 +6,7 @@ description: Browse all available event categories and their specific triggers.
 
 <img class="dropshadow" src="/images/events/event-types.png" alt="" style="width:416px; margin-top:10px">
 
-## Craft Native
+## Native Elements
 
 ### [Entries](/events/types/entries/)
 
@@ -19,12 +19,6 @@ Sends a notification for certain **Asset** events.
 ### [Users](/events/types/users/)
 
 Sends a notification for certain **User** events.
-
-## Feeds
-
-### [RSS/JSON Feed](/events/types/feed/)
-
-Sends a notification when a new item appears in an external **RSS**, **Atom**, or **JSON** feed.
 
 ## Plugins
 
@@ -39,3 +33,17 @@ Sends a notification for certain **Digital Product** and **License** events. _(r
 ### [Solspace Calendar](/events/types/solspace-calendar/)
 
 Sends a notification for certain **Calendar Event** events. _(requires [Solspace Calendar](https://plugins.craftcms.com/calendar))_
+
+## Other Data Sources
+
+### [System Snapshot](/events/types/system-snapshot/)
+
+Sends a notification with a report of **internal Craft system info**.
+
+### [Dynamic Data](/events/types/dynamic-data/)
+
+Sends a notification with **data you build yourself** in a Twig snippet.
+
+### [RSS/JSON Feed](/events/types/feed/)
+
+Sends a notification when a new item appears in an external **RSS**, **Atom**, or **JSON** feed.

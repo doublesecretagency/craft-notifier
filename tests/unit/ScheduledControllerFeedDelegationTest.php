@@ -60,4 +60,35 @@ class ScheduledControllerFeedDelegationTest extends TestCase
         $this->assertStringContainsString("\$summary['sent']", $this->consoleSource);
         $this->assertStringContainsString("array_merge(\$summary['errors'], \$feed['errors'])", $this->consoleSource);
     }
+
+    // ========================================================================= //
+    // Report runners (System Snapshot, Dynamic Data)
+    // ========================================================================= //
+
+    public function testWebControllerCallsBothReportRunners(): void
+    {
+        // The web cron tick must also drain the recurring schedules.
+        $this->assertStringContainsString('systemSnapshotRunner->run()', $this->webSource);
+        $this->assertStringContainsString('dynamicDataRunner->run()', $this->webSource);
+    }
+
+    public function testConsoleControllerCallsBothReportRunners(): void
+    {
+        $this->assertStringContainsString('systemSnapshotRunner->run()', $this->consoleSource);
+        $this->assertStringContainsString('dynamicDataRunner->run()', $this->consoleSource);
+    }
+
+    public function testWebControllerMergesReportSummaries(): void
+    {
+        // Both report summaries must be merged, or their dispatch counts and
+        // errors vanish from the response.
+        $this->assertStringContainsString("array_merge(\$summary['errors'], \$snapshot['errors'])", $this->webSource);
+        $this->assertStringContainsString("array_merge(\$summary['errors'], \$dynamic['errors'])", $this->webSource);
+    }
+
+    public function testConsoleControllerMergesReportSummaries(): void
+    {
+        $this->assertStringContainsString("array_merge(\$summary['errors'], \$snapshot['errors'])", $this->consoleSource);
+        $this->assertStringContainsString("array_merge(\$summary['errors'], \$dynamic['errors'])", $this->consoleSource);
+    }
 }

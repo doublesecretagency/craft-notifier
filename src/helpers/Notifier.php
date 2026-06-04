@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -16,22 +16,28 @@ use doublesecretagency\notifier\elements\db\NotificationQuery;
 use doublesecretagency\notifier\elements\Notification;
 
 /**
- * Class Notifier
+ * Exposes notification queries to Twig templates.
+ *
  * @since 1.0.0
  */
 class Notifier
 {
 
     /**
-     * Returns a new NotificationQuery instance.
+     * Get a new NotificationQuery instance.
      *
      * @param array $criteria
      * @return NotificationQuery
      */
     public static function notifications(array $criteria = []): NotificationQuery
     {
+        // Build a notification query
         $query = Notification::find();
+
+        // Apply the given criteria
         Craft::configure($query, $criteria);
+
+        // Return the query
         return $query;
     }
 

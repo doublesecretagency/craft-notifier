@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,7 +15,8 @@ use craft\base\Model;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 
 /**
- * Class BaseEnvelope
+ * Base class for outbound message envelopes.
+ *
  * @since 1.0.0
  */
 class BaseEnvelope extends Model implements EnvelopeInterface
@@ -40,9 +41,7 @@ class BaseEnvelope extends Model implements EnvelopeInterface
     ];
 
     /**
-     * Send the message.
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function send(): bool
     {

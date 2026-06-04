@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -23,19 +23,20 @@ use Throwable;
 use yii\validators\EmailValidator;
 
 /**
- * Class Recipients
+ * Resolves who should receive a notification.
+ *
  * @since 1.0.0
  */
 class Recipients extends Component
 {
 
     /**
-     * @var string|null
+     * @var string|null Handle of the User field holding an email address.
      */
     private ?string $_emailField = null;
 
     /**
-     * @var string|null
+     * @var string|null Handle of the User field holding a phone number.
      */
     private ?string $_smsField = null;
 
@@ -202,7 +203,7 @@ class Recipients extends Component
      */
     private function _dynamicRecipients(Notification $notification, ?Dispatch $dispatch = null): array
     {
-        // If no dispatch was passed, bail (defensive)
+        // If no dispatch was passed, bail
         if (!$dispatch) {
             return [];
         }
@@ -234,7 +235,7 @@ class Recipients extends Component
         // Initialize the resolved recipients
         $recipients = [];
 
-        // Initialize the email validator
+        // Build the email validator
         $emailValidator = new EmailValidator();
 
         // Loop through all collected items
@@ -385,10 +386,10 @@ class Recipients extends Component
         // Index the named list by UID for O(1) lookup
         $byUid = ArrayHelper::index($list, 'uid');
 
-        // Collect recipients
+        // Initialize the recipients
         $recipients = [];
 
-        // Walk each requested UID
+        // Loop through each requested UID
         foreach ($uids as $uid) {
 
             // If the UID is no longer in the list (admin removed it), log and skip
@@ -400,11 +401,12 @@ class Recipients extends Component
                 continue;
             }
 
-            // Hand the row to the factory to build a Recipient
+            // Build a Recipient from the row
             $recipients[] = $rowToRecipient($byUid[$uid]);
 
         }
 
+        // Return the recipients
         return $recipients;
     }
 

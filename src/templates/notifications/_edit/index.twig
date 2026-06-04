@@ -1,5 +1,15 @@
 {% import '_includes/forms' as forms %}
 
+{# Register the notification editor CP assets (read-only chrome + Monaco fixes) #}
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NotificationEditorAsset') %}
+
+{# Keep this inline (not in the bundle) so it loads after the codeeditor asset and wins the cascade, clipping Monaco's right-edge bleed so the editor's right border shows #}
+{% css %}
+.monaco-editor-background-frame {
+    overflow: hidden;
+}
+{% endcss %}
+
 {# When the user lacks notifier-saveNotifications, the entire form renders inside
    a disabled <fieldset>. The HTML5 disabled attribute cascades to every native
    form control inside (inputs, selects, textareas, buttons), giving us a
@@ -9,7 +19,7 @@
 {# Shared sidenote pointing at the templating + special variables docs #}
 {% set templatingTip = "[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported."|t('notifier', {
     'templatingUrl': 'https://plugins.doublesecretagency.com/notifier/messages/templating',
-    'variablesUrl': 'https://plugins.doublesecretagency.com/notifier/messages/variables',
+    'variablesUrl': 'https://plugins.doublesecretagency.com/notifier/messages/variables/',
 }) %}
 
 {# Render hidden inputs #}
@@ -30,172 +40,3 @@
     {% include 'notifier/notifications/_edit/recipients' %}
 </div>
 </fieldset>
-
-{% css %}
-/* Strip native fieldset chrome so the disabled wrapper is invisible to layout */
-.notifier-edit-fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
-    min-width: 0;
-}
-{% endcss %}
-
-{% if readOnly %}
-{% css %}
-/* Read-only visual hint: dim disabled controls slightly without making them
-   unreadable. Native disabled styling already varies by browser, so we lean
-   on opacity rather than color overrides. */
-.notifier-edit-fieldset--readonly :is(input, select, textarea, button):disabled {
-    opacity: 0.75;
-    cursor: not-allowed;
-}
-/* Block the tri-state filter button group from accepting clicks. The buttons
-   are <div>s with attached JS handlers, not native form controls, so the
-   <fieldset disabled> cascade does not neutralize them on its own. */
-.notifier-edit-fieldset--readonly .btngroup {
-    pointer-events: none;
-    opacity: 0.75;
-    cursor: not-allowed;
-}
-/* The h3 in nested-checkbox panels carries a right border that visually
-   separates the heading from the "Select All" link. With the link guarded
-   out of the DOM in read-only mode, the border becomes a stray vertical
-   bar; drop it. */
-.notifier-edit-fieldset--readonly .nested-checkboxes h3 {
-    border-right: 0;
-    padding-right: 0;
-    margin-right: 0;
-}
-{% endcss %}
-{% js %}
-(function() {
-    // Monaco editors are JS-driven and don't honor the parent fieldset's
-    // disabled attribute, so flip them to read-only mode explicitly.
-    function flipMonacoToReadOnly() {
-        if (!window.monacoEditorInstances) {
-            return;
-        }
-        Object.keys(window.monacoEditorInstances).forEach(function(editorId) {
-            var instance = window.monacoEditorInstances[editorId];
-            if (instance && typeof instance.updateOptions === 'function') {
-                instance.updateOptions({readOnly: true});
-            }
-        });
-    }
-    // First pass after page load, second pass after Monaco's deferred init
-    window.setTimeout(flipMonacoToReadOnly, 100);
-    window.setTimeout(flipMonacoToReadOnly, 600);
-})();
-{% endjs %}
-{% endif %}
-
-{% css %}
-/* Clip Monaco's overflow so the right border isn't covered */
-.monaco-editor-background-frame {
-    overflow: hidden;
-}
-/* Stack the language icon above Monaco's internal view */
-.monaco-editor-codefield--icon {
-    z-index: 10;
-}
-{% endcss %}
-
-{# Monaco editors initialize on page load, but several wrappers start `display: none`
-   (the #message / #recipients tabs, plus the per-type `.message-type-*` and
-   `.recipients-type-*` toggled partials). A Monaco editor init'd in a hidden
-   container measures zero dimensions and renders with a zero-width border.
-   This shared observer watches every wrapper that contains a Monaco editor and,
-   when it transitions from hidden to visible, forces the editors inside to clear
-   stale inline sizing and re-layout against the now-visible container. #}
-{% js %}
-(function() {
-    var wrapperSelectors = [
-        '#message',
-        '#recipients',
-        '.message-type-email',
-        '.message-type-sms',
-        '.message-type-announcement',
-        '.message-type-flash',
-        '.message-type-pushover',
-        '.message-type-ntfy',
-        '.message-type-slack',
-        '.message-type-bluesky',
-        '.recipients-type-dynamic-recipients'
-    ];
-
-    function refreshMonacoInside(wrap) {
-        if (!window.monacoEditorInstances) {
-            return;
-        }
-        Object.keys(window.monacoEditorInstances).forEach(function(editorId) {
-            var container = document.getElementById(editorId + '-monaco-editor');
-            if (!container || !wrap.contains(container)) {
-                return;
-            }
-            var instance = window.monacoEditorInstances[editorId];
-            if (!instance) {
-                return;
-            }
-
-            // Clear stale inline dimensions from the hidden-init pass so Monaco
-            // re-measures fresh against the now-visible container
-            container.style.width = '';
-            container.style.height = '';
-            instance.layout();
-
-            // The CodeEditor package's internal updateHeight() is wired only to
-            // Monaco's `onDidContentSizeChange`, a viewport-only layout() call
-            // doesn't fire it, so the inflated height from the hidden-init pass
-            // (~rows+2) would stick until the user's first keystroke. Normalize
-            // it manually: cap to max(textarea.rows × lineHeight, contentHeight).
-            var textArea = document.getElementById(editorId);
-            if (textArea && textArea instanceof HTMLTextAreaElement && textArea.rows > 0) {
-                // Read the rendered line height from Monaco's own view-line element
-                // (Monaco applies CSS line-height based on computed font metrics)
-                var viewLine = container.querySelector('.view-line');
-                var lineHeight = viewLine
-                    ? parseFloat(window.getComputedStyle(viewLine).lineHeight)
-                    : 19;
-                var minHeight = textArea.rows * lineHeight;
-                var contentHeight = instance.getContentHeight();
-                var target = Math.max(minHeight, contentHeight);
-                container.style.height = target + 'px';
-                instance.layout({
-                    width: instance.getLayoutInfo().width,
-                    height: target
-                });
-            }
-        });
-    }
-
-    // Double-tap refresh: first pass after the class-flip settles,
-    // second pass after any follow-up layout/CSS-transition pass completes
-    function scheduleRefresh(wrap) {
-        window.setTimeout(function() { refreshMonacoInside(wrap); }, 50);
-        window.setTimeout(function() { refreshMonacoInside(wrap); }, 300);
-    }
-
-    wrapperSelectors.forEach(function(selector) {
-        var wrap = document.querySelector(selector);
-        if (!wrap) {
-            return;
-        }
-        // Fire when the wrapper's class list changes (Craft's tab/toggle JS adds/removes `hidden`)
-        var observer = new MutationObserver(function(mutations) {
-            for (var i = 0; i < mutations.length; i++) {
-                if (mutations[i].attributeName === 'class' && !wrap.classList.contains('hidden')) {
-                    scheduleRefresh(wrap);
-                    return;
-                }
-            }
-        });
-        observer.observe(wrap, { attributes: true, attributeFilter: ['class'] });
-        // Also refresh on initial load for any wrapper that starts visible
-        // (e.g. editing a saved notification whose type matches this wrapper)
-        if (!wrap.classList.contains('hidden')) {
-            scheduleRefresh(wrap);
-        }
-    });
-})();
-{% endjs %}

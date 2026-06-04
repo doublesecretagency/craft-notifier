@@ -1,0 +1,44 @@
+/* ==========================================================================
+   Notifier notification edit screen (read-only chrome + Monaco editor fixes)
+   ========================================================================== */
+
+/* Strip native fieldset chrome so the disabled wrapper is invisible to layout */
+.notifier-edit-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+}
+
+/* Read-only visual hint: dim disabled controls slightly without making them
+   unreadable. Native disabled styling already varies by browser, so we lean
+   on opacity rather than color overrides. */
+.notifier-edit-fieldset--readonly :is(input, select, textarea, button):disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+/* Block the tri-state filter button group from accepting clicks. The buttons
+   are <div>s with attached JS handlers, not native form controls, so the
+   <fieldset disabled> cascade does not neutralize them on its own. */
+.notifier-edit-fieldset--readonly .btngroup {
+    pointer-events: none;
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+/* The h3 in nested-checkbox panels carries a right border that visually
+   separates the heading from the "Select All" link. With the link guarded
+   out of the DOM in read-only mode, the border becomes a stray vertical
+   bar; drop it. */
+.notifier-edit-fieldset--readonly .nested-checkboxes h3 {
+    border-right: 0;
+    padding-right: 0;
+    margin-right: 0;
+}
+
+/* The companion ".monaco-editor-background-frame { overflow: hidden }" rule must
+   stay inline in _edit/index.twig: as bundle CSS it loads before the codeeditor
+   asset, which then overrides the overflow and the right border bleeds again. */
+/* Stack the language icon above Monaco's internal view */
+.monaco-editor-codefield--icon {
+    z-index: 10;
+}

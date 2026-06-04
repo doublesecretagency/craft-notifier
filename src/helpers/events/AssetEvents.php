@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -18,7 +18,8 @@ use doublesecretagency\notifier\NotifierPlugin;
 use yii\base\Event;
 
 /**
- * Class AssetEvents
+ * Registers Asset event handlers with Notifier.
+ *
  * @since 1.1.0
  */
 class AssetEvents
@@ -206,24 +207,30 @@ class AssetEvents
         // Native attributes worth comparing for "did this asset change?"
         $attrs = ['title', 'filename', 'alt', 'focalPoint', 'kind', 'mimeType', 'size', 'width', 'height'];
 
+        // If any native attribute differs, the asset changed
         foreach ($attrs as $attr) {
             if (($original->$attr ?? null) != ($asset->$attr ?? null)) {
                 return true;
             }
         }
 
-        // Custom field values
+        // Get the asset's field layout
         $fieldLayout = $asset->getFieldLayout();
+
+        // If the layout has custom fields, compare each value
         if ($fieldLayout) {
             foreach ($fieldLayout->getCustomFields() as $field) {
+                // Serialize both sides so value objects compare by content
                 $a = $field->serializeValue($original->getFieldValue($field->handle), $original);
                 $b = $field->serializeValue($asset->getFieldValue($field->handle), $asset);
+                // If the serialized values differ, the asset changed
                 if (serialize($a) !== serialize($b)) {
                     return true;
                 }
             }
         }
 
+        // Nothing changed
         return false;
     }
 

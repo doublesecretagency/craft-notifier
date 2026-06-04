@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,11 +15,9 @@ use craft\fields\conditions\NumberFieldConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedOperator;
 
 /**
- * Class NotifierNumberFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Number field rule's operators (Number, Range).
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for Number-style field rules (Number, Range).
+ * @since 3.0.0
  */
 class NotifierNumberFieldConditionRule extends NumberFieldConditionRule
 {

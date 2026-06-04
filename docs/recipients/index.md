@@ -22,7 +22,7 @@ The list of available recipient types may change based on which type of [message
 
 ## Unique Messages
 
-Each recipient will receive their own unique copy of the message. Any [special variables](/messages/variables) will be re-parsed for each individual recipient.
+Each recipient will receive their own unique copy of the message. Any [special variables](/messages/variables/) will be re-parsed for each individual recipient.
 
 ## Advance Filtering of Recipients
 

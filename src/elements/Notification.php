@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -41,11 +41,17 @@ use yii\db\IntegrityException;
 use yii\web\Response;
 
 /**
- * Notification element type
+ * Element type representing a single configured notification.
+ *
  * @since 1.0.0
  */
 class Notification extends Element
 {
+
+    /**
+     * @var string[] Event types which compile a data report, not directly tied to elements.
+     */
+    private const REPORT_EVENT_TYPES = ['system-snapshot', 'dynamic-data'];
 
     /**
      * @var string|null Optional description of the notification.
@@ -107,46 +113,73 @@ class Notification extends Element
 
     // ========================================================================= //
 
+    /**
+     * @inheritdoc
+     */
     public static function displayName(): string
     {
         return Craft::t('notifier', 'Notification');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function pluralDisplayName(): string
     {
         return Craft::t('notifier', 'Notifications');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function refHandle(): ?string
     {
         return 'notification';
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function hasContent(): bool
     {
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function hasTitles(): bool
     {
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function hasStatuses(): bool
     {
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function find(): NotificationQuery
     {
         return Craft::createObject(NotificationQuery::class, [static::class]);
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function createCondition(): ElementConditionInterface
     {
         return Craft::createObject(NotificationCondition::class, [static::class]);
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function defineSources(string $context): array
     {
         return [
@@ -157,17 +190,26 @@ class Notification extends Element
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function defineActions(string $source): array
     {
         // List any bulk element actions here
         return [];
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function includeSetStatusAction(): bool
     {
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function defineSortOptions(): array
     {
         return [
@@ -195,6 +237,9 @@ class Notification extends Element
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function defineTableAttributes(): array
     {
         return [
@@ -214,6 +259,9 @@ class Notification extends Element
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
@@ -231,17 +279,56 @@ class Notification extends Element
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
-            ['recipientsType', 'validateDynamicRecipientsPermission'],
+            ['eventConfig', 'validateDynamicDataPermission'],
             ['messageConfig', 'validateEmailMessageMode'],
             ['messageConfig', 'validateSlackBodyFormat'],
+            ['recipientsType', 'validateDynamicRecipientsPermission'],
         ]);
     }
 
     /**
-     * Ensure the saving user holds the `notifier-editDynamicRecipients` permission
-     * when the Notification uses the Dynamic Recipients recipient type.
+     * Whether this is a report event type (System Snapshot, Dynamic Data).
      *
-     * Server-side gate catching crafted POSTs that bypass the CP template's hidden dropdown.
+     * @return bool
+     */
+    public function isReportType(): bool
+    {
+        return in_array($this->eventType, self::REPORT_EVENT_TYPES, true);
+    }
+
+    /**
+     * Ensure the user is allowed to use Dynamic Data.
+     *
+     * @return void
+     */
+    public function validateDynamicDataPermission(): void
+    {
+        // If this Notification doesn't use Dynamic Data, bail
+        if ('dynamic-data' !== $this->eventType) {
+            return;
+        }
+
+        // If this isn't a CP request, bail
+        if (!Craft::$app->getRequest()->getIsCpRequest()) {
+            return;
+        }
+
+        // Get the current user
+        $user = Craft::$app->getUser()->getIdentity();
+
+        // If the user exists and has permission, bail
+        if ($user && $user->can('notifier-editDynamicData')) {
+            return;
+        }
+
+        // Otherwise, add a validation error
+        $this->addError('eventConfig', Craft::t('notifier',
+            'You do not have permission to use the Dynamic Data type.'
+        ));
+    }
+
+    /**
+     * Ensure the user is allowed to use Dynamic Recipients.
      *
      * @return void
      */
@@ -265,23 +352,22 @@ class Notification extends Element
             return;
         }
 
-        // Otherwise, attach a validation error
+        // Otherwise, add a validation error
         $this->addError('recipientsType', Craft::t('notifier',
             'You do not have permission to use the Dynamic Recipients type.'
         ));
     }
 
     /**
-     * Validate the email message editor mode.
+     * Validate the email editor mode.
      *
-     * Accepts only 'code' (Monaco source editor) or 'rich' (Trix WYSIWYG).
-     * A missing value normalizes to 'rich' (the default for new notifications).
+     * Only 'code' or 'rich' are allowed, a missing value falls back to 'rich'.
      *
      * @return void
      */
     public function validateEmailMessageMode(): void
     {
-        // Pull the saved mode, defaulting to 'rich' when absent
+        // Get the saved mode, defaulting to 'rich' when absent
         $mode = $this->messageConfig['emailMessageMode'] ?? 'rich';
 
         // If the value isn't one of the allowed strings, attach an error
@@ -299,15 +385,14 @@ class Notification extends Element
     /**
      * Validate the Slack body format toggle.
      *
-     * Accepts only 'markdown' (raw Slack mrkdwn) or 'html' (HTML converted
-     * to Slack mrkdwn at send time). The CP lightswitch posts '1' or '0',
-     * which we normalize to the string form here.
+     * Only 'markdown' or 'html' are allowed. The lightswitch posts '1' / '0',
+     * so we normalize that to the string form here.
      *
      * @return void
      */
     public function validateSlackBodyFormat(): void
     {
-        // Pull the saved value
+        // Get the saved value
         $value = $this->messageConfig['slackBodyFormat'] ?? null;
 
         // Normalize the lightswitch's '1' / '0' to a string mode
@@ -399,16 +484,25 @@ class Notification extends Element
         return $user->can('notifier-saveNotifications');
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function cpEditUrl(): ?string
     {
         return sprintf('notifications/%s', $this->getCanonicalId());
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getPostEditUrl(): ?string
     {
         return UrlHelper::cpUrl('notifications');
     }
 
+    /**
+     * @inheritdoc
+     */
     public function prepareEditScreen(Response $response, string $containerId): void
     {
         /** @var Response|CpScreenResponseBehavior $response */
@@ -419,19 +513,29 @@ class Notification extends Element
             ],
         ]);
 
-        // Pick the correct sidebar method for the active Craft version
-        // (Craft 5: metaSidebarTemplate(), Craft 4: sidebarTemplate())
+        // Get sidebar method based on Craft major version
         $sidebarMethod = Compat::metaSidebarMethodName();
+
+        // Set the sidebar
         $response->{$sidebarMethod}('notifier/notifications/_edit/details', [
             'notification' => $this,
         ]);
 
-        // Render the "Send a test message" button into the CP screen header
-        $response->additionalButtonsTemplate('notifier/notifications/_edit/test-button', [
+        // Whether this notification is a report type
+        $isReport = $this->isReportType();
+
+        // Determine which button template to use
+        $buttonTemplate = ($isReport ? 'send-report' : 'send-test');
+
+        // Set the "Send" button
+        $response->additionalButtonsTemplate("notifier/notifications/_edit/{$buttonTemplate}", [
             'notification' => $this,
         ]);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getFieldLayout(): ?FieldLayout
     {
         // Build the field layout for the Notification element
@@ -466,7 +570,7 @@ class Notification extends Element
     {
         $forEventType = ($forEventType ?? (string) $this->eventType);
 
-        // Resolve the condition class for the requested event type
+        // Get the condition class for the requested event type
         $class = NotifierPlugin::$plugin->events->getConditionClassForEventType($forEventType);
 
         // If no condition class is registered for this event type, bail
@@ -513,8 +617,7 @@ class Notification extends Element
     }
 
     /**
-     * Resolve field layouts to attach to the condition builder, based on the
-     * notification's selected entry types.
+     * Get the field layouts for the condition builder, based on the selected entry types.
      *
      * @param string|null $forEventType Event type the builder is being rendered for.
      * @return FieldLayout[]
@@ -687,6 +790,9 @@ class Notification extends Element
                 $eventCondition     = $request->getBodyParam("eventCondition_{$selectedEventType}");
                 $manualTriggerLabel = $request->getBodyParam("manualTriggerLabel_{$selectedEventType}");
                 $dateReached        = $request->getBodyParam("dateReached_{$selectedEventType}");
+                $recurring          = $request->getBodyParam("recurring_{$selectedEventType}");
+                $recurringSchedule  = $request->getBodyParam("recurringSchedule_{$selectedEventType}");
+                $dynamicData        = $request->getBodyParam("dynamicData_{$selectedEventType}");
 
                 // Extract specific event
                 $event = ($event[$eventType] ?? null);
@@ -718,6 +824,32 @@ class Notification extends Element
                     ];
                 }
 
+                // If the recurring lightswitch was posted
+                if ($recurring !== null) {
+                    // Copy the normalized boolean to the config
+                    $eventConfig['recurring'] = ('1' === $recurring || 1 === $recurring || true === $recurring);
+                }
+
+                // If the recurring-schedule config exists
+                if (is_array($recurringSchedule)) {
+                    // Copy a sanitized copy to the config
+                    $eventConfig['recurringSchedule'] = [
+                        'frequency'  => (string)    ($recurringSchedule['frequency']  ?? 'weekly'),
+                        'interval'   => max(1, (int) ($recurringSchedule['interval']  ?? 1)),
+                        'startDate'  => (string)    ($recurringSchedule['startDate']  ?? ''),
+                        'dayOfWeek'  => (int)       ($recurringSchedule['dayOfWeek']  ?? 1),
+                        'dayOfMonth' => (int)       ($recurringSchedule['dayOfMonth'] ?? 1),
+                        'pinMonth'   => (int)       ($recurringSchedule['pinMonth']   ?? 1),
+                        'time'       => (string)    ($recurringSchedule['time']       ?? '09:00'),
+                    ];
+                }
+
+                // If the dynamic-data snippet exists
+                if ($dynamicData !== null) {
+                    // Copy it to the config
+                    $eventConfig['dynamicData'] = (string) $dynamicData;
+                }
+
             }
 
             // Configure the notification
@@ -736,6 +868,9 @@ class Notification extends Element
             // Sync the Event Type from the just-saved record
             $this->eventType = $record->eventType;
 
+            // Sync the Event from the just-saved record
+            $this->event = $record->event;
+
             // Sync the eventConfig (normalize to an array if the record holds the JSON string)
             $this->eventConfig = is_array($record->eventConfig)
                 ? $record->eventConfig
@@ -743,6 +878,9 @@ class Notification extends Element
 
             // Ensure scheduled notifications have a schedule tracking row
             $this->_ensureScheduleTracking($record->event);
+
+            // Ensure report notifications have an up-to-date tracking row
+            $this->_ensureReportTracking();
 
             // Ensure feed notifications are seeded against their current Feed URL
             $this->_ensureFeedSeeding($oldEventType, $oldFeedUrl);
@@ -836,8 +974,8 @@ class Notification extends Element
             return;
         }
 
-        // Schedule tracking table
-        $table = '{{%notifier_trackscheduled}}';
+        // Date-reached tracking table
+        $table = '{{%notifier_trackdates}}';
 
         // Whether a matching row already exists for this notification
         $exists = (new Query())
@@ -905,6 +1043,38 @@ class Notification extends Element
                 'Initial feed scan failed: {message}',
                 ['message' => $e->getMessage()]
             ));
+        }
+    }
+
+    /**
+     * Keep the report tracking row in sync after a save.
+     *
+     * @return void
+     */
+    private function _ensureReportTracking(): void
+    {
+        // If this is a draft or revision, bail
+        if ($this->getIsDraft() || $this->getIsRevision()) {
+            return;
+        }
+
+        // Get the plugin instance
+        $plugin = NotifierPlugin::getInstance();
+
+        // Whether this is a report notification with a recurring schedule
+        $isRecurring = $this->isReportType() && (bool) ($this->eventConfig['recurring'] ?? false);
+
+        // If not a recurring notification, drop any stale tracking row
+        if (!$isRecurring) {
+            $plugin->systemSnapshotRunner->wipeTracking($this->id);
+            return;
+        }
+
+        // Seed (or recompute) the tracking row via the matching runner
+        if ('system-snapshot' === $this->eventType) {
+            $plugin->systemSnapshotRunner->seedNotification($this);
+        } else {
+            $plugin->dynamicDataRunner->seedNotification($this);
         }
     }
 

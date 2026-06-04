@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,11 +15,9 @@ use craft\fields\conditions\GeneratedFieldConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedOperator;
 
 /**
- * Class NotifierGeneratedFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Generated field rule's operators.
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for generated-field rules (computed virtual fields in field layouts).
+ * @since 3.0.0
  */
 class NotifierGeneratedFieldConditionRule extends GeneratedFieldConditionRule
 {

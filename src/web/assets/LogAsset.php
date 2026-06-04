@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,7 +14,8 @@ namespace doublesecretagency\notifier\web\assets;
 use craft\web\AssetBundle;
 
 /**
- * Class LogAsset
+ * Registers the CP assets for the log utility.
+ *
  * @since 1.0.0
  */
 class LogAsset extends AssetBundle

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -12,7 +12,7 @@
 namespace doublesecretagency\notifier\base;
 
 /**
- * EnvelopeInterface defines how an outbound message must be structured.
+ * Defines how an outbound message must be structured.
  *
  * @since 1.0.0
  */

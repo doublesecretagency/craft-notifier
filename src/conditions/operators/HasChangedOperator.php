@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -17,13 +17,9 @@ use doublesecretagency\notifier\helpers\events\Originals;
 use yii\db\QueryInterface;
 
 /**
- * Trait HasChangedOperator
- * @since 3.0.0
+ * Adds a "has changed" operator to per-field condition rules.
  *
- * Adds a `has_changed` operator to per-field condition rules. Two-tier check:
- * live `isFieldDirty()` for the per-site save events, value-diff against
- * the captured original when Craft has already called `markAsClean()`
- * (the entry after-propagate path, or any propagated element save).
+ * @since 3.0.0
  */
 trait HasChangedOperator
 {
@@ -85,7 +81,7 @@ trait HasChangedOperator
             return parent::matchElement($element);
         }
 
-        // Resolve the field-layout instances this rule was configured against
+        // Get the field-layout instances this rule was configured against
         try {
             $fieldInstances = $this->fieldInstances();
         } catch (\yii\base\InvalidConfigException) {

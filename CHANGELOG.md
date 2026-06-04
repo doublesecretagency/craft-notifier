@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Added the ability to send a [System Snapshot](https://plugins.doublesecretagency.com/notifier/events/types/system-snapshot/).
+- Added the ability to send [Dynamic Data](https://plugins.doublesecretagency.com/notifier/events/types/dynamic-data/).
+- Added user permissions for authoring Dynamic Data snippets.
+
 ## 3.0.2 - 2026-05-28
 
 ### Changed

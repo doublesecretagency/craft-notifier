@@ -1,5 +1,8 @@
 {% import '_includes/forms' as forms %}
 
+{# Register the event editor CP assets (date-reached + recurring-schedule behavior) #}
+{% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\EventEditorAsset') %}
+
 {# Common instructions for multiple fields #}
 {% set commonInstructions = 'Which specific event will activate the notification?'|t('notifier') %}
 
@@ -17,51 +20,11 @@
 {% include 'notifier/notifications/_edit/event/entries' %}
 {% include 'notifier/notifications/_edit/event/assets' %}
 {% include 'notifier/notifications/_edit/event/users' %}
-{% include 'notifier/notifications/_edit/event/feed' %}
 {% include 'notifier/notifications/_edit/event/craft-commerce-orders' %}
 {% include 'notifier/notifications/_edit/event/craft-commerce-products' %}
 {% include 'notifier/notifications/_edit/event/digital-products-products' %}
 {% include 'notifier/notifications/_edit/event/digital-products-licenses' %}
 {% include 'notifier/notifications/_edit/event/solspace-calendar-events' %}
-
-{% css %}
-.notifier-date-reached {
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
-}
-.notifier-date-reached .text {
-    width: 4em;
-}
-/* Each .event-type-* wrapper is a flex item of .flex-fields, so a child's
-   bottom margin cannot collapse out of it. When the only visible direct
-   child is the Event dropdown (no event chosen yet, or no follow-up fields
-   shown), that dropdown's margin-bottom becomes trapped empty space inside
-   the wrapper. Zero it when no visible following sibling exists; once a
-   toggle wrapper or <hr> becomes visible, the selector stops matching and
-   the normal inter-field margin returns. */
-[class^="event-type-"] > .field:not(:has(~ :not(.hidden):not([type="hidden"]))) {
-    margin-bottom: 0;
-}
-{% endcss %}
-
-{% js on ready %}
-// Loop through each date-reached row on the page
-document.querySelectorAll('.notifier-date-reached').forEach((row) => {
-    // Get the direction dropdown and the offset wrapper
-    const direction = row.querySelector('.notifier-date-reached-direction select');
-    const offset = row.querySelector('.notifier-date-reached-offset');
-    // If either control is missing, bail
-    if (!direction || !offset) {
-        return;
-    }
-    // Show or hide the offset based on the direction
-    const sync = () => {
-        offset.classList.toggle('hidden', 'on' === direction.value);
-    };
-    // Sync whenever the direction changes
-    direction.addEventListener('change', sync);
-    // Sync once to set the initial state
-    sync();
-});
-{% endjs %}
+{% include 'notifier/notifications/_edit/event/system-snapshot' %}
+{% include 'notifier/notifications/_edit/event/dynamic-data' %}
+{% include 'notifier/notifications/_edit/event/feed' %}

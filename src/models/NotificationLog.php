@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -23,19 +23,20 @@ use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\records\Log;
 
 /**
- * Class NotificationLog
+ * Writes notification activity to the log.
+ *
  * @since 1.0.0
  */
 class NotificationLog extends Model
 {
 
     /**
-     * @var int|null
+     * @var int|null ID of the notification being logged.
      */
     public ?int $notificationId = null;
 
     /**
-     * @var int|null
+     * @var int|null ID of the envelope being logged.
      */
     public ?int $envelopeId = null;
 
@@ -179,7 +180,7 @@ class NotificationLog extends Model
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        // Track every envelope ID flagged for removal
+        // Initialize the list of expired envelope IDs
         $expiredEnvelopeIds = [];
 
         // Limit by age (days)

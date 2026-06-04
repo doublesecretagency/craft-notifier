@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -12,7 +12,8 @@
 namespace doublesecretagency\notifier\enums;
 
 /**
- * Options enum
+ * Holds the dropdown option lists used across notifications.
+ *
  * @since 1.0.0
  */
 abstract class Options
@@ -25,22 +26,24 @@ abstract class Options
         'entries'                   => 'Entries',
         'assets'                    => 'Assets',
         'users'                     => 'Users',
-        'feed'                      => 'RSS/JSON Feed',
         'craft-commerce-orders'     => 'Commerce Orders',
         'craft-commerce-products'   => 'Commerce Products',
         'digital-products-products' => 'Digital Products',
         'digital-products-licenses' => 'Digital Product Licenses',
         'solspace-calendar-events'  => 'Solspace Calendar',
+        'system-snapshot'           => 'System Snapshot',
+        'dynamic-data'              => 'Dynamic Data',
+        'feed'                      => 'RSS/JSON Feed',
     ];
 
     /**
      * @var array Event types grouped by plugin, for the CP dropdown.
      */
     public const EVENT_TYPE_GROUPED = [
+        ['optgroup' => 'Native Elements'],
         'entries' => 'Entries',
         'assets'  => 'Assets',
         'users'   => 'Users',
-        'feed'    => 'RSS/JSON Feed',
         ['optgroup' => 'Craft Commerce'],
         'craft-commerce-orders'   => 'Commerce Orders',
         'craft-commerce-products' => 'Commerce Products',
@@ -49,6 +52,10 @@ abstract class Options
         'digital-products-licenses' => 'Licenses',
         ['optgroup' => 'Solspace Calendar'],
         'solspace-calendar-events' => 'Calendar Events',
+        ['optgroup' => 'Other Data Sources'],
+        'system-snapshot' => 'System Snapshot',
+        'dynamic-data'    => 'Dynamic Data',
+        'feed'            => 'RSS/JSON Feed',
     ];
 
     /**
@@ -166,12 +173,6 @@ abstract class Options
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
-            ],
-        ],
-        'feed' => [
-            [
-                'label' => 'When a new RSS feed item is found',
-                'value' => 'new-item'
             ],
         ],
         'craft-commerce-orders' => [
@@ -292,6 +293,24 @@ abstract class Options
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
+            ],
+        ],
+        'system-snapshot' => [
+            [
+                'label' => 'System Snapshot',
+                'value' => 'compile'
+            ],
+        ],
+        'dynamic-data' => [
+            [
+                'label' => 'Dynamic Data',
+                'value' => 'compile'
+            ],
+        ],
+        'feed' => [
+            [
+                'label' => 'When a new RSS feed item is found',
+                'value' => 'new-item'
             ],
         ],
     ];

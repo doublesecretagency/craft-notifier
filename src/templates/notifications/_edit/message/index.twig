@@ -4,12 +4,9 @@
 {% set commonPlaceholder = "{% include 'path/to/template' %}" %}
 
 {# Instructions for the jobs queue #}
-{% set queueInstructions = "Whether the message be sent via the [jobs queue]({queueUrl})."|t('notifier', {
+{% set queueInstructions = "Whether the message should be sent via the [jobs queue]({queueUrl})."|t('notifier', {
     'queueUrl' : 'https://craftcms.com/docs/5.x/system/queue.html',
 }) %}
-
-{# Untranslated instructions for email/SMS fields #}
-{% set fieldInstructions = "Select which User field contains the recipient's {type}." %}
 
 {{ forms.selectField({
     label: 'Message Type'|t('notifier'),

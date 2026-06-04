@@ -355,9 +355,11 @@ class NotifierPluginRegistrationTest extends TestCase
         // The handler body must listen on NotifierEntryCondition (not Craft's
         // base EntryCondition), so the swap only fires inside Notifier's UI
         // and never leaks the has_changed operator into Craft's CP entries-index
-        // filter or any other EntryCondition consumer.
+        // filter or any other EntryCondition consumer. The event name is resolved
+        // through Compat::conditionRulesEventName() for Craft 4/5 parity (Craft 4
+        // calls it EVENT_REGISTER_CONDITION_RULE_TYPES, Craft 5 EVENT_REGISTER_CONDITION_RULES).
         $this->assertMatchesRegularExpression(
-            '/_registerConditionRules[\s\S]*?NotifierEntryCondition::class[\s\S]*?BaseCondition::EVENT_REGISTER_CONDITION_RULES/',
+            '/_registerConditionRules[\s\S]*?NotifierEntryCondition::class[\s\S]*?Compat::conditionRulesEventName\(\)/',
             $this->pluginSource
         );
     }
@@ -402,11 +404,14 @@ class NotifierPluginRegistrationTest extends TestCase
      */
     public function testRegisterConditionRulesSwapsCraftRuleForNotifierSubclass(string $craftClass, string $notifierClass): void
     {
-        // The swap map must contain the Craft source class as a key and the
-        // Notifier replacement class as the value. Without both, the field
-        // rule passes through unchanged and "has changed" never appears.
+        // The swap map must pair the Craft source class with its Notifier
+        // replacement. Without both, the field rule passes through unchanged and
+        // "has changed" never appears. Accept either the array-literal form
+        // (`Craft::class => Notifier::class`) or the assignment form used for the
+        // Craft-5-only rules appended inside the Compat::isCraft5() guard
+        // (`$swaps[Craft::class] = Notifier::class`).
         $this->assertMatchesRegularExpression(
-            '/' . preg_quote($craftClass, '/') . '::class[\s]*=>[\s]*' . preg_quote($notifierClass, '/') . '::class/',
+            '/' . preg_quote($craftClass, '/') . '::class\s*(?:=>|\]\s*=)\s*' . preg_quote($notifierClass, '/') . '::class/',
             $this->pluginSource
         );
     }
@@ -417,8 +422,12 @@ class NotifierPluginRegistrationTest extends TestCase
             'use doublesecretagency\\notifier\\conditions\\NotifierEntryCondition',
             $this->pluginSource
         );
+        // Compat resolves the event name and rules-property name for Craft 4/5
+        // parity, so it must be imported. (The old craft\base\conditions\BaseCondition
+        // import was dropped when the literal EVENT_REGISTER_CONDITION_RULES constant
+        // gave way to Compat::conditionRulesEventName().)
         $this->assertStringContainsString(
-            'use craft\\base\\conditions\\BaseCondition',
+            'use doublesecretagency\\notifier\\helpers\\Compat',
             $this->pluginSource
         );
         // All 11 Notifier per-field subclasses must be imported, since the

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -16,16 +16,7 @@ use craft\db\Query;
 use craft\helpers\Json;
 
 /**
- * m260508_130000_announcement_recipient_types migration
- *
- * Migrates Announcement notifications from the legacy binary
- * `recipientsConfig.adminsOnly` toggle to the standard `recipientsType`
- * field used by every other message type. The legacy `adminsOnly`
- * value maps to either `all-admins` (true) or `all-users` (false).
- * The `adminsOnly` key is dropped from `recipientsConfig`.
- *
- * Idempotent: rows that already carry a non-empty `recipientsType`
- * are skipped.
+ * Migrates Announcement notifications to the standard recipient type field.
  *
  * @since 3.0.0
  */

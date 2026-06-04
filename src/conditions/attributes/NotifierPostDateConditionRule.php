@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -17,13 +17,9 @@ use craft\elements\conditions\entries\PostDateConditionRule;
 use doublesecretagency\notifier\helpers\events\Originals;
 
 /**
- * Class NotifierPostDateConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Post Date rule's options.
  *
- * Adds `has changed` to the rangeType menu for the Post Date rule.
- * PostDate extends BaseDateRangeConditionRule, so this slots into
- * `rangeTypeOptions()` rather than `operators()` (see
- * `craft-date-rangetype-accepts-operator-constants-2026-05-08.md`).
+ * @since 3.0.0
  */
 class NotifierPostDateConditionRule extends PostDateConditionRule
 {
@@ -51,10 +47,16 @@ class NotifierPostDateConditionRule extends PostDateConditionRule
         if ($this->rangeType !== self::RANGE_TYPE_HAS_CHANGED) {
             return parent::matchElement($element);
         }
+
+        // Get the captured pre-save original
         $original = Originals::get($element);
+
+        // If no original was captured, it can't have changed
         if (!$original) {
             return false;
         }
+
+        // Compare the current post date against the original
         return ($element->postDate?->getTimestamp()) != ($original->postDate?->getTimestamp());
     }
 

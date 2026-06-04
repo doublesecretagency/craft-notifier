@@ -3,7 +3,7 @@
 {% set condition = notification.getEventCondition(eventType) %}
 
 {% if condition %}
-    {# Per-type field id avoids collisions across multiple tabs #}
+    {# Set per-type field id to avoid collisions across multiple tabs #}
     {% set fieldId = "eventCondition_#{eventType}" %}
 
     {% set conditionInput %}

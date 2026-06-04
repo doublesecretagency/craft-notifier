@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -20,7 +20,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use Throwable;
 
 /**
- * Class OutboundSlack
+ * Envelope for an outbound Slack message.
+ *
  * @since 3.0.0
  */
 class OutboundSlack extends BaseEnvelope

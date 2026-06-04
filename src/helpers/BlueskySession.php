@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -17,13 +17,9 @@ use GuzzleHttp\Exception\GuzzleException;
 use Throwable;
 
 /**
- * Class BlueskySession
- * @since 3.0.0
+ * Caches Bluesky session tokens in Craft's cache.
  *
- * Caches Bluesky session JWTs in Craft's cache. Each cache entry holds the
- * access JWT, refresh JWT, DID, and expiry; the app password is never cached.
- * Cache key is derived from the PDS URL + handle so multiple accounts on the
- * same PDS don't collide.
+ * @since 3.0.0
  */
 abstract class BlueskySession
 {
@@ -87,9 +83,8 @@ abstract class BlueskySession
     /**
      * Persist a session payload to the cache.
      *
-     * The payload must contain `accessJwt`, `refreshJwt`, `did`. The `appPassword`
-     * is NEVER cached - only the JWTs and DID. TTL is derived from the JWT's
-     * stored expiry, minus a safety margin to avoid mid-request expiry.
+     * The `appPassword` is NEVER cached, only the JWTs and DID. TTL comes from the JWT
+     * expiry minus a safety margin, to avoid mid-request expiry.
      *
      * @param string $pdsUrl
      * @param string $handle
@@ -98,7 +93,7 @@ abstract class BlueskySession
      */
     public static function put(string $pdsUrl, string $handle, array $payload): void
     {
-        // Defensive: strip any password-like keys before caching
+        // Strip any password-like keys before caching
         unset($payload['password'], $payload['appPassword']);
 
         // Derive TTL: prefer explicit expiresAt, else default to 50 minutes
@@ -168,7 +163,7 @@ abstract class BlueskySession
             // Derive an expiry timestamp from the access JWT (ATProto JWTs encode exp in the payload)
             $expiresAt = static::_decodeJwtExpiry($body['accessJwt']);
 
-            // Build the payload (strip any password echo defensively)
+            // Build the payload (strip any password echo)
             return [
                 'accessJwt'  => $body['accessJwt'],
                 'refreshJwt' => $body['refreshJwt'] ?? null,

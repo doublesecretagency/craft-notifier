@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,39 +15,40 @@ use craft\base\Model;
 use craft\elements\User;
 
 /**
- * Class Recipient
+ * A resolved recipient of a notification.
+ *
  * @since 1.0.0
  */
 class Recipient extends Model
 {
 
     /**
-     * @var User|null
+     * @var User|null The Craft user this recipient maps to, if any.
      */
     public ?User $user = null;
 
     /**
-     * @var string|null
+     * @var string|null Handle of the User field holding the email address.
      */
     public ?string $emailField = null;
 
     /**
-     * @var string|null
+     * @var string|null Handle of the User field holding the phone number.
      */
     public ?string $smsField = null;
 
     /**
-     * @var string|null
+     * @var string|null Display name.
      */
     public ?string $name = null;
 
     /**
-     * @var string|null
+     * @var string|null Recipient email address.
      */
     public ?string $emailAddress = null;
 
     /**
-     * @var string|null
+     * @var string|null Recipient phone number.
      */
     public ?string $phoneNumber = null;
 
@@ -82,7 +83,7 @@ class Recipient extends Model
     public ?string $blueskyAppPassword = null;
 
     /**
-     * Extract missing data from existing data.
+     * Populate missing data from the attached User or raw contact info.
      *
      * @return void
      */
@@ -137,9 +138,8 @@ class Recipient extends Model
     /**
      * Derive a display name from raw contact info when no User is attached.
      *
-     * Keeps log rows for Dynamic Recipients-authored recipients legible by
-     * falling back to the first available contact identifier, rather than
-     * surfacing the generic "dynamic recipients" task label.
+     * Keeps log rows for Dynamic Recipients legible by falling back to the first available
+     * contact identifier instead of the generic "dynamic recipients" task label.
      *
      * @return void
      */

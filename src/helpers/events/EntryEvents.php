@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -20,7 +20,8 @@ use doublesecretagency\notifier\NotifierPlugin;
 use yii\base\Event;
 
 /**
- * Class EntryEvents
+ * Registers Entry event handlers with Notifier.
+ *
  * @since 1.1.0
  */
 class EntryEvents
@@ -95,9 +96,8 @@ class EntryEvents
     /**
      * Bridge `Elements::EVENT_AFTER_SAVE_ELEMENT` to the `afterPropagate` handler.
      *
-     * This event delivers the entry via `$event->element`, but the downstream pipeline
-     * reads it from `$event->sender`. The bridge reshapes the event so `afterPropagate`
-     * and everything downstream can keep working unchanged.
+     * This event delivers the entry via `$event->element`, but the downstream pipeline reads
+     * `$event->sender`, so the bridge reshapes the event to keep everything downstream working.
      *
      * @param ElementEvent $event
      * @return void
@@ -112,9 +112,9 @@ class EntryEvents
         if ($event->element->propagating) {
             return;
         }
-        // If this is the canonical clone mid-applyDraft, bail and let `afterApplyDraft` handle it.
+        // If this is the canonical clone mid-applyDraft, bail and let `afterApplyDraft` handle it
         // Craft's `duplicateElement()` defers `afterPropagate()` (and therefore `createRevision()`)
-        // until *after* this event fires, so the new revision wouldn't yet be queryable here.
+        // until *after* this event fires, so the new revision wouldn't yet be queryable here
         if ($event->element->duplicateOf instanceof Entry && $event->element->duplicateOf->getIsDraft()) {
             return;
         }
@@ -127,10 +127,8 @@ class EntryEvents
     /**
      * Bridge `Drafts::EVENT_AFTER_APPLY_DRAFT` to the `afterPropagate` handler.
      *
-     * The afterSaveElement bridge skips the apply-draft case because Craft fires
-     * `EVENT_AFTER_SAVE_ELEMENT` before the new revision has been created. This
-     * event fires after the entire applyDraft flow completes, so `entry.currentRevision`
-     * is queryable by the time the notification renders.
+     * The `afterSaveElement` bridge skips apply-draft because Craft fires `EVENT_AFTER_SAVE_ELEMENT`
+     * before the revision exists; this fires after applyDraft completes, so `entry.currentRevision` is queryable.
      *
      * @param DraftEvent $event
      * @return void

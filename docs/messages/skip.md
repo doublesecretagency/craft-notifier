@@ -31,7 +31,7 @@ Ultimately, if `skipMessage` is encountered for all recipients, no messages will
 :::
 
 :::warning Use the Special Variables
-There are a wide variety of [special variables](/messages/variables) available in your Twig template, which can be used to help determine whether a particular message or recipient should be skipped.
+There are a wide variety of [special variables](/messages/variables/) available in your Twig template, which can be used to help determine whether a particular message or recipient should be skipped.
 :::
 
 ## Examples

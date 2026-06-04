@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,7 +15,8 @@ use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
 /**
- * Class MessageEditorAsset
+ * Registers the CP assets for the message editor.
+ *
  * @since 3.0.0
  */
 class MessageEditorAsset extends AssetBundle

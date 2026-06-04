@@ -89,21 +89,22 @@ class OptionsTest extends TestCase
     public function testEventTypeOrderMatchesCanonicalSequence(): void
     {
         // The order is load-bearing - the CP dropdown renders options in
-        // source order. The canonical sequence is documented in the
-        // events-bundle-tier-2 plan; this assertion is the enforcement.
-        // RSS Feed slots in after the native trio and before the Craft
-        // Commerce optgroup since it has no third-party plugin dependency.
+        // source order. Native elements first, then the plugin event types,
+        // then the data-source event types (System Snapshot, Dynamic Data,
+        // RSS/JSON Feed) last.
         $this->assertSame(
             [
                 'entries',
                 'assets',
                 'users',
-                'feed',
                 'craft-commerce-orders',
                 'craft-commerce-products',
                 'digital-products-products',
                 'digital-products-licenses',
                 'solspace-calendar-events',
+                'system-snapshot',
+                'dynamic-data',
+                'feed',
             ],
             array_keys(Options::EVENT_TYPE)
         );
@@ -136,11 +137,12 @@ class OptionsTest extends TestCase
         }
     }
 
-    public function testEventTypeGroupedDeclaresThreePluginOptgroups(): void
+    public function testEventTypeGroupedDeclaresEveryOptgroupInOrder(): void
     {
-        // Pin the optgroup labels - native trio sits flat at top, then one
-        // optgroup per plugin (Craft Commerce, Digital Products, Solspace
-        // Calendar). Drift here would re-shape the CP dropdown.
+        // Pin the optgroup labels and their order: native elements first, then
+        // one optgroup per plugin (Craft Commerce, Digital Products, Solspace
+        // Calendar), then the data-source event types last. Drift here would
+        // re-shape the CP dropdown.
         $optgroups = [];
         foreach (Options::EVENT_TYPE_GROUPED as $key => $value) {
             if (is_int($key) && is_array($value) && isset($value['optgroup'])) {
@@ -148,7 +150,7 @@ class OptionsTest extends TestCase
             }
         }
         $this->assertSame(
-            ['Craft Commerce', 'Digital Products', 'Solspace Calendar'],
+            ['Native Elements', 'Craft Commerce', 'Digital Products', 'Solspace Calendar', 'Other Data Sources'],
             $optgroups
         );
     }
@@ -508,10 +510,10 @@ class OptionsTest extends TestCase
     {
         // date-reached sits directly above manually-triggered, so the two
         // non-Yii triggers close out every element-type list together.
-        // RSS Feed is the lone exception: it has no element subject and
-        // ships with only one event of its own.
+        // The data-source event types are exceptions: RSS Feed ships one event,
+        // and System Snapshot / Dynamic Data use a recurring-schedule trigger.
         foreach (Options::ALL_EVENTS as $key => $events) {
-            if ('feed' === $key) {
+            if (in_array($key, ['feed', 'system-snapshot', 'dynamic-data'], true)) {
                 continue;
             }
             $secondToLast = $events[count($events) - 2];
@@ -570,20 +572,29 @@ class OptionsTest extends TestCase
         $this->assertArrayNotHasKey('class', $events[0]);
     }
 
-    public function testFeedSlotsBetweenUsersAndCommerceOrders(): void
+    public function testDataSourcesGroupComesLastInOrder(): void
     {
-        // In the dropdown's grouped form, RSS Feed sits with the native trio
-        // immediately above the first plugin optgroup (Craft Commerce).
+        // In the dropdown's grouped form, the data-source event types sit in a
+        // trailing "Other Data Sources" optgroup, in the order System Snapshot,
+        // Dynamic Data, RSS/JSON Feed - after every plugin optgroup.
         $keys = array_keys(Options::EVENT_TYPE_GROUPED);
-        $rssIndex = array_search('feed', $keys, true);
-        $usersIndex = array_search('users', $keys, true);
-        $this->assertNotFalse($rssIndex);
-        $this->assertNotFalse($usersIndex);
-        $this->assertGreaterThan($usersIndex, $rssIndex);
-        // The next entry must be the Craft Commerce optgroup divider.
-        $next = $keys[$rssIndex + 1];
-        $this->assertIsInt($next);
-        $this->assertSame('Craft Commerce', Options::EVENT_TYPE_GROUPED[$next]['optgroup']);
+
+        // Find the "Other Data Sources" optgroup divider
+        $dividerIndex = null;
+        foreach ($keys as $i => $key) {
+            $value = Options::EVENT_TYPE_GROUPED[$key];
+            if (is_int($key) && is_array($value) && 'Other Data Sources' === ($value['optgroup'] ?? null)) {
+                $dividerIndex = $i;
+                break;
+            }
+        }
+        $this->assertNotNull($dividerIndex, 'Missing the "Other Data Sources" optgroup');
+
+        // The three data sources follow the divider, in order, and close out the list
+        $this->assertSame('system-snapshot', $keys[$dividerIndex + 1]);
+        $this->assertSame('dynamic-data',    $keys[$dividerIndex + 2]);
+        $this->assertSame('feed',            $keys[$dividerIndex + 3]);
+        $this->assertArrayNotHasKey($dividerIndex + 4, $keys, 'Data sources must be the final group');
     }
 
     public function testEntriesOffersPendingToLive(): void

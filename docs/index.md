@@ -1,5 +1,5 @@
 ---
-description: First-class Notifications for Craft CMS
+description: First-class Notifications for Craft CMS.
 # meta:
 # - property: og:type
 #   content: website
@@ -8,7 +8,7 @@ description: First-class Notifications for Craft CMS
 # - property: og:title
 #   content: Notifier plugin for Craft CMS
 # - property: og:description
-#   content: First-class Notifications for Craft CMS
+#   content: First-class Notifications for Craft CMS.
 # - property: og:image
 #   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.png
 # - property: twitter:card
@@ -18,7 +18,7 @@ description: First-class Notifications for Craft CMS
 # - property: twitter:title
 #   content: Notifier plugin for Craft CMS
 # - property: twitter:description
-#   content: First-class Notifications for Craft CMS
+#   content: First-class Notifications for Craft CMS.
 # - property: twitter:image
 #   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.png
 
@@ -28,7 +28,7 @@ layout: home
 hero:
   name: "Notifier"
   text: "plugin for Craft CMS"
-  tagline: "First-class Notifications for Craft CMS"
+  tagline: "First-class Notifications for Craft CMS."
   image:
     src: /images/meta/notifier-v3.png
     alt: Notifier plugin for Craft CMS

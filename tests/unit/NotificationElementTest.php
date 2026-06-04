@@ -64,6 +64,48 @@ class NotificationElementTest extends TestCase
     }
 
     // ========================================================================= //
+    // Report event type predicate
+    // ========================================================================= //
+
+    public function testIsReportTypeIsPublicAndReturnsBool(): void
+    {
+        // Single source of truth for "is this a System Snapshot / Dynamic Data
+        // notification" - the CP send button, the dispatch filter, the table
+        // attribute renderer, and the recurring-tracking seed all call it.
+        $this->assertTrue($this->reflection->hasMethod('isReportType'));
+        $method = $this->reflection->getMethod('isReportType');
+        $this->assertTrue($method->isPublic());
+        $this->assertSame('bool', (string) $method->getReturnType());
+    }
+
+    /**
+     * @return array<string, array{0: string|null, 1: bool}>
+     */
+    public static function reportTypeProvider(): array
+    {
+        return [
+            'system-snapshot' => ['system-snapshot', true],
+            'dynamic-data'    => ['dynamic-data', true],
+            'entries'         => ['entries', false],
+            'feed'            => ['feed', false],
+            'null'            => [null, false],
+        ];
+    }
+
+    /**
+     * @dataProvider reportTypeProvider
+     */
+    public function testIsReportType(?string $eventType, bool $expected): void
+    {
+        // Exercise the predicate directly. init() instantiates a NotificationLog
+        // (which dereferences Craft::$app), so build the element without its
+        // constructor and set the public eventType property by hand.
+        $notification = $this->reflection->newInstanceWithoutConstructor();
+        $notification->eventType = $eventType;
+        $this->assertSame($expected, $notification->isReportType());
+    }
+
+    // ========================================================================= //
     // Field layout
     // ========================================================================= //
 

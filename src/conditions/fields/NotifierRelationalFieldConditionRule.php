@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,11 +15,9 @@ use craft\fields\conditions\RelationalFieldConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedOperator;
 
 /**
- * Class NotifierRelationalFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the relation field rule's operators (Categories, Tags, Entries, Assets, Users).
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for relation field rules (Categories, Tags, Entries, Assets, Users).
+ * @since 3.0.0
  */
 class NotifierRelationalFieldConditionRule extends RelationalFieldConditionRule
 {

@@ -2,14 +2,14 @@ import { defineConfig } from 'vitepress';
 
 const metaUrl = 'https://plugins.doublesecretagency.com/notifier/';
 const metaTitle = 'Notifier plugin for Craft CMS';
-const metaDescription = 'First-class Notifications for Craft CMS';
+const metaDescription = 'First-class Notifications for Craft CMS.';
 const metaImage = 'https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.png';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
 
   title: "Notifier plugin",
-  description: "First-class Notifications for Craft CMS",
+  description: "First-class Notifications for Craft CMS.",
 
   head: [
     ['meta', {'name': 'og:type', 'content': 'website'}],
@@ -58,14 +58,16 @@ export default defineConfig({
           },
           {
             items: [
-              {text: 'RSS/JSON Feed', link: '/events/types/feed/'},
+              {text: 'Craft Commerce',    link: '/events/types/craft-commerce/'},
+              {text: 'Digital Products',  link: '/events/types/digital-products/'},
+              {text: 'Solspace Calendar', link: '/events/types/solspace-calendar/'},
             ]
           },
           {
             items: [
-              {text: 'Craft Commerce',    link: '/events/types/craft-commerce/'},
-              {text: 'Digital Products',  link: '/events/types/digital-products/'},
-              {text: 'Solspace Calendar', link: '/events/types/solspace-calendar/'},
+              {text: 'System Snapshot', link: '/events/types/system-snapshot/'},
+              {text: 'Dynamic Data',    link: '/events/types/dynamic-data/'},
+              {text: 'RSS/JSON Feed',   link: '/events/types/feed/'},
             ]
           },
         ]
@@ -99,7 +101,7 @@ export default defineConfig({
           {
             items: [
               {text: 'Message Templating',     link: '/messages/templating'},
-              {text: 'Special Variables',      link: '/messages/variables'},
+              {text: 'Special Variables',      link: '/messages/variables/'},
               {text: 'Skip Sending a Message', link: '/messages/skip'},
               {text: 'Optional Queue',         link: '/messages/queue'},
               {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
@@ -270,7 +272,6 @@ export default defineConfig({
                     {text: 'User is restored',             link: '/events/types/users/user-restored'},
                   ]
                 },
-                {text: 'RSS/JSON Feed', link: '/events/types/feed/'},
                 {text: 'Craft Commerce', link: '/events/types/craft-commerce/', collapsed: true,
                   items: [
                     {text: 'Order is completed',  link: '/events/types/craft-commerce/order-completed'},
@@ -297,6 +298,9 @@ export default defineConfig({
                     {text: 'Event is restored', link: '/events/types/solspace-calendar/event-restored'},
                   ]
                 },
+                {text: 'System Snapshot', link: '/events/types/system-snapshot/'},
+                {text: 'Dynamic Data',    link: '/events/types/dynamic-data/'},
+                {text: 'RSS/JSON Feed',   link: '/events/types/feed/'},
               ]
             },
           ]
@@ -321,7 +325,14 @@ export default defineConfig({
               ]
             },
             {text: 'Message Templating',     link: '/messages/templating'},
-            {text: 'Special Variables',      link: '/messages/variables'},
+            {text: 'Special Variables',      link: '/messages/variables/', collapsed: true,
+              items: [
+                {text: 'Element Events',  link: '/messages/variables/element-events'},
+                {text: 'RSS/JSON Feed',   link: '/messages/variables/rss-json-feed'},
+                {text: 'System Snapshot', link: '/messages/variables/system-snapshot'},
+                {text: 'Dynamic Data',    link: '/messages/variables/dynamic-data'},
+              ]
+            },
             {text: 'Skip Sending a Message', link: '/messages/skip'},
             {text: 'Optional Queue',         link: '/messages/queue'},
             {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},

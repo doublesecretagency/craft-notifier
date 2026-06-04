@@ -1,0 +1,55 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+{# Ensure the user can edit the snippet #}
+{% set canEditDynamicData = currentUser.can('notifier-editDynamicData') %}
+
+{# Load the snippet placeholder #}
+{% set placeholder = include('notifier/notifications/_edit/event/dynamic-data/placeholder') %}
+
+{% set instructions %}
+{{ 'Enter a custom Twig snippet to [determine which data will be included]({url}).'|t('notifier', {url: 'https://plugins.doublesecretagency.com/notifier/events/types/dynamic-data/'})|md }}
+{{ 'The snippet **must** include a `{% setData %}` tag.'|t('notifier')|md }}
+{% endset %}
+
+<div class="event-type-dynamic-data hidden">
+    {{ forms.lightswitchField({
+        label: 'Send on a Recurring Schedule'|t('notifier'),
+        instructions: 'Whether the message should be sent on a schedule, or only triggered manually.'|t('notifier'),
+        tip: 'The message can always be sent using the "Send data report" button above.'|t('notifier'),
+        id: 'recurring-dynamic-data',
+        name: 'recurring_dynamic-data',
+        offLabel: "Manual only"|t('notifier'),
+        onLabel: "Scheduled sending"|t('notifier'),
+        on: (notification.eventConfig.recurring ?? false),
+        toggle: 'recurring-schedule-dynamic-data',
+    }) }}
+    <div id="recurring-schedule-dynamic-data" class="{% if not (notification.eventConfig.recurring ?? false) %}hidden{% endif %}">
+        {% include 'notifier/notifications/_edit/event/_recurring-schedule' with { eventType: 'dynamic-data' } %}
+    </div>
+
+    <hr>
+
+    {{ codeEditor.textAreaField({
+        label: 'Twig Snippet to Determine Data'|t('notifier'),
+        instructions: instructions,
+        tip: templatingTip,
+        placeholder: placeholder,
+        id: 'config-event-dynamic-data',
+        name: 'dynamicData_dynamic-data',
+        value: (notification.eventConfig.dynamicData ?? ''),
+        disabled: (readOnly ?? false) or (not canEditDynamicData),
+        rows: 6,
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {% if not canEditDynamicData %}
+        <div class="readable">
+            <blockquote class="note warning">
+                {{ 'You do not have permission to edit dynamic data.'|t('notifier') }}
+            </blockquote>
+        </div>
+    {% endif %}
+
+    {# Hidden input goes last so the first visible field keeps :first-child (and Craft's margin reset) #}
+    <input type="hidden" name="event[dynamic-data]" value="compile">
+</div>

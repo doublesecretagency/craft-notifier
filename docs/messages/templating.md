@@ -26,7 +26,7 @@ If you `include` a separate Twig file, the short object syntax won't be availabl
 
 ## Special Variables
 
-In most situations, you will have access to an additional set of [special variables](/messages/variables).
+In most situations, you will have access to an additional set of [special variables](/messages/variables/).
 
 These variables are highly dependent on context, so pay close attention to where they are being used.
 

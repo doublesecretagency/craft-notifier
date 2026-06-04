@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -17,11 +17,9 @@ use craft\elements\conditions\entries\ExpiryDateConditionRule;
 use doublesecretagency\notifier\helpers\events\Originals;
 
 /**
- * Class NotifierExpiryDateConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Expiry Date rule's options.
  *
- * Adds `has changed` to the rangeType menu for the Expiry Date rule.
- * Same pattern as NotifierPostDateConditionRule.
+ * @since 3.0.0
  */
 class NotifierExpiryDateConditionRule extends ExpiryDateConditionRule
 {
@@ -49,10 +47,16 @@ class NotifierExpiryDateConditionRule extends ExpiryDateConditionRule
         if ($this->rangeType !== self::RANGE_TYPE_HAS_CHANGED) {
             return parent::matchElement($element);
         }
+
+        // Get the captured pre-save original
         $original = Originals::get($element);
+
+        // If no original was captured, it can't have changed
         if (!$original) {
             return false;
         }
+
+        // Compare the current expiry date against the original
         return ($element->expiryDate?->getTimestamp()) != ($original->expiryDate?->getTimestamp());
     }
 

@@ -4,7 +4,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -20,7 +20,8 @@ use SimpleXMLElement;
 use Throwable;
 
 /**
- * Class Feed
+ * Parses RSS, JSON, and Atom feeds into a normalized shape.
+ *
  * @since 3.0.0
  */
 abstract class Feed
@@ -31,7 +32,7 @@ abstract class Feed
      *
      * @param string $payload The raw feed body.
      * @param string $contentType The response Content-Type header, if any.
-     * @return array {feed: array, items: array[]}
+     * @return array The normalized feed, with `feed` and `items` keys.
      */
     public static function parseAuto(string $payload, string $contentType = ''): array
     {
@@ -74,7 +75,7 @@ abstract class Feed
      * Parse a raw RSS 2.0 or Atom 1.0 feed string into a normalized array.
      *
      * @param string $xml The feed XML payload.
-     * @return array {feed: array, items: array[]}
+     * @return array The normalized feed, with `feed` and `items` keys.
      * @throws FeedParseException If the payload is empty, malformed, or has an unknown root element.
      */
     public static function parse(string $xml): array
@@ -119,7 +120,7 @@ abstract class Feed
      * Parse a raw JSON Feed 1.0 or 1.1 payload into a normalized array.
      *
      * @param string $json The feed JSON payload.
-     * @return array {feed: array, items: array[]}
+     * @return array The normalized feed, with `feed` and `items` keys.
      * @throws FeedParseException If the payload is empty, malformed, or not a JSON object.
      */
     public static function parseJson(string $json): array
@@ -237,16 +238,16 @@ abstract class Feed
      */
     private static function _normalizeRssItem(SimpleXMLElement $item): array
     {
-        // Read the title
+        // Get the title
         $title = trim((string) ($item->title ?? ''));
 
-        // Read the link
+        // Get the link
         $link = trim((string) ($item->link ?? ''));
 
-        // Read the description
+        // Get the description
         $description = trim((string) ($item->description ?? ''));
 
-        // Read the GUID
+        // Get the GUID
         $guid = trim((string) ($item->guid ?? ''));
 
         // If no GUID was set, fall back to the link
@@ -257,7 +258,7 @@ abstract class Feed
         // Initialize the publication date
         $pubDate = null;
 
-        // Read the publication date
+        // Get the publication date
         $rawDate = trim((string) ($item->pubDate ?? ''));
 
         // If a publication date was found, try to parse it
@@ -271,7 +272,7 @@ abstract class Feed
             }
         }
 
-        // Read the author
+        // Get the author
         $author = trim((string) ($item->author ?? ''));
 
         // Initialize the categories array
@@ -279,7 +280,7 @@ abstract class Feed
 
         // Loop through every <category> element
         foreach ($item->category as $category) {
-            // Read the category value
+            // Get the category value
             $value = trim((string) $category);
             // If the category isn't empty, add it
             if ('' !== $value) {
@@ -349,13 +350,13 @@ abstract class Feed
      */
     private static function _normalizeAtomEntry(SimpleXMLElement $entry): array
     {
-        // Read the title
+        // Get the title
         $title = trim((string) ($entry->title ?? ''));
 
-        // Read the link
+        // Get the link
         $link = static::_atomLink($entry);
 
-        // Read the <id> (Atom's main item identifier)
+        // Get the <id> (Atom's main item identifier)
         $guid = trim((string) ($entry->id ?? ''));
 
         // If no <id> was set, fall back to the link
@@ -363,7 +364,7 @@ abstract class Feed
             $guid = $link;
         }
 
-        // Read the <summary>
+        // Get the <summary>
         $description = trim((string) ($entry->summary ?? ''));
 
         // If no <summary> was set, fall back to <content>
@@ -376,7 +377,7 @@ abstract class Feed
 
         // Try to read a publication date from <published>, then <updated>
         foreach (['published', 'updated'] as $tag) {
-            // Read the tag value
+            // Get the tag value
             $raw = trim((string) ($entry->{$tag} ?? ''));
             // If the tag is empty, try the next one
             if ('' === $raw) {
@@ -406,7 +407,7 @@ abstract class Feed
 
         // Loop through every <category> element
         foreach ($entry->category as $category) {
-            // Read the term attribute (Atom uses `term`)
+            // Get the term attribute (Atom uses `term`)
             $term = trim((string) ($category['term'] ?? ''));
             // If the term isn't empty, add it
             if ('' !== $term) {
@@ -443,7 +444,7 @@ abstract class Feed
 
         // Loop through every <link> child
         foreach ($node->link as $link) {
-            // Read the href and rel attributes
+            // Get the href and rel attributes
             $href = trim((string) ($link['href'] ?? ''));
             $rel  = trim((string) ($link['rel']  ?? ''));
             // If this is the "alternate" link, return it immediately
@@ -470,7 +471,7 @@ abstract class Feed
     {
         // Loop through every <enclosure> child
         foreach ($item->enclosure as $enclosure) {
-            // Read the URL
+            // Get the URL
             $url = trim((string) ($enclosure['url'] ?? ''));
             // If no URL, skip this enclosure
             if ('' === $url) {
@@ -502,7 +503,7 @@ abstract class Feed
             if ('enclosure' !== trim((string) ($link['rel'] ?? ''))) {
                 continue;
             }
-            // Read the href
+            // Get the href
             $href = trim((string) ($link['href'] ?? ''));
             // If no href, skip this link
             if ('' === $href) {
@@ -534,7 +535,7 @@ abstract class Feed
             if (!is_array($attachment)) {
                 continue;
             }
-            // Read the URL
+            // Get the URL
             $url = trim((string) ($attachment['url'] ?? ''));
             // If no URL, skip this attachment
             if ('' === $url) {
@@ -558,7 +559,7 @@ abstract class Feed
      * @param string $url The enclosure URL (required, already trimmed).
      * @param string $type The MIME type (may be empty).
      * @param string $length The byte size as a string (may be empty).
-     * @return array {url: string, type: string, length: int|null}
+     * @return array The normalized enclosure (url, type, length).
      */
     private static function _normalizeEnclosure(string $url, string $type, string $length): array
     {
@@ -571,8 +572,7 @@ abstract class Feed
     }
 
     /**
-     * Extract every non-default-namespace child of an XML element into
-     * a [prefix => [tag => value]] map.
+     * Extract an XML element's namespaced children into a prefix-keyed map.
      *
      * No per-namespace allowlist; new feed extensions (Podcasting 2.0,
      * Dublin Core, Media RSS, etc.) flow through without code changes.
@@ -585,7 +585,7 @@ abstract class Feed
         // Initialize the result map
         $result = [];
 
-        // Read every namespace declared anywhere in the document
+        // Get every namespace declared anywhere in the document
         $namespaces = $element->getDocNamespaces(true);
 
         // Loop through every prefix => uri pair
@@ -650,7 +650,7 @@ abstract class Feed
     }
 
     /**
-     * Recursively convert an XML node to its Twig-facing representation.
+     * Convert an XML node into a Twig-friendly value.
      *
      * Recursion follows the supplied namespace; cross-namespace children
      * are not exposed under the parent.
@@ -661,7 +661,7 @@ abstract class Feed
      */
     private static function _xmlNodeToValue(SimpleXMLElement $node, string $ns): string|array
     {
-        // Read every attribute on the node
+        // Get every attribute on the node
         $attributes = [];
         foreach ($node->attributes() as $key => $value) {
             $attributes[(string) $key] = trim((string) $value);
@@ -670,7 +670,7 @@ abstract class Feed
         // Collect any same-namespace child elements
         $childData = static::_collectChildren($node->children($ns), $ns);
 
-        // Read the node's trimmed text content
+        // Get the node's trimmed text content
         $text = trim((string) $node);
 
         // If the node has no attributes and no children, return the text as a scalar
@@ -708,13 +708,13 @@ abstract class Feed
      */
     private static function _normalizeJsonItem(array $item): array
     {
-        // Read the item's main identifier
+        // Get the item's main identifier
         $id = trim((string) ($item['id'] ?? ''));
 
-        // Read the title
+        // Get the title
         $title = trim((string) ($item['title'] ?? ''));
 
-        // Read the URL
+        // Get the URL
         $link = trim((string) ($item['url'] ?? ''));
 
         // If no URL was set, fall back to external_url
@@ -730,7 +730,7 @@ abstract class Feed
         // Use the id as the GUID (or the link, if no id was set)
         $guid = ('' !== $id ? $id : $link);
 
-        // Read the description (content_html, content_text, or summary)
+        // Get the description (content_html, content_text, or summary)
         $description = trim((string) ($item['content_html'] ?? ''));
 
         // If no content_html, fall back to content_text
@@ -746,7 +746,7 @@ abstract class Feed
         // Initialize the publication date
         $pubDate = null;
 
-        // Read the date_published value
+        // Get the date_published value
         $rawDate = trim((string) ($item['date_published'] ?? ''));
 
         // If a publication date was found, try to parse it
@@ -778,7 +778,7 @@ abstract class Feed
 
         // Loop through every tag
         foreach (($item['tags'] ?? []) as $tag) {
-            // Read the tag value
+            // Get the tag value
             $value = trim((string) $tag);
             // If the tag isn't empty, add it
             if ('' !== $value) {

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,7 +14,8 @@ namespace doublesecretagency\notifier\elements\conditions;
 use craft\elements\conditions\ElementCondition;
 
 /**
- * Notification condition
+ * Condition for filtering notifications on the element index.
+ *
  * @since 1.0.0
  */
 class NotificationCondition extends ElementCondition
@@ -49,14 +50,10 @@ class NotificationCondition extends ElementCondition
     // ========================================================================= //
 
     /**
-     * Resolve the parent's default rule list against whichever override hook
-     * the active Craft version actually exposes, then merge in any plugin-
-     * specific rules.
+     * Build the condition rule list for the active Craft version.
      *
-     * Calling `parent::conditionRuleTypes()` directly under Craft 5 would throw
-     * (the method was removed). Calling `parent::selectableConditionRules()`
-     * directly under Craft 4 would also throw (the method didn't exist yet).
-     * The `method_exists()` guards select whichever is real on the active version.
+     * Each parent hook exists in only one Craft version (Craft 5 dropped `conditionRuleTypes()`,
+     * Craft 4 lacked `selectableConditionRules()`), so `method_exists()` guards pick whichever is real.
      *
      * @return array
      */

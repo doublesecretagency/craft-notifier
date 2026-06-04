@@ -8,7 +8,7 @@
 <div class="message-type-email hidden">
     {{ forms.selectField({
         label: "User's Email Address Field"|t('notifier'),
-        instructions: fieldInstructions|t('notifier', {'type' : 'email address'}),
+        instructions: "Select which User field contains the recipient's email address."|t('notifier'),
         id: 'messageConfig-emailField',
         name: 'messageConfig[emailField]',
         value: (notification.messageConfig.emailField ?? null),

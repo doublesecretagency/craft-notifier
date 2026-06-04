@@ -18,7 +18,7 @@ The trigger does not fire when an Asset is moved between folders or volumes (see
 
 ## Twig variables
 
-The `object` variable (and its `asset` alias) is the updated [Asset](https://docs.craftcms.com/api/v5/craft-elements-asset.html). The pre-save copy is available as [`original`](/messages/variables#fetching-the-original-element) for change-detection.
+The `object` variable (and its `asset` alias) is the updated [Asset](https://docs.craftcms.com/api/v5/craft-elements-asset.html). The pre-save copy is available as [`original`](/messages/variables/element-events#fetching-the-original-element) for change-detection.
 
 ```twig
 {{ asset.filename }} was updated by {{ currentUser.fullName }}.

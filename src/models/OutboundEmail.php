@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -18,24 +18,25 @@ use doublesecretagency\notifier\helpers\Notifier;
 use yii\base\InvalidConfigException;
 
 /**
- * Class OutboundEmail
+ * Envelope for an outbound email message.
+ *
  * @since 1.0.0
  */
 class OutboundEmail extends BaseEnvelope
 {
 
     /**
-     * @var string|null
+     * @var string|null Recipient email address.
      */
     public ?string $to = null;
 
     /**
-     * @var string
+     * @var string Email subject line.
      */
     public string $subject = '';
 
     /**
-     * @var string
+     * @var string Rendered message body.
      */
     public string $body = '';
 
@@ -68,7 +69,7 @@ class OutboundEmail extends BaseEnvelope
             return false;
         }
 
-        // Compile email
+        // Build the email
         $email = new Email();
         $email->setTo($this->to);
         $email->setSubject($this->subject);

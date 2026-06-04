@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,11 +15,9 @@ use craft\fields\conditions\EmptyFieldConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedOperator;
 
 /**
- * Class NotifierEmptyFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the empty/notEmpty field rule's operators (Time, Matrix, Addresses).
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for empty/notEmpty-only field rules (Time, Matrix, Addresses).
+ * @since 3.0.0
  */
 class NotifierEmptyFieldConditionRule extends EmptyFieldConditionRule
 {

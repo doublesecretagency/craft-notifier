@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -18,6 +18,7 @@ use yii\console\ExitCode;
 
 /**
  * Run time-based triggers from the command line.
+ *
  * @since 3.0.0
  */
 class ScheduledController extends Controller
@@ -49,6 +50,24 @@ class ScheduledController extends Controller
         $summary['dispatched']    += $feed['dispatched'];
         $summary['sent']          += $feed['sent'];
         $summary['errors']        = array_merge($summary['errors'], $feed['errors']);
+
+        // Run the system snapshot runner
+        $snapshot = $plugin->systemSnapshotRunner->run();
+
+        // Merge the system snapshot runner's results into the summary
+        $summary['notifications'] += $snapshot['notifications'];
+        $summary['dispatched']    += $snapshot['dispatched'];
+        $summary['sent']          += $snapshot['sent'];
+        $summary['errors']        = array_merge($summary['errors'], $snapshot['errors']);
+
+        // Run the dynamic data runner
+        $dynamic = $plugin->dynamicDataRunner->run();
+
+        // Merge the dynamic data runner's results into the summary
+        $summary['notifications'] += $dynamic['notifications'];
+        $summary['dispatched']    += $dynamic['dispatched'];
+        $summary['sent']          += $dynamic['sent'];
+        $summary['errors']        = array_merge($summary['errors'], $dynamic['errors']);
 
         // Loop through any errors and print each one
         foreach ($summary['errors'] as $error) {

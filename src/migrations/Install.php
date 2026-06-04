@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,7 +14,8 @@ namespace doublesecretagency\notifier\migrations;
 use craft\db\Migration;
 
 /**
- * Installation Migration
+ * Creates the database tables Notifier needs.
+ *
  * @since 1.0.0
  */
 class Install extends Migration
@@ -31,9 +32,14 @@ class Install extends Migration
     const LOG = '{{%notifier_log}}';
 
     /**
-     * @var string The schedule tracking table name.
+     * @var string The date-reached tracking table name.
      */
-    const TRACK_SCHEDULED = '{{%notifier_trackscheduled}}';
+    const TRACK_DATES = '{{%notifier_trackdates}}';
+
+    /**
+     * @var string The report-schedule tracking table name.
+     */
+    const TRACK_REPORTS = '{{%notifier_trackreports}}';
 
     /**
      * @var string The feed tracking table name.
@@ -54,14 +60,17 @@ class Install extends Migration
      */
     public function safeDown(): void
     {
+        $this->dropTableIfExists(self::TRACK_DATES);
+        $this->dropTableIfExists(self::TRACK_REPORTS);
         $this->dropTableIfExists(self::TRACK_FEEDS);
-        $this->dropTableIfExists(self::TRACK_SCHEDULED);
         $this->dropTableIfExists(self::LOG);
         $this->dropTableIfExists(self::NOTIFICATIONS);
     }
 
     /**
-     * Creates the tables.
+     * Create the tables.
+     *
+     * @return void
      */
     protected function createTables(): void
     {
@@ -101,13 +110,24 @@ class Install extends Migration
         }
 
         // If table does not already exist, create it
-        if (!$this->db->tableExists(self::TRACK_SCHEDULED)) {
-            $this->createTable(self::TRACK_SCHEDULED, [
+        if (!$this->db->tableExists(self::TRACK_DATES)) {
+            $this->createTable(self::TRACK_DATES, [
                 'id'             => $this->primaryKey(),
                 'notificationId' => $this->integer()->notNull(),
                 'lastRunAt'      => $this->dateTime()->notNull(),
             ]);
-            $this->createIndex(null, self::TRACK_SCHEDULED, ['notificationId'], true);
+            $this->createIndex(null, self::TRACK_DATES, ['notificationId'], true);
+        }
+
+        // If table does not already exist, create it
+        if (!$this->db->tableExists(self::TRACK_REPORTS)) {
+            $this->createTable(self::TRACK_REPORTS, [
+                'id'             => $this->primaryKey(),
+                'notificationId' => $this->integer()->notNull(),
+                'lastRunAt'      => $this->dateTime()->null(),
+                'nextRunAt'      => $this->dateTime()->notNull(),
+            ]);
+            $this->createIndex(null, self::TRACK_REPORTS, ['notificationId'], true);
         }
 
         // If table does not already exist, create it
@@ -122,7 +142,9 @@ class Install extends Migration
     }
 
     /**
-     * Adds the foreign keys.
+     * Add the foreign keys.
+     *
+     * @return void
      */
     protected function addForeignKeys(): void
     {
@@ -132,8 +154,11 @@ class Install extends Migration
         // Relate Logs to Notifications
         $this->addForeignKey(null, self::LOG, ['notificationId'], self::NOTIFICATIONS, ['id'], 'SET NULL');
 
-        // Relate Schedule Tracking to Notifications
-        $this->addForeignKey(null, self::TRACK_SCHEDULED, ['notificationId'], self::NOTIFICATIONS, ['id'], 'CASCADE');
+        // Relate Date Tracking to Notifications
+        $this->addForeignKey(null, self::TRACK_DATES, ['notificationId'], self::NOTIFICATIONS, ['id'], 'CASCADE');
+
+        // Relate Report Tracking to Notifications
+        $this->addForeignKey(null, self::TRACK_REPORTS, ['notificationId'], self::NOTIFICATIONS, ['id'], 'CASCADE');
 
         // Relate Feed Tracking to Notifications
         $this->addForeignKey(null, self::TRACK_FEEDS, ['notificationId'], self::NOTIFICATIONS, ['id'], 'CASCADE');

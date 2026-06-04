@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,13 +14,9 @@ namespace doublesecretagency\notifier\helpers\events;
 use craft\base\ElementInterface;
 
 /**
- * Class Originals
- * @since 3.0.0
+ * Stores pre-save element snapshots for comparison after saving.
  *
- * Central registry for pre-save element snapshots captured during the
- * Notifier dispatch pipeline. Helpers record an `original` at beforeSave;
- * afterSave handlers and condition operators read it back keyed by the
- * post-save element's class, id, and siteId.
+ * @since 3.0.0
  */
 abstract class Originals
 {
@@ -59,15 +55,17 @@ abstract class Originals
         if (empty($current->id)) {
             return null;
         }
+        // Default to site 0 when the element has no site
         $siteId = ($current->siteId ?? 0);
+        // Return the snapshot for this element and site, or null
         return (static::$_store[$current::class][$current->id][$siteId] ?? null);
     }
 
     /**
-     * Variant used by Entry handlers that need the snapshot before the post-save
-     * element instance is in scope (e.g. the per-site after-save fires with the
-     * canonical element, but the captured original is keyed against the per-site
-     * pre-save siteId).
+     * Look up a snapshot by explicit class, ID, and site.
+     *
+     * Used by Entry handlers that need the snapshot before the post-save element is in scope
+     * (the per-site after-save fires with the canonical element, keyed by the pre-save siteId).
      *
      * @param class-string<ElementInterface> $class
      * @param int $id
@@ -76,17 +74,22 @@ abstract class Originals
      */
     public static function find(string $class, int $id, ?int $siteId = null): ?ElementInterface
     {
+        // Default to site 0 when no site is given
         $siteId ??= 0;
+        // Return the snapshot for this class, ID, and site, or null
         return (static::$_store[$class][$id][$siteId] ?? null);
     }
 
     /**
-     * Reset the registry. Intended for tests; not called in production code.
+     * Reset the registry.
+     *
+     * Intended for tests; not called in production code.
      *
      * @return void
      */
     public static function reset(): void
     {
+        // Clear the registry
         static::$_store = [];
     }
 

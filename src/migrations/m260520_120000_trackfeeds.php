@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,13 +14,7 @@ namespace doublesecretagency\notifier\migrations;
 use craft\db\Migration;
 
 /**
- * m260520_120000_trackfeeds migration
- *
- * Creates the table that tracks which feed items have already been
- * dispatched. The unique index on `(notificationId, itemId)` guarantees
- * each item fires exactly once per notification. A reserved itemId marks
- * each notification as seeded so the first scan never blasts every
- * already-visible item to recipients.
+ * Creates the table that tracks which feed items have already been sent.
  *
  * @since 3.0.0
  */

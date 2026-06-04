@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -21,6 +21,7 @@ use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\exceptions\TestPreflightException;
 use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\helpers\Notifier;
+use doublesecretagency\notifier\helpers\SystemSnapshot;
 use doublesecretagency\notifier\NotifierPlugin;
 use Throwable;
 use yii\base\Event;
@@ -32,7 +33,8 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * Notifications controller
+ * Controller for the notification CP screens.
+ *
  * @since 1.0.0
  */
 class NotificationsController extends Controller
@@ -187,16 +189,23 @@ class NotificationsController extends Controller
                 'readOnly' => $readOnly,
             ]);
 
-        // Pick the correct sidebar method for the active Craft version
-        // (Craft 5: metaSidebarTemplate(), Craft 4: sidebarTemplate())
+        // Get sidebar method based on Craft major version
         $sidebarMethod = Compat::metaSidebarMethodName();
+
+        // Set the sidebar
         $response->{$sidebarMethod}('notifier/notifications/_edit/details', [
             'notification' => $notification,
             'readOnly' => $readOnly,
         ]);
 
-        // Render the "Send a test message" button into the CP screen header
-        $response->additionalButtonsTemplate('notifier/notifications/_edit/test-button', [
+        // Whether this notification is a report type
+        $isReport = $notification->isReportType();
+
+        // Determine which button template to use
+        $buttonTemplate = ($isReport ? 'send-report' : 'send-test');
+
+        // Set the "Send" button
+        $response->additionalButtonsTemplate("notifier/notifications/_edit/{$buttonTemplate}", [
             'notification' => $notification,
         ]);
 
@@ -305,13 +314,13 @@ class NotificationsController extends Controller
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 
-        // Require the dedicated test permission
+        // Require the test permission
         $this->requirePermission('notifier-testNotifications');
 
         // Get the specified Notification ID
         $notificationId = (int) $this->request->getRequiredBodyParam('notificationId');
 
-        // Load the Notification
+        // Get the Notification
         /** @var Notification|null $notification */
         $notification = Craft::$app->getElements()->getElementById($notificationId, Notification::class);
 
@@ -324,7 +333,7 @@ class NotificationsController extends Controller
         try {
             $dispatch = NotifierPlugin::getInstance()->messages->sendTest($notification);
         } catch (TestPreflightException $e) {
-            // Surface the reason as a CP error toast via the existing JS handler
+            // Return the reason as a CP error toast via the existing JS handler
             return $this->asJson([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -368,14 +377,14 @@ class NotificationsController extends Controller
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 
-        // Require the dedicated manual-send permission
+        // Require the manual-send permission
         $this->requirePermission('notifier-sendManualNotifications');
 
         // Get the specified notification and element IDs
         $notificationId = (int) $this->request->getRequiredBodyParam('notificationId');
         $elementId      = (int) $this->request->getRequiredBodyParam('elementId');
 
-        // Load the Notification
+        // Get the Notification
         $notification = Notifier::getNotification($notificationId);
 
         // If no matching Notification, 404
@@ -388,7 +397,7 @@ class NotificationsController extends Controller
             throw new BadRequestHttpException(Craft::t('notifier', 'This notification cannot be triggered manually.'));
         }
 
-        // Load the element
+        // Get the element
         $element = Craft::$app->getElements()->getElementById($elementId);
 
         // If no matching element, 404
@@ -415,7 +424,74 @@ class NotificationsController extends Controller
         $event = new Event(['sender' => $element]);
         $count = NotifierPlugin::getInstance()->messages->send($notification, $event, ['object' => $element]);
 
-        // If nothing actually went out, surface that explicitly
+        // If nothing actually went out, report it
+        if (0 === $count) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier',
+                    'Notification was not sent. Check the Notification Log for details.'
+                ),
+            ]);
+        }
+
+        // Report success
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Notification sent.'),
+        ]);
+    }
+
+    /**
+     * Send a report-type Notification on demand.
+     *
+     * Fired from the "Send" button on the edit screen
+     * of a System Snapshot or Dynamic Data notification.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionSendReport(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Require the manual-send permission
+        $this->requirePermission('notifier-sendManualNotifications');
+
+        // Get the specified notification ID
+        $notificationId = (int) $this->request->getRequiredBodyParam('notificationId');
+
+        // Get the Notification
+        $notification = Notifier::getNotification($notificationId);
+
+        // If no matching Notification, 404
+        if (!$notification) {
+            throw new NotFoundHttpException(Craft::t('notifier', 'Notification not found'));
+        }
+
+        // If the Notification isn't a report event type, bail
+        if (!$notification->isReportType()) {
+            throw new BadRequestHttpException(Craft::t('notifier', 'This notification cannot be triggered manually.'));
+        }
+
+        // If Notification is a System Snapshot
+        if ('system-snapshot' === $notification->eventType) {
+            // Compile the report
+            $data = ['report' => SystemSnapshot::compile()];
+        } else {
+            // Empty data
+            $data = [];
+        }
+
+        // Build an event with no sender
+        $event = new Event(['sender' => null]);
+
+        // Send the Notification
+        $count = NotifierPlugin::getInstance()->messages->send($notification, $event, $data);
+
+        // If nothing actually went out, report it
         if (0 === $count) {
             return $this->asJson([
                 'success' => false,
@@ -435,7 +511,7 @@ class NotificationsController extends Controller
     // ========================================================================= //
 
     /**
-     * Fetches or creates a Notification.
+     * Get or create a Notification.
      *
      * @param int|null $notificationId
      * @return Notification

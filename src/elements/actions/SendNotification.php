@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -21,7 +21,8 @@ use doublesecretagency\notifier\NotifierPlugin;
 use yii\base\Event;
 
 /**
- * Class SendNotification
+ * Element action that manually triggers a notification.
+ *
  * @since 3.0.0
  */
 class SendNotification extends ElementAction
@@ -109,7 +110,7 @@ JS, [static::class]);
             return false;
         }
 
-        // Load the chosen Notification
+        // Get the chosen Notification
         $notification = ($this->notificationId ? Notifier::getNotification((int) $this->notificationId) : null);
 
         // If Notification doesn't exist or can't be triggered manually, bail
@@ -121,16 +122,16 @@ JS, [static::class]);
         // Get the messages service
         $messages = NotifierPlugin::getInstance()->messages;
 
-        // Accumulate the envelope count across every selected element
+        // Initialize the total envelope count
         $totalSent = 0;
 
-        // Loop over selected elements
+        // Loop through the selected elements
         foreach ($query->all() as $element) {
             // Send the notification, summing the envelope count
             $totalSent += $messages->send($notification, new Event(['sender' => $element]), ['object' => $element]);
         }
 
-        // If nothing actually went out, surface that explicitly
+        // If nothing actually went out, report it
         if (0 === $totalSent) {
             $this->setMessage(Craft::t('notifier',
                 'Notification was not sent. Check the Notification Log for details.'

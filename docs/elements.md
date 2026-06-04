@@ -14,7 +14,7 @@ Each Notification consists of four parts, separated into tabs...
 
 Simple "Title" and "Description" fields.
 
-<img class="dropshadow" src="/images/elements/example-notification.png" alt="" style="width:650px; margin-top:10px">
+<img class="dropshadow" src="/images/elements/example-notification.png" alt="" style="width:640px; margin-top:10px">
 
 ### Event
 
@@ -22,7 +22,7 @@ Notifications are each tied to a specific [event](/events/) within the Craft sys
 
 ### Message
 
-Notifications will send a specific [message](/messages/), written in Twig or plain text. See more about [templating](/messages/templating) and special [variables](/messages/variables).
+Notifications will send a specific [message](/messages/), written in Twig or plain text. See more about [templating](/messages/templating) and special [variables](/messages/variables/).
 
 ### Recipients
 

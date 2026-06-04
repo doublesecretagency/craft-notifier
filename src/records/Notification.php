@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,7 +15,8 @@ use craft\db\ActiveRecord;
 use craft\db\SoftDeleteTrait;
 
 /**
- * Notification record
+ * Database record for a single notification.
+ *
  * @since 1.0.0
  *
  * @property int $id
@@ -30,10 +31,15 @@ use craft\db\SoftDeleteTrait;
  */
 class Notification extends ActiveRecord
 {
+
     use SoftDeleteTrait;
 
+    /**
+     * @inheritdoc
+     */
     public static function tableName(): string
     {
         return '{{%notifier_notifications}}';
     }
+
 }

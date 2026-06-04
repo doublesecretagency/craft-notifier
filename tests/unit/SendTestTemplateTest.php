@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -23,17 +23,17 @@ use PHPUnit\Framework\TestCase;
  *
  * @since 3.0.0
  */
-class TestButtonTemplateTest extends TestCase
+class SendTestTemplateTest extends TestCase
 {
 
     /**
-     * @var string Cached test-button template source.
+     * @var string Cached send-test template source.
      */
     private static string $source;
 
     public static function setUpBeforeClass(): void
     {
-        $path = dirname(__DIR__, 2) . '/src/templates/notifications/_edit/test-button.twig';
+        $path = dirname(__DIR__, 2) . '/src/templates/notifications/_edit/send-test.twig';
         if (!file_exists($path)) {
             throw new \RuntimeException("Missing template: $path");
         }

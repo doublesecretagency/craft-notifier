@@ -1,0 +1,90 @@
+/* ==========================================================================
+   Notifier event editor (date-reached + recurring schedule controls)
+   ========================================================================== */
+
+.notifier-date-reached {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+}
+.notifier-date-reached .text {
+    width: 4em;
+}
+.notifier-recurring-schedule {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 4px 0 6px;
+}
+.notifier-recurring-schedule .notifier-recurring-interval,
+.notifier-recurring-schedule .recurring-frequency-weekly,
+.notifier-recurring-schedule .recurring-frequency-monthly,
+.notifier-recurring-schedule .recurring-frequency-yearly {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.notifier-recurring-schedule input[type="number"] {
+    width: 4em;
+}
+.notifier-recurring-schedule input[type="time"] {
+    width: 150px;
+}
+.notifier-recurring-start {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 4px;
+    padding: 0 0 6px;
+}
+.notifier-recurring-start input[type="date"] {
+    width: 150px;
+}
+.notifier-recurring-label {
+    color: var(--medium-text-color);
+}
+.notifier-recurring-next {
+    max-width: 420px;
+    margin: 14px auto 0;
+    padding: 12px 16px;
+    border: 2px solid var(--primary-button-bg);
+    border-radius: 5px;
+    color: var(--medium-text-color);
+}
+.notifier-recurring-next-title {
+    margin-bottom: 8px;
+    font-weight: bold;
+    text-align: center;
+}
+/* Trailing cadence summary: add breathing room below the red box */
+.notifier-recurring-next + .notifier-recurring-next-title {
+    margin-top: 14px;
+}
+.notifier-recurring-runs {
+    width: 100%;
+    border-collapse: collapse;
+}
+.notifier-recurring-runs th,
+.notifier-recurring-runs td {
+    padding: 6px 10px;
+    text-align: left;
+}
+.notifier-recurring-runs thead th {
+    border-bottom: 1px solid var(--hairline-color);
+    font-weight: bold;
+}
+.notifier-recurring-runs tbody td {
+    color: var(--text-color);
+}
+
+/* Each .event-type-* wrapper is a flex item of .flex-fields, so a child's
+   bottom margin cannot collapse out of it. When the only visible direct
+   child is the Event dropdown (no event chosen yet, or no follow-up fields
+   shown), that dropdown's margin-bottom becomes trapped empty space inside
+   the wrapper. Zero it when no visible following sibling exists; once a
+   toggle wrapper or <hr> becomes visible, the selector stops matching and
+   the normal inter-field margin returns. */
+[class^="event-type-"] > .field:not(:has(~ :not(.hidden):not([type="hidden"]))) {
+    margin-bottom: 0;
+}

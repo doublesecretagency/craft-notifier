@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -17,16 +17,9 @@ use GuzzleHttp\Exception\GuzzleException;
 use Throwable;
 
 /**
- * Class BlueskyLinkCard
- * @since 3.0.0
+ * Builds the link-preview card for a Bluesky post.
  *
- * Builds the data for an `app.bsky.embed.external` link-preview card. Bluesky
- * does not unfurl links server-side; the posting client must scrape the page's
- * OpenGraph metadata itself and attach the embed. This helper owns the scrape
- * (metadata and thumbnail), leaving the PDS blob upload and embed assembly to
- * `OutboundBluesky`. The pure seams (`parseMetadata()`, `resizeToLimit()`) are
- * separated from the Guzzle boundaries (`fetchMetadata()`, `fetchThumbnail()`)
- * so the parsing logic stays unit-testable.
+ * @since 3.0.0
  */
 abstract class BlueskyLinkCard
 {
@@ -76,14 +69,14 @@ abstract class BlueskyLinkCard
      *
      * @param string $html Raw page HTML.
      * @param string $baseUrl The page's final (post-redirect) URL, used to resolve a relative image.
-     * @return array{title: string, description: string, imageUrl: ?string}
+     * @return array The card metadata (title, description, imageUrl).
      */
     public static function parseMetadata(string $html, string $baseUrl): array
     {
         // Collect every <meta> tag's property/name => content mapping
         $meta = static::_metaTags($html);
 
-        // Resolve the title, falling back og:title -> twitter:title -> <title> -> host
+        // Get the title, falling back og:title -> twitter:title -> <title> -> host
         $title = (
             $meta['og:title']
             ?? $meta['twitter:title']
@@ -91,7 +84,7 @@ abstract class BlueskyLinkCard
             ?? (parse_url($baseUrl, PHP_URL_HOST) ?: '')
         );
 
-        // Resolve the description, falling back og:description -> twitter:description -> meta -> empty
+        // Get the description, falling back og:description -> twitter:description -> meta -> empty
         $description = (
             $meta['og:description']
             ?? $meta['twitter:description']
@@ -99,7 +92,7 @@ abstract class BlueskyLinkCard
             ?? ''
         );
 
-        // Resolve the image from og:image or twitter:image, against the base URL
+        // Get the image from og:image or twitter:image, against the base URL
         $image = ($meta['og:image'] ?? $meta['twitter:image'] ?? null);
         $imageUrl = ($image ? static::_resolveUrl($baseUrl, $image) : null);
 
@@ -118,7 +111,7 @@ abstract class BlueskyLinkCard
      * response, or a non-HTML body.
      *
      * @param string $url The URL to scrape.
-     * @return array{uri: string, title: string, description: string, imageUrl: ?string}|null
+     * @return array|null The card metadata (uri, title, description, imageUrl), or null on failure.
      */
     public static function fetchMetadata(string $url): ?array
     {
@@ -170,11 +163,11 @@ abstract class BlueskyLinkCard
      * @param string $bytes Raw image bytes.
      * @param string $mime The declared MIME type.
      * @param int $maxBytes The maximum allowed byte size.
-     * @return array{bytes: string, mime: string}|null
+     * @return array|null The resized image (bytes, mime), or null.
      */
     public static function resizeToLimit(string $bytes, string $mime, int $maxBytes): ?array
     {
-        // Determine the raster type, byte-sniffing when the MIME is unhelpful
+        // Get the raster type, byte-sniffing when the MIME is unhelpful
         $type = static::_rasterType($mime, $bytes);
 
         // Reject unsupported types (SVG, unknown)
@@ -249,7 +242,7 @@ abstract class BlueskyLinkCard
      * resized under the blob limit.
      *
      * @param string $imageUrl The image URL to fetch.
-     * @return array{bytes: string, mime: string}|null
+     * @return array|null The thumbnail (bytes, mime), or null.
      */
     public static function fetchThumbnail(string $imageUrl): ?array
     {
@@ -294,7 +287,7 @@ abstract class BlueskyLinkCard
      * Handles attributes in any order and HTML entities in the content.
      *
      * @param string $html Raw page HTML.
-     * @return array<string,string> Map of each meta property/name to its content value.
+     * @return array Map of each meta property/name to its content value.
      */
     private static function _metaTags(string $html): array
     {
@@ -306,7 +299,7 @@ abstract class BlueskyLinkCard
             return $map;
         }
 
-        // Walk each tag
+        // Loop through each tag
         foreach ($tags[0] as $tag) {
 
             // Parse the tag's attributes into a key => value map
@@ -332,6 +325,7 @@ abstract class BlueskyLinkCard
 
         }
 
+        // Return the meta map
         return $map;
     }
 

@@ -50,13 +50,11 @@ Pass the ID of the notification and the ID of the element. This is handy for scr
 
 ## Permissions
 
-Manually sending a notification requires the **Send manual notifications** [permission](/getting-started/permissions).
-
-It is separate from saving and testing, so you can let trusted users send notifications without also granting them the ability to edit notification configurations.
+Manually sending notifications is only possible for users with the [Send manual notifications](/getting-started/permissions) permission enabled.
 
 ## Twig variables
 
-Almost all [special variables](/messages/variables) are available in the message body, exactly as they are for automatic events.
+Almost all [special variables](/messages/variables/) are available in the message body, exactly as they are for automatic events.
 
 :::tip No `original`
 Because a manual send is not a save, there is no "before" state. The `original` variable will be `null`.

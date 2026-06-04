@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -22,6 +22,7 @@ use yii\console\ExitCode;
 
 /**
  * Manually trigger notifications from the command line.
+ *
  * @since 3.0.0
  */
 class ManualController extends Controller
@@ -39,7 +40,7 @@ class ManualController extends Controller
      */
     public function actionSend(int $notificationId, int $elementId): int
     {
-        // Load the Notification
+        // Get the Notification
         $notification = Notifier::getNotification($notificationId);
 
         // If no matching Notification, bail
@@ -54,7 +55,7 @@ class ManualController extends Controller
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        // Load the element
+        // Get the element
         $element = Craft::$app->getElements()->getElementById($elementId);
 
         // If no matching element, bail
@@ -80,7 +81,7 @@ class ManualController extends Controller
         $event = new Event(['sender' => $element]);
         $count = NotifierPlugin::getInstance()->messages->send($notification, $event, ['object' => $element]);
 
-        // If nothing actually went out, surface that explicitly
+        // If nothing actually went out, report it
         if (0 === $count) {
             $this->stderr("Notification was not sent. Check the Notification Log for details." . PHP_EOL, Console::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;

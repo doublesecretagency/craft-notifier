@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -21,7 +21,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use Throwable;
 
 /**
- * Class OutboundNtfy
+ * Envelope for an outbound ntfy push notification.
+ *
  * @since 3.0.0
  */
 class OutboundNtfy extends BaseEnvelope
@@ -81,7 +82,7 @@ class OutboundNtfy extends BaseEnvelope
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        // Resolve server URL via env-var dereference, falling back to the public ntfy.sh server
+        // Resolve the server URL (supports a $ENV_VAR reference), falling back to the public ntfy.sh server
         $serverUrl = App::parseEnv($settings->ntfyServerUrl) ?: 'https://ntfy.sh';
 
         // If recipient has no topic, log error and bail

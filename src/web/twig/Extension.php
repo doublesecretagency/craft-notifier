@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -19,10 +19,14 @@ use craft\fields\Email;
 use craft\fields\PlainText;
 use craft\fields\RadioButtons;
 use craft\fields\Url;
+use DateTime;
+use DateTimeZone;
 use doublesecretagency\notifier\enums\Options;
 use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\helpers\Notifier;
+use doublesecretagency\notifier\helpers\RecurringSchedule;
 use doublesecretagency\notifier\NotifierPlugin;
+use doublesecretagency\notifier\web\twig\tokenparsers\SetDataTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SetRecipientsTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
 use Twig\Extension\AbstractExtension;
@@ -30,7 +34,8 @@ use Twig\Extension\GlobalsInterface;
 use Twig\TwigFunction;
 
 /**
- * Class Extension
+ * Registers Notifier's Twig tags, functions, and globals.
+ *
  * @since 1.0.0
  */
 class Extension extends AbstractExtension implements GlobalsInterface
@@ -44,15 +49,14 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return [
             new SkipMessageTokenParser(),
             new SetRecipientsTokenParser(),
+            new SetDataTokenParser(),
         ];
     }
 
     // ========================================================================= //
 
     /**
-     * Registers global variables.
-     *
-     * @return array
+     * @inheritdoc
      */
     public function getGlobals(): array
     {
@@ -252,6 +256,42 @@ class Extension extends AbstractExtension implements GlobalsInterface
             new TwigFunction('availableDigitalProductTypes', [$this, 'availableDigitalProductTypes']),
             new TwigFunction('availableCalendars', [$this, 'availableCalendars']),
             new TwigFunction('availableDateFields', [$this, 'availableDateFields']),
+            new TwigFunction('notifierNextRun', [$this, 'notifierNextRun']),
+        ];
+    }
+
+    /**
+     * Get the next run for the recurring-schedule preview.
+     *
+     * Provides both a formatted string and the raw values, so the inline JS can
+     * recompute the preview as the controls change.
+     *
+     * @param array $eventConfig The notification's saved eventConfig.
+     * @return array
+     */
+    public function notifierNextRun(array $eventConfig = []): array
+    {
+        // Get the saved recurring-schedule config
+        $config = ($eventConfig['recurringSchedule'] ?? []);
+
+        // Get the system timezone
+        $tz = new DateTimeZone(Craft::$app->getTimeZone());
+
+        // If no start date is set, default it to today (system tz) for the preview
+        if (empty($config['startDate'])) {
+            $config['startDate'] = (new DateTime('now', $tz))->format('Y-m-d');
+        }
+
+        // Get the next run time
+        $next = RecurringSchedule::nextRunAfter(new DateTime('now', $tz), $config, $tz);
+
+        // Return the preview data
+        return [
+            'iso'       => $next->format('c'),
+            'formatted' => Craft::$app->getFormatter()->asDatetime($next, 'long'),
+            'timezone'  => Craft::$app->getTimeZone(),
+            'locale'    => Craft::$app->language,
+            'config'    => RecurringSchedule::normalize($config),
         ];
     }
 

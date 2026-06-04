@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -21,7 +21,8 @@ use nystudio107\crafttwigsandbox\twig\WhitelistSecurityPolicy;
 use nystudio107\crafttwigsandbox\web\SandboxView;
 
 /**
- * Class Sandbox
+ * Secure Twig environment for rendering message bodies.
+ *
  * @since 1.1.0
  */
 class Sandbox extends Model
@@ -115,10 +116,8 @@ class Sandbox extends Model
         // Configure the security policy
         $this->_configurePolicy();
 
-        // Set configured sandbox view,
-        // registering the Notifier Twig extension so that plugin-registered
-        // tags (e.g. `{% skipMessage %}` and `{% setRecipients %}`)
-        // are available inside the sandbox, not only under the DISABLE mode.
+        // Set the configured sandbox view, registering the Notifier Twig extension so plugin
+        // tags (`{% skipMessage %}`, `{% setRecipients %}`) work inside the sandbox, in every mode
         $this->view = new SandboxView([
             'securityPolicy' => $this->securityPolicy,
             'twigExtensionClasses' => [
@@ -129,6 +128,8 @@ class Sandbox extends Model
 
     /**
      * Configure the security policy.
+     *
+     * @return void
      */
     private function _configurePolicy(): void
     {

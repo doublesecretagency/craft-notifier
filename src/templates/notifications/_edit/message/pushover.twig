@@ -4,7 +4,7 @@
 <div class="message-type-pushover hidden">
     {{ forms.selectField({
         label: "Field containing each user's Pushover key"|t('notifier'),
-        instructions: fieldInstructions|t('notifier', {'type' : 'Pushover user key'}),
+        instructions: "Select which User field contains the recipient's Pushover user key."|t('notifier'),
         id: 'messageConfig-pushoverKeyField',
         name: 'messageConfig[pushoverKeyField]',
         value: (notification.messageConfig.pushoverKeyField ?? null),

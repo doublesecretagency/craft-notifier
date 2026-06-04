@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -20,7 +20,9 @@ use doublesecretagency\notifier\records\Log;
 use Exception;
 
 /**
- * Notification Log utility
+ * Utility that displays the notification log in the CP.
+ *
+ * @since 1.0.0
  */
 class NotificationLog extends Utility
 {
@@ -100,7 +102,7 @@ class NotificationLog extends Utility
             $date = DateTimeHelper::today()->format('Y-m-d');
         }
 
-        // Determine previous and next days
+        // Get the previous and next days
         $prevDay = (new DateTime($date))->modify('-1 day');
         $nextDay = (new DateTime($date))->modify('+1 day');
 
@@ -128,7 +130,7 @@ class NotificationLog extends Utility
     // ========================================================================= //
 
     /**
-     * Resolve the absolute path to the utility's icon mask SVG.
+     * Get the absolute path to the utility's icon mask SVG.
      *
      * @return string|null
      */

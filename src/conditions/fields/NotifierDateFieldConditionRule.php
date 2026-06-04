@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -17,13 +17,9 @@ use craft\fields\conditions\DateFieldConditionRule;
 use doublesecretagency\notifier\helpers\events\Originals;
 
 /**
- * Class NotifierDateFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Date field rule's options.
  *
- * Notifier-scoped subclass that adds `has changed` to the rangeType dropdown
- * for Date field rules. Date rules use `rangeType` instead of `operator`, so
- * this class handles the has-changed semantics inline rather than via the
- * shared `HasChangedOperator` trait.
+ * @since 3.0.0
  */
 class NotifierDateFieldConditionRule extends DateFieldConditionRule
 {
@@ -52,7 +48,7 @@ class NotifierDateFieldConditionRule extends DateFieldConditionRule
             return parent::matchElement($element);
         }
 
-        // Resolve the field-layout instances this rule was configured against
+        // Get the field-layout instances this rule was configured against
         try {
             $fieldInstances = $this->fieldInstances();
         } catch (\yii\base\InvalidConfigException) {

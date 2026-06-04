@@ -24,7 +24,7 @@ This trigger is filterable by **sites**, **sections and entry types**, and the [
 
 ## Twig variables
 
-The `object` variable (and its `entry` alias) is the saved [Entry](https://docs.craftcms.com/api/v5/craft-elements-entry.html). The pre-save copy is available as [`original`](/messages/variables#fetching-the-original-element).
+The `object` variable (and its `entry` alias) is the saved [Entry](https://docs.craftcms.com/api/v5/craft-elements-entry.html). The pre-save copy is available as [`original`](/messages/variables/element-events#fetching-the-original-element).
 
 ```twig
 {{ entry.title }} was saved on {{ currentSite.name }}.

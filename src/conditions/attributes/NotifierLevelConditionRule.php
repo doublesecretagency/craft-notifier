@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -16,11 +16,9 @@ use craft\elements\conditions\LevelConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedAttributeOperator;
 
 /**
- * Class NotifierLevelConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Level rule's operators.
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for the Level rule (structure depth).
+ * @since 3.0.0
  */
 class NotifierLevelConditionRule extends LevelConditionRule
 {

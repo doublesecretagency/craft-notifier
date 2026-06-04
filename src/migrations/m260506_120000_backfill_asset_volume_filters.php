@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -17,14 +17,7 @@ use craft\db\Query;
 use craft\helpers\Json;
 
 /**
- * m260506_120000_backfill_asset_volume_filters migration
- *
- * Backfills the new mandatory `volumes` gate for any pre-existing
- * Asset notification. Without this, notifications saved before the
- * Volume Filter UI shipped would silently stop firing on upgrade
- * because their eventConfig JSON has no `volumes` key.
- *
- * Idempotent: rows that already carry a `volumes` key are skipped.
+ * Backfills the volume filter on existing Asset notifications.
  *
  * @since 3.0.0
  */

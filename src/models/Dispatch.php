@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -33,7 +33,8 @@ use yii\base\Event;
 use yii\base\Exception;
 
 /**
- * Class Dispatch
+ * Core model driving the notification send pipeline.
+ *
  * @since 1.1.0
  */
 class Dispatch extends Model
@@ -80,6 +81,16 @@ class Dispatch extends Model
     public bool $setRecipientsInvoked = false;
 
     /**
+     * @var array Keyed values collected from the Dynamic Data Twig snippet.
+     */
+    public array $collectedDynamicData = [];
+
+    /**
+     * @var bool Whether the `{% setData %}` tag was invoked during the snippet parse.
+     */
+    public bool $setDataInvoked = false;
+
+    /**
      * @var SandboxView|null Secure Twig sandbox environment.
      */
     private ?SandboxView $_sandboxView = null;
@@ -100,6 +111,11 @@ class Dispatch extends Model
 
         // If this is a feed event, bail successfully
         if ('feed' === $this->notification->eventType) {
+            return true;
+        }
+
+        // If this is a report event type, bail successfully
+        if ($this->notification->isReportType()) {
             return true;
         }
 
@@ -397,7 +413,7 @@ class Dispatch extends Model
             return false;
         }
 
-        // Load the parent product
+        // Get the parent product
         $product = (method_exists($element, 'getProduct') ? $element->getProduct() : null);
 
         // If parent product can't be resolved, return false
@@ -455,6 +471,17 @@ class Dispatch extends Model
      */
     public function configureByMessageType(): void
     {
+        // If this is a Dynamic Data notification, run the user's snippet first
+        if ('dynamic-data' === $this->notification->eventType) {
+            // If the snippet fails to parse or never calls setData, send nothing
+            if (!$this->parseDynamicDataSnippet($this->notification) || !$this->setDataInvoked) {
+                $this->envelopes = [];
+                return;
+            }
+            // Expose the collected data to the message body as {{ data.* }}
+            $this->data['data'] = $this->collectedDynamicData;
+        }
+
         // Configure message based on type
         switch ($this->notification->messageType) {
             case 'email':
@@ -851,7 +878,7 @@ class Dispatch extends Model
      */
     private function _compilePushover(): array
     {
-        // Read the per-User Pushover key field handle off the notification
+        // Get the per-User Pushover key field handle off the notification
         $keyFieldHandle = ($this->notification->messageConfig['pushoverKeyField'] ?? null);
 
         // Get User recipients via the existing User-centric recipient resolution
@@ -873,7 +900,7 @@ class Dispatch extends Model
         // Loop through all recipients
         foreach ($recipients as $recipient) {
 
-            // If no key field is configured, log and skip
+            // If no key field is configured, log and stop
             if (!$keyFieldHandle) {
                 $this->notification->log->warning(Craft::t('notifier',
                     'Pushover user-key field is not configured on this notification.'
@@ -890,7 +917,7 @@ class Dispatch extends Model
                 continue;
             }
 
-            // Read the per-User Pushover key from the configured custom field
+            // Get the per-User Pushover key from the configured custom field
             $userKey = (string) ($recipient->user->{$keyFieldHandle} ?? '');
 
             // If user has no key, log [SKIPPED] and continue
@@ -1018,7 +1045,7 @@ class Dispatch extends Model
                 $parseError = $e;
             }
 
-            // Resolve simple-config fields (priority, tags, markdown)
+            // Get simple-config fields (priority, tags, markdown)
             $priority = (int) ($this->notification->messageConfig['ntfyPriority'] ?? 3);
             $tags     = ($this->notification->messageConfig['ntfyTags']     ?? null);
             $markdown = (bool) ($this->notification->messageConfig['ntfyMarkdown'] ?? false);
@@ -1237,7 +1264,7 @@ class Dispatch extends Model
             // Derive the post language from the primary site
             $language = explode('-', Craft::$app->getSites()->getPrimarySite()->language)[0];
 
-            // Generate link-preview cards unless explicitly disabled
+            // Whether to generate link-preview cards (default to true)
             $linkCard = (bool) ($this->notification->messageConfig['blueskyLinkCard'] ?? true);
 
             // Get message details
@@ -1312,7 +1339,7 @@ class Dispatch extends Model
             // Run the snippet; render result is ignored (side effects only)
             $this->_parseTwig($config, $snippet);
         } catch (Exception|Throwable $e) {
-            // Reset the collector so partial items from a failed parse don't leak
+            // Clear any partial recipients left by the failed parse
             $this->collectedDynamicRecipients = [];
             // Log the parse error and bail
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
@@ -1321,6 +1348,61 @@ class Dispatch extends Model
         } finally {
             // Restore the previously active dispatch (supports re-entrant parses)
             NotifierPlugin::$plugin->activeDispatchForRecipients = $previouslyActive;
+        }
+
+        // Parse succeeded
+        return true;
+    }
+
+    /**
+     * Run the Dynamic Data Twig snippet authored on the Notification.
+     *
+     * @param Notification $notification
+     * @return bool Whether the snippet was successfully parsed.
+     */
+    public function parseDynamicDataSnippet(Notification $notification): bool
+    {
+        // Reset the collector and invocation flag for a fresh parse
+        $this->collectedDynamicData = [];
+        $this->setDataInvoked = false;
+
+        // Get the raw snippet
+        $snippet = ($notification->eventConfig['dynamicData'] ?? '');
+
+        // Build the parse context
+        $config = [
+            'recipient' => null,
+            'notification' => $notification,
+            'event' => $this->event,
+            'data' => $this->data,
+        ];
+
+        // Remember the previously active dispatch
+        $previouslyActive = NotifierPlugin::$plugin->activeDispatchForData;
+
+        try {
+            // Point the plugin at this Dispatch for the duration of the parse
+            NotifierPlugin::$plugin->activeDispatchForData = $this;
+            // Run the snippet, ignore rendered result
+            $this->_parseTwig($config, $snippet);
+        } catch (Exception|Throwable $e) {
+            // Clear any partial data left by the failed parse
+            $this->collectedDynamicData = [];
+            // Log the parse error and bail
+            $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
+            $notification->log->error($message);
+            return false;
+        } finally {
+            // Restore the previously active dispatch
+            NotifierPlugin::$plugin->activeDispatchForData = $previouslyActive;
+        }
+
+        // If the snippet never called setData, warn so the empty dispatch is explained
+        if (!$this->setDataInvoked) {
+            $notification->log->warning(Craft::t('notifier',
+                'The Dynamic Data snippet did not call the {tag} tag.',
+                ['tag' => '{% setData %}']
+            ));
         }
 
         // Parse succeeded
@@ -1339,7 +1421,7 @@ class Dispatch extends Model
      */
     private function _requireFieldNotEmpty(string $key, string $label): void
     {
-        // Read the field value as a trimmed string
+        // Get the field value as a trimmed string
         $value = trim((string) ($this->notification->messageConfig[$key] ?? ''));
 
         // If the value is empty, throw a typed exception

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,7 +14,8 @@ namespace doublesecretagency\notifier\models;
 use craft\base\Model;
 
 /**
- * Class Settings
+ * Plugin settings model.
+ *
  * @since 1.0.0
  */
 class Settings extends Model

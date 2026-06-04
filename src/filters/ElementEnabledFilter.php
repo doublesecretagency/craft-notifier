@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -23,35 +23,55 @@ use craft\base\ElementInterface;
  */
 class ElementEnabledFilter extends BaseElementFilter
 {
+
+    /**
+     * @inheritdoc
+     */
     public static function displayName(): string
     {
         return Craft::t('notifier', 'Element is enabled');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleYes(): string
     {
         return Craft::t('notifier', 'Must be enabled');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleNo(): string
     {
         return Craft::t('notifier', 'Must be disabled');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleIgnore(): string
     {
         return Craft::t('notifier', 'Can be enabled or disabled');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function defaultValue(): ?bool
     {
         // Require enabled by default
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function checkElement(ElementInterface $element, bool $value): bool
     {
         /** @var Element $element */
         return $value === ($element->enabled && $element->getEnabledForSite());
     }
+
 }

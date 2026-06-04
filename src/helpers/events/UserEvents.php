@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -21,7 +21,8 @@ use doublesecretagency\notifier\NotifierPlugin;
 use yii\base\Event;
 
 /**
- * Class UserEvents
+ * Registers User event handlers with Notifier.
+ *
  * @since 1.1.0
  */
 class UserEvents
@@ -70,7 +71,7 @@ class UserEvents
      */
     public static function afterPropagate(ModelEvent $event): void
     {
-        /** @var User $entry */
+        /** @var User $user */
         $user = $event->sender;
 
         // If not first time being saved, skip it
@@ -169,7 +170,7 @@ class UserEvents
      */
     public static function afterAssignToGroups(UserGroupsAssignEvent $event): void
     {
-        // Load the user being assigned
+        // Get the user being assigned
         $user = Craft::$app->getUsers()->getUserById($event->userId);
 
         // If user can't be loaded, bail

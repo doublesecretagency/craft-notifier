@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -16,7 +16,8 @@ use craft\queue\BaseJob;
 use doublesecretagency\notifier\base\EnvelopeInterface;
 
 /**
- * Class SendMessage
+ * Queue job that sends a single message.
+ *
  * @since 1.0.0
  */
 class SendMessage extends BaseJob
@@ -28,10 +29,7 @@ class SendMessage extends BaseJob
     public EnvelopeInterface $envelope;
 
     /**
-     * Run the queue job.
-     *
-     * @param $queue
-     * @return void
+     * @inheritdoc
      */
     public function execute($queue): void
     {
@@ -45,9 +43,7 @@ class SendMessage extends BaseJob
     }
 
     /**
-     * Description of queue job.
-     *
-     * @return string
+     * @inheritdoc
      */
     protected function defaultDescription(): string
     {

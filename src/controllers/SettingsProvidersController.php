@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -25,11 +25,9 @@ use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 /**
- * Settings Providers controller
- * @since 3.0.0
+ * Controller for the Notifier provider settings pages.
  *
- * Powers the Notifier settings pages. Each provider gets its own page;
- * this controller shows them, saves changes, and runs the per-row Test buttons.
+ * @since 3.0.0
  */
 class SettingsProvidersController extends Controller
 {
@@ -194,21 +192,27 @@ class SettingsProvidersController extends Controller
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 
+        // Get the posted topic
         $topic = (string) $this->request->getRequiredBodyParam('topic');
 
-        // Validate
+        // If the topic is empty, return an error
         if ('' === trim($topic)) {
             return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Topic is empty.')]);
         }
 
+        // Get the plugin settings
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
+        // Get the configured server URL
         $serverUrl = App::parseEnv($settings->ntfyServerUrl);
+
+        // If no server URL is configured, return an error
         if (!$serverUrl) {
             return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Server URL is not configured.')]);
         }
 
+        // Build the endpoint URL
         $endpoint = rtrim($serverUrl, '/').'/'.$topic;
 
         // Build headers
@@ -281,7 +285,7 @@ class SettingsProvidersController extends Controller
             ]);
             $decoded = json_decode((string) $response->getBody(), true);
 
-            // If Slack rejected the message, surface the error code
+            // If Slack rejected the message, return the error code
             if (!is_array($decoded) || true !== ($decoded['ok'] ?? false)) {
                 $error = ($decoded['error'] ?? 'unknown');
                 return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Slack rejected the message: {error}', ['error' => $error])]);
@@ -303,22 +307,29 @@ class SettingsProvidersController extends Controller
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 
+        // Get the posted handle
         $handle = (string) $this->request->getRequiredBodyParam('handle');
 
         // Resolve the posted app password (supports a $ENV_VAR reference)
         $appPassword = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('appPassword'));
 
+        // If the handle or app password is empty, return an error
         if ('' === $handle || '' === $appPassword) {
             return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Handle and app password are required.')]);
         }
 
+        // Get the plugin settings
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
+
+        // Get the PDS URL, falling back to the default
         $pdsUrl = App::parseEnv($settings->blueskyPdsUrl) ?: Settings::DEFAULT_PDS_URL;
 
+        // Verify the credential by creating a session
         $err = null;
         $session = BlueskySession::createSession($pdsUrl, $handle, $appPassword, $err);
 
+        // If authentication failed, return the error
         if (!$session) {
             return $this->asJson(['success' => false, 'message' => $err ?: Craft::t('notifier', 'Authentication failed.')]);
         }
@@ -361,7 +372,9 @@ class SettingsProvidersController extends Controller
         // Editable-table posts arrive keyed by row position; reindex
         $rows = array_values($rows);
 
+        // Loop through every row
         foreach ($rows as $i => $row) {
+            // If the row isn't an array, skip it
             if (!is_array($row)) {
                 continue;
             }
@@ -371,6 +384,7 @@ class SettingsProvidersController extends Controller
             }
         }
 
+        // Return the rows with stable UIDs
         return $rows;
     }
 

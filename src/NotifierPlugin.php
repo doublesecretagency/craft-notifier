@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -84,18 +84,21 @@ use doublesecretagency\notifier\enums\Options;
 use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\models\Settings;
+use doublesecretagency\notifier\services\DynamicDataRunner;
 use doublesecretagency\notifier\services\Events;
 use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
 use doublesecretagency\notifier\services\FeedRunner;
 use doublesecretagency\notifier\services\ScheduleRunner;
+use doublesecretagency\notifier\services\SystemSnapshotRunner;
 use doublesecretagency\notifier\utilities\NotificationLog;
 use doublesecretagency\notifier\web\twig\Extension;
 use Solspace\Calendar\Elements\Event as CalendarEvent;
 use yii\base\Event;
 
 /**
- * Notifier plugin
+ * Main plugin class that boots Notifier.
+ *
  * @since 1.0.0
  *
  * @property Events $events
@@ -103,6 +106,8 @@ use yii\base\Event;
  * @property Recipients $recipients
  * @property ScheduleRunner $scheduleRunner
  * @property FeedRunner $feedRunner
+ * @property SystemSnapshotRunner $systemSnapshotRunner
+ * @property DynamicDataRunner $dynamicDataRunner
  */
 class NotifierPlugin extends Plugin
 {
@@ -115,7 +120,7 @@ class NotifierPlugin extends Plugin
     /**
      * @var string Current schema version of the plugin.
      */
-    public string $schemaVersion = '3.0.0';
+    public string $schemaVersion = '3.1.0';
 
     /**
      * @var NotifierPlugin Self-referential plugin property.
@@ -133,15 +138,16 @@ class NotifierPlugin extends Plugin
     public array $sent = [];
 
     /**
-     * @var Dispatch|null Transient pointer to the Dispatch currently resolving Dynamic Recipients.
+     * @var Dispatch|null Transient pointer to the Dispatch currently parsing Dynamic Data.
      *
-     * Set by `Dispatch::parseDynamicRecipientSnippet()` immediately before the
-     * Twig parse and cleared in its `finally` clause. The `{% setRecipients %}`
-     * Twig tag reads this pointer (via its compiled node output) to know where
-     * to deposit items; if null, the tag's compiled code silently no-ops.
-     * Keeping the collector on the active Dispatch (rather than globally on the
-     * plugin) isolates queue-worker reuse, re-entrant notifications, and
-     * accidental tag invocations from message bodies.
+     * Set around the Twig parse so the `{% setData %}` tag knows where to deposit data.
+     */
+    public ?Dispatch $activeDispatchForData = null;
+
+    /**
+     * @var Dispatch|null Transient pointer to the Dispatch currently parsing Dynamic Recipients.
+     *
+     * Set around the Twig parse so the `{% setRecipients %}` tag knows where to deposit recipients.
      */
     public ?Dispatch $activeDispatchForRecipients = null;
 
@@ -160,6 +166,8 @@ class NotifierPlugin extends Plugin
             'recipients' => Recipients::class,
             'scheduleRunner' => ScheduleRunner::class,
             'feedRunner' => FeedRunner::class,
+            'systemSnapshotRunner' => SystemSnapshotRunner::class,
+            'dynamicDataRunner' => DynamicDataRunner::class,
         ]);
 
         // Redirect after plugin is installed
@@ -170,7 +178,7 @@ class NotifierPlugin extends Plugin
             return;
         }
 
-        // Register components
+        // Register element types
         $this->_registerElementTypes();
 
         // Register user permissions
@@ -208,9 +216,6 @@ class NotifierPlugin extends Plugin
 
     /**
      * @inheritdoc
-     *
-     * Redirect Craft's default plugin-settings entry point to our General sub-page.
-     * Each sub-page is its own CP route, rendered through `SettingsProvidersController`.
      */
     public function getSettingsResponse(): mixed
     {
@@ -218,7 +223,6 @@ class NotifierPlugin extends Plugin
             UrlHelper::cpUrl('settings/plugins/notifier/general')
         );
     }
-
 
     /**
      * @inheritdoc
@@ -237,8 +241,7 @@ class NotifierPlugin extends Plugin
     // ========================================================================= //
 
     /**
-     * After the plugin has been installed,
-     * redirect to the Notifications page.
+     * Redirect to the Notifications page after the plugin is installed.
      *
      * @return void
      */
@@ -303,6 +306,9 @@ class NotifierPlugin extends Plugin
                                 'notifier-saveNotifications' => [
                                     'label' => Craft::t('notifier', 'Save notifications'),
                                     'nested' => [
+                                        'notifier-editDynamicData' => [
+                                            'label' => Craft::t('notifier', 'Use the Dynamic Data type'),
+                                        ],
                                         'notifier-editDynamicRecipients' => [
                                             'label' => Craft::t('notifier', 'Use the Dynamic Recipients type'),
                                         ],
@@ -364,6 +370,8 @@ class NotifierPlugin extends Plugin
 
     /**
      * Register utilities.
+     *
+     * @return void
      */
     private function _registerUtilities(): void
     {
@@ -395,6 +403,8 @@ class NotifierPlugin extends Plugin
 
     /**
      * Register index table attributes.
+     *
+     * @return void
      */
     private function _registerTableAttributes(): void
     {
@@ -417,6 +427,13 @@ class NotifierPlugin extends Plugin
                         break;
 
                     case 'event':
+                        // Report event types show their schedule state
+                        if ($notification->isReportType()) {
+                            $event->html = ($notification->eventConfig['recurring'] ?? false)
+                                ? Craft::t('notifier', 'On a recurring schedule')
+                                : Craft::t('notifier', 'On demand');
+                            break;
+                        }
                         // Get all events within specified type
                         $events = Options::ALL_EVENTS[$notification->eventType] ?? [];
                         // Filter through all events
@@ -652,7 +669,7 @@ JS, [
             NotifierEntryCondition::class,
             Compat::conditionRulesEventName(),
             static function ($event) use ($swaps, $rulesProp) {
-                // Walk the rules array and rewrite each entry's `class` when it's
+                // Loop through the rules array and rewrite each entry's `class` when it's
                 // a Craft per-field rule we have a Notifier subclass for
                 foreach ($event->{$rulesProp} as $i => $rule) {
                     $class = (is_array($rule) ? ($rule['class'] ?? null) : $rule);

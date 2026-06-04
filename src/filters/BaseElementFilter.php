@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -27,31 +27,50 @@ use yii\base\NotSupportedException;
  */
 abstract class BaseElementFilter extends Component implements ExclusiveFilterInterface
 {
+
+    /**
+     * @inheritdoc
+     */
     public static function displayName(): string
     {
         return Craft::t('notifier', 'Unnamed filter');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleYes(): string
     {
         return Craft::t('notifier', 'Must be TRUE to send message');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleNo(): string
     {
         return Craft::t('notifier', 'Must be FALSE to send message');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleIgnore(): string
     {
         return Craft::t('notifier', 'No effect');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function defaultValue(): ?bool
     {
         return null;
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function show(string $class, string $event): bool
     {
         return (is_subclass_of($class, ElementInterface::class) || (
@@ -69,11 +88,17 @@ abstract class BaseElementFilter extends Component implements ExclusiveFilterInt
             ));
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function excludes(): array
     {
         return [];
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function check(Event $event, bool $value): bool
     {
         if ($event->sender instanceof ElementInterface) {
@@ -88,7 +113,7 @@ abstract class BaseElementFilter extends Component implements ExclusiveFilterInt
     }
 
     /**
-     * Returns whether the element passes the filter.
+     * Whether the element passes the filter.
      *
      * @param ElementInterface $element
      * @param bool $value
@@ -98,4 +123,5 @@ abstract class BaseElementFilter extends Component implements ExclusiveFilterInt
     {
         return true;
     }
+
 }

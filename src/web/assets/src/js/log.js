@@ -109,7 +109,7 @@ window.deleteEnvelope = function (envelopeId) {
 window.deleteDay = function (date) {
 
     // Warning message prior to deletion
-    const warning = `Are you sure you want to delete all logs from ${date}?`;
+    const warning = Craft.t('notifier', 'Are you sure you want to delete all logs from {date}?', {date: date});
 
     // If deletion is not confirmed, do nothing
     if (!confirm(warning)) {

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -18,7 +18,8 @@ use doublesecretagency\notifier\NotifierPlugin;
 use yii\base\Event;
 
 /**
- * Class DigitalProductLicenseEvents
+ * Registers Digital Product License event handlers with Notifier.
+ *
  * @since 3.0.0
  */
 class DigitalProductLicenseEvents

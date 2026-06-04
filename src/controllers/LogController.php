@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -21,7 +21,8 @@ use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 /**
- * Log controller
+ * Controller for the notification log CP actions.
+ *
  * @since 1.0.0
  */
 class LogController extends Controller
@@ -143,7 +144,7 @@ class LogController extends Controller
             ]);
         }
 
-        // Delete all log rows for envelope
+        // Delete all log rows for the specified day
         $success = (bool) Log::deleteAll(
             ["DATE(CONVERT_TZ(dateCreated, 'UTC', :timeZone))" => $date],
             [':timeZone' => Craft::$app->timeZone]

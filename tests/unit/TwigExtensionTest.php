@@ -2,6 +2,7 @@
 namespace doublesecretagency\notifier\tests\unit;
 
 use doublesecretagency\notifier\web\twig\Extension;
+use doublesecretagency\notifier\web\twig\tokenparsers\SetDataTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SetRecipientsTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
 use PHPUnit\Framework\TestCase;
@@ -50,16 +51,17 @@ class TwigExtensionTest extends TestCase
     // Token parser registration
     // ========================================================================= //
 
-    public function testRegistersBothTokenParsers(): void
+    public function testRegistersAllTokenParsers(): void
     {
         $extension = new Extension();
         $parsers = $extension->getTokenParsers();
 
-        $this->assertCount(2, $parsers);
+        $this->assertCount(3, $parsers);
 
         $parserClasses = array_map('get_class', $parsers);
         $this->assertContains(SkipMessageTokenParser::class, $parserClasses);
         $this->assertContains(SetRecipientsTokenParser::class, $parserClasses);
+        $this->assertContains(SetDataTokenParser::class, $parserClasses);
     }
 
     // ========================================================================= //
@@ -174,14 +176,16 @@ class TwigExtensionTest extends TestCase
 
     public function testTier2HelpersGuardOnPluginPresence(): void
     {
-        // Each plugin-bridged helper must guard on class_exists so installs
-        // without the source plugin return an empty array rather than fatal.
+        // Each plugin-bridged helper must guard on plugin presence so installs
+        // without the source plugin return an empty array rather than fatal. The
+        // guard is centralized in _pluginInstalled($class, $handle), which checks
+        // class_exists($class) AND that the plugin has a live booted instance.
         $path = $this->reflection->getFileName();
         $source = file_get_contents($path);
 
-        $this->assertStringContainsString("class_exists('craft\\\\commerce\\\\Plugin')", $source);
-        $this->assertStringContainsString("class_exists('craft\\\\digitalproducts\\\\Plugin')", $source);
-        $this->assertStringContainsString("class_exists('Solspace\\\\Calendar\\\\Calendar')", $source);
+        $this->assertStringContainsString("_pluginInstalled('craft\\\\commerce\\\\Plugin', 'commerce')", $source);
+        $this->assertStringContainsString("_pluginInstalled('craft\\\\digitalproducts\\\\Plugin', 'digital-products')", $source);
+        $this->assertStringContainsString("_pluginInstalled('Solspace\\\\Calendar\\\\Calendar', 'calendar')", $source);
     }
 
     public function testTier2HelpersRegisteredAsTwigFunctions(): void
@@ -204,9 +208,9 @@ class TwigExtensionTest extends TestCase
         $path = $this->reflection->getFileName();
         $source = file_get_contents($path);
 
-        $this->assertStringContainsString("class_exists('craft\\\\commerce\\\\elements\\\\Product')", $source);
-        $this->assertStringContainsString("class_exists('craft\\\\digitalproducts\\\\elements\\\\Product')", $source);
-        $this->assertStringContainsString("class_exists('Solspace\\\\Calendar\\\\Elements\\\\Event')", $source);
+        $this->assertStringContainsString("_pluginInstalled('craft\\\\commerce\\\\elements\\\\Product', 'commerce')", $source);
+        $this->assertStringContainsString("_pluginInstalled('craft\\\\digitalproducts\\\\elements\\\\Product', 'digital-products')", $source);
+        $this->assertStringContainsString("_pluginInstalled('Solspace\\\\Calendar\\\\Elements\\\\Event', 'calendar')", $source);
         $this->assertStringContainsString("unset(\$eventTypes['craft-commerce-products']", $source);
         $this->assertStringContainsString("unset(\$eventTypes['solspace-calendar-events']", $source);
     }

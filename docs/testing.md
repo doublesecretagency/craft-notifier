@@ -32,7 +32,7 @@ The configured queue setting still applies. Email and SMS sends respect their `e
 
 The test **simulates the event only**. No real entry/asset/user is ever invoked, the triggered event is artificial.
 
-Which means that event-based variables and conditions will not apply. Many [special variables](/messages/variables) will not resolve, and any filters or conditions that rely on the event's sender or context will be bypassed.
+Which means that event-based variables and conditions will not apply. Many [special variables](/messages/variables/) will not resolve, and any filters or conditions that rely on the event's sender or context will be bypassed.
 
 The test verifies only what is found in the **Message** and **Recipients** tabs.
 

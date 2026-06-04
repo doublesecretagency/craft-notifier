@@ -8,9 +8,7 @@ Sends a notification when a **chosen date is reached**, optionally offset by a n
 
 Most triggers run on a Craft event. This one does not. Craft fires nothing when an entry's Post Date or Expiry Date passes, so Notifier polls for due notifications instead.
 
-:::warning Set up Scheduled Sending
-Before this trigger will fire, you will need to [run the schedule](/getting-started/run-the-schedule) on a recurring basis.
-:::
+<!--@include: @/events/types/_run-the-schedule.md-->
 
 ## Configuring the date
 

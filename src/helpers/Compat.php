@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,14 +14,9 @@ namespace doublesecretagency\notifier\helpers;
 use Craft;
 
 /**
- * Class Compat
- * @since 3.0.0
+ * Centralizes Craft 4 vs 5 API name differences.
  *
- * Centralizes the handful of API name differences between Craft 4 and Craft 5
- * so the rest of the plugin can stay version-agnostic. Each helper resolves
- * to a raw string (event name) or a method name suitable for dynamic dispatch
- * (`$obj->{$method}(...)`), avoiding direct references to constants or classes
- * that only exist on one Craft major.
+ * @since 3.0.0
  */
 abstract class Compat
 {
@@ -56,10 +51,8 @@ abstract class Compat
      * Craft 5 dispatches `Utilities::EVENT_REGISTER_UTILITIES` (`'registerUtilities'`).
      * Craft 4 dispatched the older `Utilities::EVENT_REGISTER_UTILITY_TYPES` (`'registerUtilityTypes'`).
      *
-     * Raw string literals are used (not class constants) because referencing a
-     * constant that doesn't exist on the loaded Craft version is a fatal error.
-     * The string values are part of Craft's stable internal contract, they're
-     * what the framework dispatches against.
+     * Raw string literals (not class constants) are used: referencing a constant absent on
+     * the loaded Craft version is a fatal error, and these literals are Craft's stable dispatch contract.
      *
      * @return string
      */

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -18,24 +18,25 @@ use doublesecretagency\notifier\helpers\Notifier;
 use yii\helpers\Markdown;
 
 /**
- * Class OutboundFlash
+ * Envelope for an outbound flash message.
+ *
  * @since 1.0.0
  */
 class OutboundFlash extends BaseEnvelope
 {
 
     /**
-     * @var string
+     * @var string Flash type ('success', 'notice', or 'error').
      */
     public string $type = 'notice';
 
     /**
-     * @var string
+     * @var string Flash title.
      */
     public string $title = '';
 
     /**
-     * @var string
+     * @var string Flash message body.
      */
     public string $message = '';
 

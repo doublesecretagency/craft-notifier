@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,11 +15,9 @@ use craft\fields\conditions\TextFieldConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedOperator;
 
 /**
- * Class NotifierTextFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Text field rule's operators (PlainText, Email).
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for Text-style field rules (PlainText, Email).
+ * @since 3.0.0
  */
 class NotifierTextFieldConditionRule extends TextFieldConditionRule
 {

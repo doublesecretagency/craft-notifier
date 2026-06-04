@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -17,13 +17,9 @@ use doublesecretagency\notifier\helpers\events\Originals;
 use yii\db\QueryInterface;
 
 /**
- * Trait HasChangedAttributeOperator
- * @since 3.0.0
+ * Adds a "has changed" operator to attribute condition rules.
  *
- * Adds a `has_changed` operator to native attribute condition rules
- * (Title, Slug, Status, Post Date, etc.). Sibling of HasChangedOperator;
- * differs in that the comparison value comes from a single attribute /
- * derived getter on the element, not from a fieldInstances() loop.
+ * @since 3.0.0
  */
 trait HasChangedAttributeOperator
 {
@@ -34,9 +30,10 @@ trait HasChangedAttributeOperator
     public const OPERATOR_HAS_CHANGED = 'has_changed';
 
     /**
-     * Return the value used for the has_changed diff. Must be scalar /
-     * array / DateTime, anything that compares safely with `!=` without
-     * recursing into cyclic object graphs.
+     * Return the value used for the has_changed diff.
+     *
+     * Must be scalar, array, or DateTime, anything that compares safely with `!=`
+     * without recursing into cyclic object graphs.
      *
      * @param ElementInterface $element
      * @return mixed
@@ -93,11 +90,15 @@ trait HasChangedAttributeOperator
             return parent::matchElement($element);
         }
 
+        // Get the captured pre-save original
         $original = Originals::get($element);
+
+        // If no original was captured, it can't have changed
         if (!$original) {
             return false;
         }
 
+        // Compare the current value against the original
         return $this->hasChangedComparisonValue($element) != $this->hasChangedComparisonValue($original);
     }
 

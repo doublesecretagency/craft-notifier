@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -22,7 +22,8 @@ use Throwable;
 use yii\base\Event;
 
 /**
- * Class FeedRunner
+ * Polls RSS and JSON feeds, dispatching notifications for new items.
+ *
  * @since 3.0.0
  */
 class FeedRunner extends Component
@@ -106,7 +107,7 @@ class FeedRunner extends Component
             return false;
         }
 
-        // Check if the seed marker is already claimed
+        // Whether the seed marker is already claimed
         $alreadySeeded = (new Query())
             ->from(self::TABLE)
             ->where(['notificationId' => $notification->id, 'itemId' => self::SEED_MARKER])
@@ -125,7 +126,7 @@ class FeedRunner extends Component
             return false;
         }
 
-        // Try to claim the seed marker (atomic; bail if a concurrent scan beat us)
+        // If a concurrent scan already claimed the seed marker, bail
         if (!$this->_markFirstScan($notification->id)) {
             return false;
         }
@@ -197,7 +198,7 @@ class FeedRunner extends Component
      * Run a single feed notification and send messages based on any new items.
      *
      * @param Notification $notification
-     * @return array{0:int,1:int} Tuple of [dispatched items, successful envelope sends].
+     * @return array Tuple of [dispatched items, sent].
      */
     private function _runNotification(Notification $notification): array
     {
@@ -282,7 +283,7 @@ class FeedRunner extends Component
             return null;
         }
 
-        // Read the response body and content type
+        // Get the response body and content type
         $body = (string) $response->getBody();
         $contentType = $response->getHeaderLine('Content-Type');
 
@@ -330,7 +331,7 @@ class FeedRunner extends Component
      */
     private function _trackItem(int $notificationId, string $itemId): bool
     {
-        // Check if the item is already tracked
+        // Whether the item is already tracked
         $exists = (new Query())
             ->from(self::TABLE)
             ->where(['notificationId' => $notificationId, 'itemId' => $itemId])
@@ -350,7 +351,7 @@ class FeedRunner extends Component
                 ])
                 ->execute();
         } catch (Throwable) {
-            // Another ping beat us to it
+            // Another cron tick beat us to it
             return false;
         }
 

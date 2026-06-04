@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -23,24 +23,38 @@ use craft\base\ElementInterface;
  */
 class PropagatingFilter extends BaseElementFilter
 {
+
+    /**
+     * @inheritdoc
+     */
     public static function displayName(): string
     {
         return Craft::t('notifier', 'Element is being propagated');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleYes(): string
     {
         return Craft::t('notifier', 'Element must be propagating');
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function titleNo(): string
     {
         return Craft::t('notifier', 'Element must not be propagating');
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function checkElement(ElementInterface $element, bool $value): bool
     {
         /** @var Element $element */
         return (bool)$element->propagating === $value;
     }
+
 }

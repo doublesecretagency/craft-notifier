@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -11,447 +11,504 @@
 
 return [
 
-    // Plugin name and nav
-    'Notifier'               => 'Notifier',
-    'Notifications'          => 'Уведомления',
-    'Notification'           => 'Уведомление',
-    'All notifications'      => 'Все уведомления',
-    'Notification Log'       => 'Журнал уведомлений',
-    'Logs'                   => 'Журналы',
-    'View Notifications'     => 'Просмотр уведомлений',
+    // ============================================================
+    // PLUGIN & PERMISSIONS
+    // ============================================================
+
+    // Plugin & navigation
+    'Notifier' => 'Notifier',
+    'Notifications' => 'Уведомления',
+    'Notification' => 'Уведомление',
+    'All notifications' => 'Все уведомления',
+    'Notification Log' => 'Журнал уведомлений',
+    'Logs' => 'Журналы',
+    'View Notifications' => 'Просмотр уведомлений',
     'Add a New Notification' => 'Добавить новое уведомление',
+    'notification' => 'уведомление',
 
     // Permissions
-    'View notifications'              => 'Просматривать уведомления',
-    'Save notifications'              => 'Сохранять уведомления',
+    'View notifications' => 'Просматривать уведомления',
+    'Save notifications' => 'Сохранять уведомления',
     'Use the Dynamic Recipients type' => 'Использовать тип «Динамические получатели»',
-    'Test notifications'              => 'Тестировать уведомления',
-    'Delete notifications'            => 'Удалять уведомления',
-    'View notification log'           => 'Просматривать журнал уведомлений',
-    'Delete notification log'         => 'Удалять журнал уведомлений',
+    'Use the Dynamic Data type' => 'Использовать тип «Динамические данные»',
+    'Test notifications' => 'Тестировать уведомления',
+    'Send manual notifications' => 'Отправлять уведомления вручную',
+    'Delete notifications' => 'Удалять уведомления',
+    'View notification log' => 'Просматривать журнал уведомлений',
+    'Delete notification log' => 'Удалять журнал уведомлений',
 
-    // Notification editor: tabs
-    'Meta'       => 'Мета',
-    'Event'      => 'Событие',
-    'Message'    => 'Сообщение',
+    // ============================================================
+    // NOTIFICATION EDITOR
+    // ============================================================
+
+    // Editor: tabs
+    'Meta' => 'Мета',
+    'Event' => 'Событие',
+    'Message' => 'Сообщение',
     'Recipients' => 'Получатели',
 
     // Event tab: type selector
-    'Event Type'                                           => 'Тип события',
-    'What type of event will activate the notification?'   => 'Какой тип события активирует уведомление?',
+    'Event Type' => 'Тип события',
+    'What type of event will activate the notification?' => 'Какой тип события активирует уведомление?',
     'Which specific event will activate the notification?' => 'Какое именно событие активирует уведомление?',
 
     // Event tab: event types
-    'Assets Event'                   => 'Событие ресурса',
-    'Commerce Orders Event'          => 'Событие заказа Commerce',
-    'Commerce Products Event'        => 'Событие товара Commerce',
-    'Digital Products Event'         => 'Событие Digital Products',
+    'Assets Event' => 'Событие ресурса',
+    'Commerce Orders Event' => 'Событие заказа Commerce',
+    'Commerce Products Event' => 'Событие товара Commerce',
+    'Digital Products Event' => 'Событие Digital Products',
     'Digital Product Licenses Event' => 'Событие лицензии Digital Products',
-    'Solspace Calendar Event'        => 'Событие Solspace Calendar',
-    'Entries Event'                  => 'Событие записей',
-    'Users Event'                    => 'Событие пользователя',
-    'Ungrouped Users'                => 'Пользователи без группы',
+    'Solspace Calendar Event' => 'Событие Solspace Calendar',
+    'Entries Event' => 'Событие записей',
+    'Users Event' => 'Событие пользователя',
+    'Ungrouped Users' => 'Пользователи без группы',
 
-    // Feed
+    // Event tab: Feed
     'Feed URL' => 'URL канала',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'URL отслеживаемого RSS-, Atom- или JSON-канала.',
-    // Field and element conditions
-    'Field Conditions'             => 'Условия поля',
+
+    // Event tab: field conditions
+    'Field Conditions' => 'Условия поля',
     'Send the message only when the saved element matches the following conditions.' => 'Отправлять сообщение только когда сохранённый элемент соответствует следующим условиям.',
-    'has changed'                  => 'изменилось',
+    'has changed' => 'изменилось',
+
+    // Event tab: element filters (panel chrome + common output)
     '#{elementType} Event Filters' => 'Фильтры событий для #{elementType}',
     'No filters match this event.' => 'Ни один фильтр не соответствует этому событию.',
     'Determine whether each message should be sent based on specified conditions.' => 'Определите на основе указанных условий, следует ли отправлять каждое сообщение.',
+    'Unnamed filter' => 'Безымянный фильтр',
+    'Must be TRUE to send message' => 'Должно быть TRUE для отправки сообщения',
+    'Must be FALSE to send message' => 'Должно быть FALSE для отправки сообщения',
+    'No effect' => 'Без эффекта',
 
-    // Filters: entry lifecycle (new vs existing)
+    // Event tab: element filter rules
     'Element is being saved for the first time' => 'Элемент сохраняется впервые',
-    'Must be a new entry'                       => 'Должна быть новая запись',
-    'Must be an existing entry'                 => 'Должна быть существующая запись',
-    'Can be existing or new'                    => 'Может быть существующим или новым',
-
-    // Filters: new elements
-    'Element is new'         => 'Элемент новый',
-    'New elements only'      => 'Только новые элементы',
+    'Must be a new entry' => 'Должна быть новая запись',
+    'Must be an existing entry' => 'Должна быть существующая запись',
+    'Can be existing or new' => 'Может быть существующим или новым',
+    'Element is new' => 'Элемент новый',
+    'New elements only' => 'Только новые элементы',
     'Existing elements only' => 'Только существующие элементы',
-
-    // Filters: enabled state
-    'Element is enabled'         => 'Элемент включён',
-    'Must be enabled'            => 'Должен быть включён',
-    'Must be disabled'           => 'Должен быть отключён',
+    'Element is enabled' => 'Элемент включён',
+    'Must be enabled' => 'Должен быть включён',
+    'Must be disabled' => 'Должен быть отключён',
     'Can be enabled or disabled' => 'Может быть включён или отключён',
-
-    // Filters: drafts
-    'Element is a draft'          => 'Элемент — черновик',
-    'Must be a draft'             => 'Должен быть черновиком',
-    'Must not be a draft'         => 'Не должен быть черновиком',
+    'Element is a draft' => 'Элемент — черновик',
+    'Must be a draft' => 'Должен быть черновиком',
+    'Must not be a draft' => 'Не должен быть черновиком',
     'Can be a draft or non-draft' => 'Может быть черновиком или нет',
-
-    // Filters: provisional drafts
-    'Element is a provisional draft'                => 'Элемент — предварительный черновик',
-    'Must be a provisional draft'                   => 'Должен быть предварительным черновиком',
-    'Must not be a provisional draft'               => 'Не должен быть предварительным черновиком',
+    'Element is a provisional draft' => 'Элемент — предварительный черновик',
+    'Must be a provisional draft' => 'Должен быть предварительным черновиком',
+    'Must not be a provisional draft' => 'Не должен быть предварительным черновиком',
     'Can be a provisional draft or non-provisional' => 'Может быть предварительным черновиком или нет',
-
-    // Filters: revisions
-    'Element is a revision'             => 'Элемент — версия',
-    'Must be a revision'                => 'Должен быть версией',
-    'Must not be a revision'            => 'Не должен быть версией',
+    'Element is a revision' => 'Элемент — версия',
+    'Must be a revision' => 'Должен быть версией',
+    'Must not be a revision' => 'Не должен быть версией',
     'Can be a revision or non-revision' => 'Может быть версией или нет',
-
-    // Filters: duplication
-    'Element is being duplicated'         => 'Элемент дублируется',
-    'Must be duplicating the element'     => 'Должен дублировать элемент',
+    'Element is being duplicated' => 'Элемент дублируется',
+    'Must be duplicating the element' => 'Должен дублировать элемент',
     'Must not be duplicating the element' => 'Не должен дублировать элемент',
-
-    // Filters: propagation
-    'Element is being propagated'     => 'Элемент распространяется',
-    'Element must be propagating'     => 'Элемент должен распространяться',
+    'Element is being propagated' => 'Элемент распространяется',
+    'Element must be propagating' => 'Элемент должен распространяться',
     'Element must not be propagating' => 'Элемент не должен распространяться',
-
-    // Filters: bulk-resave
-    'Element is being bulk-resaved'         => 'Элемент массово пересохраняется',
-    'Must be bulk-resaving the element'     => 'Должен массово пересохранять элемент',
+    'Element is being bulk-resaved' => 'Элемент массово пересохраняется',
+    'Must be bulk-resaving the element' => 'Должен массово пересохранять элемент',
     'Must not be bulk-resaving the element' => 'Не должен массово пересохранять элемент',
 
-    // Filters: common output
-    'Unnamed filter'                => 'Безымянный фильтр',
-    'Must be TRUE to send message'  => 'Должно быть TRUE для отправки сообщения',
-    'Must be FALSE to send message' => 'Должно быть FALSE для отправки сообщения',
-    'No effect'                     => 'Без эффекта',
+    // Event tab: date trigger
+    'On' => 'В день',
+    'days before' => 'дней до',
+    'days after' => 'дней после',
+    'Relevant Date' => 'Соответствующая дата',
+    'Send the notification relative to a chosen date.' => 'Отправляйте уведомление относительно выбранной даты.',
 
-    // Message tab: type selector and queue
-    'Message Type'                       => 'Тип сообщения',
+    // Event tab: recurring schedule
+    'Every' => 'Каждые',
+    'on' => 'в',
+    'on day' => 'в день',
+    'at' => 'в',
+    'Starting on' => 'Начиная с',
+    'Day' => 'День',
+    'Date' => 'Дата',
+    'Time' => 'Время',
+    'day(s)' => 'дн.',
+    'week(s)' => 'нед.',
+    'month(s)' => 'мес.',
+    'year(s)' => 'г.',
+    'day' => 'день',
+    'days' => 'дней',
+    'week' => 'неделя',
+    'weeks' => 'недель',
+    'month' => 'месяц',
+    'months' => 'месяцев',
+    'year' => 'год',
+    'years' => 'лет',
+    'Manual only' => 'Только вручную',
+    'Scheduled sending' => 'Отправка по расписанию',
+    'On a recurring schedule' => 'По повторяющемуся расписанию',
+    'On demand' => 'По требованию',
+    'Send on a Recurring Schedule' => 'Отправлять по повторяющемуся расписанию',
+    'Configure Recurring Schedule' => 'Настроить повторяющееся расписание',
+    'System timezone set to {timezone}' => 'Часовой пояс системы: {timezone}',
+    'Notifications will be sent on the following schedule...' => 'Уведомления будут отправляться по следующему расписанию...',
+    '... and every {cadence} after that.' => '... и далее каждые {cadence}.',
+    'On what recurring schedule should the notification be sent?' => 'По какому повторяющемуся расписанию отправлять уведомление?',
+    'Whether the message should be sent on a schedule, or only triggered manually.' => 'Отправлять ли сообщение по расписанию или запускать только вручную.',
+    'The message can always be sent using the "Send system snapshot" button above.' => 'Сообщение всегда можно отправить кнопкой «Отправить снимок системы» выше.',
+    'The message can always be sent using the "Send data report" button above.' => 'Сообщение всегда можно отправить кнопкой «Отправить отчёт о данных» выше.',
+
+    // Event tab: Dynamic Data snippet field
+    'Twig Snippet to Determine Data' => 'Сниппет Twig для определения данных',
+    'Enter a custom Twig snippet to [determine which data will be included]({url}).' => 'Введите пользовательский фрагмент Twig, чтобы [определить, какие данные будут включены]({url}).',
+    'The snippet **must** include a `{% setData %}` tag.' => 'Фрагмент **должен** содержать тег `{% setData %}`.',
+    'You do not have permission to edit dynamic data.' => 'У вас нет прав на редактирование динамических данных.',
+
+    // Event tab: manual trigger
+    'Trigger Label' => 'Метка триггера',
+    'An element action label (helps to differentiate multiple triggers).' => 'Метка действия элемента (помогает различать несколько триггеров).',
+    'Send Notification' => 'Отправить уведомление',
+
+    // Message tab: type selector & queue
+    'Message Type' => 'Тип сообщения',
     'What type of message will be sent?' => 'Какой тип сообщения будет отправлен?',
-    'Send Message via Queue'             => 'Отправить сообщение через очередь',
+    'Send Message via Queue' => 'Отправить сообщение через очередь',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Шаблоны]({templatingUrl}) и [специальные переменные]({variablesUrl}) также поддерживаются.',
     'Send immediately' => 'Отправить немедленно',
     'Add to queue' => 'Добавить в очередь',
+    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Отправлять ли сообщение через [очередь задач]({queueUrl}).',
 
-    // Message tab: Email fields
+    // Message tab: Email
     "User's Email Address Field" => 'Поле электронной почты пользователя',
-    'Email Subject'              => 'Тема письма',
-    'Email Body'                 => 'Тело письма',
+    'Select which User field contains the recipient\'s email address.' => 'Выберите поле пользователя, содержащее адрес электронной почты получателя.',
+    'Email Subject' => 'Тема письма',
+    'Subject line of the email.' => 'Тема письма.',
+    'Dynamic Subject Line' => 'Динамическая тема',
+    'Email Body' => 'Тело письма',
+    'Body of the email. Supports HTML.' => 'Текст письма. Поддерживает HTML.',
 
-    // Message tab: SMS fields
-    "User's Phone Number Field" => 'Поле телефона пользователя',
-    'SMS Message Body'          => 'Тело SMS-сообщения',
-
-    // Message tab: Announcement fields
-    'Announcement Title'   => 'Заголовок объявления',
-    'Announcement Message' => 'Текст объявления',
-
-    // Message tab: Flash fields
-    'Flash Message Type'                         => 'Тип flash-сообщения',
-    'Flash Message Title'                        => 'Заголовок flash-сообщения',
-    'Flash Message Details'                      => 'Подробности flash-сообщения',
-    'Which type of flash message should appear?' => 'Какой тип flash-сообщения должен появиться?',
-
-    // Message tab: Pushover fields
-    "Field containing each user's Pushover key" => 'Поле ключа Pushover пользователя',
-
-    // Message tab: ntfy fields
-    'Priority'           => 'Приоритет',
-    'Tags'               => 'Метки',
-
-    // Message tab: Slack fields
-    'Slack Message Body' => 'Тело сообщения Slack',
-    'Bot Icon URL' => 'URL значка',
-
-    // Message tab: Bluesky fields
-    'Post Body' => 'Текст поста',
-    'Generate Link Preview' => 'Создать предпросмотр ссылки',
-    'No card' => 'Без карточки',
-    'Generate preview card' => 'Создать карточку предпросмотра',
-
-    // Message tab: Title / Body / Trix toolbar
-    'Rich Text'     => 'Форматированный текст',
-    'Bold'          => 'Полужирный',
-    'Italic'        => 'Курсив',
-    'Underline'     => 'Подчёркнутый',
+    // Message tab: rich-text (Trix) toolbar
+    'Rich Text' => 'Форматированный текст',
+    'Bold' => 'Полужирный',
+    'Italic' => 'Курсив',
+    'Underline' => 'Подчёркнутый',
     'Strikethrough' => 'Зачёркнутый',
-    'Bullets'       => 'Маркеры',
-    'Numbers'       => 'Нумерация',
-    'Heading'       => 'Заголовок',
-    'Code'          => 'Код',
-    'Undo'          => 'Отменить',
-    'Redo'          => 'Повторить',
+    'Bullets' => 'Маркеры',
+    'Numbers' => 'Нумерация',
+    'Heading' => 'Заголовок',
+    'Code' => 'Код',
+    'Undo' => 'Отменить',
+    'Redo' => 'Повторить',
 
-    // Recipients tab: common
-    'Recipients Type'                             => 'Тип получателей',
-    'Who will receive this message?'              => 'Кто получит это сообщение?',
-    'Add a message recipient'                     => 'Добавить получателя',
-    'Select User(s)'                              => 'Выберите пользователя(ей)',
-    'Which users will receive the message?'       => 'Какие пользователи получат сообщение?',
-    'Which user groups will receive the message?' => 'Какие группы пользователей получат сообщение?',
-    'Twig Snippet to Determine Recipients'        => 'Фрагмент Twig для определения получателей',
+    // Message tab: SMS
+    "User's Phone Number Field" => 'Поле телефона пользователя',
+    'Select which User field contains the recipient\'s phone number.' => 'Выберите поле пользователя, содержащее номер телефона получателя.',
+    'SMS Message Body' => 'Тело SMS-сообщения',
+    'Body of the SMS (text message). Plain text only.' => 'Текст SMS (текстового сообщения). Только обычный текст.',
 
-    // Recipients tab: per-provider pickers
-    'Select Slack channel(s)'                           => 'Выберите канал(ы) Slack',
-    'Which Slack channels should receive this message?' => 'Какие каналы Slack получат это сообщение?',
-    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Каналы Slack не настроены. Добавьте в [Настройки → Slack]({url}).',
-    'Select ntfy topic(s)'                              => 'Выберите тему(ы) ntfy',
-    'Which ntfy topics should receive this message?'    => 'Какие темы ntfy получат это сообщение?',
-    'No ntfy topics configured. Add one in [Settings → ntfy]({url}).' => 'Темы ntfy не настроены. Добавьте в [Настройки → ntfy]({url}).',
-    'Select Bluesky account(s)'                         => 'Выберите аккаунт(ы) Bluesky',
-    'Which Bluesky accounts should post this message?'  => 'Какие аккаунты Bluesky должны опубликовать это сообщение?',
-    'No Bluesky accounts configured. Add one in [Settings → Bluesky]({url}).' => 'Аккаунты Bluesky не настроены. Добавьте в [Настройки → Bluesky]({url}).',
+    // Message tab: Announcement
+    'Announcement Title' => 'Заголовок объявления',
+    'Heading of the announcement.' => 'Заголовок анонса.',
+    'Dynamic Announcement Title' => 'Динамический заголовок анонса',
+    'Announcement Message' => 'Текст объявления',
+    'Body of the announcement. Supports Markdown.' => 'Текст анонса. Поддерживает Markdown.',
 
-    // Settings: page chrome
-    'Notifier Settings' => 'Настройки Notifier',
-    'General'           => 'Общие',
-    'Twilio'            => 'Twilio',
-    'Pushover'          => 'Pushover',
-    'Slack'             => 'Slack',
-    'Bluesky'           => 'Bluesky',
-    'ntfy'              => 'ntfy',
+    // Message tab: Flash
+    'Flash Message Type' => 'Тип flash-сообщения',
+    'Which type of flash message should appear?' => 'Какой тип flash-сообщения должен появиться?',
+    'Flash Message Title' => 'Заголовок flash-сообщения',
+    'Heading of the flash message.' => 'Заголовок flash-сообщения.',
+    'Dynamic Flash Message Title' => 'Динамический заголовок Flash-сообщения',
+    'Flash Message Details' => 'Подробности flash-сообщения',
+    'Optionally include details below the heading. Supports Markdown and HTML.' => 'При необходимости добавьте детали под заголовком. Поддерживает Markdown и HTML.',
 
-    // Settings: Logging
-    'Logging'                             => 'Журналирование',
-    'Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database.' => 'Notifier ведёт постоянный журнал отправленных сообщений. Обычно это не нужно, но вы можете ограничить количество событий, записываемых в базу данных.',
-    'Enable Logging'                      => 'Включить журналирование',
-    'When disabled, Notifier will not write anything to the notification log.' => 'Когда отключено, Notifier ничего не записывает в журнал уведомлений.',
-    'Number of days to retain log events' => 'Число дней хранения событий журнала',
-    'At most, keep log events for this many days. Leave blank for no limit.' => 'Хранить события журнала не более этого числа дней. Пусто означает без ограничения.',
-    'Number of log events to retain'      => 'Число сохраняемых событий журнала',
-    'At most, keep this many log events. Leave blank for no limit.' => 'Хранить не более этого числа событий. Пусто означает без ограничения.',
-
-    // Settings: Twilio
-    'Twilio API Credentials'                       => 'Учётные данные API Twilio',
-    'If using the Twilio API to send SMS messages, the following credentials are required.' => 'При отправке SMS через Twilio API требуются следующие учётные данные.',
-    'Twilio Account SID'                           => 'Twilio Account SID',
-    'Twilio Auth Token'                            => 'Twilio Auth Token',
-    'Twilio phone number (sends each SMS message)' => 'Номер телефона Twilio (отправляет каждое SMS-сообщение)',
-    'SMS Testing'                                  => 'Тестирование SMS',
-    'Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient.' => 'Необязательно. Если установлено, каждое отправленное SMS будет направлено на этот номер вместо реального получателя.',
-    'Test phone number'                            => 'Тестовый номер телефона',
-
-    // Settings: Pushover
-    "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)." => '[Pushover](https://pushover.net) отправляет push-уведомления на устройства зарегистрированного пользователя. Каждому пользователю Craft нужно пользовательское поле в профиле для хранения ключа Pushover; вы выбираете, какое поле использовать, на вкладке Сообщение каждого уведомления. Полную инструкцию по настройке смотрите в [документации Pushover для начинающих](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover).',
-    'Application API Token'                                      => 'Токен API приложения',
-    'The 30-character app token from your Pushover application.' => '30-символьный токен приложения из вашего приложения Pushover.',
-
-    // Settings: ntfy
-    'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh — бесплатный HTTP-сервис push-уведомлений. Подписчики получают сообщения в приложении ntfy, в Интернете или в любом совместимом клиенте, подключаясь к теме.',
-    'Server URL'   => 'URL сервера',
-    'Access token' => 'Токен доступа',
-    'ntfy Topics'  => 'Темы ntfy',
-    'Topics'       => 'Темы',
-    'Topic'        => 'Тема',
-    'Add a topic'  => 'Добавить тему',
-
-    // Settings: Slack
-    'Slack Channels' => 'Каналы Slack',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Создайте [приложение Slack](https://api.slack.com/apps) с областями действия `chat:write`, `chat:write.customize` и `chat:write.public`, затем добавьте по строке для каждого канала, в который вы хотите публиковать сообщения. Каждый канал становится доступным как получатель на вкладке **Получатели** при настройке уведомления. Токен бота — это секрет, поэтому храните его в переменной `.env` и ссылайтесь на эту переменную (например, `$SLACK_BOT_TOKEN`) вместо того, чтобы вставлять токен напрямую.',
-    'Channels'       => 'Каналы',
-    'Add a channel'  => 'Добавить канал',
-    'Bot Token' => 'Токен бота',
-    'Channel ID' => 'ID канала',
-    'Bot Emoji' => 'Эмодзи значка',
-    'Bot Name' => 'Имя пользователя',
-    'Whether Slack should unfurl link previews for URLs in the message body.' => 'Должен ли Slack показывать превью ссылок для URL-адресов в тексте сообщения.',
-    'Not a valid Bot Token. Must start with `xoxb-`.' => 'Недействительный токен бота. Должен начинаться с `xoxb-`.',
-    'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Недействительный ID канала. Должен выглядеть как `C01234ABCD`.',
-    'Unable to send Slack message, no bot token.' => 'Не удалось отправить сообщение Slack: нет токена бота.',
-    'Unable to send Slack message, no channel ID.' => 'Не удалось отправить сообщение Slack: нет ID канала.',
-    'Recipient "{name}" has no Slack bot token.' => 'У получателя "{name}" нет токена бота Slack.',
-    'Recipient "{name}" has no Slack channel ID.' => 'У получателя "{name}" нет ID канала Slack.',
-    'Slack rejected the message: {error}' => 'Slack отклонил сообщение: {error}',
-
-    // Settings: Bluesky
-    "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => 'Посты [Bluesky](https://bsky.app) публикуются в ленте настроенного аккаунта через ATProto API. Пароли приложений создаются на [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). Пароль приложения является секретом, поэтому храните его в переменной `.env` и ссылайтесь на эту переменную (например, `$BLUESKY_APP_PASSWORD`), а не вставляйте пароль напрямую.',
-    'PDS URL'          => 'URL PDS',
-    'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'По умолчанию https://bsky.social. Укажите свой PDS, если ваша установка федерирована.',
-    'Bluesky Accounts' => 'Аккаунты Bluesky',
-    'Accounts'         => 'Аккаунты',
-    'Label'            => 'Метка',
-    'Handle'           => 'Хэндл',
-    'App password'     => 'Пароль приложения',
-    'Add an account'   => 'Добавить аккаунт',
-
-    // Test notification (UI)
-    'Send a test message'           => 'Отправить тестовое сообщение',
-    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => 'Отправить НАСТОЯЩЕЕ тестовое уведомление?\\n\\n⚠️ Использует случайную выборку реальных данных.\\n⚠️ Отправляет настоящее сообщение через настроенный канал.\\n⚠️ Доставляется настоящим настроенным получателям.',
-    'Test'                          => 'Тест',
-    'Test notification dispatched.' => 'Тестовое уведомление отправлено.',
-    'No messages were dispatched. Check the recipient configuration.' => 'Сообщения не были отправлены. Проверьте конфигурацию получателей.',
-    'Unable to send test: the feed could not be read or has no items.' => 'Невозможно отправить тест: не удалось прочитать ленту или в ней нет элементов.',
-    'Unable to send test: no element matches the configured filters.' => 'Невозможно отправить тест: ни один элемент не соответствует настроенным фильтрам.',
-
-    // Settings: save / test action responses
-    "Couldn't save settings."                 => 'Не удалось сохранить настройки.',
-    'Settings saved.'                         => 'Настройки сохранены.',
-    'Topic is empty.'                         => 'Тема пуста.',
-    'Server URL is not configured.'           => 'URL сервера не настроен.',
-    'Test message from Notifier.'             => 'Тестовое сообщение от Notifier.',
-    'HTTP {status}'                           => 'HTTP {status}',
-    'Test message sent successfully.'         => 'Тестовое сообщение успешно отправлено.',
-    'Handle and app password are required.'   => 'Хэндл и пароль приложения обязательны.',
-    'Authentication failed.'                  => 'Аутентификация не удалась.',
-    'Successfully authenticated. No messages were posted.' => 'Аутентификация выполнена успешно. Сообщения не были опубликованы.',
-
-    // Runtime / log feedback
-    'Sending {messageType} to {recipient}.'          => 'Отправка {messageType} для {recipient}.',
-    'Adding message to queue.'                       => 'Сообщение добавляется в очередь.',
-    'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.' => 'Не удалось разобрать ленту. Необходимы расширения PHP `simplexml` и `libxml`.',
-    'Unable to parse the feed.' => 'Не удалось разобрать ленту.',
-    'Unable to fetch the feed: {message}' => 'Не удалось получить ленту: {message}',
-    'Initial feed scan failed: {message}' => 'Не удалось выполнить первоначальную проверку ленты: {message}',
-    'Sending message immediately (bypassing queue).' => 'Отправка сообщения немедленно (минуя очередь).',
-    'Log events deleted.'                            => 'События журнала удалены.',
-    'notification'                                   => 'уведомление',
-
-    // Outbound: Email log messages
-    'Unable to send email, no recipient specified.'     => 'Невозможно отправить письмо: получатель не указан.',
-    'Unable to send email, the message body was empty.' => 'Невозможно отправить письмо: тело сообщения пустое.',
-    "Unable to send the email using Craft's native email handling." => 'Невозможно отправить письмо через встроенный почтовый обработчик Craft.',
-    'Check your general email settings within Craft.'   => 'Проверьте общие настройки почты в Craft.',
-    'Successfully sent email message!'                  => 'Письмо успешно отправлено!',
-
-    // Outbound: SMS log messages
-    '[Invalid Twilio credentials.]({url}) Missing {missing}.' => '[Неверные учётные данные Twilio.]({url}) Отсутствует {missing}.',
-    'Unable to send SMS, no Twilio phone number exists.'      => 'Невозможно отправить SMS, нет номера телефона Twilio.',
-    'Unable to send SMS, no recipient phone number exists.'   => 'Невозможно отправить SMS, нет номера телефона получателя.',
-    'Unable to send SMS, recipient phone number is invalid.'  => 'Невозможно отправить SMS, номер телефона получателя недействителен.',
-    'Successfully sent SMS message!'                          => 'SMS-сообщение успешно отправлено!',
-
-    // Outbound: Announcement log messages
-    'Unable to post announcement, no recipient userId specified.' => 'Невозможно опубликовать объявление: userId получателя не указан.',
-    'Successfully posted announcement!' => 'Объявление успешно опубликовано!',
-
-    // Outbound: Flash log messages
-    'Unable to send the flash message, invalid flash type.' => 'Невозможно отправить flash-сообщение: недействительный flash-тип.',
-    'Successfully sent flash message!'                      => 'Flash-сообщение успешно отправлено!',
-
-    // Outbound: Pushover log messages
-    '[Invalid Pushover credentials.]({url}) Missing app token.'  => '[Неверные учётные данные Pushover.]({url}) Отсутствует токен приложения.',
-    'Unable to send Pushover message, no user key on recipient.' => 'Невозможно отправить сообщение Pushover: у получателя нет пользовательского ключа.',
-    'Pushover POST failed: {reason}'                             => 'Pushover POST не удался: {reason}',
-    'Successfully sent Pushover message!'                        => 'Сообщение Pushover успешно отправлено!',
-
-    // Outbound: ntfy log messages
-    'Unable to send ntfy message, no topic specified.'       => 'Невозможно отправить сообщение ntfy: тема не указана.',
-    'ntfy POST failed with HTTP {status}: {reason}'          => 'ntfy POST не удался с HTTP {status}: {reason}',
-    'ntfy POST failed: {reason}'                             => 'ntfy POST не удался: {reason}',
-    'Successfully sent ntfy message to topic "{topic}".'     => 'Сообщение ntfy успешно отправлено в тему "{topic}".',
-
-    // Outbound: Slack log messages
-    'Unable to send Slack message, body is empty.'  => 'Невозможно отправить сообщение Slack: тело пустое.',
-    'Slack POST failed: {reason}'                   => 'Slack POST не удался: {reason}',
-    'Successfully sent Slack message to "{label}".' => 'Сообщение Slack успешно отправлено в "{label}".',
-
-    // Outbound: Bluesky log messages
-    'Unable to send Bluesky post, recipient is missing credentials.' => 'Невозможно отправить пост Bluesky: у получателя нет учётных данных.',
-    'Body exceeded {max} characters, truncated.'          => 'Тело превысило {max} символов и было обрезано.',
-    'Successfully posted to Bluesky as "{label}".'        => 'Опубликовано в Bluesky как "{label}".',
-    'Bluesky auth failed for {handle}: {reason}'          => 'Аутентификация Bluesky не удалась для {handle}: {reason}',
-    'Bluesky auth failed: {reason}'                       => 'Аутентификация Bluesky не удалась: {reason}',
-    'Bluesky post failed: {reason}'                       => 'Публикация в Bluesky не удалась: {reason}',
-    'Bluesky link preview skipped: {reason}'              => 'Предпросмотр ссылки Bluesky пропущен: {reason}',
-
-    // Recipient-strategy warnings
-    'Recipient "{name}" has no email address.'       => 'У получателя "{name}" нет адреса электронной почты.',
-    'Recipient "{name}" has no phone number.'        => 'У получателя "{name}" нет номера телефона.',
-    'Recipient "{name}" has no associated User; cannot send announcement.' => 'У получателя "{name}" нет связанного пользователя; объявление невозможно отправить.',
-    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => 'У получателя "{name}" нет доступа к панели управления; объявление невозможно отправить.',
-    'Pushover user-key field is not configured on this notification.' => 'Поле пользовательского ключа Pushover не настроено в этом уведомлении.',
-    'Recipient "{name}" has no associated User; cannot send Pushover message.' => 'У получателя "{name}" нет связанного пользователя; сообщение Pushover невозможно отправить.',
-    '[SKIPPED] User "{name}" has no Pushover key.'   => '[ПРОПУЩЕНО] У пользователя "{name}" нет ключа Pushover.',
-    'Recipient "{name}" has no ntfy topic.'          => 'У получателя "{name}" нет темы ntfy.',
-    'Recipient "{name}" has no Bluesky credentials.' => 'У получателя "{name}" нет учётных данных Bluesky.',
-
-    // Errors / exceptions
-    'Invalid element event: {class}'                         => 'Недействительное событие элемента: {class}',
-    'Invalid notification ID: {id}'                          => 'Недействительный ID уведомления: {id}',
-    'Invalid email message mode.'                            => 'Недействительный режим электронного письма.',
-    'You do not have permission to use the Dynamic Recipients type.' => 'У вас нет разрешения на использование типа «Динамические получатели».',
-    'Dynamic recipients snippet did not call setRecipients.' => 'Сниппет динамических получателей не вызвал setRecipients.',
-    'setRecipients was called with an empty value.'          => 'setRecipients вызван с пустым значением.',
-    'Unrecognized recipient of type "{type}".'               => 'Нераспознанный получатель типа "{type}".',
-    'Unrecognized recipient "{value}".'                      => 'Нераспознанный получатель "{value}".',
-    'Configured {kind} no longer exists in plugin settings (uid: {uid}).' => 'Настроенный {kind} больше не существует в настройках плагина (uid: {uid}).',
-    'Invalid settings section: {section}'                    => 'Недопустимый раздел настроек: {section}',
-    'User not authorized to save this notification.'         => 'Пользователю запрещено сохранять это уведомление.',
-    'User not authorized to view this notification.'         => 'Пользователю запрещено просматривать это уведомление.',
-    'User not authorized to delete this notification.'       => 'Пользователю запрещено удалять это уведомление.',
-    'Notification not found'                                 => 'Уведомление не найдено',
-
-    // Misc config-file note
-    'This is being set in the config file. [{file}]' => 'Это задано в файле конфигурации. [{file}]',
-
-    // Slack, ntfy, and Bluesky message types
-    "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Добавьте аккаунты Bluesky, от имени которых вы хотите публиковать. Каждый аккаунт становится доступен как получатель на вкладке **Получатели** при настройке уведомления.',
-    "Click any row's **Test** button to confirm the account authenticates." => 'Нажмите кнопку **Тест** в любой строке, чтобы убедиться, что аккаунт проходит аутентификацию.',
-    "Click any row's **Test** button to send a quick test message to that channel." => 'Нажмите кнопку **Тест** в любой строке, чтобы отправить быстрое тестовое сообщение в этот канал.',
-    'Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`.' => 'Необязательно, укажите свою ntfy-инстанцию (если применимо). По умолчанию `https://ntfy.sh`.',
-    'Optional, required for protected topics or self-hosted instances with auth.' => 'Необязательно, требуется для защищённых тем или self-hosted инстанций с авторизацией.',
-    'Add the ntfy topics you\'d like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Добавьте темы ntfy, в которые вы хотите отправлять сообщения. Каждая тема становится доступна как получатель на вкладке **Получатели** при настройке уведомления.',
-    "Click any row's **Test** button to send a quick test message to that topic." => 'Нажмите кнопку **Тест** в любой строке, чтобы отправить быстрое тестовое сообщение в эту тему.',
-    'Enable Markdown' => 'Включить Markdown',
-
-    // Manual triggers
-    'Send Notification'                                            => 'Отправить уведомление',
-    'Send manual notifications'                                    => 'Отправлять уведомления вручную',
-    'Are you sure you want to send this notification?'             => 'Вы уверены, что хотите отправить это уведомление?',
-    'This notification cannot be triggered manually.'              => 'Это уведомление нельзя запустить вручную.',
-    'This notification no longer applies to the selected element.' => 'Это уведомление больше не применяется к выбранному элементу.',
-    'Notification was not sent. Check the Notification Log for details.' => 'Уведомление не отправлено. Подробности см. в Журнале уведомлений.',
-    'Notification sent.'                                           => 'Уведомление отправлено.',
-    'Element not found'                                            => 'Элемент не найден',
-    'Trigger Label'                                                => 'Метка триггера',
-    'An element action label (helps to differentiate multiple triggers).'        => 'Метка действия элемента (помогает различать несколько триггеров).',
-
-    // Event tab: date trigger
-    'On'                                                          => 'В день',
-    'days before'                                                 => 'дней до',
-    'days after'                                                  => 'дней после',
-    'Relevant Date'                                               => 'Соответствующая дата',
-    'Send the notification relative to a chosen date.'            => 'Отправляйте уведомление относительно выбранной даты.',
-
-    // Scheduled sending
-    'Scheduled Sending' => 'Запланированная отправка',
-    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Общий секрет для аутентификации веб-запросов запланированного запуска. Требуется только при запуске расписания через веб-конечную точку.',
-    'Scheduled-Run Token' => 'Токен запланированного запуска',
-    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Отправляется с каждым запросом как заголовок X-Notifier-Token или параметр token в теле запроса.',
+    // Message tab: Pushover
+    "Field containing each user's Pushover key" => 'Поле ключа Pushover пользователя',
+    'Select which User field contains the recipient\'s Pushover user key.' => 'Выберите поле пользователя, содержащее ключ Pushover получателя.',
     'Pushover Title' => 'Заголовок Pushover',
+    'Optionally include a heading above the body.' => 'При необходимости добавьте заголовок над текстом.',
+    'Dynamic Pushover Title' => 'Динамический заголовок Pushover',
     'Pushover Body' => 'Текст Pushover',
+    'Body of the Pushover notification. Plain text only.' => 'Текст Pushover-уведомления. Только обычный текст.',
+
+    // Message tab: ntfy
+    'Priority' => 'Приоритет',
+    'Priority level of the ntfy message.' => 'Уровень приоритета ntfy-сообщения.',
+    'Tags' => 'Метки',
+    'Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/).' => 'При необходимости укажите [emoji-коды](https://docs.ntfy.sh/emojis/) через запятую.',
     'ntfy Title' => 'Заголовок ntfy',
+    'Dynamic ntfy Title' => 'Динамический заголовок ntfy',
     'ntfy Body' => 'Текст ntfy',
+    'Body of the ntfy notification.' => 'Текст ntfy-уведомления.',
     'ntfy Link URL' => 'URL ссылки ntfy',
-    'Render Link Previews' => 'Показывать превью ссылок',
-    'Don\'t unfurl' => 'Не разворачивать',
-    'Expand link previews' => 'Развернуть превью ссылок',
+    'Optionally open a URL when the notification is clicked.' => 'При необходимости открывать URL при клике по уведомлению.',
+    'Enable Markdown' => 'Включить Markdown',
+    'Whether to parse the body as Markdown in supported clients.' => 'Должен ли текст обрабатываться как Markdown в поддерживающих клиентах.',
     'Regular text only' => 'Только обычный текст',
     'Markdown enabled' => 'Markdown включён',
-    'Dynamic Pushover Title' => 'Динамический заголовок Pushover',
-    'Dynamic Subject Line' => 'Динамическая тема',
-    'Dynamic Bot Name' => 'Динамическое имя бота',
-    'Dynamic ntfy Title' => 'Динамический заголовок ntfy',
-    'Dynamic Announcement Title' => 'Динамический заголовок анонса',
-    'Dynamic Flash Message Title' => 'Динамический заголовок Flash-сообщения',
-    'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Обычный текст, максимум 300 символов. URL-адреса и упоминания вида `@handle.tld` автоматически становятся ссылками.',
-    'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Автоматически создавать карточку-превью, когда в теле поста есть URL.',
-    'Whether the message be sent via the [jobs queue]({queueUrl}).' => 'Должно ли сообщение отправляться через [очередь задач]({queueUrl}).',
-    'Priority level of the ntfy message.' => 'Уровень приоритета ntfy-сообщения.',
-    'Optionally include comma-separated [emoji shortcodes](https://docs.ntfy.sh/emojis/).' => 'При необходимости укажите [emoji-коды](https://docs.ntfy.sh/emojis/) через запятую.',
-    'Body of the ntfy notification.' => 'Текст ntfy-уведомления.',
-    'Optionally open a URL when the notification is clicked.' => 'При необходимости открывать URL при клике по уведомлению.',
-    'Whether to parse the body as Markdown in supported clients.' => 'Должен ли текст обрабатываться как Markdown в поддерживающих клиентах.',
-    'Heading of the announcement.' => 'Заголовок анонса.',
-    'Body of the announcement. Supports Markdown.' => 'Текст анонса. Поддерживает Markdown.',
-    'Heading of the flash message.' => 'Заголовок flash-сообщения.',
-    'Optionally include details below the heading. Supports Markdown and HTML.' => 'При необходимости добавьте детали под заголовком. Поддерживает Markdown и HTML.',
-    'Optionally include a heading above the body.' => 'При необходимости добавьте заголовок над текстом.',
-    'Body of the SMS (text message). Plain text only.' => 'Текст SMS (текстового сообщения). Только обычный текст.',
-    'Body of the Pushover notification. Plain text only.' => 'Текст Pushover-уведомления. Только обычный текст.',
-    'Subject line of the email.' => 'Тема письма.',
-    'Body of the email. Supports HTML.' => 'Текст письма. Поддерживает HTML.',
-    'Optionally override the app\'s display name.' => 'При необходимости переопределите отображаемое имя приложения.',
-    'Optionally override the app\'s icon with a URL.' => 'При необходимости переопределите иконку приложения через URL.',
-    'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'При необходимости переопределите иконку приложения через эмодзи. Используется, только если Bot Icon URL пуст.',
-    'Invalid Slack body format.' => 'Недопустимый формат содержимого Slack.',
+
+    // Message tab: Slack
+    'Slack Message Body' => 'Тело сообщения Slack',
     'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => 'Поддерживает стандартный синтаксис [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting). Опционально поддерживает HTML _(см. ниже)_.',
     'Render Message Body as HTML' => 'Отображать содержимое сообщения как HTML',
     'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => 'Анализировать только как [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) или также как HTML.',
     'mrkdwn only' => 'только mrkdwn',
     'mrkdwn + HTML' => 'mrkdwn + HTML',
+    'Render Link Previews' => 'Показывать превью ссылок',
+    'Whether Slack should unfurl link previews for URLs in the message body.' => 'Должен ли Slack показывать превью ссылок для URL-адресов в тексте сообщения.',
+    'Don\'t unfurl' => 'Не разворачивать',
+    'Expand link previews' => 'Развернуть превью ссылок',
+    'Bot Name' => 'Имя пользователя',
+    'Optionally override the app\'s display name.' => 'При необходимости переопределите отображаемое имя приложения.',
+    'Dynamic Bot Name' => 'Динамическое имя бота',
+    'Bot Icon URL' => 'URL значка',
+    'Optionally override the app\'s icon with a URL.' => 'При необходимости переопределите иконку приложения через URL.',
+    'Bot Emoji' => 'Эмодзи значка',
+    'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'При необходимости переопределите иконку приложения через эмодзи. Используется, только если Bot Icon URL пуст.',
+
+    // Message tab: Bluesky
+    'Post Body' => 'Текст поста',
+    'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Обычный текст, максимум 300 символов. URL-адреса и упоминания вида `@handle.tld` автоматически становятся ссылками.',
+    'Generate Link Preview' => 'Создать предпросмотр ссылки',
+    'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Автоматически создавать карточку-превью, когда в теле поста есть URL.',
+    'No card' => 'Без карточки',
+    'Generate preview card' => 'Создать карточку предпросмотра',
+
+    // Recipients tab: type selector & user/group pickers
+    'Recipients Type' => 'Тип получателей',
+    'Who will receive this message?' => 'Кто получит это сообщение?',
+    'Add a message recipient' => 'Добавить получателя',
+    'Select User(s)' => 'Выберите пользователя(ей)',
+    'Which users will receive the message?' => 'Какие пользователи получат сообщение?',
+    'Which user groups will receive the message?' => 'Какие группы пользователей получат сообщение?',
+
+    // Recipients tab: channel pickers (Slack / ntfy / Bluesky)
+    'Select Slack channel(s)' => 'Выберите канал(ы) Slack',
+    'Which Slack channels should receive this message?' => 'Какие каналы Slack получат это сообщение?',
+    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Каналы Slack не настроены. Добавьте в [Настройки → Slack]({url}).',
+    'Select ntfy topic(s)' => 'Выберите тему(ы) ntfy',
+    'Which ntfy topics should receive this message?' => 'Какие темы ntfy получат это сообщение?',
+    'No ntfy topics configured. Add one in [Settings → ntfy]({url}).' => 'Темы ntfy не настроены. Добавьте в [Настройки → ntfy]({url}).',
+    'Select Bluesky account(s)' => 'Выберите аккаунт(ы) Bluesky',
+    'Which Bluesky accounts should post this message?' => 'Какие аккаунты Bluesky должны опубликовать это сообщение?',
+    'No Bluesky accounts configured. Add one in [Settings → Bluesky]({url}).' => 'Аккаунты Bluesky не настроены. Добавьте в [Настройки → Bluesky]({url}).',
+
+    // Recipients tab: dynamic recipients snippet
+    'Twig Snippet to Determine Recipients' => 'Фрагмент Twig для определения получателей',
+    'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Введите пользовательский фрагмент Twig, чтобы [определить, кто получит сообщение]({url}).',
+    'The snippet **must** include a `{% setRecipients %}` tag.' => 'Фрагмент **должен** содержать тег `{% setRecipients %}`.',
+
+    // ============================================================
+    // SETTINGS
+    // ============================================================
+
+    // Settings: nav & page chrome
+    'Notifier Settings' => 'Настройки Notifier',
+    'General' => 'Общие',
+    'Twilio' => 'Twilio',
+    'Pushover' => 'Pushover',
+    'Slack' => 'Slack',
+    'Bluesky' => 'Bluesky',
+    'ntfy' => 'ntfy',
+
+    // Settings: Logging
+    'Logging' => 'Журналирование',
+    'Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database.' => 'Notifier ведёт постоянный журнал отправленных сообщений. Обычно это не нужно, но вы можете ограничить количество событий, записываемых в базу данных.',
+    'Enable Logging' => 'Включить журналирование',
+    'When disabled, Notifier will not write anything to the notification log.' => 'Когда отключено, Notifier ничего не записывает в журнал уведомлений.',
+    'Number of days to retain log events' => 'Число дней хранения событий журнала',
+    'At most, keep log events for this many days. Leave blank for no limit.' => 'Хранить события журнала не более этого числа дней. Пусто означает без ограничения.',
+    'Number of log events to retain' => 'Число сохраняемых событий журнала',
+    'At most, keep this many log events. Leave blank for no limit.' => 'Хранить не более этого числа событий. Пусто означает без ограничения.',
+
+    // Settings: Scheduled sending
+    'Scheduled Sending' => 'Запланированная отправка',
+    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Общий секрет для аутентификации веб-запросов запланированного запуска. Требуется только при запуске расписания через веб-конечную точку.',
+    'Scheduled-Run Token' => 'Токен запланированного запуска',
+    'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Отправляется с каждым запросом как заголовок X-Notifier-Token или параметр token в теле запроса.',
+
+    // Settings: Twilio
+    'Twilio API Credentials' => 'Учётные данные API Twilio',
+    'If using the Twilio API to send SMS messages, the following credentials are required.' => 'При отправке SMS через Twilio API требуются следующие учётные данные.',
+    'Twilio Account SID' => 'Twilio Account SID',
+    'Twilio Auth Token' => 'Twilio Auth Token',
+    'Twilio phone number (sends each SMS message)' => 'Номер телефона Twilio (отправляет каждое SMS-сообщение)',
+    'SMS Testing' => 'Тестирование SMS',
+    'Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient.' => 'Необязательно. Если установлено, каждое отправленное SMS будет направлено на этот номер вместо реального получателя.',
+    'Test phone number' => 'Тестовый номер телефона',
+
+    // Settings: Pushover
+    "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)." => '[Pushover](https://pushover.net) отправляет push-уведомления на устройства зарегистрированного пользователя. Каждому пользователю Craft нужно пользовательское поле в профиле для хранения ключа Pushover; вы выбираете, какое поле использовать, на вкладке Сообщение каждого уведомления. Полную инструкцию по настройке смотрите в [документации Pushover для начинающих](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover).',
+    'Application API Token' => 'Токен API приложения',
+    'The 30-character app token from your Pushover application.' => '30-символьный токен приложения из вашего приложения Pushover.',
+
+    // Settings: ntfy
+    'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh — бесплатный HTTP-сервис push-уведомлений. Подписчики получают сообщения в приложении ntfy, в Интернете или в любом совместимом клиенте, подключаясь к теме.',
+    'Server URL' => 'URL сервера',
+    'Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`.' => 'Необязательно, укажите свою ntfy-инстанцию (если применимо). По умолчанию `https://ntfy.sh`.',
+    'Access token' => 'Токен доступа',
+    'Optional, required for protected topics or self-hosted instances with auth.' => 'Необязательно, требуется для защищённых тем или self-hosted инстанций с авторизацией.',
+    'ntfy Topics' => 'Темы ntfy',
+    'Add the ntfy topics you\'d like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Добавьте темы ntfy, в которые вы хотите отправлять сообщения. Каждая тема становится доступна как получатель на вкладке **Получатели** при настройке уведомления.',
+    'Topics' => 'Темы',
+    "Click any row's **Test** button to send a quick test message to that topic." => 'Нажмите кнопку **Тест** в любой строке, чтобы отправить быстрое тестовое сообщение в эту тему.',
+    'Label' => 'Метка',
+    'Topic' => 'Тема',
+    'Add a topic' => 'Добавить тему',
+
+    // Settings: Slack
+    'Slack Channels' => 'Каналы Slack',
+    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Создайте [приложение Slack](https://api.slack.com/apps) с областями действия `chat:write`, `chat:write.customize` и `chat:write.public`, затем добавьте по строке для каждого канала, в который вы хотите публиковать сообщения. Каждый канал становится доступным как получатель на вкладке **Получатели** при настройке уведомления. Токен бота — это секрет, поэтому храните его в переменной `.env` и ссылайтесь на эту переменную (например, `$SLACK_BOT_TOKEN`) вместо того, чтобы вставлять токен напрямую.',
+    'Channels' => 'Каналы',
+    "Click any row's **Test** button to send a quick test message to that channel." => 'Нажмите кнопку **Тест** в любой строке, чтобы отправить быстрое тестовое сообщение в этот канал.',
+    'Bot Token' => 'Токен бота',
+    'Channel ID' => 'ID канала',
+    'Add a channel' => 'Добавить канал',
+    'Not a valid Bot Token. Must start with `xoxb-`.' => 'Недействительный токен бота. Должен начинаться с `xoxb-`.',
+    'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Недействительный ID канала. Должен выглядеть как `C01234ABCD`.',
+
+    // Settings: Bluesky
+    "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => 'Посты [Bluesky](https://bsky.app) публикуются в ленте настроенного аккаунта через ATProto API. Пароли приложений создаются на [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). Пароль приложения является секретом, поэтому храните его в переменной `.env` и ссылайтесь на эту переменную (например, `$BLUESKY_APP_PASSWORD`), а не вставляйте пароль напрямую.',
+    'PDS URL' => 'URL PDS',
+    'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'По умолчанию https://bsky.social. Укажите свой PDS, если ваша установка федерирована.',
+    'Bluesky Accounts' => 'Аккаунты Bluesky',
+    "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Добавьте аккаунты Bluesky, от имени которых вы хотите публиковать. Каждый аккаунт становится доступен как получатель на вкладке **Получатели** при настройке уведомления.',
+    'Accounts' => 'Аккаунты',
+    "Click any row's **Test** button to confirm the account authenticates." => 'Нажмите кнопку **Тест** в любой строке, чтобы убедиться, что аккаунт проходит аутентификацию.',
+    'Handle' => 'Хэндл',
+    'App password' => 'Пароль приложения',
+    'Add an account' => 'Добавить аккаунт',
+
+    // ============================================================
+    // MANUAL SEND & TEST
+    // ============================================================
+
+    // Manual send & test
+    'Send a test message' => 'Отправить тестовое сообщение',
+    'Send a REAL test notification?\\n\\n⚠️ Uses a random sample of real data.\\n⚠️ Sends a real message via the configured channel.\\n⚠️ Delivers to the real configured recipient(s).' => 'Отправить НАСТОЯЩЕЕ тестовое уведомление?\\n\\n⚠️ Использует случайную выборку реальных данных.\\n⚠️ Отправляет настоящее сообщение через настроенный канал.\\n⚠️ Доставляется настоящим настроенным получателям.',
+    'Test' => 'Тест',
+    'Send system snapshot' => 'Отправить снимок системы',
+    'Send data report' => 'Отправить отчёт о данных',
+    'Are you sure you want to send this notification?' => 'Вы уверены, что хотите отправить это уведомление?',
+    'This notification cannot be triggered manually.' => 'Это уведомление нельзя запустить вручную.',
+    'This notification no longer applies to the selected element.' => 'Это уведомление больше не применяется к выбранному элементу.',
+
+    // ============================================================
+    // RUNTIME OUTPUT
+    // ============================================================
+
+    // Runtime: dispatch log feedback
+    'Sending {messageType} to {recipient}.' => 'Отправка {messageType} для {recipient}.',
+    'Adding message to queue.' => 'Сообщение добавляется в очередь.',
+    'Sending message immediately (bypassing queue).' => 'Отправка сообщения немедленно (минуя очередь).',
+    'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.' => 'Не удалось разобрать ленту. Необходимы расширения PHP `simplexml` и `libxml`.',
+    'Unable to parse the feed.' => 'Не удалось разобрать ленту.',
+    'Unable to fetch the feed: {message}' => 'Не удалось получить ленту: {message}',
+    'Initial feed scan failed: {message}' => 'Не удалось выполнить первоначальную проверку ленты: {message}',
+
+    // Runtime: controller responses
+    'Test notification dispatched.' => 'Тестовое уведомление отправлено.',
+    'No messages were dispatched. Check the recipient configuration.' => 'Сообщения не были отправлены. Проверьте конфигурацию получателей.',
+    'Unable to send test: the feed could not be read or has no items.' => 'Невозможно отправить тест: не удалось прочитать ленту или в ней нет элементов.',
+    'Unable to send test: no element matches the configured filters.' => 'Невозможно отправить тест: ни один элемент не соответствует настроенным фильтрам.',
+    "Couldn't save settings." => 'Не удалось сохранить настройки.',
+    'Settings saved.' => 'Настройки сохранены.',
+    'Topic is empty.' => 'Тема пуста.',
+    'Server URL is not configured.' => 'URL сервера не настроен.',
+    'Test message from Notifier.' => 'Тестовое сообщение от Notifier.',
+    'HTTP {status}' => 'HTTP {status}',
+    'Test message sent successfully.' => 'Тестовое сообщение успешно отправлено.',
+    'Handle and app password are required.' => 'Хэндл и пароль приложения обязательны.',
+    'Authentication failed.' => 'Аутентификация не удалась.',
+    'Successfully authenticated. No messages were posted.' => 'Аутентификация выполнена успешно. Сообщения не были опубликованы.',
+    'Log events deleted.' => 'События журнала удалены.',
+    'Notification sent.' => 'Уведомление отправлено.',
+    'Notification was not sent. Check the Notification Log for details.' => 'Уведомление не отправлено. Подробности см. в Журнале уведомлений.',
+
+    // Outbound: per-channel send results
+    'Unable to send email, no recipient specified.' => 'Невозможно отправить письмо: получатель не указан.',
+    'Unable to send email, the message body was empty.' => 'Невозможно отправить письмо: тело сообщения пустое.',
+    "Unable to send the email using Craft's native email handling." => 'Невозможно отправить письмо через встроенный почтовый обработчик Craft.',
+    'Check your general email settings within Craft.' => 'Проверьте общие настройки почты в Craft.',
+    'Successfully sent email message!' => 'Письмо успешно отправлено!',
+    '[Invalid Twilio credentials.]({url}) Missing {missing}.' => '[Неверные учётные данные Twilio.]({url}) Отсутствует {missing}.',
+    'Unable to send SMS, no Twilio phone number exists.' => 'Невозможно отправить SMS, нет номера телефона Twilio.',
+    'Unable to send SMS, no recipient phone number exists.' => 'Невозможно отправить SMS, нет номера телефона получателя.',
+    'Unable to send SMS, recipient phone number is invalid.' => 'Невозможно отправить SMS, номер телефона получателя недействителен.',
+    'Successfully sent SMS message!' => 'SMS-сообщение успешно отправлено!',
+    'Unable to post announcement, no recipient userId specified.' => 'Невозможно опубликовать объявление: userId получателя не указан.',
+    'Successfully posted announcement!' => 'Объявление успешно опубликовано!',
+    'Unable to send the flash message, invalid flash type.' => 'Невозможно отправить flash-сообщение: недействительный flash-тип.',
+    'Successfully sent flash message!' => 'Flash-сообщение успешно отправлено!',
+    '[Invalid Pushover credentials.]({url}) Missing app token.' => '[Неверные учётные данные Pushover.]({url}) Отсутствует токен приложения.',
+    'Unable to send Pushover message, no user key on recipient.' => 'Невозможно отправить сообщение Pushover: у получателя нет пользовательского ключа.',
+    'Pushover POST failed: {reason}' => 'Pushover POST не удался: {reason}',
+    'Successfully sent Pushover message!' => 'Сообщение Pushover успешно отправлено!',
+    'Unable to send ntfy message, no topic specified.' => 'Невозможно отправить сообщение ntfy: тема не указана.',
+    'ntfy POST failed with HTTP {status}: {reason}' => 'ntfy POST не удался с HTTP {status}: {reason}',
+    'ntfy POST failed: {reason}' => 'ntfy POST не удался: {reason}',
+    'Successfully sent ntfy message to topic "{topic}".' => 'Сообщение ntfy успешно отправлено в тему "{topic}".',
+    'Unable to send Slack message, no bot token.' => 'Не удалось отправить сообщение Slack: нет токена бота.',
+    'Unable to send Slack message, no channel ID.' => 'Не удалось отправить сообщение Slack: нет ID канала.',
+    'Unable to send Slack message, body is empty.' => 'Невозможно отправить сообщение Slack: тело пустое.',
+    'Slack rejected the message: {error}' => 'Slack отклонил сообщение: {error}',
+    'Slack POST failed: {reason}' => 'Slack POST не удался: {reason}',
+    'Successfully sent Slack message to "{label}".' => 'Сообщение Slack успешно отправлено в "{label}".',
+    'Unable to send Bluesky post, recipient is missing credentials.' => 'Невозможно отправить пост Bluesky: у получателя нет учётных данных.',
+    'Body exceeded {max} characters, truncated.' => 'Тело превысило {max} символов и было обрезано.',
+    'Successfully posted to Bluesky as "{label}".' => 'Опубликовано в Bluesky как "{label}".',
+    'Bluesky auth failed for {handle}: {reason}' => 'Аутентификация Bluesky не удалась для {handle}: {reason}',
+    'Bluesky auth failed: {reason}' => 'Аутентификация Bluesky не удалась: {reason}',
+    'Bluesky post failed: {reason}' => 'Публикация в Bluesky не удалась: {reason}',
+    'Bluesky link preview skipped: {reason}' => 'Предпросмотр ссылки Bluesky пропущен: {reason}',
+
+    // Recipient warnings
+    'Recipient "{name}" has no email address.' => 'У получателя "{name}" нет адреса электронной почты.',
+    'Recipient "{name}" has no phone number.' => 'У получателя "{name}" нет номера телефона.',
+    'Recipient "{name}" has no associated User; cannot send announcement.' => 'У получателя "{name}" нет связанного пользователя; объявление невозможно отправить.',
+    'Recipient "{name}" cannot access the control panel; cannot send announcement.' => 'У получателя "{name}" нет доступа к панели управления; объявление невозможно отправить.',
+    'Pushover user-key field is not configured on this notification.' => 'Поле пользовательского ключа Pushover не настроено в этом уведомлении.',
+    'Recipient "{name}" has no associated User; cannot send Pushover message.' => 'У получателя "{name}" нет связанного пользователя; сообщение Pushover невозможно отправить.',
+    '[SKIPPED] User "{name}" has no Pushover key.' => '[ПРОПУЩЕНО] У пользователя "{name}" нет ключа Pushover.',
+    'Recipient "{name}" has no ntfy topic.' => 'У получателя "{name}" нет темы ntfy.',
+    'Recipient "{name}" has no Bluesky credentials.' => 'У получателя "{name}" нет учётных данных Bluesky.',
+    'Recipient "{name}" has no Slack bot token.' => 'У получателя "{name}" нет токена бота Slack.',
+    'Recipient "{name}" has no Slack channel ID.' => 'У получателя "{name}" нет ID канала Slack.',
+
+    // Errors & exceptions
+    'Invalid element event: {class}' => 'Недействительное событие элемента: {class}',
+    'Invalid notification ID: {id}' => 'Недействительный ID уведомления: {id}',
+    'Invalid email message mode.' => 'Недействительный режим электронного письма.',
+    'You do not have permission to use the Dynamic Recipients type.' => 'У вас нет разрешения на использование типа «Динамические получатели».',
+    'Dynamic recipients snippet did not call setRecipients.' => 'Сниппет динамических получателей не вызвал setRecipients.',
+    'setRecipients was called with an empty value.' => 'setRecipients вызван с пустым значением.',
+    'Unrecognized recipient of type "{type}".' => 'Нераспознанный получатель типа "{type}".',
+    'Unrecognized recipient "{value}".' => 'Нераспознанный получатель "{value}".',
+    'Configured {kind} no longer exists in plugin settings (uid: {uid}).' => 'Настроенный {kind} больше не существует в настройках плагина (uid: {uid}).',
+    'Invalid settings section: {section}' => 'Недопустимый раздел настроек: {section}',
+    'User not authorized to save this notification.' => 'Пользователю запрещено сохранять это уведомление.',
+    'User not authorized to view this notification.' => 'Пользователю запрещено просматривать это уведомление.',
+    'User not authorized to delete this notification.' => 'Пользователю запрещено удалять это уведомление.',
+    'Notification not found' => 'Уведомление не найдено',
+    'Element not found' => 'Элемент не найден',
+    'You do not have permission to use the Dynamic Data type.' => 'У вас нет прав на использование типа «Динамические данные».',
+    'The Dynamic Data snippet did not call the {tag} tag.' => 'Сниппет Twig не вызвал тег {tag}.',
+    'Invalid Slack body format.' => 'Недопустимый формат содержимого Slack.',
+
+    // Config-file override note
+    'This is being set in the config file. [{file}]' => 'Это задано в файле конфигурации. [{file}]',
+
+    // ============================================================
+    // JAVASCRIPT UI
+    // ============================================================
+
+    // JavaScript: log utility & buttons
+    'Test notification failed.' => 'Не удалось отправить тестовое уведомление.',
+    'Unable to get the notification, something went wrong.' => 'Не удалось получить уведомление, что-то пошло не так.',
+    'Something went wrong.' => 'Что-то пошло не так.',
+    'Invalid notification ID.' => 'Недопустимый идентификатор уведомления.',
+    'Unable to delete the log event, something went wrong.' => 'Не удалось удалить событие журнала, что-то пошло не так.',
+    'Log event deleted.' => 'Событие журнала удалено.',
+    'Unable to delete log events, something went wrong.' => 'Не удалось удалить события журнала, что-то пошло не так.',
+    'Are you sure you want to delete this log event?' => 'Вы уверены, что хотите удалить это событие журнала?',
+    'Are you sure you want to delete all logs from {date}?' => 'Вы уверены, что хотите удалить все журналы за {date}?',
 ];

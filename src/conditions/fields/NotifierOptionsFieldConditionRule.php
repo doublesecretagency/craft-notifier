@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,12 +15,9 @@ use craft\fields\conditions\OptionsFieldConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedOperator;
 
 /**
- * Class NotifierOptionsFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Options field rule's operators (Dropdown, RadioButtons, Checkboxes, MultiSelect, ButtonGroup).
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for Options-based field rules (Dropdown, RadioButtons, Checkboxes,
- * MultiSelect, ButtonGroup).
+ * @since 3.0.0
  */
 class NotifierOptionsFieldConditionRule extends OptionsFieldConditionRule
 {

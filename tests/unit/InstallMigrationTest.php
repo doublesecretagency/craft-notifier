@@ -188,4 +188,50 @@ class InstallMigrationTest extends TestCase
             $this->migrationSource
         );
     }
+
+    // ========================================================================= //
+    // Recurring-schedule tracking table (System Snapshot, Dynamic Data)
+    // ========================================================================= //
+
+    public function testRecurringTrackingTableNameConstant(): void
+    {
+        // Fresh installs must get the report-schedule table without running every
+        // dated migration, so it is declared on the install migration too.
+        $this->assertSame('{{%notifier_trackreports}}', Install::TRACK_REPORTS);
+    }
+
+    public function testCreatesRecurringTrackingTableWithThreeColumns(): void
+    {
+        // The table carries notificationId + the two tracking timestamps.
+        $this->assertMatchesRegularExpression(
+            "/createTable\(self::TRACK_REPORTS,[\s\S]*?'notificationId'[\s\S]*?'lastRunAt'[\s\S]*?'nextRunAt'/",
+            $this->migrationSource
+        );
+    }
+
+    public function testRecurringTrackingNextRunAtIsNotNull(): void
+    {
+        // nextRunAt is always seeded; lastRunAt is null until the first fire.
+        $this->assertMatchesRegularExpression(
+            "/'nextRunAt'\s*=>\s*\\\$this->dateTime\(\)->notNull\(\)/",
+            $this->migrationSource
+        );
+    }
+
+    public function testRecurringTrackingForeignKeyCascades(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/addForeignKey[\s\S]*?self::TRACK_REPORTS[\s\S]*?self::NOTIFICATIONS[\s\S]*?'CASCADE'/",
+            $this->migrationSource
+        );
+    }
+
+    public function testSafeDownDropsRecurringTrackingBeforeNotifications(): void
+    {
+        // TRACK_REPORTS references NOTIFICATIONS, so it must drop first.
+        $this->assertMatchesRegularExpression(
+            '/safeDown[\s\S]*?dropTableIfExists\(self::TRACK_REPORTS\)[\s\S]*?dropTableIfExists\(self::NOTIFICATIONS\)/',
+            $this->migrationSource
+        );
+    }
 }

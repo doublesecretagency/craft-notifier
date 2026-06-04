@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -18,11 +18,7 @@ use Solspace\Calendar\Elements\Event as CalendarEvent;
 use yii\base\Event;
 
 /**
- * Class CalendarEventEvents
- *
- * Handlers for Solspace Calendar Event element lifecycle.
- * The class name is "CalendarEventEvents" - the element is called Event,
- * and the handlers are events about that element.
+ * Registers Solspace Calendar Event event handlers with Notifier.
  *
  * @since 3.0.0
  */

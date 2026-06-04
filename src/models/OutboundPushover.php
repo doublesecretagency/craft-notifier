@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -21,7 +21,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use Throwable;
 
 /**
- * Class OutboundPushover
+ * Envelope for an outbound Pushover message.
+ *
  * @since 3.0.0
  */
 class OutboundPushover extends BaseEnvelope
@@ -66,7 +67,7 @@ class OutboundPushover extends BaseEnvelope
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        // Resolve app token via env-var dereference
+        // Resolve the app token (supports a $ENV_VAR reference)
         $appToken = App::parseEnv($settings->pushoverApplicationToken);
 
         // If app token is missing, log error and bail

@@ -1,6 +1,6 @@
 {
     "name": "doublesecretagency/craft-notifier",
-    "description": "First-class Notifications for Craft CMS",
+    "description": "First-class Notifications for Craft CMS.",
     "type": "craft-plugin",
     "version": "3.0.2",
     "keywords": [

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -22,8 +22,9 @@ use PHPUnit\Framework\TestCase;
  *
  *   1. A locale file goes out of sync with the canonical key set
  *      (extra keys, missing keys, misspelled keys).
- *   2. A new Craft::t('notifier', ...) or |t('notifier') call site
- *      lands in source without anyone updating the locale files.
+ *   2. A new Craft::t('notifier', ...), |t('notifier'), or JS
+ *      Craft.t('notifier', ...) call site lands in source without
+ *      anyone updating the locale files.
  *   3. A translation accidentally drops or renames a {placeholder}
  *      or breaks the [text]({url}) markdown-link structure.
  *
@@ -105,11 +106,13 @@ class TranslationsTest extends TestCase
     /**
      * Extract every translatable source string from src/.
      *
-     * Scans .php files for Craft::t('notifier', '...') / Craft::t('notifier', "...")
-     * and .twig / .html files for '...'|t('notifier') / "..."|t('notifier').
+     * Scans .php files for Craft::t('notifier', '...') / Craft::t('notifier', "..."),
+     * .twig / .html files for '...'|t('notifier') / "..."|t('notifier'), and
+     * .js files for Craft.t('notifier', '...') / Craft.t('notifier', "...").
      * The leading quote in each match must also close the literal, so
      * apostrophes inside values force the source to use double quotes
-     * (the regex handles both forms).
+     * (the regex handles both forms). The dist/ folder is skipped, so only
+     * authored source JS is scanned, never the compiled bundles.
      *
      * @return string[]
      */
@@ -135,18 +138,25 @@ class TranslationsTest extends TestCase
         // Allow trailing , or ) so calls like |t('notifier', {param: ...}) match.
         $twigRe = "/(['\"])((?:\\\\.|(?!\\1).)*)\\1\s*\|\s*t\(\s*'notifier'\s*[,)]/s";
 
+        // JS: Craft.t('notifier', 'msg') or Craft.t('notifier', "msg")
+        $jsRe = "/Craft\\.t\(\s*'notifier'\s*,\s*(['\"])((?:\\\\.|(?!\\1).)*)\\1/s";
+
         foreach ($iter as $file) {
             if (!$file->isFile()) {
                 continue;
             }
             $name = $file->getFilename();
             $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-            if (!in_array($ext, ['php', 'twig', 'html'], true)) {
+            if (!in_array($ext, ['php', 'twig', 'html', 'js'], true)) {
                 continue;
             }
             $contents = file_get_contents($file->getPathname());
 
-            $re = ($ext === 'php' ? $phpRe : $twigRe);
+            $re = match ($ext) {
+                'php' => $phpRe,
+                'js' => $jsRe,
+                default => $twigRe,
+            };
             if (!preg_match_all($re, $contents, $matches, PREG_SET_ORDER)) {
                 continue;
             }

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -16,11 +16,9 @@ use craft\elements\conditions\TitleConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedAttributeOperator;
 
 /**
- * Class NotifierTitleConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Title rule's operators.
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for the Title rule.
+ * @since 3.0.0
  */
 class NotifierTitleConditionRule extends TitleConditionRule
 {

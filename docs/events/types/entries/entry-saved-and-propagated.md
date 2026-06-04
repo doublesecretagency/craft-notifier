@@ -24,7 +24,7 @@ This trigger is filterable by **sections and entry types** and the [standard ele
 
 ## Twig variables
 
-The `object` variable (and its `entry` alias) is the saved [Entry](https://docs.craftcms.com/api/v5/craft-elements-entry.html). The pre-save copy is available as [`original`](/messages/variables#fetching-the-original-element).
+The `object` variable (and its `entry` alias) is the saved [Entry](https://docs.craftcms.com/api/v5/craft-elements-entry.html). The pre-save copy is available as [`original`](/messages/variables/element-events#fetching-the-original-element).
 
 ```twig
 {{ entry.title }} was saved by {{ currentUser.fullName }}.
@@ -37,7 +37,7 @@ The `object` variable (and its `entry` alias) is the saved [Entry](https://docs.
 ## Caveats
 
 :::warning Relationship Issues
-If your [message template](/messages/) relies on the [`original` variable](/messages/variables#element-variables), please note that any **related** values (e.g. Matrix Blocks, Assets, etc.) may have changed by the time propagation has completed.
+If your [message template](/messages/) relies on the [`original` variable](/messages/variables/element-events#fetching-the-original-element), please note that any **related** values (e.g. Matrix Blocks, Assets, etc.) may have changed by the time propagation has completed.
 
 To ensure `original` relationships are accurate, instead use the event **["When an entry is saved (send one message per each site)"](/events/types/entries/entry-saved-per-site)**.
 :::

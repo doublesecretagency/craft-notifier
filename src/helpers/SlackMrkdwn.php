@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -14,7 +14,8 @@ namespace doublesecretagency\notifier\helpers;
 use League\HTMLToMarkdown\HtmlConverter;
 
 /**
- * Class SlackMrkdwn
+ * Converts HTML to Slack mrkdwn.
+ *
  * @since 3.0.0
  */
 class SlackMrkdwn

@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -15,11 +15,9 @@ use craft\fields\conditions\CountryFieldConditionRule;
 use doublesecretagency\notifier\conditions\operators\HasChangedOperator;
 
 /**
- * Class NotifierCountryFieldConditionRule
- * @since 3.0.0
+ * Adds "has changed" to the Country field rule's operators.
  *
- * Notifier-scoped subclass that adds `has changed` to the operator dropdown
- * for Country field rules.
+ * @since 3.0.0
  */
 class NotifierCountryFieldConditionRule extends CountryFieldConditionRule
 {

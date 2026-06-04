@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -16,7 +16,8 @@ use Twig\Error\RuntimeError;
 use Twig\Node\Node;
 
 /**
- * Class SkipMessageNode
+ * Compiled node for the {% skipMessage %} tag.
+ *
  * @since 1.0.0
  */
 class SkipMessageNode extends Node

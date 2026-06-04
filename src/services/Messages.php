@@ -2,7 +2,7 @@
 /**
  * Notifier plugin for Craft CMS
  *
- * First-class Notifications for Craft CMS
+ * First-class Notifications for Craft CMS.
  *
  * @author    Double Secret Agency
  * @link      https://plugins.doublesecretagency.com/
@@ -24,6 +24,7 @@ use craft\elements\Entry;
 use craft\elements\User;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\exceptions\TestPreflightException;
+use doublesecretagency\notifier\helpers\SystemSnapshot;
 use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\NotifierPlugin;
 use Solspace\Calendar\Elements\Event as CalendarEvent;
@@ -31,7 +32,8 @@ use yii\base\Event;
 use yii\db\Expression;
 
 /**
- * Class Messages
+ * Builds and sends notification messages.
+ *
  * @since 1.0.0
  */
 class Messages extends Component
@@ -109,6 +111,12 @@ class Messages extends Component
                 ));
             }
             $data = $resolved;
+        } elseif ('system-snapshot' === $notification->eventType) {
+            // Compile a fresh system snapshot report
+            $data = ['report' => SystemSnapshot::compile()];
+        } elseif ('dynamic-data' === $notification->eventType) {
+            // No data sent, to be compiled dynamically at dispatch
+            $data = [];
         } else {
             // Pick a random element matching the configured filters
             $element = $this->getRandomMatchingElement($notification);
@@ -121,7 +129,7 @@ class Messages extends Component
             // Mirror the real dispatch shape: stash the chosen element under 'object'
             $data = ['object' => $element];
             // Thread the element through the synthetic event too, so any
-            // recipient strategy that derefs the sender directly sees it
+            // recipient strategy that reads the sender directly sees it
             $event->sender = $element;
         }
 
@@ -156,7 +164,7 @@ class Messages extends Component
      */
     public function getRandomMatchingElement(Notification $notification): ?ElementInterface
     {
-        // Resolve the element class for this notification's event type
+        // Get the element class for this notification's event type
         $elementClass = $this->_eventTypeToElementClass($notification->eventType);
 
         // If the event type is unsupported, or its host plugin isn't installed, bail
@@ -186,7 +194,7 @@ class Messages extends Component
             return null;
         }
 
-        // Walk candidates and return the first that passes the shared gate
+        // Loop through the candidates and return the first that passes the shared gate
         foreach ($candidates as $candidate) {
             // Build a one-off dispatch to validate via the shared filter gate
             $dispatch = new Dispatch([
@@ -272,6 +280,47 @@ class Messages extends Component
             ->all();
     }
 
+    /**
+     * Get all Notifications driven by the recurring System Snapshot schedule.
+     *
+     * @return Notification[] Recurring System Snapshot notifications.
+     */
+    public function getSystemSnapshotNotifications(): array
+    {
+        // Get all recurring System Snapshot notifications
+        return $this->_recurringNotifications('system-snapshot');
+    }
+
+    /**
+     * Get all Notifications driven by the recurring Dynamic Data schedule.
+     *
+     * @return Notification[] Recurring Dynamic Data notifications.
+     */
+    public function getDynamicDataNotifications(): array
+    {
+        // Get all recurring Dynamic Data notifications
+        return $this->_recurringNotifications('dynamic-data');
+    }
+
+    /**
+     * Get all recurring notifications of a given event type.
+     *
+     * @param string $eventType
+     * @return Notification[]
+     */
+    private function _recurringNotifications(string $eventType): array
+    {
+        // Get all notifications of the specified event type
+        $notifications = Notification::find()
+            ->where(['eventType' => $eventType])
+            ->all();
+
+        // Return only the recurring notifications
+        return array_values(array_filter($notifications,
+            static fn(Notification $n): bool => (bool) ($n->eventConfig['recurring'] ?? false)
+        ));
+    }
+
     // ========================================================================= //
 
     /**
@@ -305,6 +354,7 @@ class Messages extends Component
             $map['solspace-calendar-events'] = CalendarEvent::class;
         }
 
+        // Return the matching element class, or null
         return ($map[$eventType] ?? null);
     }
 
@@ -320,7 +370,7 @@ class Messages extends Component
      */
     private function _buildCandidateQuery(Notification $notification, string $elementClass): ElementQueryInterface
     {
-        // Read the notification's eventConfig as a plain array
+        // Get the notification's eventConfig as a plain array
         $eventConfig = ($notification->eventConfig ?? []);
 
         // Start a base element query
@@ -372,6 +422,7 @@ class Messages extends Component
                 break;
         }
 
+        // Return the query
         return $query;
     }
 
