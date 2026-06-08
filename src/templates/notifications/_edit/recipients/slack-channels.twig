@@ -18,7 +18,11 @@
         }) }}
     {% else %}
         <p class="instructions warning">
-            {{ "No Slack channels configured. Add one in [Settings → Slack]({url})."|t('notifier', { url: url('settings/plugins/notifier/slack') })|md }}
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No Slack channels configured. Add one in [Settings → Slack]({url})."|t('notifier', { url: url('settings/plugins/notifier/slack') })|md }}
+            {% else %}
+                {{ "No Slack channels configured. Channels can only be added in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
         </p>
     {% endif %}
 

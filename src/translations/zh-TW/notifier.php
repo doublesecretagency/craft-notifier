@@ -511,4 +511,63 @@ return [
     'Unable to delete log events, something went wrong.' => '無法刪除日誌事件，發生錯誤。',
     'Are you sure you want to delete this log event?' => '確定要刪除此日誌事件嗎？',
     'Are you sure you want to delete all logs from {date}?' => '確定要刪除 {date} 的所有日誌嗎？',
+
+    // ============================================================
+    // MQTT
+    // ============================================================
+
+    'Recipient "{name}" has no MQTT topic.' => '收件者「{name}」沒有 MQTT 主題。',
+    'Unable to send MQTT message, no broker host configured.' => '無法傳送 MQTT 訊息,未設定代理主機。',
+    'Unable to send MQTT message, no topic specified.' => '無法傳送 MQTT 訊息,未指定主題。',
+    'Unable to send MQTT message, the payload is empty.' => '無法傳送 MQTT 訊息,內容為空。',
+    'MQTT publish failed: {reason}' => 'MQTT 發布失敗:{reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => '已成功向主題「{topic}」傳送 MQTT 訊息。',
+    'MQTT Broker' => 'MQTT 代理',
+    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier 會向 MQTT 代理(如 Mosquitto、EMQX、HiveMQ 或 AWS IoT Core)發布訊息。請在下方輸入代理的連線資訊。敏感值可以儲存在 `.env` 變數中並在此參考(例如 `$MQTT_PASSWORD`)。',
+    'Host' => '主機',
+    'Broker hostname, without a protocol or port.' => '代理的主機名稱,不含通訊協定或連接埠。',
+    'Port' => '連接埠',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => '選用。啟用 TLS 時預設為 8883,否則為 1883。',
+    'Use TLS' => '使用 TLS',
+    'Whether to connect to the broker over a secure TLS socket.' => '是否透過安全的 TLS 通訊端連線至代理。',
+    'Username' => '使用者名稱',
+    'Optional, for brokers that require username/password authentication.' => '選用,適用於需要使用者名稱/密碼驗證的代理。',
+    'Password' => '密碼',
+    'MQTT Version' => 'MQTT 版本',
+    'Protocol version sent to the broker.' => '傳送給代理的通訊協定版本。',
+    'Client ID' => '用戶端 ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => '選用。留空時會自動產生唯一的用戶端 ID。',
+    'Mutual TLS' => '雙向 TLS',
+    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => '選用。適用於使用憑證驗證用戶端的代理(如 AWS IoT Core)。請提供憑證檔案的伺服器檔案路徑(允許使用 `.env` 變數或 `@alias` 參考)。',
+    'CA Certificate File' => 'CA 憑證檔案',
+    'Path to the certificate authority (CA) file.' => '憑證授權單位(CA)檔案的路徑。',
+    'Client Certificate File' => '用戶端憑證檔案',
+    'Path to the client certificate file.' => '用戶端憑證檔案的路徑。',
+    'Client Key File' => '用戶端金鑰檔案',
+    'Path to the client private key file.' => '用戶端私密金鑰檔案的路徑。',
+    'MQTT Topics' => 'MQTT 主題',
+    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => '新增您希望發布的 MQTT 主題。設定通知時,每個主題都可在**收件者**分頁中作為收件者使用。',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => '點擊任一列的 **測試** 按鈕以向該主題發布快速測試訊息。',
+    'MQTT' => 'MQTT',
+    'Payload' => '負載',
+    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => '發布到主題的訊息。可以是純文字或由 Twig 算繪的 JSON 物件。',
+    'Quality of Service' => '服務品質',
+    'Delivery guarantee for this message.' => '此訊息的傳遞保證。',
+    'Retain' => '保留',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => '代理是否將其保留為該主題的最後一則訊息,並傳遞給未來的訂閱者。',
+    'Don\'t retain' => '不保留',
+    'Select MQTT topic(s)' => '選擇 MQTT 主題',
+    'Which topics should receive this message?' => '哪些主題應接收此訊息?',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => '未設定 MQTT 主題。請在[設定 → MQTT]({url})中新增一個。',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '不是有效的主題。不能為空,也不能包含萬用字元 `+` 或 `#`。',
+    'Broker host is not configured.' => '未設定代理主機。',
+
+    // ============================================================
+    // Recipient empty-state (administrative changes disabled)
+    // ============================================================
+
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => '未設定 ntfy 主題。主題只能在允許管理變更的環境中新增。',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => '未設定 Slack 頻道。頻道只能在允許管理變更的環境中新增。',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => '未設定 Bluesky 帳號。帳號只能在允許管理變更的環境中新增。',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => '未設定 MQTT 主題。主題只能在允許管理變更的環境中新增。',
 ];

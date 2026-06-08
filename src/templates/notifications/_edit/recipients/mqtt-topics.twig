@@ -1,0 +1,29 @@
+{% import '_includes/forms' as forms %}
+
+{% set topicOptions = [] %}
+{% for row in (notificationOptions.mqttTopics ?? []) %}
+    {% set topicOptions = topicOptions|merge([{ label: row.label, value: row.uid }]) %}
+{% endfor %}
+
+<div class="recipients-type-mqtt-topics">
+
+    {% if topicOptions|length %}
+        {{ forms.checkboxSelectField({
+            label: "Select MQTT topic(s)"|t('notifier'),
+            instructions: "Which topics should receive this message?"|t('notifier'),
+            id: 'recipientsConfig-mqttTopicUids',
+            name: 'recipientsConfig[mqttTopicUids]',
+            options: topicOptions,
+            values: (notification.recipientsConfig.mqttTopicUids ?? []),
+        }) }}
+    {% else %}
+        <p class="instructions warning">
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No MQTT topics configured. Add one in [Settings → MQTT]({url})."|t('notifier', { url: url('settings/plugins/notifier/mqtt') })|md }}
+            {% else %}
+                {{ "No MQTT topics configured. Topics can only be added in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+</div>

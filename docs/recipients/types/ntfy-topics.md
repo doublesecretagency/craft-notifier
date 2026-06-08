@@ -6,7 +6,7 @@ description: Send the ntfy message to one or more named topics. Topics are manag
 
 Sends the [ntfy](/messages/types/ntfy) message to **one or more named topics.**
 
-<img class="dropshadow" src="/images/recipients/ntfy-topics-picker.png" alt="" style="width:366px; margin-top:10px; margin-bottom:30px">
+<img class="dropshadow" src="/images/recipients/ntfy-topics-picker.png" alt="" style="width:400px; margin-top:10px; margin-bottom:30px">
 
 :::warning Configure Topics
 Available topics can be managed in [Settings → Plugins → Notifier → ntfy](/getting-started/integrations/ntfy).

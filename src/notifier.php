@@ -35,11 +35,22 @@ return [
     // Bluesky (if posting to Bluesky)
     //'blueskyPdsUrl' => getenv('BLUESKY_PDS_URL'),
 
+    // MQTT (if publishing to an MQTT broker)
+    //'mqttHost'              => getenv('MQTT_HOST'),
+    //'mqttUsername'          => getenv('MQTT_USERNAME'),
+    //'mqttPassword'          => getenv('MQTT_PASSWORD'),
+    //'mqttTlsCaFile'         => getenv('MQTT_TLS_CA_FILE'),
+    //'mqttTlsClientCertFile' => getenv('MQTT_TLS_CLIENT_CERT_FILE'),
+    //'mqttTlsClientKeyFile'  => getenv('MQTT_TLS_CLIENT_KEY_FILE'),
+
     /**
-     * Note: ntfyTopics, slackChannels, and blueskyAccounts are managed via the
-     * control panel only, not in this file. For sensitive values (Slack webhook
-     * URLs, Bluesky app passwords), store the secret in a .env variable and
-     * reference it in the control-panel field, e.g. $SLACK_WEBHOOK_URL.
+     * Your ntfy topics, Slack channels, Bluesky accounts, and MQTT topics are
+     * managed in the control panel, not in this file.
+     *
+     * To keep sensitive values out of the database (Slack bot tokens, Bluesky
+     * app passwords, MQTT passwords and certificate paths), store each secret
+     * in a .env variable and reference that variable in the control-panel field
+     * instead of typing the value directly.
      */
 
 ];

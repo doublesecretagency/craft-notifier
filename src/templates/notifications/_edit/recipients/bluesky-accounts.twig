@@ -19,7 +19,11 @@
         }) }}
     {% else %}
         <p class="instructions warning">
-            {{ "No Bluesky accounts configured. Add one in [Settings → Bluesky]({url})."|t('notifier', { url: url('settings/plugins/notifier/bluesky') })|md }}
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No Bluesky accounts configured. Add one in [Settings → Bluesky]({url})."|t('notifier', { url: url('settings/plugins/notifier/bluesky') })|md }}
+            {% else %}
+                {{ "No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
         </p>
     {% endif %}
 

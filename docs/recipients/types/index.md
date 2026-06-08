@@ -49,3 +49,7 @@ Posts the Slack message to **one or more channels**.
 ### [Selected Bluesky account(s)](/recipients/types/bluesky-accounts)
 
 Posts the Bluesky message from **one or more accounts**.
+
+### [Selected MQTT topic(s)](/recipients/types/mqtt-topics)
+
+Publishes the MQTT message to **one or more topics**.

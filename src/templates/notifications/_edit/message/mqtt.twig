@@ -1,0 +1,48 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+<div class="message-type-mqtt hidden">
+
+    {{ codeEditor.textAreaField({
+        label: "Payload"|t('notifier'),
+        instructions: "The JSON or plain text message published to the MQTT topic."|t('notifier'),
+        tip: templatingTip,
+        placeholder: '{{ data | json_encode }}',
+        rows: 4,
+        id: 'messageConfig-mqttBody',
+        name: 'messageConfig[mqttBody]',
+        value: (notification.messageConfig.mqttBody ?? null),
+        errors: notification.getErrors('messageConfig[mqttBody]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    <hr>
+
+    {{ forms.selectField({
+        label: "Quality of Service"|t('notifier'),
+        instructions: "Delivery guarantee for this message."|t('notifier'),
+        id: 'messageConfig-mqttQos',
+        name: 'messageConfig[mqttQos]',
+        value: (notification.messageConfig.mqttQos ?? '0'),
+        options: notificationOptions.mqttQos ?? {'0':'0 - At most once','1':'1 - At least once','2':'2 - Exactly once'},
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: "Retain"|t('notifier'),
+        instructions: "Whether the broker keeps this as the topic's last message for future subscribers."|t('notifier'),
+        id: 'messageConfig-mqttRetain',
+        name: 'messageConfig[mqttRetain]',
+        offLabel: "Don't retain"|t('notifier'),
+        onLabel: "Retain"|t('notifier'),
+        on: (notification.messageConfig.mqttRetain ?? false),
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: "Send Message via Queue"|t('notifier'),
+        instructions: queueInstructions,
+        id: 'messageConfig-mqttQueue',
+        name: 'messageConfig[mqttQueue]',
+        offLabel: "Send immediately"|t('notifier'),
+        onLabel: "Add to queue"|t('notifier'),
+        on: (notification.messageConfig.mqttQueue ?? true),
+    }) }}
+</div>

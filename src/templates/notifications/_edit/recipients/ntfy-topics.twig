@@ -18,7 +18,11 @@
         }) }}
     {% else %}
         <p class="instructions warning">
-            {{ "No ntfy topics configured. Add one in [Settings → ntfy]({url})."|t('notifier', { url: url('settings/plugins/notifier/ntfy') })|md }}
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No ntfy topics configured. Add one in [Settings → ntfy]({url})."|t('notifier', { url: url('settings/plugins/notifier/ntfy') })|md }}
+            {% else %}
+                {{ "No ntfy topics configured. Topics can only be added in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
         </p>
     {% endif %}
 

@@ -327,6 +327,7 @@ abstract class Options
         'ntfy'         => 'ntfy',
         'slack'        => 'Slack',
         'bluesky'      => 'Bluesky',
+        'mqtt'         => 'MQTT',
     ];
 
     /**
@@ -341,6 +342,7 @@ abstract class Options
         'ntfy'         => 'angle-right',
         'slack'        => 'slack',
         'bluesky'      => 'bluesky',
+        'mqtt'         => 'tower-broadcast',
     ];
 
     /**
@@ -365,6 +367,7 @@ abstract class Options
         'ntfy-topics'        => 'Selected ntfy topic(s)',
         'slack-channels'     => 'Selected Slack channel(s)',
         'bluesky-accounts'   => 'Selected Bluesky account(s)',
+        'mqtt-topics'        => 'Selected MQTT topic(s)',
     ];
 
     /**
@@ -381,6 +384,7 @@ abstract class Options
         'ntfy'         => ['ntfy-topics'],
         'slack'        => ['slack-channels'],
         'bluesky'      => ['bluesky-accounts'],
+        'mqtt'         => ['mqtt-topics'],
     ];
 
     /**
@@ -392,6 +396,23 @@ abstract class Options
         '3' => '3 - Default',
         '2' => '2 - Low',
         '1' => '1 - Min',
+    ];
+
+    /**
+     * @var array MQTT quality-of-service levels.
+     */
+    public const MQTT_QOS = [
+        '0' => '0 - At most once',
+        '1' => '1 - At least once',
+        '2' => '2 - Exactly once',
+    ];
+
+    /**
+     * @var array Supported MQTT protocol versions.
+     */
+    public const MQTT_VERSION = [
+        '3.1'   => 'MQTT 3.1',
+        '3.1.1' => 'MQTT 3.1.1',
     ];
 
 }

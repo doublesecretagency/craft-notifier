@@ -511,4 +511,63 @@ return [
     'Unable to delete log events, something went wrong.' => 'ログイベントを削除できませんでした。問題が発生しました。',
     'Are you sure you want to delete this log event?' => 'このログイベントを削除してもよろしいですか？',
     'Are you sure you want to delete all logs from {date}?' => '{date}のすべてのログを削除してもよろしいですか？',
+
+    // ============================================================
+    // MQTT
+    // ============================================================
+
+    'Recipient "{name}" has no MQTT topic.' => '受信者「{name}」に MQTT トピックがありません。',
+    'Unable to send MQTT message, no broker host configured.' => 'MQTT メッセージを送信できません。ブローカーのホストが設定されていません。',
+    'Unable to send MQTT message, no topic specified.' => 'MQTT メッセージを送信できません。トピックが指定されていません。',
+    'Unable to send MQTT message, the payload is empty.' => 'MQTT メッセージを送信できません。ペイロードが空です。',
+    'MQTT publish failed: {reason}' => 'MQTT の発行に失敗しました: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'トピック「{topic}」に MQTT メッセージを送信しました。',
+    'MQTT Broker' => 'MQTT ブローカー',
+    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier は MQTT ブローカー(Mosquitto、EMQX、HiveMQ、AWS IoT Core など)に発行します。以下にブローカーの接続情報を入力してください。機密情報は `.env` 変数に保存し、ここで参照できます(例: `$MQTT_PASSWORD`)。',
+    'Host' => 'ホスト',
+    'Broker hostname, without a protocol or port.' => 'ブローカーのホスト名(プロトコルやポートは含めません)。',
+    'Port' => 'ポート',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => '任意。TLS が有効な場合は既定で 8883、それ以外は 1883 です。',
+    'Use TLS' => 'TLS を使用',
+    'Whether to connect to the broker over a secure TLS socket.' => 'セキュアな TLS ソケットでブローカーに接続するかどうか。',
+    'Username' => 'ユーザー名',
+    'Optional, for brokers that require username/password authentication.' => '任意。ユーザー名/パスワード認証を必要とするブローカー向けです。',
+    'Password' => 'パスワード',
+    'MQTT Version' => 'MQTT バージョン',
+    'Protocol version sent to the broker.' => 'ブローカーに送信するプロトコルバージョン。',
+    'Client ID' => 'クライアント ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => '任意。空欄の場合、一意のクライアント ID が自動生成されます。',
+    'Mutual TLS' => '相互 TLS',
+    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => '任意。AWS IoT Core など、証明書でクライアントを認証するブローカーに必要です。証明書ファイルへのサーバーファイルパスを指定してください(`.env` 変数または `@alias` 参照を使用できます)。',
+    'CA Certificate File' => 'CA 証明書ファイル',
+    'Path to the certificate authority (CA) file.' => '認証局(CA)ファイルへのパス。',
+    'Client Certificate File' => 'クライアント証明書ファイル',
+    'Path to the client certificate file.' => 'クライアント証明書ファイルへのパス。',
+    'Client Key File' => 'クライアントキーファイル',
+    'Path to the client private key file.' => 'クライアントの秘密鍵ファイルへのパス。',
+    'MQTT Topics' => 'MQTT トピック',
+    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => '発行先にしたい MQTT トピックを追加します。各トピックは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => '任意の行の **テスト** ボタンをクリックして、そのトピックに簡単なテストメッセージを発行します。',
+    'MQTT' => 'MQTT',
+    'Payload' => 'ペイロード',
+    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'トピックに発行されるメッセージ。プレーンテキストまたは Twig でレンダリングした JSON オブジェクトを使用できます。',
+    'Quality of Service' => 'サービス品質',
+    'Delivery guarantee for this message.' => 'このメッセージの配信保証。',
+    'Retain' => '保持',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'ブローカーがこれをトピックの最新メッセージとして保持し、今後の購読者に配信するかどうか。',
+    'Don\'t retain' => '保持しない',
+    'Select MQTT topic(s)' => 'MQTT トピックを選択',
+    'Which topics should receive this message?' => 'どのトピックがこのメッセージを受信しますか?',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'MQTT トピックが設定されていません。[設定 → MQTT]({url}) で追加してください。',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '有効なトピックではありません。空にしたり、ワイルドカード `+` や `#` を含めたりすることはできません。',
+    'Broker host is not configured.' => 'ブローカーのホストが設定されていません。',
+
+    // ============================================================
+    // Recipient empty-state (administrative changes disabled)
+    // ============================================================
+
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'ntfy トピックが設定されていません。トピックは、管理者による変更が許可された環境でのみ追加できます。',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Slack チャンネルが設定されていません。チャンネルは、管理者による変更が許可された環境でのみ追加できます。',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Bluesky アカウントが設定されていません。アカウントは、管理者による変更が許可された環境でのみ追加できます。',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'MQTT トピックが設定されていません。トピックは、管理者による変更が許可された環境でのみ追加できます。',
 ];

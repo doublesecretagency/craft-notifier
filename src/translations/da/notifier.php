@@ -511,4 +511,63 @@ return [
     'Unable to delete log events, something went wrong.' => 'Kunne ikke slette loghændelser, noget gik galt.',
     'Are you sure you want to delete this log event?' => 'Er du sikker på, at du vil slette denne loghændelse?',
     'Are you sure you want to delete all logs from {date}?' => 'Er du sikker på, at du vil slette alle logfiler fra {date}?',
+
+    // ============================================================
+    // MQTT
+    // ============================================================
+
+    'Recipient "{name}" has no MQTT topic.' => 'Modtageren "{name}" har ikke noget MQTT-emne.',
+    'Unable to send MQTT message, no broker host configured.' => 'Kan ikke sende MQTT-besked, ingen broker-vært er konfigureret.',
+    'Unable to send MQTT message, no topic specified.' => 'Kan ikke sende MQTT-besked, intet emne angivet.',
+    'Unable to send MQTT message, the payload is empty.' => 'Kan ikke sende MQTT-besked, indholdet er tomt.',
+    'MQTT publish failed: {reason}' => 'MQTT-publicering mislykkedes: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-besked sendt til emnet "{topic}".',
+    'MQTT Broker' => 'MQTT-broker',
+    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier publicerer til en MQTT-broker (såsom Mosquitto, EMQX, HiveMQ eller AWS IoT Core). Indtast brokerens forbindelsesoplysninger nedenfor. Følsomme værdier kan gemmes i en `.env`-variabel og refereres her (f.eks. `$MQTT_PASSWORD`).',
+    'Host' => 'Vært',
+    'Broker hostname, without a protocol or port.' => 'Brokerens værtsnavn, uden protokol eller port.',
+    'Port' => 'Port',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Valgfri. Standard er 8883, når TLS er aktiveret, ellers 1883.',
+    'Use TLS' => 'Brug TLS',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Om der skal oprettes forbindelse til brokeren via en sikker TLS-socket.',
+    'Username' => 'Brugernavn',
+    'Optional, for brokers that require username/password authentication.' => 'Valgfri, for brokere der kræver godkendelse med brugernavn/adgangskode.',
+    'Password' => 'Adgangskode',
+    'MQTT Version' => 'MQTT-version',
+    'Protocol version sent to the broker.' => 'Protokolversion sendt til brokeren.',
+    'Client ID' => 'Klient-ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'Valgfri. Et unikt klient-ID genereres automatisk, når feltet er tomt.',
+    'Mutual TLS' => 'Gensidig TLS',
+    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'Valgfri. Kræves for brokere der godkender klienter med certifikater, såsom AWS IoT Core. Angiv serverfilstier til certifikatfilerne (en `.env`-variabel eller `@alias`-reference er tilladt).',
+    'CA Certificate File' => 'CA-certifikatfil',
+    'Path to the certificate authority (CA) file.' => 'Sti til certifikatautoritetsfilen (CA).',
+    'Client Certificate File' => 'Klientcertifikatfil',
+    'Path to the client certificate file.' => 'Sti til klientcertifikatfilen.',
+    'Client Key File' => 'Klientnøglefil',
+    'Path to the client private key file.' => 'Sti til klientens private nøglefil.',
+    'MQTT Topics' => 'MQTT-emner',
+    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Tilføj de MQTT-emner, du vil publicere til. Hvert emne bliver tilgængeligt som modtager på fanen **Modtagere**, når du konfigurerer en notifikation.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Klik på en vilkårlig rækkes **Test**-knap for at publicere en hurtig testbesked til det emne.',
+    'MQTT' => 'MQTT',
+    'Payload' => 'Indhold',
+    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Beskeden, der publiceres til emnet. Kan være ren tekst eller et Twig-renderet JSON-objekt.',
+    'Quality of Service' => 'Servicekvalitet',
+    'Delivery guarantee for this message.' => 'Leveringsgaranti for denne besked.',
+    'Retain' => 'Behold',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Om brokeren beholder denne som den seneste besked på emnet og leverer den til fremtidige abonnenter.',
+    'Don\'t retain' => 'Behold ikke',
+    'Select MQTT topic(s)' => 'Vælg MQTT-emne(r)',
+    'Which topics should receive this message?' => 'Hvilke emner skal modtage denne besked?',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Ingen MQTT-emner konfigureret. Tilføj et under [Indstillinger → MQTT]({url}).',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Ikke et gyldigt emne. Må ikke være tomt eller indeholde wildcards `+` eller `#`.',
+    'Broker host is not configured.' => 'Broker-vært er ikke konfigureret.',
+
+    // ============================================================
+    // Recipient empty-state (administrative changes disabled)
+    // ============================================================
+
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Ingen ntfy-emner er konfigureret. Emner kan kun tilføjes i et miljø, der tillader administrative ændringer.',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Ingen Slack-kanaler er konfigureret. Kanaler kan kun tilføjes i et miljø, der tillader administrative ændringer.',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Ingen Bluesky-konti er konfigureret. Konti kan kun tilføjes i et miljø, der tillader administrative ændringer.',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Ingen MQTT-emner konfigureret. Emner kan kun tilføjes i et miljø, der tillader administrative ændringer.',
 ];

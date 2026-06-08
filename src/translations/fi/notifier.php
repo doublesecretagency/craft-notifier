@@ -511,4 +511,63 @@ return [
     'Unable to delete log events, something went wrong.' => 'Lokitapahtumien poistaminen epäonnistui, jokin meni vikaan.',
     'Are you sure you want to delete this log event?' => 'Haluatko varmasti poistaa tämän lokitapahtuman?',
     'Are you sure you want to delete all logs from {date}?' => 'Haluatko varmasti poistaa kaikki lokit päivältä {date}?',
+
+    // ============================================================
+    // MQTT
+    // ============================================================
+
+    'Recipient "{name}" has no MQTT topic.' => 'Vastaanottajalla "{name}" ei ole MQTT-aihetta.',
+    'Unable to send MQTT message, no broker host configured.' => 'MQTT-viestiä ei voi lähettää, brokerin isäntää ei ole määritetty.',
+    'Unable to send MQTT message, no topic specified.' => 'MQTT-viestiä ei voi lähettää, aihetta ei ole määritetty.',
+    'Unable to send MQTT message, the payload is empty.' => 'MQTT-viestiä ei voi lähettää, sisältö on tyhjä.',
+    'MQTT publish failed: {reason}' => 'MQTT-julkaisu epäonnistui: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-viesti lähetettiin aiheeseen "{topic}".',
+    'MQTT Broker' => 'MQTT-broker',
+    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier julkaisee MQTT-brokeriin (kuten Mosquitto, EMQX, HiveMQ tai AWS IoT Core). Anna brokerin yhteystiedot alla. Arkaluonteiset arvot voidaan tallentaa `.env`-muuttujaan ja viitata niihin tässä (esim. `$MQTT_PASSWORD`).',
+    'Host' => 'Isäntä',
+    'Broker hostname, without a protocol or port.' => 'Brokerin isäntänimi, ilman protokollaa tai porttia.',
+    'Port' => 'Portti',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Valinnainen. Oletus on 8883, kun TLS on käytössä, muuten 1883.',
+    'Use TLS' => 'Käytä TLS:ää',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Yhdistetäänkö brokeriin suojatun TLS-soketin kautta.',
+    'Username' => 'Käyttäjätunnus',
+    'Optional, for brokers that require username/password authentication.' => 'Valinnainen, brokereille jotka vaativat käyttäjätunnus/salasana-todennuksen.',
+    'Password' => 'Salasana',
+    'MQTT Version' => 'MQTT-versio',
+    'Protocol version sent to the broker.' => 'Brokerille lähetettävä protokollaversio.',
+    'Client ID' => 'Asiakastunnus',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'Valinnainen. Yksilöllinen asiakastunnus luodaan automaattisesti, kun kenttä jätetään tyhjäksi.',
+    'Mutual TLS' => 'Molemminpuolinen TLS',
+    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'Valinnainen. Vaaditaan brokereille jotka todentavat asiakkaat varmenteilla, kuten AWS IoT Core. Anna palvelimen tiedostopolut varmennetiedostoihin (`.env`-muuttuja tai `@alias`-viittaus on sallittu).',
+    'CA Certificate File' => 'CA-varmennetiedosto',
+    'Path to the certificate authority (CA) file.' => 'Polku varmenneviranomaisen (CA) tiedostoon.',
+    'Client Certificate File' => 'Asiakasvarmennetiedosto',
+    'Path to the client certificate file.' => 'Polku asiakasvarmennetiedostoon.',
+    'Client Key File' => 'Asiakasavaintiedosto',
+    'Path to the client private key file.' => 'Polku asiakkaan yksityiseen avaintiedostoon.',
+    'MQTT Topics' => 'MQTT-aiheet',
+    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Lisää MQTT-aiheet, joihin haluat julkaista. Kukin aihe on käytettävissä vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Napsauta minkä tahansa rivin **Testi**-painiketta julkaistaksesi nopean testiviestin kyseiseen aiheeseen.',
+    'MQTT' => 'MQTT',
+    'Payload' => 'Sisältö',
+    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Aiheeseen julkaistava viesti. Voi olla pelkkää tekstiä tai Twigillä renderöity JSON-objekti.',
+    'Quality of Service' => 'Palvelun laatu',
+    'Delivery guarantee for this message.' => 'Tämän viestin toimitustakuu.',
+    'Retain' => 'Säilytä',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Säilyttääkö broker tämän aiheen viimeisimpänä viestinä ja toimittaa sen tuleville tilaajille.',
+    'Don\'t retain' => 'Älä säilytä',
+    'Select MQTT topic(s)' => 'Valitse MQTT-aihe(et)',
+    'Which topics should receive this message?' => 'Mitkä aiheet saavat tämän viestin?',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'MQTT-aiheita ei ole määritetty. Lisää sellainen kohdassa [Asetukset → MQTT]({url}).',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Virheellinen aihe. Ei saa olla tyhjä eikä sisältää jokerimerkkejä `+` tai `#`.',
+    'Broker host is not configured.' => 'Brokerin isäntää ei ole määritetty.',
+
+    // ============================================================
+    // Recipient empty-state (administrative changes disabled)
+    // ============================================================
+
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'ntfy-aiheita ei ole määritetty. Aiheita voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Slack-kanavia ei ole määritetty. Kanavia voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Bluesky-tilejä ei ole määritetty. Tilejä voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'MQTT-aiheita ei ole määritetty. Aiheita voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
 ];

@@ -511,4 +511,63 @@ return [
     'Unable to delete log events, something went wrong.' => 'Det gick inte att ta bort logghändelser, något gick fel.',
     'Are you sure you want to delete this log event?' => 'Är du säker på att du vill ta bort den här logghändelsen?',
     'Are you sure you want to delete all logs from {date}?' => 'Är du säker på att du vill ta bort alla loggar från {date}?',
+
+    // ============================================================
+    // MQTT
+    // ============================================================
+
+    'Recipient "{name}" has no MQTT topic.' => 'Mottagaren "{name}" har inget MQTT-ämne.',
+    'Unable to send MQTT message, no broker host configured.' => 'Det går inte att skicka MQTT-meddelandet, ingen broker-värd är konfigurerad.',
+    'Unable to send MQTT message, no topic specified.' => 'Det går inte att skicka MQTT-meddelandet, inget ämne angivet.',
+    'Unable to send MQTT message, the payload is empty.' => 'Det går inte att skicka MQTT-meddelandet, innehållet är tomt.',
+    'MQTT publish failed: {reason}' => 'MQTT-publicering misslyckades: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-meddelande skickat till ämnet "{topic}".',
+    'MQTT Broker' => 'MQTT-broker',
+    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier publicerar till en MQTT-broker (som Mosquitto, EMQX, HiveMQ eller AWS IoT Core). Ange brokerns anslutningsuppgifter nedan. Känsliga värden kan lagras i en `.env`-variabel och refereras här (t.ex. `$MQTT_PASSWORD`).',
+    'Host' => 'Värd',
+    'Broker hostname, without a protocol or port.' => 'Brokerns värdnamn, utan protokoll eller port.',
+    'Port' => 'Port',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Valfritt. Standard är 8883 när TLS är aktiverat, annars 1883.',
+    'Use TLS' => 'Använd TLS',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Om anslutningen till brokern ska ske via en säker TLS-socket.',
+    'Username' => 'Användarnamn',
+    'Optional, for brokers that require username/password authentication.' => 'Valfritt, för brokers som kräver autentisering med användarnamn/lösenord.',
+    'Password' => 'Lösenord',
+    'MQTT Version' => 'MQTT-version',
+    'Protocol version sent to the broker.' => 'Protokollversion som skickas till brokern.',
+    'Client ID' => 'Klient-ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'Valfritt. Ett unikt klient-ID genereras automatiskt när fältet lämnas tomt.',
+    'Mutual TLS' => 'Ömsesidig TLS',
+    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'Valfritt. Krävs för brokers som autentiserar klienter med certifikat, som AWS IoT Core. Ange serverfilsökvägar till certifikatfilerna (en `.env`-variabel eller `@alias`-referens tillåts).',
+    'CA Certificate File' => 'CA-certifikatfil',
+    'Path to the certificate authority (CA) file.' => 'Sökväg till certifikatutfärdarens (CA) fil.',
+    'Client Certificate File' => 'Klientcertifikatfil',
+    'Path to the client certificate file.' => 'Sökväg till klientcertifikatfilen.',
+    'Client Key File' => 'Klientnyckelfil',
+    'Path to the client private key file.' => 'Sökväg till klientens privata nyckelfil.',
+    'MQTT Topics' => 'MQTT-ämnen',
+    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Lägg till de MQTT-ämnen du vill publicera till. Varje ämne blir tillgängligt som mottagare på fliken **Mottagare** när du konfigurerar en avisering.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Klicka på **Testa**-knappen på valfri rad för att publicera ett snabbt testmeddelande till det ämnet.',
+    'MQTT' => 'MQTT',
+    'Payload' => 'Innehåll',
+    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Meddelandet som publiceras till ämnet. Kan vara ren text eller ett JSON-objekt renderat med Twig.',
+    'Quality of Service' => 'Tjänstekvalitet',
+    'Delivery guarantee for this message.' => 'Leveransgaranti för detta meddelande.',
+    'Retain' => 'Behåll',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Om brokern behåller detta som det senaste meddelandet på ämnet och levererar det till framtida prenumeranter.',
+    'Don\'t retain' => 'Behåll inte',
+    'Select MQTT topic(s)' => 'Välj MQTT-ämne(n)',
+    'Which topics should receive this message?' => 'Vilka ämnen ska ta emot detta meddelande?',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Inga MQTT-ämnen konfigurerade. Lägg till ett under [Inställningar → MQTT]({url}).',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Inte ett giltigt ämne. Får inte vara tomt eller innehålla jokertecknen `+` eller `#`.',
+    'Broker host is not configured.' => 'Broker-värden är inte konfigurerad.',
+
+    // ============================================================
+    // Recipient empty-state (administrative changes disabled)
+    // ============================================================
+
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Inga ntfy-ämnen konfigurerade. Ämnen kan endast läggas till i en miljö som tillåter administrativa ändringar.',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Inga Slack-kanaler konfigurerade. Kanaler kan endast läggas till i en miljö som tillåter administrativa ändringar.',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Inga Bluesky-konton konfigurerade. Konton kan endast läggas till i en miljö som tillåter administrativa ändringar.',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Inga MQTT-ämnen konfigurerade. Ämnen kan endast läggas till i en miljö som tillåter administrativa ändringar.',
 ];

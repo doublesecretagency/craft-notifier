@@ -16,9 +16,12 @@ use craft\helpers\App;
 use craft\helpers\StringHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\helpers\BlueskySession;
+use doublesecretagency\notifier\models\OutboundMqtt;
 use doublesecretagency\notifier\models\OutboundSlack;
 use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\NotifierPlugin;
+use PhpMqtt\Client\ConnectionSettings;
+use PhpMqtt\Client\MqttClient;
 use Throwable;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
@@ -38,7 +41,7 @@ class SettingsProvidersController extends Controller
     public array|bool|int $allowAnonymous = false;
 
     /**
-     * Require admin access for every action in this controller (mirrors Craft's settings gating).
+     * Require admin access for every action in this controller.
      *
      * @inheritdoc
      */
@@ -49,18 +52,18 @@ class SettingsProvidersController extends Controller
             return false;
         }
 
-        // Only admins (or users with admin-equivalent settings access) can manage plugin settings
+        // Only admins can manage plugin settings
         $this->requireAdmin();
 
         return true;
     }
 
     // ========================================================================= //
-    // Render actions (one per sub-page)
+    // Render actions
     // ========================================================================= //
 
     /**
-     * Render the General sub-page (logging settings).
+     * Render the General sub-page.
      *
      * @return Response
      */
@@ -119,6 +122,16 @@ class SettingsProvidersController extends Controller
         return $this->_renderSubPage('bluesky', 'Bluesky');
     }
 
+    /**
+     * Render the MQTT sub-page.
+     *
+     * @return Response
+     */
+    public function actionMqtt(): Response
+    {
+        return $this->_renderSubPage('mqtt', 'MQTT');
+    }
+
     // ========================================================================= //
     // Save actions
     // ========================================================================= //
@@ -137,8 +150,8 @@ class SettingsProvidersController extends Controller
         // Get the section being saved
         $section = $this->request->getRequiredBodyParam('section');
 
-        // Whitelist sections (no surprises)
-        $whitelist = ['general', 'twilio', 'pushover', 'ntfy', 'slack', 'bluesky'];
+        // Only allow known sections
+        $whitelist = ['general', 'twilio', 'pushover', 'ntfy', 'slack', 'bluesky', 'mqtt'];
         if (!in_array($section, $whitelist, true)) {
             throw new BadRequestHttpException(Craft::t('notifier', 'Invalid settings section: {section}', ['section' => $section]));
         }
@@ -155,6 +168,9 @@ class SettingsProvidersController extends Controller
         }
         if ('bluesky' === $section && isset($posted['blueskyAccounts'])) {
             $posted['blueskyAccounts'] = $this->_assignUids($posted['blueskyAccounts']);
+        }
+        if ('mqtt' === $section && isset($posted['mqttTopics'])) {
+            $posted['mqttTopics'] = $this->_assignUids($posted['mqttTopics']);
         }
 
         // Get the existing settings as an array
@@ -197,7 +213,10 @@ class SettingsProvidersController extends Controller
 
         // If the topic is empty, return an error
         if ('' === trim($topic)) {
-            return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Topic is empty.')]);
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Topic is empty.'),
+            ]);
         }
 
         // Get the plugin settings
@@ -209,7 +228,10 @@ class SettingsProvidersController extends Controller
 
         // If no server URL is configured, return an error
         if (!$serverUrl) {
-            return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Server URL is not configured.')]);
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Server URL is not configured.'),
+            ]);
         }
 
         // Build the endpoint URL
@@ -233,13 +255,22 @@ class SettingsProvidersController extends Controller
             $status = $response->getStatusCode();
 
             if ($status < 200 || $status >= 300) {
-                return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'HTTP {status}', ['status' => $status])]);
+                return $this->asJson([
+                    'success' => false,
+                    'message' => Craft::t('notifier', 'HTTP {status}', ['status' => $status]),
+                ]);
             }
         } catch (Throwable $e) {
-            return $this->asJson(['success' => false, 'message' => $e->getMessage()]);
+            return $this->asJson([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
         }
 
-        return $this->asJson(['success' => true, 'message' => Craft::t('notifier', 'Test message sent successfully.')]);
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Test message sent successfully.'),
+        ]);
     }
 
     /**
@@ -252,20 +283,26 @@ class SettingsProvidersController extends Controller
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 
-        // Resolve the posted bot token (supports a $ENV_VAR reference)
+        // Get the posted bot token
         $botToken = App::parseEnv((string) $this->request->getRequiredBodyParam('botToken'));
 
-        // Resolve the posted channel ID (also supports a $ENV_VAR reference)
+        // Get the posted channel ID
         $channelId = App::parseEnv(trim((string) $this->request->getRequiredBodyParam('channelId')));
 
         // If the bot token isn't valid, bail
         if (!OutboundSlack::isValidBotToken($botToken)) {
-            return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Not a valid Bot Token. Must start with `xoxb-`.')]);
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Not a valid Bot Token. Must start with `xoxb-`.'),
+            ]);
         }
 
         // If the channel ID isn't valid, bail
         if (!OutboundSlack::isValidChannelId($channelId)) {
-            return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Not a valid Channel ID. Must look like `C01234ABCD`.')]);
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Not a valid Channel ID. Must look like `C01234ABCD`.'),
+            ]);
         }
 
         try {
@@ -288,13 +325,22 @@ class SettingsProvidersController extends Controller
             // If Slack rejected the message, return the error code
             if (!is_array($decoded) || true !== ($decoded['ok'] ?? false)) {
                 $error = ($decoded['error'] ?? 'unknown');
-                return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Slack rejected the message: {error}', ['error' => $error])]);
+                return $this->asJson([
+                    'success' => false,
+                    'message' => Craft::t('notifier', 'Slack rejected the message: {error}', ['error' => $error]),
+                ]);
             }
         } catch (Throwable $e) {
-            return $this->asJson(['success' => false, 'message' => $e->getMessage()]);
+            return $this->asJson([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
         }
 
-        return $this->asJson(['success' => true, 'message' => Craft::t('notifier', 'Test message sent successfully.')]);
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Test message sent successfully.'),
+        ]);
     }
 
     /**
@@ -310,12 +356,15 @@ class SettingsProvidersController extends Controller
         // Get the posted handle
         $handle = (string) $this->request->getRequiredBodyParam('handle');
 
-        // Resolve the posted app password (supports a $ENV_VAR reference)
+        // Get the posted app password
         $appPassword = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('appPassword'));
 
         // If the handle or app password is empty, return an error
         if ('' === $handle || '' === $appPassword) {
-            return $this->asJson(['success' => false, 'message' => Craft::t('notifier', 'Handle and app password are required.')]);
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Handle and app password are required.'),
+            ]);
         }
 
         // Get the plugin settings
@@ -331,10 +380,108 @@ class SettingsProvidersController extends Controller
 
         // If authentication failed, return the error
         if (!$session) {
-            return $this->asJson(['success' => false, 'message' => $err ?: Craft::t('notifier', 'Authentication failed.')]);
+            return $this->asJson([
+                'success' => false,
+                'message' => $err ?: Craft::t('notifier', 'Authentication failed.'),
+            ]);
         }
 
-        return $this->asJson(['success' => true, 'message' => Craft::t('notifier', 'Successfully authenticated. No messages were posted.')]);
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Successfully authenticated. No messages were posted.'),
+        ]);
+    }
+
+    /**
+     * Publish a test message to a specific MQTT topic via the saved broker settings.
+     *
+     * @return Response
+     */
+    public function actionTestMqtt(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Get the posted topic
+        $topic = (string) $this->request->getRequiredBodyParam('topic');
+
+        // If the topic isn't a valid publish topic, bail
+        if (!OutboundMqtt::isValidTopic($topic)) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.'),
+            ]);
+        }
+
+        // Get the plugin settings
+        /** @var Settings $settings */
+        $settings = NotifierPlugin::$plugin->getSettings();
+
+        // Get the broker host
+        $host = App::parseEnv($settings->mqttHost);
+
+        // If no broker host is configured, return an error
+        if (!$host) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Broker host is not configured.'),
+            ]);
+        }
+
+        // Whether to connect over TLS
+        $useTls = (bool) $settings->mqttUseTls;
+
+        // Get the port, defaulting to 8883 for TLS or 1883 for plain
+        $port = ($settings->mqttPort ?: ($useTls ? 8883 : 1883));
+
+        // Get the client ID, generating a unique one when empty
+        $clientId = (App::parseEnv($settings->mqttClientId) ?: 'notifier-'.uniqid());
+
+        // Get the protocol level, defaulting to 3.1.1
+        $protocol = ($settings->mqttProtocolLevel ?: MqttClient::MQTT_3_1_1);
+
+        try {
+
+            // Build the MQTT client
+            $client = new MqttClient($host, (int) $port, $clientId, $protocol);
+
+            // Build the connection settings
+            $connectionSettings = (new ConnectionSettings())
+                ->setUsername(App::parseEnv($settings->mqttUsername) ?: null)
+                ->setPassword(App::parseEnv($settings->mqttPassword) ?: null)
+                ->setKeepAliveInterval(60)
+                ->setConnectTimeout(10)
+                ->setUseTls($useTls);
+
+            // If using TLS with a CA certificate, configure it
+            if ($useTls && ($caFile = App::parseEnv($settings->mqttTlsCaFile))) {
+                $connectionSettings->setTlsCertificateAuthorityFile($caFile);
+            }
+
+            // If using Mutual TLS, configure the client certificate and key
+            if ($useTls && ($clientCert = App::parseEnv($settings->mqttTlsClientCertFile))) {
+                $connectionSettings->setTlsClientCertificateFile($clientCert);
+            }
+            if ($useTls && ($clientKey = App::parseEnv($settings->mqttTlsClientKeyFile))) {
+                $connectionSettings->setTlsClientCertificateKeyFile($clientKey);
+            }
+
+            // Connect, publish a test message, and disconnect
+            $client->connect($connectionSettings, true);
+            $client->publish($topic, Craft::t('notifier', 'Test message from Notifier.'), 0, false);
+            $client->disconnect();
+
+        } catch (Throwable $e) {
+            return $this->asJson([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Test message sent successfully.'),
+        ]);
     }
 
     // ========================================================================= //
@@ -364,11 +511,16 @@ class SettingsProvidersController extends Controller
     /**
      * Ensure every row in a named-list has a stable UID.
      *
-     * @param array $rows
+     * @param mixed $rows Posted rows, or an empty string when the editable table has no rows.
      * @return array
      */
-    private function _assignUids(array $rows): array
+    private function _assignUids(mixed $rows): array
     {
+        // If the editable table was empty it posts a string, so normalize to an array
+        if (!is_array($rows)) {
+            return [];
+        }
+
         // Editable-table posts arrive keyed by row position; reindex
         $rows = array_values($rows);
 

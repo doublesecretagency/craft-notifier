@@ -6,7 +6,7 @@ description: Send the message to a hand-picked list of Users. Deleted Users are 
 
 Sends the message to **only the selected Users.**
 
-<img class="dropshadow" src="/images/recipients/selected-users.png" alt="" style="width:300px; margin-top:10px">
+<img class="dropshadow" src="/images/recipients/selected-users.png" alt="" style="width:400px; margin-top:10px">
 
 Pick one or more Users. Updates to the User will not impact their placement on this list. If a User is deleted, they will be silently dropped from the recipient list.
 

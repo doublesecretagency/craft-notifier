@@ -115,4 +115,61 @@ class Settings extends Model
      */
     public array $blueskyAccounts = [];
 
+    // ========================================================================= //
+
+    /**
+     * @var string|null MQTT broker hostname. May be a $ENV_VAR reference.
+     */
+    public ?string $mqttHost = null;
+
+    /**
+     * @var int|null MQTT broker port. Defaults to 8883 when TLS is on, otherwise 1883.
+     */
+    public ?int $mqttPort = null;
+
+    /**
+     * @var bool Whether to connect to the broker over TLS.
+     */
+    public bool $mqttUseTls = false;
+
+    /**
+     * @var string|null MQTT username. May be a $ENV_VAR reference.
+     */
+    public ?string $mqttUsername = null;
+
+    /**
+     * @var string|null MQTT password. May be a $ENV_VAR reference.
+     */
+    public ?string $mqttPassword = null;
+
+    /**
+     * @var string|null Optional client ID prefix. Auto-generated when empty.
+     */
+    public ?string $mqttClientId = null;
+
+    /**
+     * @var string Protocol version sent to the broker (default 3.1.1).
+     */
+    public string $mqttProtocolLevel = '3.1.1';
+
+    /**
+     * @var string|null Path to the CA certificate file (for TLS / Mutual TLS). May be a $ENV_VAR reference.
+     */
+    public ?string $mqttTlsCaFile = null;
+
+    /**
+     * @var string|null Path to the client certificate file (for Mutual TLS). May be a $ENV_VAR reference.
+     */
+    public ?string $mqttTlsClientCertFile = null;
+
+    /**
+     * @var string|null Path to the client private key file (for Mutual TLS). May be a $ENV_VAR reference.
+     */
+    public ?string $mqttTlsClientKeyFile = null;
+
+    /**
+     * @var array Named list of MQTT topics. Each row: ['uid' => string, 'label' => string, 'topic' => string].
+     */
+    public array $mqttTopics = [];
+
 }

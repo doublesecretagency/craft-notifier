@@ -511,4 +511,63 @@ return [
     'Unable to delete log events, something went wrong.' => 'Не удалось удалить события журнала, что-то пошло не так.',
     'Are you sure you want to delete this log event?' => 'Вы уверены, что хотите удалить это событие журнала?',
     'Are you sure you want to delete all logs from {date}?' => 'Вы уверены, что хотите удалить все журналы за {date}?',
+
+    // ============================================================
+    // MQTT
+    // ============================================================
+
+    'Recipient "{name}" has no MQTT topic.' => 'У получателя "{name}" нет темы MQTT.',
+    'Unable to send MQTT message, no broker host configured.' => 'Не удалось отправить сообщение MQTT: не настроен хост брокера.',
+    'Unable to send MQTT message, no topic specified.' => 'Не удалось отправить сообщение MQTT: не указана тема.',
+    'Unable to send MQTT message, the payload is empty.' => 'Не удалось отправить сообщение MQTT: содержимое пусто.',
+    'MQTT publish failed: {reason}' => 'Не удалось опубликовать в MQTT: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'Сообщение MQTT отправлено в тему "{topic}".',
+    'MQTT Broker' => 'Брокер MQTT',
+    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier публикует в брокер MQTT (например, Mosquitto, EMQX, HiveMQ или AWS IoT Core). Введите данные подключения к брокеру ниже. Конфиденциальные значения можно хранить в переменной `.env` и ссылаться на них здесь (например, `$MQTT_PASSWORD`).',
+    'Host' => 'Хост',
+    'Broker hostname, without a protocol or port.' => 'Имя хоста брокера, без протокола и порта.',
+    'Port' => 'Порт',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Необязательно. По умолчанию 8883, если TLS включён, иначе 1883.',
+    'Use TLS' => 'Использовать TLS',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Подключаться ли к брокеру через защищённый сокет TLS.',
+    'Username' => 'Имя пользователя',
+    'Optional, for brokers that require username/password authentication.' => 'Необязательно, для брокеров, требующих аутентификации по имени пользователя/паролю.',
+    'Password' => 'Пароль',
+    'MQTT Version' => 'Версия MQTT',
+    'Protocol version sent to the broker.' => 'Версия протокола, отправляемая брокеру.',
+    'Client ID' => 'Идентификатор клиента',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'Необязательно. Если оставить поле пустым, уникальный идентификатор клиента создаётся автоматически.',
+    'Mutual TLS' => 'Взаимный TLS',
+    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'Необязательно. Требуется для брокеров, проверяющих клиентов по сертификатам, например AWS IoT Core. Укажите серверные пути к файлам сертификатов (допускается переменная `.env` или ссылка `@alias`).',
+    'CA Certificate File' => 'Файл сертификата CA',
+    'Path to the certificate authority (CA) file.' => 'Путь к файлу центра сертификации (CA).',
+    'Client Certificate File' => 'Файл сертификата клиента',
+    'Path to the client certificate file.' => 'Путь к файлу сертификата клиента.',
+    'Client Key File' => 'Файл ключа клиента',
+    'Path to the client private key file.' => 'Путь к файлу закрытого ключа клиента.',
+    'MQTT Topics' => 'Темы MQTT',
+    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Добавьте темы MQTT, в которые вы хотите публиковать. Каждая тема становится доступна как получатель на вкладке **Получатели** при настройке уведомления.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Нажмите кнопку **Тест** в любой строке, чтобы опубликовать быстрое тестовое сообщение в эту тему.',
+    'MQTT' => 'MQTT',
+    'Payload' => 'Содержимое',
+    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Сообщение, публикуемое в тему. Может быть простым текстом или объектом JSON, отрендеренным через Twig.',
+    'Quality of Service' => 'Качество обслуживания',
+    'Delivery guarantee for this message.' => 'Гарантия доставки этого сообщения.',
+    'Retain' => 'Сохранять',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Сохраняет ли брокер это сообщение как последнее в теме и доставляет ли его будущим подписчикам.',
+    'Don\'t retain' => 'Не сохранять',
+    'Select MQTT topic(s)' => 'Выберите тему(ы) MQTT',
+    'Which topics should receive this message?' => 'Какие темы должны получить это сообщение?',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Темы MQTT не настроены. Добавьте тему в [Настройки → MQTT]({url}).',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Недопустимая тема. Не должна быть пустой и не должна содержать подстановочные знаки `+` или `#`.',
+    'Broker host is not configured.' => 'Хост брокера не настроен.',
+
+    // ============================================================
+    // Recipient empty-state (administrative changes disabled)
+    // ============================================================
+
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Темы ntfy не настроены. Темы можно добавлять только в среде, где разрешены административные изменения.',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Каналы Slack не настроены. Каналы можно добавлять только в среде, где разрешены административные изменения.',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Аккаунты Bluesky не настроены. Аккаунты можно добавлять только в среде, где разрешены административные изменения.',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Темы MQTT не настроены. Темы можно добавлять только в среде, где разрешены административные изменения.',
 ];

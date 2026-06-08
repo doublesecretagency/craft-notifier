@@ -511,4 +511,63 @@ return [
     'Unable to delete log events, something went wrong.' => 'Kan loggebeurtenissen niet verwijderen, er is iets misgegaan.',
     'Are you sure you want to delete this log event?' => 'Weet je zeker dat je deze loggebeurtenis wilt verwijderen?',
     'Are you sure you want to delete all logs from {date}?' => 'Weet je zeker dat je alle logboeken van {date} wilt verwijderen?',
+
+    // ============================================================
+    // MQTT
+    // ============================================================
+
+    'Recipient "{name}" has no MQTT topic.' => 'Ontvanger "{name}" heeft geen MQTT-onderwerp.',
+    'Unable to send MQTT message, no broker host configured.' => 'Kan MQTT-bericht niet verzenden, geen broker-host geconfigureerd.',
+    'Unable to send MQTT message, no topic specified.' => 'Kan MQTT-bericht niet verzenden, geen onderwerp opgegeven.',
+    'Unable to send MQTT message, the payload is empty.' => 'Kan MQTT-bericht niet verzenden, de inhoud is leeg.',
+    'MQTT publish failed: {reason}' => 'MQTT-publicatie mislukt: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-bericht verzonden naar onderwerp "{topic}".',
+    'MQTT Broker' => 'MQTT-broker',
+    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier publiceert naar een MQTT-broker (zoals Mosquitto, EMQX, HiveMQ of AWS IoT Core). Voer hieronder de verbindingsgegevens van de broker in. Gevoelige waarden kun je opslaan in een `.env`-variabele en hier refereren (bijv. `$MQTT_PASSWORD`).',
+    'Host' => 'Host',
+    'Broker hostname, without a protocol or port.' => 'Hostnaam van de broker, zonder protocol of poort.',
+    'Port' => 'Poort',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Optioneel. Standaard 8883 wanneer TLS is ingeschakeld, anders 1883.',
+    'Use TLS' => 'TLS gebruiken',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Of er via een beveiligde TLS-socket verbinding met de broker wordt gemaakt.',
+    'Username' => 'Gebruikersnaam',
+    'Optional, for brokers that require username/password authentication.' => 'Optioneel, voor brokers die authenticatie met gebruikersnaam/wachtwoord vereisen.',
+    'Password' => 'Wachtwoord',
+    'MQTT Version' => 'MQTT-versie',
+    'Protocol version sent to the broker.' => 'Protocolversie die naar de broker wordt verzonden.',
+    'Client ID' => 'Client-ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'Optioneel. Er wordt automatisch een unieke client-ID gegenereerd wanneer dit leeg wordt gelaten.',
+    'Mutual TLS' => 'Wederzijdse TLS',
+    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'Optioneel. Vereist voor brokers die clients authenticeren met certificaten, zoals AWS IoT Core. Geef serverbestandspaden naar de certificaatbestanden op (een `.env`-variabele of `@alias`-referentie is toegestaan).',
+    'CA Certificate File' => 'CA-certificaatbestand',
+    'Path to the certificate authority (CA) file.' => 'Pad naar het bestand van de certificeringsinstantie (CA).',
+    'Client Certificate File' => 'Clientcertificaatbestand',
+    'Path to the client certificate file.' => 'Pad naar het clientcertificaatbestand.',
+    'Client Key File' => 'Clientsleutelbestand',
+    'Path to the client private key file.' => 'Pad naar het privésleutelbestand van de client.',
+    'MQTT Topics' => 'MQTT-onderwerpen',
+    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Voeg de MQTT-onderwerpen toe waarnaar je wilt publiceren. Elk onderwerp wordt beschikbaar als ontvanger op het tabblad **Ontvangers** bij het configureren van een melding.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Klik op de knop **Testen** van een rij om een snel testbericht naar dat onderwerp te publiceren.',
+    'MQTT' => 'MQTT',
+    'Payload' => 'Inhoud',
+    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Het bericht dat naar het onderwerp wordt gepubliceerd. Kan platte tekst zijn of een met Twig gerenderd JSON-object.',
+    'Quality of Service' => 'Servicekwaliteit',
+    'Delivery guarantee for this message.' => 'Leveringsgarantie voor dit bericht.',
+    'Retain' => 'Behouden',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Of de broker dit als het laatste bericht op het onderwerp behoudt en aan toekomstige abonnees levert.',
+    'Don\'t retain' => 'Niet behouden',
+    'Select MQTT topic(s)' => 'MQTT-onderwerp(en) selecteren',
+    'Which topics should receive this message?' => 'Welke onderwerpen moeten dit bericht ontvangen?',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Geen MQTT-onderwerpen geconfigureerd. Voeg er een toe in [Instellingen → MQTT]({url}).',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Geen geldig onderwerp. Mag niet leeg zijn of de jokertekens `+` of `#` bevatten.',
+    'Broker host is not configured.' => 'Broker-host is niet geconfigureerd.',
+
+    // ============================================================
+    // Recipient empty-state (administrative changes disabled)
+    // ============================================================
+
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Geen ntfy-onderwerpen geconfigureerd. Onderwerpen kunnen alleen worden toegevoegd in een omgeving die administratieve wijzigingen toestaat.',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Geen Slack-kanalen geconfigureerd. Kanalen kunnen alleen worden toegevoegd in een omgeving die administratieve wijzigingen toestaat.',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Geen Bluesky-accounts geconfigureerd. Accounts kunnen alleen worden toegevoegd in een omgeving die administratieve wijzigingen toestaat.',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Geen MQTT-onderwerpen geconfigureerd. Onderwerpen kunnen alleen worden toegevoegd in een omgeving die administratieve wijzigingen toestaat.',
 ];

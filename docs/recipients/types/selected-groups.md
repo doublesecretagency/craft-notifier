@@ -6,7 +6,7 @@ description: Send the message to every active User in one or more selected User 
 
 Sends the message to **every active User in the selected User Groups.**
 
-<img class="dropshadow" src="/images/recipients/selected-groups.png" alt="" style="width:340px; margin-top:10px">
+<img class="dropshadow" src="/images/recipients/selected-groups.png" alt="" style="width:400px; margin-top:10px">
 
 Pick one or more User Groups. Selecting **All** is equivalent to picking every group individually, and applies to any group added to the system after the notification is saved.
 

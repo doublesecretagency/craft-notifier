@@ -110,10 +110,10 @@ class DispatchModelTest extends TestCase
         // Each compile branch must tag its log->envelope() call with isTest
         // so the log row records the fact. The flag is intentionally NOT
         // passed into the envelope constructor (envelopes are delivery-only).
-        // Pin all eight occurrences of the log-side merge (email, sms, announcement,
-        // flash, ntfy, slack, pushover, bluesky).
+        // Pin all nine occurrences of the log-side merge (email, sms, announcement,
+        // flash, ntfy, slack, pushover, bluesky, mqtt).
         $this->assertSame(
-            8,
+            9,
             preg_match_all(
                 "/'isTest'\s*=>\s*\\\$this->isTest/",
                 $this->dispatchSource

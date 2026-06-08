@@ -66,6 +66,7 @@ class Recipients extends Component
             case 'ntfy-topics':        return ($notification ? $this->_ntfyTopics($notification)        : []);
             case 'slack-channels':     return ($notification ? $this->_slackChannels($notification)     : []);
             case 'bluesky-accounts':   return ($notification ? $this->_blueskyAccounts($notification)   : []);
+            case 'mqtt-topics':        return ($notification ? $this->_mqttTopics($notification)        : []);
         }
 
         // Invalid recipients type
@@ -88,9 +89,8 @@ class Recipients extends Component
             $currentUser = null;
         }
 
-        // If no current user
+        // If no current user, return empty array
         if (!$currentUser) {
-            // Return empty array
             return [];
         }
 
@@ -192,10 +192,8 @@ class Recipients extends Component
     /**
      * Get dynamic recipients by running the Notification's authored Twig snippet.
      *
-     * The Dispatch drives the actual Twig parse (since it owns the sandbox
-     * lifecycle); this method orchestrates: pre-flight checks, post-parse
-     * type-sniffing of the collected items, and logging of empty results
-     * or unrecognized entries.
+     * The Dispatch owns the sandbox and runs the Twig parse; this method builds
+     * a Recipient from each collected item and logs empty or unrecognized results.
      *
      * @param Notification $notification
      * @param Dispatch|null $dispatch Data for parsing Dynamic Recipients snippets.
@@ -302,6 +300,28 @@ class Recipients extends Component
             'ntfyTopicUids',
             NotifierPlugin::$plugin->getSettings()->ntfyTopics,
             'ntfy topic',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'  => $row['label'] ?? null,
+                    'topic' => $row['topic'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Get MQTT topic recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _mqttTopics(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'mqttTopicUids',
+            NotifierPlugin::$plugin->getSettings()->mqttTopics,
+            'MQTT topic',
             static function (array $row): Recipient {
                 return new Recipient([
                     'name'  => $row['label'] ?? null,

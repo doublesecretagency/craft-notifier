@@ -6,6 +6,8 @@ description: Send the message to every active User with Admin permissions. Pendi
 
 Sends the message to **every active User with Admin permissions.**
 
+<img class="dropshadow" src="/images/recipients/all-admins.png" alt="" style="width:400px; margin-top:10px">
+
 ## Active Users only
 
 Pending, suspended, and locked admins are skipped. Only admins with an `active` status receive the message.

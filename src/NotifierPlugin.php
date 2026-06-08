@@ -364,6 +364,7 @@ class NotifierPlugin extends Plugin
                 $event->rules['settings/plugins/notifier/ntfy']     = 'notifier/settings-providers/ntfy';
                 $event->rules['settings/plugins/notifier/slack']    = 'notifier/settings-providers/slack';
                 $event->rules['settings/plugins/notifier/bluesky']  = 'notifier/settings-providers/bluesky';
+                $event->rules['settings/plugins/notifier/mqtt']     = 'notifier/settings-providers/mqtt';
             }
         );
     }

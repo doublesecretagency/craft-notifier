@@ -44,6 +44,7 @@ class SettingsProvidersControllerTest extends TestCase
             ['actionNtfy'],
             ['actionSlack'],
             ['actionBluesky'],
+            ['actionMqtt'],
         ];
     }
 
@@ -71,6 +72,7 @@ class SettingsProvidersControllerTest extends TestCase
             ['actionTestNtfy'],
             ['actionTestSlack'],
             ['actionTestBluesky'],
+            ['actionTestMqtt'],
         ];
     }
 
@@ -94,13 +96,28 @@ class SettingsProvidersControllerTest extends TestCase
 
     public function testSaveActionWhitelistsSection(): void
     {
-        $this->assertStringContainsString("['general', 'twilio', 'pushover', 'ntfy', 'slack', 'bluesky']", $this->controllerSource);
+        $this->assertStringContainsString("['general', 'twilio', 'pushover', 'ntfy', 'slack', 'bluesky', 'mqtt']", $this->controllerSource);
     }
 
     public function testSaveActionAssignsUidsToNamedListRows(): void
     {
         $this->assertStringContainsString('_assignUids(', $this->controllerSource);
         $this->assertStringContainsString('StringHelper::UUID()', $this->controllerSource);
+    }
+
+    public function testAssignUidsNormalizesNonArrayInput(): void
+    {
+        // An empty editable table posts the named-list param as an empty string,
+        // not an array. _assignUids must accept that and normalize to [] rather
+        // than throwing a TypeError on the array hint.
+        $this->assertMatchesRegularExpression(
+            '/function\s+_assignUids\(\s*mixed\s+\$rows\s*\)/',
+            $this->controllerSource
+        );
+        $this->assertMatchesRegularExpression(
+            '/if\s*\(\s*!is_array\(\$rows\)\s*\)\s*{\s*return\s*\[\];/',
+            $this->controllerSource
+        );
     }
 
     public function testTestSlackAcceptsJsonAndPost(): void

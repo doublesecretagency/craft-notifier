@@ -1,0 +1,124 @@
+{% import '_includes/forms' as forms %}
+{% set autosuggest = 'notifier/_form/autosuggest' %}
+{% set lightswitch = 'notifier/_form/lightswitch' %}
+{% set number = 'notifier/_form/number' %}
+
+{% set versionOverride = ('mqttProtocolLevel' in configFile|keys) %}
+
+<h2>{{ "MQTT Broker"|t('notifier') }}</h2>
+<p>{{ "Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`)."|t('notifier')|md }}</p>
+<div class="pane">
+    {% include autosuggest with {
+        config: {
+            label: "Host"|t('notifier'),
+            instructions: "Broker hostname, without a protocol or port."|t('notifier'),
+            name: 'mqttHost',
+            placeholder: 'broker.example.com',
+        }
+    } %}
+    {% include number with {
+        config: {
+            label: "Port"|t('notifier'),
+            instructions: "Optional. Defaults to 8883 when TLS is enabled, otherwise 1883."|t('notifier'),
+            name: 'mqttPort',
+            min: 1,
+        }
+    } %}
+    {% include lightswitch with {
+        config: {
+            label: "Use TLS"|t('notifier'),
+            instructions: "Whether to connect to the broker over a secure TLS socket."|t('notifier'),
+            name: 'mqttUseTls',
+        }
+    } %}
+    {% include autosuggest with {
+        config: {
+            label: "Username"|t('notifier'),
+            instructions: "Optional, for brokers that require username/password authentication."|t('notifier'),
+            name: 'mqttUsername',
+        }
+    } %}
+    {% include autosuggest with {
+        config: {
+            label: "Password"|t('notifier'),
+            instructions: "Optional, for brokers that require username/password authentication."|t('notifier'),
+            name: 'mqttPassword',
+        }
+    } %}
+    {{ forms.selectField({
+        label: "MQTT Version"|t('notifier'),
+        instructions: "Protocol version sent to the broker."|t('notifier'),
+        name: 'settings[mqttProtocolLevel]',
+        value: (configFile.mqttProtocolLevel ?? settings.mqttProtocolLevel ?? '3.1.1'),
+        options: {'3.1': 'MQTT 3.1', '3.1.1': 'MQTT 3.1.1'},
+        disabled: versionOverride,
+        warning: (versionOverride ? "This is being set in the config file. [{file}]"|t('notifier', { file: '`config/notifier.php`' })),
+    }) }}
+    {% include autosuggest with {
+        config: {
+            label: "Client ID"|t('notifier'),
+            instructions: "Optional. A unique client ID is generated automatically when left blank."|t('notifier'),
+            name: 'mqttClientId',
+        }
+    } %}
+</div>
+
+<h2>{{ "Mutual TLS"|t('notifier') }}</h2>
+<p>{{ "Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed)."|t('notifier')|md }}</p>
+<div class="pane">
+    {% include autosuggest with {
+        config: {
+            label: "CA Certificate File"|t('notifier'),
+            instructions: "Path to the certificate authority (CA) file."|t('notifier'),
+            name: 'mqttTlsCaFile',
+        }
+    } %}
+    {% include autosuggest with {
+        config: {
+            label: "Client Certificate File"|t('notifier'),
+            instructions: "Path to the client certificate file."|t('notifier'),
+            name: 'mqttTlsClientCertFile',
+        }
+    } %}
+    {% include autosuggest with {
+        config: {
+            label: "Client Key File"|t('notifier'),
+            instructions: "Path to the client private key file."|t('notifier'),
+            name: 'mqttTlsClientKeyFile',
+        }
+    } %}
+</div>
+
+<h2>{{ "MQTT Topics"|t('notifier') }}</h2>
+<p>{{ "Add the MQTT topics you'd like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification."|t('notifier')|md }}</p>
+<div class="pane notifier-named-list">
+    {{ forms.editableTableField({
+        label: "Topics"|t('notifier'),
+        instructions: "Click any row's **Test** button to publish a quick test message to that topic."|t('notifier'),
+        id: 'mqttTopics',
+        name: 'settings[mqttTopics]',
+        cols: {
+            label: {
+                heading: "Label"|t('notifier'),
+                type: 'singleline',
+                width: '30%',
+            },
+            topic: {
+                heading: "Topic"|t('notifier'),
+                type: 'singleline',
+                width: '50%',
+                placeholder: 'home/livingroom/lamp',
+            },
+            uid: {
+                heading: '',
+                type: 'hidden',
+            },
+        },
+        rows: settings.mqttTopics ?? [],
+        addRowLabel: "Add a topic"|t('notifier'),
+        staticRows: false,
+        allowAdd: true,
+        allowDelete: true,
+        allowReorder: true,
+    }) }}
+</div>

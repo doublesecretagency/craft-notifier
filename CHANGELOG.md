@@ -6,6 +6,8 @@
 - Added the ability to send a [System Snapshot](https://plugins.doublesecretagency.com/notifier/events/types/system-snapshot/).
 - Added the ability to send [Dynamic Data](https://plugins.doublesecretagency.com/notifier/events/types/dynamic-data/).
 - Added user permissions for authoring Dynamic Data snippets.
+- Added support for sending [MQTT](https://plugins.doublesecretagency.com/notifier/messages/types/mqtt) notifications.
+- Added the [MQTT topics](https://plugins.doublesecretagency.com/notifier/recipients/types/mqtt-topics) recipient type for posting to one or more MQTT topics.
 
 ## 3.0.2 - 2026-05-28
 

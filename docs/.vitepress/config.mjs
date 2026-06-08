@@ -96,6 +96,7 @@ export default defineConfig({
               {text: 'ntfy',               link: '/messages/types/ntfy'},
               {text: 'Slack',              link: '/messages/types/slack'},
               {text: 'Bluesky',            link: '/messages/types/bluesky'},
+              {text: 'MQTT',               link: '/messages/types/mqtt'},
             ]
           },
           {
@@ -134,6 +135,7 @@ export default defineConfig({
               {text: 'ntfy Topics',      link: '/recipients/types/ntfy-topics'},
               {text: 'Slack Channels',   link: '/recipients/types/slack-channels'},
               {text: 'Bluesky Accounts', link: '/recipients/types/bluesky-accounts'},
+              {text: 'MQTT Topics',      link: '/recipients/types/mqtt-topics'},
             ]
           },
         ]
@@ -227,6 +229,7 @@ export default defineConfig({
                 {text: 'ntfy',     link: '/getting-started/integrations/ntfy'},
                 {text: 'Slack',    link: '/getting-started/integrations/slack'},
                 {text: 'Bluesky',  link: '/getting-started/integrations/bluesky'},
+                {text: 'MQTT',     link: '/getting-started/integrations/mqtt'},
               ]
             },
           ]
@@ -322,6 +325,7 @@ export default defineConfig({
                 {text: 'ntfy',               link: '/messages/types/ntfy'},
                 {text: 'Slack',              link: '/messages/types/slack'},
                 {text: 'Bluesky',            link: '/messages/types/bluesky'},
+                {text: 'MQTT',               link: '/messages/types/mqtt'},
               ]
             },
             {text: 'Message Templating',     link: '/messages/templating'},
@@ -356,6 +360,7 @@ export default defineConfig({
                 {text: 'ntfy Topics',        link: '/recipients/types/ntfy-topics'},
                 {text: 'Slack Channels',     link: '/recipients/types/slack-channels'},
                 {text: 'Bluesky Accounts',   link: '/recipients/types/bluesky-accounts'},
+                {text: 'MQTT Topics',        link: '/recipients/types/mqtt-topics'},
               ]
             }
           ]

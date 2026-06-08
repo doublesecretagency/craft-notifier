@@ -6,6 +6,8 @@ description: Send the message to every active User in the system. Use with cauti
 
 Sends the message to **every active User in the system.**
 
+<img class="dropshadow" src="/images/recipients/all-users.png" alt="" style="width:400px; margin-top:10px">
+
 :::warning ⚠️ USE WITH CAUTION
 Ensure you really want all system Users to see the message!
 

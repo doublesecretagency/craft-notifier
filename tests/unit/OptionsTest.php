@@ -382,9 +382,9 @@ class OptionsTest extends TestCase
     // Other channel/recipient maps (regression coverage)
     // ========================================================================= //
 
-    public function testMessageTypeIncludesAllEightChannels(): void
+    public function testMessageTypeIncludesAllNineChannels(): void
     {
-        // The eight channels Notifier understands; any addition would also need a Dispatch case branch.
+        // The nine channels Notifier understands; any addition would also need a Dispatch case branch.
         $this->assertArrayHasKey('email', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('sms', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('announcement', Options::MESSAGE_TYPE);
@@ -393,6 +393,7 @@ class OptionsTest extends TestCase
         $this->assertArrayHasKey('ntfy', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('slack', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('bluesky', Options::MESSAGE_TYPE);
+        $this->assertArrayHasKey('mqtt', Options::MESSAGE_TYPE);
     }
 
     public function testMessageTypeIconCoversEveryMessageType(): void
@@ -405,9 +406,9 @@ class OptionsTest extends TestCase
         }
     }
 
-    public function testRecipientsTypeIncludesAllNineStrategies(): void
+    public function testRecipientsTypeIncludesAllTenStrategies(): void
     {
-        // The nine recipient strategies must each remain addressable by key.
+        // The ten recipient strategies must each remain addressable by key.
         $this->assertArrayHasKey('current-user', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('all-users', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('all-admins', Options::RECIPIENTS_TYPE);
@@ -417,6 +418,7 @@ class OptionsTest extends TestCase
         $this->assertArrayHasKey('ntfy-topics', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('slack-channels', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('bluesky-accounts', Options::RECIPIENTS_TYPE);
+        $this->assertArrayHasKey('mqtt-topics', Options::RECIPIENTS_TYPE);
     }
 
     public function testAllowedRecipientTypesMapIsExhaustive(): void
@@ -450,6 +452,30 @@ class OptionsTest extends TestCase
         $this->assertCount(5, Options::NTFY_PRIORITY);
         $this->assertArrayHasKey('1', Options::NTFY_PRIORITY);
         $this->assertArrayHasKey('5', Options::NTFY_PRIORITY);
+    }
+
+    public function testMqttQosMapHasThreeLevels(): void
+    {
+        // QoS levels 0, 1, 2 map to the MQTT delivery guarantees.
+        $this->assertCount(3, Options::MQTT_QOS);
+        $this->assertArrayHasKey('0', Options::MQTT_QOS);
+        $this->assertArrayHasKey('1', Options::MQTT_QOS);
+        $this->assertArrayHasKey('2', Options::MQTT_QOS);
+    }
+
+    public function testMqttVersionMapShipsThreeOneOneAndThreeOne(): void
+    {
+        // 3.1.1 ships as the default; 3.1 is offered for older brokers.
+        // 5.0 is intentionally absent until a supporting transport exists.
+        $this->assertArrayHasKey('3.1.1', Options::MQTT_VERSION);
+        $this->assertArrayHasKey('3.1', Options::MQTT_VERSION);
+        $this->assertArrayNotHasKey('5.0', Options::MQTT_VERSION);
+    }
+
+    public function testMqttIconIsSet(): void
+    {
+        // No MQTT brand icon exists; tower-broadcast is the chosen Font Awesome glyph.
+        $this->assertSame('tower-broadcast', Options::MESSAGE_TYPE_ICON['mqtt']);
     }
 
     // ========================================================================= //

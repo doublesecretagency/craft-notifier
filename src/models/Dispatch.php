@@ -516,6 +516,10 @@ class Dispatch extends Model
                 $this->useQueue = ($this->notification->messageConfig['blueskyQueue'] ?? true);
                 $this->envelopes = $this->_compileBluesky();
                 break;
+            case 'mqtt':
+                $this->useQueue = ($this->notification->messageConfig['mqttQueue'] ?? true);
+                $this->envelopes = $this->_compileMqtt();
+                break;
         }
     }
 
@@ -1304,6 +1308,95 @@ class Dispatch extends Model
         return $outbound;
     }
 
+    /**
+     * Compile the message as one or more MQTT publishes.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileMqtt(): array
+    {
+        // Get topic recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Get message-level QoS and retain flag
+        $qos    = (int) ($this->notification->messageConfig['mqttQos'] ?? 0);
+        $retain = (bool) ($this->notification->messageConfig['mqttRetain'] ?? false);
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient has no topic, log and skip
+            if (!$recipient->topic) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no MQTT topic.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $jobInfo = [
+                'messageType' => 'an MQTT message',
+                'recipient'   => ($recipient->name ?? $recipient->topic),
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse the payload
+            try {
+                $payload = $this->_parseTwig($config, $this->notification->messageConfig['mqttBody'] ?? '');
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $payload = ($this->notification->messageConfig['mqttBody'] ?? '');
+                $parseError = $e;
+            }
+
+            // Get message details
+            $details = [
+                'topic'   => $recipient->topic,
+                'payload' => $payload,
+                'qos'     => $qos,
+                'retain'  => $retain,
+            ];
+
+            // Initialize logging for envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound MQTT message into envelope
+            $outbound[] = new OutboundMqtt(array_merge([
+                'notificationId' => $this->notification->id,
+                'envelopeId'     => $envelopeId,
+                'jobInfo'        => $jobInfo,
+            ], $details));
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
     // ========================================================================= //
 
     /**
@@ -1314,14 +1407,14 @@ class Dispatch extends Model
      */
     public function parseDynamicRecipientSnippet(Notification $notification): bool
     {
-        // Reset the collector and invocation flag for a fresh parse
+        // Start fresh before each parse
         $this->collectedDynamicRecipients = [];
         $this->setRecipientsInvoked = false;
 
-        // Get the raw snippet
+        // Get the snippet
         $snippet = ($notification->recipientsConfig['dynamicRecipients'] ?? '');
 
-        // Build the parse context (same shape as announcement/flash compilers)
+        // Set up the variables available to the snippet
         $config = [
             'recipient' => null,
             'notification' => $notification,
@@ -1329,24 +1422,24 @@ class Dispatch extends Model
             'data' => $this->data,
         ];
 
-        // Remember the previously active dispatch (nesting safety)
+        // Remember the previously active dispatch
         $previouslyActive = NotifierPlugin::$plugin->activeDispatchForRecipients;
 
         try {
-            // Point the plugin at this Dispatch for the duration of the parse
+            // Point the plugin at this dispatch while the snippet runs
             NotifierPlugin::$plugin->activeDispatchForRecipients = $this;
 
-            // Run the snippet; render result is ignored (side effects only)
+            // Run the snippet, ignoring the rendered output
             $this->_parseTwig($config, $snippet);
         } catch (Exception|Throwable $e) {
-            // Clear any partial recipients left by the failed parse
+            // Clear any recipients left behind by the failed parse
             $this->collectedDynamicRecipients = [];
             // Log the parse error and bail
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
             $notification->log->error($message);
             return false;
         } finally {
-            // Restore the previously active dispatch (supports re-entrant parses)
+            // Restore the previously active dispatch
             NotifierPlugin::$plugin->activeDispatchForRecipients = $previouslyActive;
         }
 
@@ -1362,14 +1455,14 @@ class Dispatch extends Model
      */
     public function parseDynamicDataSnippet(Notification $notification): bool
     {
-        // Reset the collector and invocation flag for a fresh parse
+        // Start fresh before each parse
         $this->collectedDynamicData = [];
         $this->setDataInvoked = false;
 
-        // Get the raw snippet
+        // Get the snippet
         $snippet = ($notification->eventConfig['dynamicData'] ?? '');
 
-        // Build the parse context
+        // Set up the variables available to the snippet
         $config = [
             'recipient' => null,
             'notification' => $notification,
@@ -1381,12 +1474,12 @@ class Dispatch extends Model
         $previouslyActive = NotifierPlugin::$plugin->activeDispatchForData;
 
         try {
-            // Point the plugin at this Dispatch for the duration of the parse
+            // Point the plugin at this dispatch while the snippet runs
             NotifierPlugin::$plugin->activeDispatchForData = $this;
-            // Run the snippet, ignore rendered result
+            // Run the snippet, ignoring the rendered output
             $this->_parseTwig($config, $snippet);
         } catch (Exception|Throwable $e) {
-            // Clear any partial data left by the failed parse
+            // Clear any data left behind by the failed parse
             $this->collectedDynamicData = [];
             // Log the parse error and bail
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
@@ -1397,7 +1490,7 @@ class Dispatch extends Model
             NotifierPlugin::$plugin->activeDispatchForData = $previouslyActive;
         }
 
-        // If the snippet never called setData, warn so the empty dispatch is explained
+        // If the snippet never called setData, log a warning
         if (!$this->setDataInvoked) {
             $notification->log->warning(Craft::t('notifier',
                 'The Dynamic Data snippet did not call the {tag} tag.',

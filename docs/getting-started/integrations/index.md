@@ -27,3 +27,7 @@ Required for posting [Slack](/messages/types/slack) channel messages.
 ## [Bluesky](/getting-started/integrations/bluesky)
 
 Required for publishing [Bluesky](/messages/types/bluesky) posts.
+
+## [MQTT](/getting-started/integrations/mqtt)
+
+Required for publishing [MQTT](/messages/types/mqtt) messages to a broker.

@@ -172,6 +172,59 @@ class SettingsModelTest extends TestCase
     }
 
     // ========================================================================= //
+    // MQTT properties
+    // ========================================================================= //
+
+    public function testMqttConnectionPropertiesDefaultToNull(): void
+    {
+        // The broker connection fields are env-referenceable and default to null.
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertNull($defaults['mqttHost']);
+        $this->assertNull($defaults['mqttPort']);
+        $this->assertNull($defaults['mqttUsername']);
+        $this->assertNull($defaults['mqttPassword']);
+        $this->assertNull($defaults['mqttClientId']);
+        $this->assertNull($defaults['mqttTlsCaFile']);
+        $this->assertNull($defaults['mqttTlsClientCertFile']);
+        $this->assertNull($defaults['mqttTlsClientKeyFile']);
+    }
+
+    public function testMqttUseTlsDefaultsToFalse(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertFalse($defaults['mqttUseTls']);
+    }
+
+    public function testMqttUseTlsIsBool(): void
+    {
+        $type = $this->reflection->getProperty('mqttUseTls')->getType();
+        $this->assertNotNull($type);
+        $this->assertSame('bool', $type->getName());
+        $this->assertFalse($type->allowsNull());
+    }
+
+    public function testMqttPortIsNullableInt(): void
+    {
+        $type = $this->reflection->getProperty('mqttPort')->getType();
+        $this->assertNotNull($type);
+        $this->assertSame('int', $type->getName());
+        $this->assertTrue($type->allowsNull());
+    }
+
+    public function testMqttProtocolLevelDefaultsToThreeOneOne(): void
+    {
+        // 3.1.1 is the default protocol version sent to the broker.
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertSame('3.1.1', $defaults['mqttProtocolLevel']);
+    }
+
+    public function testMqttTopicsDefaultsToEmptyArray(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertSame([], $defaults['mqttTopics']);
+    }
+
+    // ========================================================================= //
     // Encryption surface removed
     // ========================================================================= //
 

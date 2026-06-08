@@ -511,4 +511,63 @@ return [
     'Unable to delete log events, something went wrong.' => '로그 이벤트를 삭제하지 못했습니다. 문제가 발생했습니다.',
     'Are you sure you want to delete this log event?' => '이 로그 이벤트를 삭제하시겠습니까?',
     'Are you sure you want to delete all logs from {date}?' => '{date}의 모든 로그를 삭제하시겠습니까?',
+
+    // ============================================================
+    // MQTT
+    // ============================================================
+
+    'Recipient "{name}" has no MQTT topic.' => '수신자 "{name}"에 MQTT 토픽이 없습니다.',
+    'Unable to send MQTT message, no broker host configured.' => 'MQTT 메시지를 보낼 수 없습니다. 브로커 호스트가 구성되지 않았습니다.',
+    'Unable to send MQTT message, no topic specified.' => 'MQTT 메시지를 보낼 수 없습니다. 토픽이 지정되지 않았습니다.',
+    'Unable to send MQTT message, the payload is empty.' => 'MQTT 메시지를 보낼 수 없습니다. 페이로드가 비어 있습니다.',
+    'MQTT publish failed: {reason}' => 'MQTT 게시에 실패했습니다: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => '토픽 "{topic}"에 MQTT 메시지를 보냈습니다.',
+    'MQTT Broker' => 'MQTT 브로커',
+    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier는 MQTT 브로커(Mosquitto, EMQX, HiveMQ 또는 AWS IoT Core 등)에 게시합니다. 아래에 브로커 연결 정보를 입력하세요. 민감한 값은 `.env` 변수에 저장하고 여기에서 참조할 수 있습니다(예: `$MQTT_PASSWORD`).',
+    'Host' => '호스트',
+    'Broker hostname, without a protocol or port.' => '프로토콜이나 포트를 제외한 브로커 호스트 이름.',
+    'Port' => '포트',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => '선택 사항. TLS가 활성화된 경우 기본값은 8883이고, 그렇지 않으면 1883입니다.',
+    'Use TLS' => 'TLS 사용',
+    'Whether to connect to the broker over a secure TLS socket.' => '보안 TLS 소켓을 통해 브로커에 연결할지 여부.',
+    'Username' => '사용자 이름',
+    'Optional, for brokers that require username/password authentication.' => '선택 사항. 사용자 이름/비밀번호 인증이 필요한 브로커에 사용합니다.',
+    'Password' => '비밀번호',
+    'MQTT Version' => 'MQTT 버전',
+    'Protocol version sent to the broker.' => '브로커에 전송되는 프로토콜 버전.',
+    'Client ID' => '클라이언트 ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => '선택 사항. 비워 두면 고유한 클라이언트 ID가 자동으로 생성됩니다.',
+    'Mutual TLS' => '상호 TLS',
+    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => '선택 사항. AWS IoT Core처럼 인증서로 클라이언트를 인증하는 브로커에 필요합니다. 인증서 파일에 대한 서버 파일 경로를 입력하세요(`.env` 변수 또는 `@alias` 참조가 허용됩니다).',
+    'CA Certificate File' => 'CA 인증서 파일',
+    'Path to the certificate authority (CA) file.' => '인증 기관(CA) 파일 경로.',
+    'Client Certificate File' => '클라이언트 인증서 파일',
+    'Path to the client certificate file.' => '클라이언트 인증서 파일 경로.',
+    'Client Key File' => '클라이언트 키 파일',
+    'Path to the client private key file.' => '클라이언트 개인 키 파일 경로.',
+    'MQTT Topics' => 'MQTT 토픽',
+    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => '게시할 MQTT 토픽을 추가하세요. 각 토픽은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => '아무 행의 **테스트** 버튼을 클릭하여 해당 토픽에 빠른 테스트 메시지를 게시하세요.',
+    'MQTT' => 'MQTT',
+    'Payload' => '페이로드',
+    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => '토픽에 게시되는 메시지입니다. 일반 텍스트 또는 Twig로 렌더링된 JSON 객체일 수 있습니다.',
+    'Quality of Service' => '서비스 품질',
+    'Delivery guarantee for this message.' => '이 메시지의 전달 보장 수준.',
+    'Retain' => '보존',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => '브로커가 이 메시지를 토픽의 마지막 메시지로 보존하여 이후 구독자에게 전달할지 여부.',
+    'Don\'t retain' => '보존 안 함',
+    'Select MQTT topic(s)' => 'MQTT 토픽 선택',
+    'Which topics should receive this message?' => '어떤 토픽이 이 메시지를 받아야 합니까?',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => '구성된 MQTT 토픽이 없습니다. [설정 → MQTT]({url})에서 추가하세요.',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '유효한 토픽이 아닙니다. 비어 있거나 와일드카드 `+` 또는 `#`를 포함할 수 없습니다.',
+    'Broker host is not configured.' => '브로커 호스트가 구성되지 않았습니다.',
+
+    // ============================================================
+    // Recipient empty-state (administrative changes disabled)
+    // ============================================================
+
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => '구성된 ntfy 토픽이 없습니다. 토픽은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => '구성된 Slack 채널이 없습니다. 채널은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => '구성된 Bluesky 계정이 없습니다. 계정은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => '구성된 MQTT 토픽이 없습니다. 토픽은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
 ];

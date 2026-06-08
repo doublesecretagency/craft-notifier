@@ -30,9 +30,9 @@ class ChannelEnvelopeMappingTest extends TestCase
     // Switch coverage
     // ========================================================================= //
 
-    public function testSwitchCoversAllEightMessageTypes(): void
+    public function testSwitchCoversAllNineMessageTypes(): void
     {
-        // The eight message types must each have a dedicated case branch.
+        // The nine message types must each have a dedicated case branch.
         $this->assertMatchesRegularExpression("/case\s+'email':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'sms':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'announcement':/", $this->dispatchSource);
@@ -41,12 +41,13 @@ class ChannelEnvelopeMappingTest extends TestCase
         $this->assertMatchesRegularExpression("/case\s+'ntfy':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'slack':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'bluesky':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'mqtt':/", $this->dispatchSource);
     }
 
-    public function testNoOrphanedChannelsBeyondTheKnownEight(): void
+    public function testNoOrphanedChannelsBeyondTheKnownNine(): void
     {
         // The switch is on $this->notification->messageType. Any case beyond
-        // the canonical eight would indicate a half-implemented channel.
+        // the canonical nine would indicate a half-implemented channel.
         preg_match_all(
             "/case\s+'([a-z]+)':\s*\\\$this->useQueue/",
             $this->dispatchSource,
@@ -57,9 +58,9 @@ class ChannelEnvelopeMappingTest extends TestCase
         sort($cases);
 
         $this->assertSame(
-            ['announcement', 'bluesky', 'email', 'flash', 'ntfy', 'pushover', 'slack', 'sms'],
+            ['announcement', 'bluesky', 'email', 'flash', 'mqtt', 'ntfy', 'pushover', 'slack', 'sms'],
             $cases,
-            'Dispatch::configureByMessageType should switch on exactly the eight canonical channels'
+            'Dispatch::configureByMessageType should switch on exactly the nine canonical channels'
         );
     }
 
@@ -127,6 +128,14 @@ class ChannelEnvelopeMappingTest extends TestCase
     {
         $this->assertMatchesRegularExpression(
             "/case 'bluesky':[\s\S]*?\\\$this->_compileBluesky\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testMqttCaseDelegatesToMqttCompiler(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'mqtt':[\s\S]*?\\\$this->_compileMqtt\(\)/",
             $this->dispatchSource
         );
     }
@@ -201,6 +210,14 @@ class ChannelEnvelopeMappingTest extends TestCase
         );
     }
 
+    public function testMqttCompilerInstantiatesOutboundMqtt(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/_compileMqtt[\s\S]*?new OutboundMqtt/',
+            $this->dispatchSource
+        );
+    }
+
     // ========================================================================= //
     // Queue policy per channel
     // ========================================================================= //
@@ -268,6 +285,14 @@ class ChannelEnvelopeMappingTest extends TestCase
     {
         $this->assertMatchesRegularExpression(
             "/case 'bluesky':[\s\S]*?messageConfig\['blueskyQueue'\]/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testMqttRespectsConfigurableQueueOptIn(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'mqtt':[\s\S]*?messageConfig\['mqttQueue'\]/",
             $this->dispatchSource
         );
     }

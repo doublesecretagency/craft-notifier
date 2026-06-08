@@ -511,4 +511,63 @@ return [
     'Unable to delete log events, something went wrong.' => 'Günlük olayları silinemedi, bir şeyler ters gitti.',
     'Are you sure you want to delete this log event?' => 'Bu günlük olayını silmek istediğinizden emin misiniz?',
     'Are you sure you want to delete all logs from {date}?' => '{date} tarihindeki tüm günlükleri silmek istediğinizden emin misiniz?',
+
+    // ============================================================
+    // MQTT
+    // ============================================================
+
+    'Recipient "{name}" has no MQTT topic.' => '"{name}" alıcısının MQTT konusu yok.',
+    'Unable to send MQTT message, no broker host configured.' => 'MQTT mesajı gönderilemiyor, hiçbir broker ana bilgisayarı yapılandırılmadı.',
+    'Unable to send MQTT message, no topic specified.' => 'MQTT mesajı gönderilemiyor, hiçbir konu belirtilmedi.',
+    'Unable to send MQTT message, the payload is empty.' => 'MQTT mesajı gönderilemiyor, içerik boş.',
+    'MQTT publish failed: {reason}' => 'MQTT yayını başarısız oldu: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT mesajı "{topic}" konusuna gönderildi.',
+    'MQTT Broker' => 'MQTT Broker',
+    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier, bir MQTT broker\'ına (Mosquitto, EMQX, HiveMQ veya AWS IoT Core gibi) yayın yapar. Broker bağlantı bilgilerini aşağıya girin. Hassas değerler bir `.env` değişkeninde saklanabilir ve burada referans gösterilebilir (örn. `$MQTT_PASSWORD`).',
+    'Host' => 'Ana bilgisayar',
+    'Broker hostname, without a protocol or port.' => 'Protokol veya port olmadan broker ana bilgisayar adı.',
+    'Port' => 'Port',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'İsteğe bağlı. TLS etkinken varsayılan 8883, aksi takdirde 1883\'tür.',
+    'Use TLS' => 'TLS Kullan',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Broker\'a güvenli bir TLS soketi üzerinden bağlanılıp bağlanılmayacağı.',
+    'Username' => 'Kullanıcı adı',
+    'Optional, for brokers that require username/password authentication.' => 'İsteğe bağlı, kullanıcı adı/parola kimlik doğrulaması gerektiren broker\'lar için.',
+    'Password' => 'Parola',
+    'MQTT Version' => 'MQTT Sürümü',
+    'Protocol version sent to the broker.' => 'Broker\'a gönderilen protokol sürümü.',
+    'Client ID' => 'İstemci Kimliği',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'İsteğe bağlı. Boş bırakıldığında benzersiz bir istemci kimliği otomatik olarak oluşturulur.',
+    'Mutual TLS' => 'Karşılıklı TLS',
+    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'İsteğe bağlı. AWS IoT Core gibi istemcileri sertifikalarla doğrulayan broker\'lar için gereklidir. Sertifika dosyalarına sunucu dosya yollarını belirtin (bir `.env` değişkeni veya `@alias` referansı kullanılabilir).',
+    'CA Certificate File' => 'CA Sertifika Dosyası',
+    'Path to the certificate authority (CA) file.' => 'Sertifika yetkilisi (CA) dosyasının yolu.',
+    'Client Certificate File' => 'İstemci Sertifika Dosyası',
+    'Path to the client certificate file.' => 'İstemci sertifika dosyasının yolu.',
+    'Client Key File' => 'İstemci Anahtar Dosyası',
+    'Path to the client private key file.' => 'İstemcinin özel anahtar dosyasının yolu.',
+    'MQTT Topics' => 'MQTT Konuları',
+    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Yayın yapmak istediğiniz MQTT konularını ekleyin. Bir bildirim yapılandırırken her konu **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'O konuya hızlı bir test mesajı yayınlamak için herhangi bir satırın **Test** düğmesine tıklayın.',
+    'MQTT' => 'MQTT',
+    'Payload' => 'Yük',
+    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Konuya yayınlanan mesaj. Düz metin veya Twig ile işlenmiş bir JSON nesnesi olabilir.',
+    'Quality of Service' => 'Hizmet kalitesi',
+    'Delivery guarantee for this message.' => 'Bu mesaj için teslim garantisi.',
+    'Retain' => 'Sakla',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Broker\'ın bunu konunun son mesajı olarak saklayıp gelecekteki abonelere teslim edip etmeyeceği.',
+    'Don\'t retain' => 'Saklama',
+    'Select MQTT topic(s)' => 'MQTT konularını seçin',
+    'Which topics should receive this message?' => 'Bu mesajı hangi konular almalı?',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Yapılandırılmış MQTT konusu yok. [Ayarlar → MQTT]({url}) bölümünden bir tane ekleyin.',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Geçerli bir konu değil. Boş olamaz veya `+` ya da `#` joker karakterlerini içeremez.',
+    'Broker host is not configured.' => 'Broker ana bilgisayarı yapılandırılmadı.',
+
+    // ============================================================
+    // Recipient empty-state (administrative changes disabled)
+    // ============================================================
+
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'ntfy konusu yapılandırılmamış. Konular yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Slack kanalı yapılandırılmamış. Kanallar yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Bluesky hesabı yapılandırılmamış. Hesaplar yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Yapılandırılmış MQTT konusu yok. Konular yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
 ];

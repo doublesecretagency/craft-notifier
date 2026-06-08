@@ -119,6 +119,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 'ntfyTopics'             => ($settings->ntfyTopics ?? []),
                 'slackChannels'          => ($settings->slackChannels ?? []),
                 'blueskyAccounts'        => ($settings->blueskyAccounts ?? []),
+                'mqttQos'                => Options::MQTT_QOS,
+                'mqttTopics'             => ($settings->mqttTopics ?? []),
             ],
         ];
     }

@@ -41,3 +41,7 @@ Posts a message to one or more Slack channels via [Incoming Webhooks](https://ap
 ### [Bluesky](/messages/types/bluesky)
 
 Publishes a post to one or more [Bluesky](https://bsky.app) accounts via the ATProto API.
+
+### [MQTT](/messages/types/mqtt)
+
+Publishes a message to one or more MQTT topics on your broker.

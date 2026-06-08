@@ -52,6 +52,12 @@
     {% include 'notifier/notifications/_edit/recipients/bluesky-accounts' %}
 </div>
 
+{# MQTT: locked to mqtt-topics #}
+<div class="message-type-mqtt hidden">
+    <input type="hidden" name="recipientsType" value="mqtt-topics" disabled>
+    {% include 'notifier/notifications/_edit/recipients/mqtt-topics' %}
+</div>
+
 {% js %}
 (function () {
 

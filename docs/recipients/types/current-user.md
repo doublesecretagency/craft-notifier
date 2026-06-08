@@ -6,6 +6,8 @@ description: Send the message only to the User who triggered the event. The requ
 
 Sends the message to **only the User who triggered the event.**
 
+<img class="dropshadow" src="/images/recipients/current-user.png" alt="" style="width:400px; margin-top:10px">
+
 This is the only recipient type that's eligible for [Flash Messages](/messages/types/flash), since flashes can only be displayed to the actively logged-in user.
 
 ## When no current user exists

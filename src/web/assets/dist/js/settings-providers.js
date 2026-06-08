@@ -14,7 +14,8 @@
     var TABLES = {
         ntfyTopics:      'ntfy',
         slackChannels:   'slack',
-        blueskyAccounts: 'bluesky'
+        blueskyAccounts: 'bluesky',
+        mqttTopics:      'mqtt'
     };
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -136,7 +137,7 @@
     });
 
     function collectRowPayload(provider, row) {
-        if ('ntfy' === provider) {
+        if ('ntfy' === provider || 'mqtt' === provider) {
             return { topic: readInputValue(row, '[topic]'), uid: readInputValue(row, '[uid]') };
         }
         if ('slack' === provider) {
