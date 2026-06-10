@@ -101,18 +101,6 @@
             <span>{{ templatingTip|md(inlineOnly=true) }}</span>
         </p>
     </div>
-
-    <hr>
-
-    {{ forms.lightswitchField({
-        label: "Send Message via Queue"|t('notifier'),
-        instructions: queueInstructions,
-        id: 'messageConfig-emailQueue',
-        name: 'messageConfig[emailQueue]',
-        offLabel: "Send immediately"|t('notifier'),
-        onLabel: "Add to queue"|t('notifier'),
-        on: (notification.messageConfig.emailQueue ?? true),
-    }) }}
 </div>
 
 {% js %}

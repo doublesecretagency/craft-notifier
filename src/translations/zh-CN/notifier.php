@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => '元素操作标签（有助于区分多个触发）。',
     'Send Notification' => '发送通知',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => '消息类型',
     'What type of message will be sent?' => '将发送什么类型的消息?',
-    'Send Message via Queue' => '通过队列发送消息',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '也支持[模板]({templatingUrl})和[特殊变量]({variablesUrl})。',
-    'Send immediately' => '立即发送',
-    'Add to queue' => '加入队列',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => '消息是否应通过[任务队列]({queueUrl})发送。',
+
+    // Details sidebar: queue
+    'Use Queue' => '使用队列',
+    'Immediate' => '立即',
+    'Queue' => '队列',
+    'jobs queue' => '任务队列',
+    'Whether the message will be sent immediately, or added to the {link}.' => '消息是立即发送，还是添加到{link}。',
+    'Flash messages never use the queue.' => 'Flash 消息从不使用队列。',
+    'Announcements always use the queue.' => '公告始终使用队列。',
 
     // Message tab: Email
     "User's Email Address Field" => '用户的电子邮件地址字段',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => '点击任意行的 **测试** 按钮以向该主题发布快速测试消息。',
     'MQTT' => 'MQTT',
     'Payload' => '负载',
+    'The JSON or plain text message published to the MQTT topic.' => '发布到 MQTT 主题的 JSON 或纯文本消息。',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => '发布到主题的消息。可以是纯文本或由 Twig 渲染的 JSON 对象。',
     'Quality of Service' => '服务质量',
     'Delivery guarantee for this message.' => '此消息的传递保证。',

@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => 'Elementtitoiminnon nimi (auttaa erottamaan useat liipaisimet).',
     'Send Notification' => 'Lähetä ilmoitus',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'Viestin tyyppi',
     'What type of message will be sent?' => 'Minkä tyyppinen viesti lähetetään?',
-    'Send Message via Queue' => 'Lähetä viesti jonon kautta',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Mallintaminen]({templatingUrl}) ja [erityismuuttujat]({variablesUrl}) ovat myös tuettuja.',
-    'Send immediately' => 'Lähetä välittömästi',
-    'Add to queue' => 'Lisää jonoon',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Lähetetäänkö viesti [työjonon]({queueUrl}) kautta.',
+
+    // Details sidebar: queue
+    'Use Queue' => 'Käytä jonoa',
+    'Immediate' => 'Välittömästi',
+    'Queue' => 'Jono',
+    'jobs queue' => 'työjonoon',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'Lähetetäänkö viesti välittömästi vai lisätäänkö se {link}.',
+    'Flash messages never use the queue.' => 'Flash-viestit eivät koskaan käytä jonoa.',
+    'Announcements always use the queue.' => 'Ilmoitukset käyttävät aina jonoa.',
 
     // Message tab: Email
     "User's Email Address Field" => 'Käyttäjän sähköpostikenttä',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Napsauta minkä tahansa rivin **Testi**-painiketta julkaistaksesi nopean testiviestin kyseiseen aiheeseen.',
     'MQTT' => 'MQTT',
     'Payload' => 'Sisältö',
+    'The JSON or plain text message published to the MQTT topic.' => 'JSON- tai pelkkä tekstiviesti, joka julkaistaan MQTT-aiheeseen.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Aiheeseen julkaistava viesti. Voi olla pelkkää tekstiä tai Twigillä renderöity JSON-objekti.',
     'Quality of Service' => 'Palvelun laatu',
     'Delivery guarantee for this message.' => 'Tämän viestin toimitustakuu.',

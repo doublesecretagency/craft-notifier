@@ -72,7 +72,7 @@ class DispatchModelTest extends TestCase
     public function testUseQueueDefaultsToTrue(): void
     {
         // By default Dispatch routes envelopes through the queue. The
-        // four message-type branches override this for flash / announcement.
+        // announcement and flash branches override it for their fixed behavior.
         $defaults = $this->reflection->getDefaultProperties();
         $this->assertTrue($defaults['useQueue']);
     }
@@ -159,29 +159,31 @@ class DispatchModelTest extends TestCase
         }
     }
 
-    public function testEmailRespectsEmailQueueConfig(): void
+    public function testConfigurableChannelsReadTopLevelQueueColumn(): void
     {
-        // emailQueue config defaults to true but must be overridable.
-        $this->assertStringContainsString(
-            "'emailQueue'",
+        // The per-type messageConfig[<type>Queue] keys were collapsed into a
+        // single top-level `queue` column, read once above the switch and
+        // shared by every configurable channel.
+        $this->assertMatchesRegularExpression(
+            '/\$this->useQueue\s*=\s*\(bool\)\s*\$this->notification->queue/',
             $this->dispatchSource
         );
     }
 
-    public function testSmsRespectsSmsQueueConfig(): void
+    public function testNoPerTypeQueueConfigKeysRemain(): void
     {
-        $this->assertStringContainsString(
-            "'smsQueue'",
-            $this->dispatchSource
-        );
+        // None of the old per-channel queue keys should survive the collapse.
+        foreach (['emailQueue', 'smsQueue', 'pushoverQueue', 'ntfyQueue', 'slackQueue', 'blueskyQueue', 'mqttQueue'] as $key) {
+            $this->assertStringNotContainsString("'{$key}'", $this->dispatchSource);
+        }
     }
 
     public function testAnnouncementsAlwaysQueued(): void
     {
-        // Announcements have no opt-out, the configureByMessageType branch
-        // must hard-set useQueue = true.
+        // Announcements have no opt-out; the configureByMessageType branch
+        // must hard-set useQueue = true regardless of the stored column.
         $this->assertMatchesRegularExpression(
-            "/case 'announcement':\s*\\\$this->useQueue\s*=\s*true/",
+            "/case 'announcement':[\s\S]*?\\\$this->useQueue\s*=\s*true/",
             $this->dispatchSource
         );
     }
@@ -190,18 +192,9 @@ class DispatchModelTest extends TestCase
     {
         // Flash messages are session-scoped; they must dispatch in-process.
         $this->assertMatchesRegularExpression(
-            "/case 'flash':\s*\\\$this->useQueue\s*=\s*false/",
+            "/case 'flash':[\s\S]*?\\\$this->useQueue\s*=\s*false/",
             $this->dispatchSource
         );
-    }
-
-    public function testNewChannelsRespectPerMessageQueueConfig(): void
-    {
-        // Pushover / ntfy / Slack / Bluesky each honor a per-message queue lightswitch.
-        $this->assertStringContainsString("'pushoverQueue'", $this->dispatchSource);
-        $this->assertStringContainsString("'ntfyQueue'", $this->dispatchSource);
-        $this->assertStringContainsString("'slackQueue'", $this->dispatchSource);
-        $this->assertStringContainsString("'blueskyQueue'", $this->dispatchSource);
     }
 
     // ========================================================================= //

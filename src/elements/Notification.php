@@ -94,6 +94,11 @@ class Notification extends Element
     public array $recipientsConfig = [];
 
     /**
+     * @var bool Whether the message should be sent via the jobs queue.
+     */
+    public bool $queue = true;
+
+    /**
      * @var NotificationLog|null
      */
     public ?NotificationLog $log = null;
@@ -765,6 +770,7 @@ class Notification extends Element
             // Initialize POST values (null falls back to the saved value)
             $description = $eventType = $event = $eventConfig = null;
             $messageType = $messageConfig = $recipientsType = $recipientsConfig = null;
+            $queue = null;
 
             // If not a console request
             if (!$request->getIsConsoleRequest()) {
@@ -784,6 +790,7 @@ class Notification extends Element
                 }
                 $recipientsType   = $request->getBodyParam('recipientsType');
                 $recipientsConfig = $request->getBodyParam('recipientsConfig');
+                $queue            = $request->getBodyParam('queue');
 
                 // Get the active tab's condition and label
                 $selectedEventType  = ($eventType ?? (string) $this->eventType);
@@ -861,6 +868,11 @@ class Notification extends Element
             $record->messageConfig    = $messageConfig    ?? $this->messageConfig;
             $record->recipientsType   = $recipientsType   ?? $this->recipientsType;
             $record->recipientsConfig = $recipientsConfig ?? $this->recipientsConfig;
+
+            // Normalize the queue lightswitch ('1' / '') into a boolean
+            $record->queue = (null !== $queue)
+                ? ('1' === $queue || 1 === $queue || true === $queue)
+                : $this->queue;
 
             // Save the notification
             $record->save(false);

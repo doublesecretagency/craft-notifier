@@ -482,42 +482,40 @@ class Dispatch extends Model
             $this->data['data'] = $this->collectedDynamicData;
         }
 
+        // Whether to send the notification via the queue
+        $this->useQueue = (bool) $this->notification->queue;
+
         // Configure message based on type
         switch ($this->notification->messageType) {
             case 'email':
-                $this->useQueue = ($this->notification->messageConfig['emailQueue'] ?? true);
                 $this->envelopes = $this->_compileEmail();
                 break;
             case 'sms':
-                $this->useQueue = ($this->notification->messageConfig['smsQueue'] ?? true);
                 $this->envelopes = $this->_compileSms();
                 break;
             case 'announcement':
+                // Announcements are always queued
                 $this->useQueue = true;
                 $this->envelopes = $this->_compileAnnouncement();
                 break;
             case 'flash':
+                // Flash messages are never queued
                 $this->useQueue = false;
                 $this->envelopes = [$this->_compileFlash()];
                 break;
             case 'pushover':
-                $this->useQueue = ($this->notification->messageConfig['pushoverQueue'] ?? true);
                 $this->envelopes = $this->_compilePushover();
                 break;
             case 'ntfy':
-                $this->useQueue = ($this->notification->messageConfig['ntfyQueue'] ?? true);
                 $this->envelopes = $this->_compileNtfy();
                 break;
             case 'slack':
-                $this->useQueue = ($this->notification->messageConfig['slackQueue'] ?? true);
                 $this->envelopes = $this->_compileSlack();
                 break;
             case 'bluesky':
-                $this->useQueue = ($this->notification->messageConfig['blueskyQueue'] ?? true);
                 $this->envelopes = $this->_compileBluesky();
                 break;
             case 'mqtt':
-                $this->useQueue = ($this->notification->messageConfig['mqttQueue'] ?? true);
                 $this->envelopes = $this->_compileMqtt();
                 break;
         }

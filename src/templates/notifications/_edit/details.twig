@@ -1,10 +1,8 @@
 {% import '_includes/forms' as forms %}
 
-{% css %}
-.so-sidebar.details {
-    padding-top: 4px !important;
-}
-{% endcss %}
+{% set queueInfo = 'Whether the message will be sent immediately, or added to the {link}.'|t('notifier', {
+    link: '<a href="https://craftcms.com/docs/5.x/system/queue.html" target="_blank">'~('jobs queue'|t('notifier'))~'</a>',
+}) %}
 
 <div class="meta">
     {{ forms.textField({
@@ -19,6 +17,22 @@
         name: 'enabled',
         on: notification.enabled,
     }) }}
+    {{ forms.lightswitchField({
+        label: 'Use Queue'|t('notifier'),
+        id: 'queue',
+        name: 'queue',
+        on: (notification.queue ?? true),
+        onLabel: 'Queue'|t('notifier'),
+        offLabel: 'Immediate'|t('notifier'),
+        headingSuffix: '<span class="info">'~queueInfo~'</span>',
+    }) }}
+    {# Message types which are required to either use or not use the queue #}
+    {% for note in [
+        {type: 'flash', text: 'Flash messages never use the queue.'|t('notifier')},
+        {type: 'announcement', text: 'Announcements always use the queue.'|t('notifier')},
+    ] %}
+        <div class="notifier-queue-note" data-message-type="{{ note.type }}" style="display: none;">{{ note.text }}</div>
+    {% endfor %}
 </div>
 
 <dl class="meta read-only">
@@ -35,3 +49,4 @@
         <dd class="value">{{ notification.dateUpdated|datetime('short') }}</dd>
     </div>
 </dl>
+

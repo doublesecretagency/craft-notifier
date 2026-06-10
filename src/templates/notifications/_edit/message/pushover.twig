@@ -36,16 +36,4 @@
         value: (notification.messageConfig.pushoverBody ?? null),
         errors: notification.getErrors('messageConfig[pushoverBody]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
-
-    <hr>
-
-    {{ forms.lightswitchField({
-        label: "Send Message via Queue"|t('notifier'),
-        instructions: queueInstructions,
-        id: 'messageConfig-pushoverQueue',
-        name: 'messageConfig[pushoverQueue]',
-        offLabel: "Send immediately"|t('notifier'),
-        onLabel: "Add to queue"|t('notifier'),
-        on: (notification.messageConfig.pushoverQueue ?? true),
-    }) }}
 </div>

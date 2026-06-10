@@ -28,6 +28,7 @@ use craft\db\SoftDeleteTrait;
  * @property array $messageConfig
  * @property string $recipientsType
  * @property array $recipientsConfig
+ * @property bool $queue
  */
 class Notification extends ActiveRecord
 {

@@ -42,3 +42,24 @@
 .monaco-editor-codefield--icon {
     z-index: 10;
 }
+
+/* ==========================================================================
+   Sidebar "Use Queue" control
+   ========================================================================== */
+
+/* Tighten the gap above the details sidebar so the first row sits flush */
+.so-sidebar.details {
+    padding-top: 4px !important;
+}
+
+/* Note shown in place of the toggle for message types that route around the
+   queue (Flash / Announcement). Sized to match a meta row. */
+.notifier-queue-note {
+    margin: 0 -24px;
+    padding: 17px 24px;
+    border-top: 1px solid rgba(51, 64, 77, 0.1);
+    color: #596673;
+    line-height: 1.3;
+    text-align: center;
+    font-style: italic;
+}

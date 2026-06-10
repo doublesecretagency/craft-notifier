@@ -38,8 +38,6 @@ Attaches a URL to the notification. Tapping the notification will open that URL 
 
 Renders the body as Markdown. Some ntfy clients (like the web app) will properly format Markdown syntax, while others (like the iOS app) do not support it and will show the raw text.
 
-<!--@include: @/messages/types/_queue-link.md-->
-
 ## Examples
 
 **Note when an entry is deleted**

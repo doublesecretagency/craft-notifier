@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => 'Een label voor de elementactie (helpt meerdere triggers te onderscheiden).',
     'Send Notification' => 'Notificatie verzenden',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'Berichttype',
     'What type of message will be sent?' => 'Welk type bericht wordt verzonden?',
-    'Send Message via Queue' => 'Bericht via wachtrij verzenden',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Templating]({templatingUrl}) en [speciale variabelen]({variablesUrl}) worden ook ondersteund.',
-    'Send immediately' => 'Direct verzenden',
-    'Add to queue' => 'Aan wachtrij toevoegen',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Of het bericht via de [takenwachtrij]({queueUrl}) moet worden verzonden.',
+
+    // Details sidebar: queue
+    'Use Queue' => 'Wachtrij gebruiken',
+    'Immediate' => 'Direct',
+    'Queue' => 'Wachtrij',
+    'jobs queue' => 'takenwachtrij',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'Of het bericht direct wordt verzonden of aan de {link} wordt toegevoegd.',
+    'Flash messages never use the queue.' => 'Flash-berichten gebruiken nooit de wachtrij.',
+    'Announcements always use the queue.' => 'Aankondigingen gebruiken altijd de wachtrij.',
 
     // Message tab: Email
     "User's Email Address Field" => 'Gebruikersveld voor e-mailadres',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Klik op de knop **Testen** van een rij om een snel testbericht naar dat onderwerp te publiceren.',
     'MQTT' => 'MQTT',
     'Payload' => 'Inhoud',
+    'The JSON or plain text message published to the MQTT topic.' => 'Het JSON- of platte-tekstbericht dat naar het MQTT-onderwerp wordt gepubliceerd.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Het bericht dat naar het onderwerp wordt gepubliceerd. Kan platte tekst zijn of een met Twig gerenderd JSON-object.',
     'Quality of Service' => 'Servicekwaliteit',
     'Delivery guarantee for this message.' => 'Leveringsgarantie voor dit bericht.',

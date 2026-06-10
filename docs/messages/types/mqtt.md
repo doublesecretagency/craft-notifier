@@ -40,8 +40,6 @@ When enabled, the broker remembers this message and delivers it to new subscribe
 
 Useful for state like "the lamp is on" that a new device should know right away.
 
-<!--@include: @/messages/types/_queue-link.md-->
-
 ## Examples
 
 **Toggle a smart device with a JSON payload**

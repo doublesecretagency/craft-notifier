@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => 'Öge eylemi etiketi (birden fazla tetikleyiciyi ayırt etmeye yardımcı olur).',
     'Send Notification' => 'Bildirim gönder',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'Mesaj türü',
     'What type of message will be sent?' => 'Hangi tür mesaj gönderilecek?',
-    'Send Message via Queue' => 'Mesajı kuyruk üzerinden gönder',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Şablonlama]({templatingUrl}) ve [özel değişkenler]({variablesUrl}) de desteklenir.',
-    'Send immediately' => 'Hemen gönder',
-    'Add to queue' => 'Kuyruğa ekle',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Mesajın [iş kuyruğu]({queueUrl}) üzerinden gönderilip gönderilmeyeceği.',
+
+    // Details sidebar: queue
+    'Use Queue' => 'Kuyruğu kullan',
+    'Immediate' => 'Hemen',
+    'Queue' => 'Kuyruk',
+    'jobs queue' => 'iş kuyruğuna',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'Mesaj hemen mi gönderilsin, yoksa {link} mı eklensin.',
+    'Flash messages never use the queue.' => 'Flash mesajları kuyruğu asla kullanmaz.',
+    'Announcements always use the queue.' => 'Duyurular her zaman kuyruğu kullanır.',
 
     // Message tab: Email
     "User's Email Address Field" => 'Kullanıcı e-posta adresi alanı',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'O konuya hızlı bir test mesajı yayınlamak için herhangi bir satırın **Test** düğmesine tıklayın.',
     'MQTT' => 'MQTT',
     'Payload' => 'Yük',
+    'The JSON or plain text message published to the MQTT topic.' => 'MQTT konusunda yayınlanan JSON veya düz metin mesajı.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Konuya yayınlanan mesaj. Düz metin veya Twig ile işlenmiş bir JSON nesnesi olabilir.',
     'Quality of Service' => 'Hizmet kalitesi',
     'Delivery guarantee for this message.' => 'Bu mesaj için teslim garantisi.',

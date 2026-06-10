@@ -24,8 +24,6 @@ This toggle (enabled by default) controls whether Notifier will attempt to gener
 
 Turn the toggle off to post plain links with no card.
 
-<!--@include: @/messages/types/_queue-link.md-->
-
 ## Formatting
 
 ### Character limit

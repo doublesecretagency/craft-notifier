@@ -48,9 +48,16 @@ class ChannelEnvelopeMappingTest extends TestCase
     {
         // The switch is on $this->notification->messageType. Any case beyond
         // the canonical nine would indicate a half-implemented channel.
-        preg_match_all(
-            "/case\s+'([a-z]+)':\s*\\\$this->useQueue/",
+        // Isolate the configureByMessageType() body so cases from other
+        // switches (filterByEventType, etc.) don't leak into the match.
+        preg_match(
+            '/function configureByMessageType\(\)[\s\S]*?\n    }/',
             $this->dispatchSource,
+            $body
+        );
+        preg_match_all(
+            "/case\s+'([a-z]+)':/",
+            $body[0] ?? '',
             $matches
         );
 
@@ -222,28 +229,30 @@ class ChannelEnvelopeMappingTest extends TestCase
     // Queue policy per channel
     // ========================================================================= //
 
-    public function testEmailRespectsConfigurableQueueOptIn(): void
+    public function testConfigurableChannelsShareTopLevelQueueColumn(): void
     {
-        // Emails default to queued but are user-configurable.
+        // The per-type messageConfig[<type>Queue] keys were collapsed into a
+        // single top-level `queue` column, read once before the switch and
+        // shared by every configurable channel.
         $this->assertMatchesRegularExpression(
-            "/case 'email':[\s\S]*?messageConfig\['emailQueue'\]/",
+            '/\$this->useQueue\s*=\s*\(bool\)\s*\$this->notification->queue/',
             $this->dispatchSource
         );
     }
 
-    public function testSmsRespectsConfigurableQueueOptIn(): void
+    public function testNoPerTypeQueueKeysRemainInDispatch(): void
     {
-        $this->assertMatchesRegularExpression(
-            "/case 'sms':[\s\S]*?messageConfig\['smsQueue'\]/",
-            $this->dispatchSource
-        );
+        // None of the old per-channel queue keys should survive the collapse.
+        foreach (['emailQueue', 'smsQueue', 'pushoverQueue', 'ntfyQueue', 'slackQueue', 'blueskyQueue', 'mqttQueue'] as $key) {
+            $this->assertStringNotContainsString("messageConfig['{$key}']", $this->dispatchSource);
+        }
     }
 
     public function testAnnouncementsAreAlwaysQueued(): void
     {
-        // No opt-out, announcements always queue.
+        // No opt-out, announcements always queue regardless of the column.
         $this->assertMatchesRegularExpression(
-            "/case 'announcement':\s*\\\$this->useQueue\s*=\s*true/",
+            "/case 'announcement':[\s\S]*?\\\$this->useQueue\s*=\s*true/",
             $this->dispatchSource
         );
     }
@@ -252,47 +261,7 @@ class ChannelEnvelopeMappingTest extends TestCase
     {
         // Flash messages need the active session, so they always run inline.
         $this->assertMatchesRegularExpression(
-            "/case 'flash':\s*\\\$this->useQueue\s*=\s*false/",
-            $this->dispatchSource
-        );
-    }
-
-    public function testPushoverRespectsConfigurableQueueOptIn(): void
-    {
-        $this->assertMatchesRegularExpression(
-            "/case 'pushover':[\s\S]*?messageConfig\['pushoverQueue'\]/",
-            $this->dispatchSource
-        );
-    }
-
-    public function testNtfyRespectsConfigurableQueueOptIn(): void
-    {
-        $this->assertMatchesRegularExpression(
-            "/case 'ntfy':[\s\S]*?messageConfig\['ntfyQueue'\]/",
-            $this->dispatchSource
-        );
-    }
-
-    public function testSlackRespectsConfigurableQueueOptIn(): void
-    {
-        $this->assertMatchesRegularExpression(
-            "/case 'slack':[\s\S]*?messageConfig\['slackQueue'\]/",
-            $this->dispatchSource
-        );
-    }
-
-    public function testBlueskyRespectsConfigurableQueueOptIn(): void
-    {
-        $this->assertMatchesRegularExpression(
-            "/case 'bluesky':[\s\S]*?messageConfig\['blueskyQueue'\]/",
-            $this->dispatchSource
-        );
-    }
-
-    public function testMqttRespectsConfigurableQueueOptIn(): void
-    {
-        $this->assertMatchesRegularExpression(
-            "/case 'mqtt':[\s\S]*?messageConfig\['mqttQueue'\]/",
+            "/case 'flash':[\s\S]*?\\\$this->useQueue\s*=\s*false/",
             $this->dispatchSource
         );
     }

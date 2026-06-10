@@ -3,11 +3,6 @@
 {# Common placeholder for various dynamic text fields #}
 {% set commonPlaceholder = "{% include 'path/to/template' %}" %}
 
-{# Instructions for the jobs queue #}
-{% set queueInstructions = "Whether the message should be sent via the [jobs queue]({queueUrl})."|t('notifier', {
-    'queueUrl' : 'https://craftcms.com/docs/5.x/system/queue.html',
-}) %}
-
 {{ forms.selectField({
     label: 'Message Type'|t('notifier'),
     instructions: 'What type of message will be sent?'|t('notifier'),

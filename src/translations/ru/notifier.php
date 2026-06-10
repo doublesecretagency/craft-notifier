@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => 'Метка действия элемента (помогает различать несколько триггеров).',
     'Send Notification' => 'Отправить уведомление',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'Тип сообщения',
     'What type of message will be sent?' => 'Какой тип сообщения будет отправлен?',
-    'Send Message via Queue' => 'Отправить сообщение через очередь',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Шаблоны]({templatingUrl}) и [специальные переменные]({variablesUrl}) также поддерживаются.',
-    'Send immediately' => 'Отправить немедленно',
-    'Add to queue' => 'Добавить в очередь',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Отправлять ли сообщение через [очередь задач]({queueUrl}).',
+
+    // Details sidebar: queue
+    'Use Queue' => 'Использовать очередь',
+    'Immediate' => 'Немедленно',
+    'Queue' => 'Очередь',
+    'jobs queue' => 'очередь задач',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'Будет ли сообщение отправлено немедленно или добавлено в {link}.',
+    'Flash messages never use the queue.' => 'Flash-сообщения никогда не используют очередь.',
+    'Announcements always use the queue.' => 'Объявления всегда используют очередь.',
 
     // Message tab: Email
     "User's Email Address Field" => 'Поле электронной почты пользователя',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Нажмите кнопку **Тест** в любой строке, чтобы опубликовать быстрое тестовое сообщение в эту тему.',
     'MQTT' => 'MQTT',
     'Payload' => 'Содержимое',
+    'The JSON or plain text message published to the MQTT topic.' => 'Сообщение в формате JSON или в виде обычного текста, публикуемое в теме MQTT.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Сообщение, публикуемое в тему. Может быть простым текстом или объектом JSON, отрендеренным через Twig.',
     'Quality of Service' => 'Качество обслуживания',
     'Delivery guarantee for this message.' => 'Гарантия доставки этого сообщения.',

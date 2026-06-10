@@ -74,16 +74,4 @@
         value: (notification.messageConfig.slackEmoji ?? null),
         errors: notification.getErrors('messageConfig[slackEmoji]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
-
-    <hr>
-
-    {{ forms.lightswitchField({
-        label: "Send Message via Queue"|t('notifier'),
-        instructions: queueInstructions,
-        id: 'messageConfig-slackQueue',
-        name: 'messageConfig[slackQueue]',
-        offLabel: "Send immediately"|t('notifier'),
-        onLabel: "Add to queue"|t('notifier'),
-        on: (notification.messageConfig.slackQueue ?? true),
-    }) }}
 </div>

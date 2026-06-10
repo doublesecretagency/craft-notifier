@@ -40,6 +40,7 @@ class NotificationQuery extends ElementQuery
             'notifier_notifications.messageConfig',
             'notifier_notifications.recipientsType',
             'notifier_notifications.recipientsConfig',
+            'notifier_notifications.queue',
         ]);
 
         // Return the prepared query

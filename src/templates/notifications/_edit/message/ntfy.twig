@@ -70,14 +70,4 @@
         onLabel: "Markdown enabled"|t('notifier'),
         on: (notification.messageConfig.ntfyMarkdown ?? true),
     }) }}
-
-    {{ forms.lightswitchField({
-        label: "Send Message via Queue"|t('notifier'),
-        instructions: queueInstructions,
-        id: 'messageConfig-ntfyQueue',
-        name: 'messageConfig[ntfyQueue]',
-        offLabel: "Send immediately"|t('notifier'),
-        onLabel: "Add to queue"|t('notifier'),
-        on: (notification.messageConfig.ntfyQueue ?? true),
-    }) }}
 </div>

@@ -28,14 +28,4 @@
         onLabel: 'Generate preview card'|t('notifier'),
         on: (notification.messageConfig.blueskyLinkCard ?? true),
     }) }}
-
-    {{ forms.lightswitchField({
-        label: "Send Message via Queue"|t('notifier'),
-        instructions: queueInstructions,
-        id: 'messageConfig-blueskyQueue',
-        name: 'messageConfig[blueskyQueue]',
-        offLabel: "Send immediately"|t('notifier'),
-        onLabel: "Add to queue"|t('notifier'),
-        on: (notification.messageConfig.blueskyQueue ?? true),
-    }) }}
 </div>

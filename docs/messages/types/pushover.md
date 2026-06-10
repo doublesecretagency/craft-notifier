@@ -23,7 +23,6 @@ For each Pushover notification, be sure to specify the **field containing each u
 <img class="dropshadow" src="/images/messages/pushover-config.png" alt="" style="width:640px; margin-top:10px">
 
 <!--@include: @/messages/types/_docs-links.md-->
-<!--@include: @/messages/types/_queue-link.md-->
 
 ## Pushover Recipients
 

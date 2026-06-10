@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => 'En etikett för elementåtgärden (hjälper till att skilja flera utlösare åt).',
     'Send Notification' => 'Skicka avisering',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'Meddelandetyp',
     'What type of message will be sent?' => 'Vilken typ av meddelande ska skickas?',
-    'Send Message via Queue' => 'Skicka meddelandet via kö',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Templating]({templatingUrl}) och [specialvariabler]({variablesUrl}) stöds också.',
-    'Send immediately' => 'Skicka direkt',
-    'Add to queue' => 'Lägg till i kö',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Om meddelandet ska skickas via [jobbkön]({queueUrl}).',
+
+    // Details sidebar: queue
+    'Use Queue' => 'Använd kö',
+    'Immediate' => 'Direkt',
+    'Queue' => 'Kö',
+    'jobs queue' => 'jobbkön',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'Om meddelandet skickas direkt eller läggs till i {link}.',
+    'Flash messages never use the queue.' => 'Flash-meddelanden använder aldrig kön.',
+    'Announcements always use the queue.' => 'Kungörelser använder alltid kön.',
 
     // Message tab: Email
     "User's Email Address Field" => 'Användarfält för e-postadress',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Klicka på **Testa**-knappen på valfri rad för att publicera ett snabbt testmeddelande till det ämnet.',
     'MQTT' => 'MQTT',
     'Payload' => 'Innehåll',
+    'The JSON or plain text message published to the MQTT topic.' => 'JSON- eller klartextmeddelandet som publiceras till MQTT-ämnet.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Meddelandet som publiceras till ämnet. Kan vara ren text eller ett JSON-objekt renderat med Twig.',
     'Quality of Service' => 'Tjänstekvalitet',
     'Delivery guarantee for this message.' => 'Leveransgaranti för detta meddelande.',

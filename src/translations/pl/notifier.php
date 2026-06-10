@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => 'Etykieta akcji elementu (pomaga rozróżnić wiele wyzwalaczy).',
     'Send Notification' => 'Wyślij powiadomienie',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'Typ wiadomości',
     'What type of message will be sent?' => 'Jaki typ wiadomości zostanie wysłany?',
-    'Send Message via Queue' => 'Wyślij wiadomość przez kolejkę',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => 'Obsługiwane są również [szablony]({templatingUrl}) i [zmienne specjalne]({variablesUrl}).',
-    'Send immediately' => 'Wyślij natychmiast',
-    'Add to queue' => 'Dodaj do kolejki',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Czy wiadomość ma być wysyłana przez [kolejkę zadań]({queueUrl}).',
+
+    // Details sidebar: queue
+    'Use Queue' => 'Użyj kolejki',
+    'Immediate' => 'Natychmiast',
+    'Queue' => 'Kolejka',
+    'jobs queue' => 'kolejki zadań',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'Czy wiadomość zostanie wysłana natychmiast, czy dodana do {link}.',
+    'Flash messages never use the queue.' => 'Wiadomości flash nigdy nie używają kolejki.',
+    'Announcements always use the queue.' => 'Ogłoszenia zawsze używają kolejki.',
 
     // Message tab: Email
     "User's Email Address Field" => 'Pole adresu e-mail użytkownika',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Kliknij przycisk **Testuj** w dowolnym wierszu, aby opublikować szybką wiadomość testową do tego tematu.',
     'MQTT' => 'MQTT',
     'Payload' => 'Zawartość',
+    'The JSON or plain text message published to the MQTT topic.' => 'Wiadomość JSON lub zwykły tekst publikowana w temacie MQTT.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Wiadomość publikowana do tematu. Może to być zwykły tekst lub obiekt JSON wyrenderowany przez Twig.',
     'Quality of Service' => 'Jakość usługi',
     'Delivery guarantee for this message.' => 'Gwarancja dostarczenia tej wiadomości.',

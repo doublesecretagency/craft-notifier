@@ -24,16 +24,4 @@
         value: (notification.messageConfig.smsMessage ?? null),
         errors: notification.getErrors('messageConfig[smsMessage]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
-
-    <hr>
-
-    {{ forms.lightswitchField({
-        label: "Send Message via Queue"|t('notifier'),
-        instructions: queueInstructions,
-        id: 'messageConfig-smsQueue',
-        name: 'messageConfig[smsQueue]',
-        offLabel: "Send immediately"|t('notifier'),
-        onLabel: "Add to queue"|t('notifier'),
-        on: (notification.messageConfig.smsQueue ?? true),
-    }) }}
 </div>

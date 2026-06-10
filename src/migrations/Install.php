@@ -86,6 +86,7 @@ class Install extends Migration
                 'messageConfig'    => $this->text(),
                 'recipientsType'   => $this->string(),
                 'recipientsConfig' => $this->text(),
+                'queue'            => $this->boolean()->defaultValue(true),
                 'dateCreated'      => $this->dateTime()->notNull(),
                 'dateUpdated'      => $this->dateTime()->notNull(),
                 'dateDeleted'      => $this->dateTime()->null(),

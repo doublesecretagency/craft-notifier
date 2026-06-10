@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => 'Eine Bezeichnung für die Elementaktion (hilft, mehrere Auslöser zu unterscheiden).',
     'Send Notification' => 'Benachrichtigung senden',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'Nachrichtentyp',
     'What type of message will be sent?' => 'Welche Art von Nachricht wird gesendet?',
-    'Send Message via Queue' => 'Nachricht über Warteschlange senden',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Templating]({templatingUrl}) und [spezielle Variablen]({variablesUrl}) werden ebenfalls unterstützt.',
-    'Send immediately' => 'Sofort senden',
-    'Add to queue' => 'Zur Warteschlange hinzufügen',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Ob die Nachricht über die [Aufgabenwarteschlange]({queueUrl}) gesendet werden soll.',
+
+    // Details sidebar: queue
+    'Use Queue' => 'Warteschlange verwenden',
+    'Immediate' => 'Sofort',
+    'Queue' => 'Warteschlange',
+    'jobs queue' => 'Aufgabenwarteschlange',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'Ob die Nachricht sofort gesendet oder zur {link} hinzugefügt wird.',
+    'Flash messages never use the queue.' => 'Flash-Nachrichten verwenden nie die Warteschlange.',
+    'Announcements always use the queue.' => 'Ankündigungen verwenden immer die Warteschlange.',
 
     // Message tab: Email
     "User's Email Address Field" => 'Benutzerfeld für E-Mail-Adresse',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Klicken Sie auf die Schaltfläche **Test** einer beliebigen Zeile, um eine schnelle Testnachricht an dieses Thema zu veröffentlichen.',
     'MQTT' => 'MQTT',
     'Payload' => 'Inhalt',
+    'The JSON or plain text message published to the MQTT topic.' => 'Die JSON- oder Klartextnachricht, die im MQTT-Thema veröffentlicht wird.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Die an das Thema veröffentlichte Nachricht. Kann reiner Text oder ein per Twig gerendertes JSON-Objekt sein.',
     'Quality of Service' => 'Dienstgüte',
     'Delivery guarantee for this message.' => 'Zustellgarantie für diese Nachricht.',

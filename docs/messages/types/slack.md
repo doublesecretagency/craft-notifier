@@ -50,8 +50,6 @@ Used only when **Bot Icon URL** is empty. Leave blank to use the app's default i
 
 <!--@include: @/messages/types/_docs-links.md-->
 
-<!--@include: @/messages/types/_queue-link.md-->
-
 ## mrkdwn Syntax
 
 Slack uses its own lightweight markup called [**mrkdwn**](https://docs.slack.dev/messaging/formatting-message-text/#formatting), which differs from standard Markdown.

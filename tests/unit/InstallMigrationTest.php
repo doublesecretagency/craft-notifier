@@ -84,6 +84,7 @@ class InstallMigrationTest extends TestCase
             ['messageConfig'],
             ['recipientsType'],
             ['recipientsConfig'],
+            ['queue'],
             ['dateCreated'],
             ['dateUpdated'],
             ['dateDeleted'],

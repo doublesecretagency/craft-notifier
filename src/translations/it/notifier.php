@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => "Un'etichetta per l'azione dell'elemento (aiuta a distinguere più trigger).",
     'Send Notification' => 'Invia notifica',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'Tipo di messaggio',
     'What type of message will be sent?' => 'Quale tipo di messaggio verrà inviato?',
-    'Send Message via Queue' => 'Invia il messaggio tramite coda',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => 'Sono supportati anche [templating]({templatingUrl}) e [variabili speciali]({variablesUrl}).',
-    'Send immediately' => 'Invia immediatamente',
-    'Add to queue' => 'Aggiungi alla coda',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Se il messaggio deve essere inviato tramite la [coda dei processi]({queueUrl}).',
+
+    // Details sidebar: queue
+    'Use Queue' => 'Usa coda',
+    'Immediate' => 'Immediato',
+    'Queue' => 'Coda',
+    'jobs queue' => 'coda dei processi',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'Se il messaggio verrà inviato immediatamente o aggiunto alla {link}.',
+    'Flash messages never use the queue.' => 'I messaggi flash non usano mai la coda.',
+    'Announcements always use the queue.' => 'Gli annunci usano sempre la coda.',
 
     // Message tab: Email
     "User's Email Address Field" => "Campo email dell'utente",
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Fai clic sul pulsante **Prova** di una qualsiasi riga per pubblicare un rapido messaggio di prova su quell\'argomento.',
     'MQTT' => 'MQTT',
     'Payload' => 'Contenuto',
+    'The JSON or plain text message published to the MQTT topic.' => 'Il messaggio JSON o di testo semplice pubblicato sull\'argomento MQTT.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Il messaggio pubblicato sull\'argomento. Può essere testo semplice o un oggetto JSON renderizzato con Twig.',
     'Quality of Service' => 'Qualità del servizio',
     'Delivery guarantee for this message.' => 'Garanzia di consegna per questo messaggio.',

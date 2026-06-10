@@ -9,6 +9,9 @@
 - Added support for sending [MQTT](https://plugins.doublesecretagency.com/notifier/messages/types/mqtt) notifications.
 - Added the [MQTT topics](https://plugins.doublesecretagency.com/notifier/recipients/types/mqtt-topics) recipient type for posting to one or more MQTT topics.
 
+### Changed
+- Moved the ["Use Queue"](https://plugins.doublesecretagency.com/notifier/messages/queue) setting to the right sidebar, below "Enabled".
+
 ## 3.0.2 - 2026-05-28
 
 ### Changed

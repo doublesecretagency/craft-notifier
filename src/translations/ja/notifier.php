@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => '要素アクションのラベル（複数のトリガーを区別しやすくします）。',
     'Send Notification' => '通知を送信',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'メッセージタイプ',
     'What type of message will be sent?' => 'どのタイプのメッセージが送信されますか?',
-    'Send Message via Queue' => 'キュー経由でメッセージを送信',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[テンプレート]({templatingUrl}) と [特殊変数]({variablesUrl}) もサポートされています。',
-    'Send immediately' => '即時送信',
-    'Add to queue' => 'キューに追加',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'メッセージを[ジョブキュー]({queueUrl})経由で送信するかどうか。',
+
+    // Details sidebar: queue
+    'Use Queue' => 'キューを使用',
+    'Immediate' => '即時',
+    'Queue' => 'キュー',
+    'jobs queue' => 'ジョブキュー',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'メッセージを即時に送信するか、{link}に追加するか。',
+    'Flash messages never use the queue.' => 'Flash メッセージはキューを使用しません。',
+    'Announcements always use the queue.' => 'アナウンスは常にキューを使用します。',
 
     // Message tab: Email
     "User's Email Address Field" => 'ユーザーのメールアドレスフィールド',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => '任意の行の **テスト** ボタンをクリックして、そのトピックに簡単なテストメッセージを発行します。',
     'MQTT' => 'MQTT',
     'Payload' => 'ペイロード',
+    'The JSON or plain text message published to the MQTT topic.' => 'MQTT トピックに公開される JSON またはプレーンテキストのメッセージ。',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'トピックに発行されるメッセージ。プレーンテキストまたは Twig でレンダリングした JSON オブジェクトを使用できます。',
     'Quality of Service' => 'サービス品質',
     'Delivery guarantee for this message.' => 'このメッセージの配信保証。',

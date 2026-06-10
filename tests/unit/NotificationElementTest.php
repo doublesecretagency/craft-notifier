@@ -138,6 +138,7 @@ class NotificationElementTest extends TestCase
             ['messageConfig'],
             ['recipientsType'],
             ['recipientsConfig'],
+            ['queue'],
         ];
     }
 
@@ -171,6 +172,17 @@ class NotificationElementTest extends TestCase
         $this->assertStringContainsString(
             'use ' . NotificationQuery::class,
             $this->notificationSource
+        );
+    }
+
+    public function testQuerySelectsQueueColumn(): void
+    {
+        // The element only hydrates columns the query explicitly selects.
+        // Without this, the `queue` value silently never loads.
+        $querySource = file_get_contents(dirname(__DIR__, 2).'/src/elements/db/NotificationQuery.php');
+        $this->assertStringContainsString(
+            'notifier_notifications.queue',
+            $querySource
         );
     }
 

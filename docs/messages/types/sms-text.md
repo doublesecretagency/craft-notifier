@@ -17,7 +17,6 @@ In order to send SMS messages, you must have a fully configured [Twilio](/gettin
 <img class="dropshadow" src="/images/messages/sms-config.png" alt="" style="width:640px; margin-top:10px">
 
 <!--@include: @/messages/types/_docs-links.md-->
-<!--@include: @/messages/types/_queue-link.md-->
 
 ## SMS Recipients
 

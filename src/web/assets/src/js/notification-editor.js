@@ -87,8 +87,35 @@
         window.setTimeout(() => refreshMonacoInside(wrap), 300);
     };
 
+    // Toggle the sidebar "Use Queue" control vs. a per-type note based on the
+    // selected message type. Flash and Announcement route around the queue in
+    // PHP, so the toggle is hidden and an explanatory note is shown instead.
+    // The saved value is left untouched, so switching back restores it.
+    const setupQueueControl = () => {
+        const messageType = document.getElementById('messageType');
+        const queueEl = document.getElementById('queue');
+        if (!messageType || !queueEl) {
+            return;
+        }
+        const queueField = queueEl.closest('.field');
+        const notes = document.querySelectorAll('.notifier-queue-note');
+        const sync = () => {
+            const value = messageType.value;
+            const routed = ('flash' === value || 'announcement' === value);
+            queueField.style.display = routed ? 'none' : '';
+            notes.forEach((note) => {
+                note.style.display = (note.dataset.messageType === value) ? '' : 'none';
+            });
+        };
+        messageType.addEventListener('change', sync);
+        sync();
+    };
+
     // Wire up the page
     const init = () => {
+
+        // Wire the sidebar "Use Queue" control to the message type select
+        setupQueueControl();
 
         // If the form rendered read-only, flip Monaco to read-only too
         // (the fieldset can't reach Monaco, so detect the state from its class)

@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => '요소 작업 레이블 (여러 트리거를 구분하는 데 도움이 됩니다).',
     'Send Notification' => '알림 보내기',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => '메시지 유형',
     'What type of message will be sent?' => '어떤 유형의 메시지가 전송됩니까?',
-    'Send Message via Queue' => '대기열을 통해 메시지 보내기',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[템플릿]({templatingUrl})과 [특수 변수]({variablesUrl})도 지원됩니다.',
-    'Send immediately' => '즉시 전송',
-    'Add to queue' => '대기열에 추가',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => '메시지를 [작업 대기열]({queueUrl})을 통해 보낼지 여부.',
+
+    // Details sidebar: queue
+    'Use Queue' => '대기열 사용',
+    'Immediate' => '즉시',
+    'Queue' => '대기열',
+    'jobs queue' => '작업 대기열',
+    'Whether the message will be sent immediately, or added to the {link}.' => '메시지를 즉시 보낼지 또는 {link}에 추가할지 여부.',
+    'Flash messages never use the queue.' => 'Flash 메시지는 대기열을 사용하지 않습니다.',
+    'Announcements always use the queue.' => '공지는 항상 대기열을 사용합니다.',
 
     // Message tab: Email
     "User's Email Address Field" => '사용자 이메일 주소 필드',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => '아무 행의 **테스트** 버튼을 클릭하여 해당 토픽에 빠른 테스트 메시지를 게시하세요.',
     'MQTT' => 'MQTT',
     'Payload' => '페이로드',
+    'The JSON or plain text message published to the MQTT topic.' => 'MQTT 토픽에 게시되는 JSON 또는 일반 텍스트 메시지.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => '토픽에 게시되는 메시지입니다. 일반 텍스트 또는 Twig로 렌더링된 JSON 객체일 수 있습니다.',
     'Quality of Service' => '서비스 품질',
     'Delivery guarantee for this message.' => '이 메시지의 전달 보장 수준.',

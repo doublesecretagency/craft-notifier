@@ -168,14 +168,19 @@ return [
     'An element action label (helps to differentiate multiple triggers).' => 'En etiket for elementhandlingen (hjælper med at skelne mellem flere udløsere).',
     'Send Notification' => 'Send notifikation',
 
-    // Message tab: type selector & queue
+    // Message tab: type selector
     'Message Type' => 'Beskedtype',
     'What type of message will be sent?' => 'Hvilken type besked sendes?',
-    'Send Message via Queue' => 'Send besked via kø',
     '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.' => '[Templating]({templatingUrl}) og [specialvariabler]({variablesUrl}) understøttes også.',
-    'Send immediately' => 'Send med det samme',
-    'Add to queue' => 'Føj til kø',
-    'Whether the message should be sent via the [jobs queue]({queueUrl}).' => 'Om beskeden skal sendes via [jobkøen]({queueUrl}).',
+
+    // Details sidebar: queue
+    'Use Queue' => 'Brug kø',
+    'Immediate' => 'Med det samme',
+    'Queue' => 'Kø',
+    'jobs queue' => 'jobkøen',
+    'Whether the message will be sent immediately, or added to the {link}.' => 'Om beskeden sendes med det samme eller føjes til {link}.',
+    'Flash messages never use the queue.' => 'Flash-beskeder bruger aldrig køen.',
+    'Announcements always use the queue.' => 'Bekendtgørelser bruger altid køen.',
 
     // Message tab: Email
     "User's Email Address Field" => 'Brugerfelt for e-mailadresse',
@@ -550,6 +555,7 @@ return [
     'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Klik på en vilkårlig rækkes **Test**-knap for at publicere en hurtig testbesked til det emne.',
     'MQTT' => 'MQTT',
     'Payload' => 'Indhold',
+    'The JSON or plain text message published to the MQTT topic.' => 'JSON- eller almindelig tekstbesked, der publiceres til MQTT-emnet.',
     'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Beskeden, der publiceres til emnet. Kan være ren tekst eller et Twig-renderet JSON-objekt.',
     'Quality of Service' => 'Servicekvalitet',
     'Delivery guarantee for this message.' => 'Leveringsgaranti for denne besked.',
