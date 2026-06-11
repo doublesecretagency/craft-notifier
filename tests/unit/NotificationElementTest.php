@@ -339,52 +339,6 @@ class NotificationElementTest extends TestCase
     }
 
     // ========================================================================= //
-    // Slack body format toggle (Markdown / HTML)
-    // ========================================================================= //
-
-    public function testValidateSlackBodyFormatExists(): void
-    {
-        // Validator backs the rule that gates messageConfig[slackBodyFormat]
-        // to 'markdown' or 'html' and normalizes lightswitch '1' / '0' values
-        // into the string form.
-        $this->assertTrue(
-            $this->reflection->hasMethod('validateSlackBodyFormat')
-        );
-        $this->assertTrue(
-            $this->reflection->getMethod('validateSlackBodyFormat')->isPublic()
-        );
-    }
-
-    public function testValidateRulesIncludeSlackBodyFormatCheck(): void
-    {
-        // The validator must be wired into defineRules() so it actually runs
-        $this->assertStringContainsString(
-            "'validateSlackBodyFormat'",
-            $this->notificationSource
-        );
-    }
-
-    public function testValidateSlackBodyFormatAllowsMarkdownAndHtmlOnly(): void
-    {
-        // Only 'markdown' (raw Slack mrkdwn) and 'html' (HTML converted at
-        // send time) are valid; anything else attaches a validation error
-        $this->assertMatchesRegularExpression(
-            "/validateSlackBodyFormat[\s\S]*?\['markdown',\s*'html'\]/",
-            $this->notificationSource
-        );
-    }
-
-    public function testValidateSlackBodyFormatDefaultsToMarkdown(): void
-    {
-        // Markdown is the default and preserves existing behavior for any
-        // notification saved before the toggle existed
-        $this->assertMatchesRegularExpression(
-            "/validateSlackBodyFormat[\s\S]*?=\s*'markdown'/",
-            $this->notificationSource
-        );
-    }
-
-    // ========================================================================= //
     // afterSave persistence
     // ========================================================================= //
 

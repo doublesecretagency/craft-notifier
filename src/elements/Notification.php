@@ -19,12 +19,14 @@ use craft\elements\conditions\ElementConditionInterface;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use craft\models\FieldLayout;
+use craft\services\Structures;
 use craft\web\CpScreenResponseBehavior;
 use DateTime;
 use doublesecretagency\notifier\elements\conditions\NotificationCondition;
 use doublesecretagency\notifier\elements\db\NotificationQuery;
 use doublesecretagency\notifier\enums\Options;
 use doublesecretagency\notifier\helpers\Compat;
+use doublesecretagency\notifier\helpers\NotificationStructure;
 use doublesecretagency\notifier\fieldlayoutelements\notifications\EventFieldLayoutTab;
 use doublesecretagency\notifier\fieldlayoutelements\notifications\MessageFieldLayoutTab;
 use doublesecretagency\notifier\fieldlayoutelements\notifications\MetaFieldLayoutTab;
@@ -32,6 +34,7 @@ use doublesecretagency\notifier\fieldlayoutelements\notifications\RecipientsFiel
 use doublesecretagency\notifier\filters\ExclusiveFilterInterface;
 use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\models\NotificationLog;
+use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\records\Notification as NotificationRecord;
 use Throwable;
@@ -187,12 +190,54 @@ class Notification extends Element
      */
     protected static function defineSources(string $context): array
     {
+        // Resolve the structure that backs the manual order
+        $structureId = NotificationStructure::getStructureId();
+
+        // If the structure can't be resolved, fall back to a plain (unordered) source
+        if (!$structureId) {
+            return [
+                [
+                    'key' => '*',
+                    'label' => Craft::t('notifier', 'All notifications'),
+                ],
+            ];
+        }
+
+        // Single structured source: a flat, drag-to-reorder list
         return [
             [
                 'key' => '*',
                 'label' => Craft::t('notifier', 'All notifications'),
+                'criteria' => ['structureId' => $structureId],
+                'defaultSort' => ['structure', 'asc'],
+                'structureId' => $structureId,
+                'structureEditable' => static::_canReorder(),
             ],
         ];
+    }
+
+    /**
+     * Whether the current user may drag notifications into a new order.
+     *
+     * @return bool
+     */
+    private static function _canReorder(): bool
+    {
+        // Get the current user
+        $user = Craft::$app->getUser()->getIdentity();
+
+        // If there's no user, deny
+        if (!$user) {
+            return false;
+        }
+
+        // Admins may always reorder
+        if ($user->admin) {
+            return true;
+        }
+
+        // Otherwise require the save permission (reordering is an edit affordance)
+        return $user->can('notifier-saveNotifications');
     }
 
     /**
@@ -286,7 +331,6 @@ class Notification extends Element
         return array_merge(parent::defineRules(), [
             ['eventConfig', 'validateDynamicDataPermission'],
             ['messageConfig', 'validateEmailMessageMode'],
-            ['messageConfig', 'validateSlackBodyFormat'],
             ['recipientsType', 'validateDynamicRecipientsPermission'],
         ]);
     }
@@ -385,38 +429,6 @@ class Notification extends Element
 
         // Normalize so persistence is stable even when the value was missing
         $this->messageConfig['emailMessageMode'] = $mode;
-    }
-
-    /**
-     * Validate the Slack body format toggle.
-     *
-     * Only 'markdown' or 'html' are allowed. The lightswitch posts '1' / '0',
-     * so we normalize that to the string form here.
-     *
-     * @return void
-     */
-    public function validateSlackBodyFormat(): void
-    {
-        // Get the saved value
-        $value = $this->messageConfig['slackBodyFormat'] ?? null;
-
-        // Normalize the lightswitch's '1' / '0' to a string mode
-        if ('1' === $value || 1 === $value || true === $value) {
-            $value = 'html';
-        } elseif (null === $value || '' === $value || '0' === $value || 0 === $value || false === $value) {
-            $value = 'markdown';
-        }
-
-        // If the value isn't one of the allowed strings, attach an error
-        if (!in_array($value, ['markdown', 'html'], true)) {
-            $this->addError('messageConfig', Craft::t('notifier',
-                'Invalid Slack body format.'
-            ));
-            return;
-        }
-
-        // Normalize so persistence is stable
-        $this->messageConfig['slackBodyFormat'] = $value;
     }
 
     /**
@@ -782,12 +794,6 @@ class Notification extends Element
                 $eventConfig      = $request->getBodyParam('eventConfig');
                 $messageType      = $request->getBodyParam('messageType');
                 $messageConfig    = $request->getBodyParam('messageConfig');
-                // Normalize the Slack body format lightswitch ('1' / '0') into 'html' / 'markdown'
-                if (is_array($messageConfig) && array_key_exists('slackBodyFormat', $messageConfig)) {
-                    $messageConfig['slackBodyFormat'] = (
-                        '1' === $messageConfig['slackBodyFormat'] || 1 === $messageConfig['slackBodyFormat'] || true === $messageConfig['slackBodyFormat']
-                    ) ? 'html' : 'markdown';
-                }
                 $recipientsType   = $request->getBodyParam('recipientsType');
                 $recipientsConfig = $request->getBodyParam('recipientsConfig');
                 $queue            = $request->getBodyParam('queue');
@@ -896,6 +902,9 @@ class Notification extends Element
 
             // Ensure feed notifications are seeded against their current Feed URL
             $this->_ensureFeedSeeding($oldEventType, $oldFeedUrl);
+
+            // Add brand-new notifications to the manual order
+            $this->_ensureStructurePlacement($isNew);
         }
 
         parent::afterSave($isNew);
@@ -1088,6 +1097,49 @@ class Notification extends Element
         } else {
             $plugin->dynamicDataRunner->seedNotification($this);
         }
+    }
+
+    /**
+     * Add a brand-new notification to the manual-order structure.
+     *
+     * @param bool $isNew Whether this is a brand-new notification.
+     * @return void
+     */
+    private function _ensureStructurePlacement(bool $isNew): void
+    {
+        // If not a brand-new notification, bail (existing ones keep their place)
+        if (!$isNew) {
+            return;
+        }
+
+        // If this is a draft or revision, bail (only canonical saves are placed)
+        if ($this->getIsDraft() || $this->getIsRevision()) {
+            return;
+        }
+
+        // Resolve the structure that backs the manual order
+        $structureId = NotificationStructure::getStructureId();
+
+        // If the structure can't be resolved, bail
+        if (!$structureId) {
+            return;
+        }
+
+        // Get the structures service
+        $structures = Craft::$app->getStructures();
+
+        // Get the configured default placement
+        /** @var Settings $settings */
+        $settings = NotifierPlugin::$plugin->getSettings();
+
+        // If placing at the beginning, add before the others (top of the list)
+        if (Settings::DEFAULT_PLACEMENT_BEGINNING === $settings->defaultPlacement) {
+            $structures->prependToRoot($structureId, $this, Structures::MODE_INSERT);
+            return;
+        }
+
+        // Otherwise add after the others (bottom of the list)
+        $structures->appendToRoot($structureId, $this, Structures::MODE_INSERT);
     }
 
 }

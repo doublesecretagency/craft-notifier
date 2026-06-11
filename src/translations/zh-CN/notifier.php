@@ -11,9 +11,9 @@
 
 return [
 
-    // ============================================================
+    // ========================================================
     // PLUGIN & PERMISSIONS
-    // ============================================================
+    // ========================================================
 
     // Plugin & navigation
     'Notifier' => 'Notifier',
@@ -37,9 +37,9 @@ return [
     'View notification log' => '查看通知日志',
     'Delete notification log' => '删除通知日志',
 
-    // ============================================================
+    // ========================================================
     // NOTIFICATION EDITOR
-    // ============================================================
+    // ========================================================
 
     // Editor: tabs
     'Meta' => '元信息',
@@ -145,8 +145,8 @@ return [
     'years' => '年',
     'Manual only' => '仅手动',
     'Scheduled sending' => '计划发送',
-    'On a recurring schedule' => '按重复计划',
-    'On demand' => '按需',
+    'Generate report on a recurring schedule' => '按重复计划生成报告',
+    'Generate report on demand' => '按需生成报告',
     'Send on a Recurring Schedule' => '按重复计划发送',
     'Configure Recurring Schedule' => '配置重复计划',
     'System timezone set to {timezone}' => '系统时区设置为 {timezone}',
@@ -256,8 +256,6 @@ return [
     'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => '支持标准 [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) 语法。可选支持 HTML _（见下文）_。',
     'Render Message Body as HTML' => '将消息正文渲染为 HTML',
     'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => '是否仅解析为 [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)，或同时解析为 HTML。',
-    'mrkdwn only' => '仅 mrkdwn',
-    'mrkdwn + HTML' => 'mrkdwn + HTML',
     'Render Link Previews' => '显示链接预览',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'Slack 是否应展开消息正文中 URL 的链接预览。',
     'Don\'t unfurl' => '不展开',
@@ -270,6 +268,19 @@ return [
     'Bot Emoji' => '图标表情',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => '可选用 emoji 覆盖应用的图标。仅在 Bot Icon URL 为空时使用。',
 
+    // Message tab: Discord
+    'Discord Message Body' => 'Discord 消息正文',
+    'Supports standard Markdown, and optionally HTML _(see below)_. Max 2000 characters.' => '支持标准 Markdown，以及可选的 HTML _（见下文）_。最多 2000 个字符。',
+    'Whether to only parse as Markdown, or additionally parse it as HTML.' => '是否仅解析为 Markdown,或同时解析为 HTML。',
+    'Markdown only' => '仅 Markdown',
+    'Markdown + HTML' => 'Markdown + HTML',
+    'Whether Discord should unfurl link previews for URLs in the message body.' => 'Discord 是否应显示消息正文中 URL 的链接预览。',
+    'Webhook Username' => 'Webhook 用户名',
+    'Optionally override the webhook\'s display name.' => '可选覆盖 Webhook 的显示名称。',
+    'Dynamic Username' => '动态用户名',
+    'Webhook Avatar URL' => 'Webhook 头像 URL',
+    'Optionally override the webhook\'s avatar with a URL.' => '可选用 URL 覆盖 Webhook 的头像。',
+
     // Message tab: Bluesky
     'Post Body' => '帖子正文',
     'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => '纯文本,最多 300 个字符。URL 和 `@handle.tld` 提及会自动转为链接。',
@@ -277,6 +288,20 @@ return [
     'Whether to automatically generate a preview card when a URL is included in the post body.' => '当帖子正文包含 URL 时,自动生成预览卡片。',
     'No card' => '无卡片',
     'Generate preview card' => '生成预览卡片',
+
+    // Message tab: Mastodon
+    'Plain text, max 500 characters. URLs will unfurl automatically.' => '纯文本，最多 500 个字符。URL 会自动展开。',
+    'Visibility' => '可见性',
+    'Who will be able to see this post?' => '谁可以看到此帖子?',
+
+    // Message tab: MQTT
+    'Payload' => '负载',
+    'The JSON or plain text message published to the MQTT topic.' => '发布到 MQTT 主题的 JSON 或纯文本消息。',
+    'Quality of Service' => '服务质量',
+    'Delivery guarantee for this message.' => '此消息的传递保证。',
+    'Retain' => '保留',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => '代理是否将其保留为该主题的最后一条消息,并传递给将来的订阅者。',
+    'Don\'t retain' => '不保留',
 
     // Recipients tab: type selector & user/group pickers
     'Recipients Type' => '收件人类型',
@@ -286,38 +311,66 @@ return [
     'Which users will receive the message?' => '哪些用户将收到此消息?',
     'Which user groups will receive the message?' => '哪些用户组将收到此消息?',
 
-    // Recipients tab: channel pickers (Slack / ntfy / Bluesky)
-    'Select Slack channel(s)' => '选择 Slack 频道',
-    'Which Slack channels should receive this message?' => '哪些 Slack 频道应收到此消息?',
-    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => '未配置 Slack 频道。请在[设置 → Slack]({url})中添加一个。',
+    // Recipients tab: channel pickers (ntfy, Slack, Discord, Bluesky, Mastodon, MQTT)
     'Select ntfy topic(s)' => '选择 ntfy 主题',
-    'Which ntfy topics should receive this message?' => '哪些 ntfy 主题应收到此消息?',
+    'Which topics should receive this message?' => '哪些主题应接收此消息?',
     'No ntfy topics configured. Add one in [Settings → ntfy]({url}).' => '未配置 ntfy 主题。请在[设置 → ntfy]({url})中添加一个。',
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => '未配置 ntfy 主题。主题只能在允许管理更改的环境中添加。',
+    'Select Slack channel(s)' => '选择 Slack 频道',
+    'Which channels should receive this message?' => '哪些频道应接收此消息?',
+    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => '未配置 Slack 频道。请在[设置 → Slack]({url})中添加一个。',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => '未配置 Slack 频道。频道只能在允许管理更改的环境中添加。',
+    'Select Discord channel(s)' => '选择 Discord 频道',
+    'No Discord channels configured. Add one in [Settings → Discord]({url}).' => '未配置 Discord 频道。请在[设置 → Discord]({url})中添加一个。',
+    'No Discord channels configured. Channels can only be added in an environment that allows administrative changes.' => '未配置 Discord 频道。频道只能在允许管理更改的环境中添加。',
     'Select Bluesky account(s)' => '选择 Bluesky 账号',
-    'Which Bluesky accounts should post this message?' => '哪些 Bluesky 账号应发布此消息?',
+    'Which accounts should post this message?' => '哪些账号应发布此消息?',
     'No Bluesky accounts configured. Add one in [Settings → Bluesky]({url}).' => '未配置 Bluesky 账号。请在[设置 → Bluesky]({url})中添加一个。',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => '未配置 Bluesky 账号。账号只能在允许管理更改的环境中添加。',
+    'Select Mastodon account(s)' => '选择 Mastodon 账号',
+    'No Mastodon accounts configured. Add one in [Settings → Mastodon]({url}).' => '未配置 Mastodon 账号。请在[设置 → Mastodon]({url})中添加一个。',
+    'No Mastodon accounts configured. Accounts can only be added in an environment that allows administrative changes.' => '未配置 Mastodon 账号。账号只能在允许管理更改的环境中添加。',
+    'Select MQTT topic(s)' => '选择 MQTT 主题',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => '未配置 MQTT 主题。请在[设置 → MQTT]({url})中添加一个。',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => '未配置 MQTT 主题。主题只能在允许管理更改的环境中添加。',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '不是有效的主题。不能为空,也不能包含通配符 `+` 或 `#`。',
 
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => '用于确定收件人的 Twig 代码片段',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => '输入自定义 Twig 代码片段以[确定谁将接收消息]({url})。',
     'The snippet **must** include a `{% setRecipients %}` tag.' => '代码片段**必须**包含 `{% setRecipients %}` 标签。',
 
-    // ============================================================
+    // ========================================================
     // SETTINGS
-    // ============================================================
+    // ========================================================
 
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier 设置',
     'General' => '常规',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
-    'Slack' => 'Slack',
-    'Bluesky' => 'Bluesky',
     'ntfy' => 'ntfy',
+    'Slack' => 'Slack',
+    'Discord' => 'Discord',
+    'Bluesky' => 'Bluesky',
+    'Mastodon' => 'Mastodon',
+    'MQTT' => 'MQTT',
+
+    // Settings: shared intro lines
+    'Consult the [{name} setup guide]({url}) for complete instructions.' => '请参阅 [{name} 设置指南]({url}) 获取完整说明。',
+    'Sensitive values can be stored in your `.env` file and referenced here.' => '敏感值可以存储在您的 `.env` 文件中并在此引用。',
+
+    // Settings: Notification order
+    'Notification Order' => '通知排序',
+    'Notifications can be dragged into any order on the index page. Choose where new notifications land in that order.' => '可以在列表页面拖动通知以自定义顺序。选择新通知在该顺序中的添加位置。',
+    'Default Placement' => '默认位置',
+    'Where new notifications are added to the list.' => '新通知添加到列表的位置。',
+    'Before other notifications' => '在其他通知之前',
+    'After other notifications' => '在其他通知之后',
 
     // Settings: Logging
     'Logging' => '日志记录',
-    'Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database.' => 'Notifier 持续记录已发送消息的日志。通常不需要,但您可以限制存入数据库的日志事件数量。',
+    "Notifier keeps a running log of every message it sends. You usually won't need to change this, but you can limit how many log entries are kept in the database." => 'Notifier 持续记录已发送消息的日志。通常不需要,但您可以限制存入数据库的日志事件数量。',
     'Enable Logging' => '启用日志记录',
     'When disabled, Notifier will not write anything to the notification log.' => '禁用时,Notifier 不会向通知日志写入任何内容。',
     'Number of days to retain log events' => '保留日志事件的天数',
@@ -327,33 +380,32 @@ return [
 
     // Settings: Scheduled sending
     'Scheduled Sending' => '定时发送',
-    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => '用于验证定时运行 Web 请求的共享密钥。仅在通过 Web 端点触发计划时才需要。',
+    'A shared secret that authenticates scheduled runs triggered over the web. You only need this if you trigger the schedule from the web endpoint.' => '用于验证定时运行 Web 请求的共享密钥。仅在通过 Web 端点触发计划时才需要。',
     'Scheduled-Run Token' => '定时运行令牌',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => '随每个请求一起发送,作为 X-Notifier-Token 标头或 token 主体参数。',
 
     // Settings: Twilio
-    'Twilio API Credentials' => 'Twilio API 凭证',
-    'If using the Twilio API to send SMS messages, the following credentials are required.' => '如果使用 Twilio API 发送 SMS,则需要以下凭证。',
+    'Send SMS text messages through [Twilio](https://www.twilio.com).' => '通过 [Twilio](https://www.twilio.com) 发送 SMS 短信。',
     'Twilio Account SID' => 'Twilio 账户 SID',
     'Twilio Auth Token' => 'Twilio 认证令牌',
     'Twilio phone number (sends each SMS message)' => 'Twilio 电话号码(发送每条短信)',
     'SMS Testing' => '短信测试',
-    'Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient.' => '可选。设置后,每条 SMS 将发送到此号码,而不是实际的收件人。',
+    'Optional. When set, every SMS is sent to this number instead of the actual recipient.' => '可选。设置后,每条 SMS 将发送到此号码,而不是实际的收件人。',
     'Test phone number' => '测试电话号码',
 
     // Settings: Pushover
-    "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)." => '[Pushover](https://pushover.net) 向已注册用户的设备发送推送通知。每个 Craft 用户的个人资料上需要一个自定义字段,用于存储其 Pushover 用户密钥;在每个通知的"消息"选项卡上选择使用哪个字段。完整的设置说明请参阅 [Pushover 入门文档](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)。',
+    'Send push notifications through [Pushover](https://pushover.net).' => '通过 [Pushover](https://pushover.net) 发送推送通知。',
     'Application API Token' => '应用 API 令牌',
     'The 30-character app token from your Pushover application.' => '来自您 Pushover 应用的 30 个字符的应用令牌。',
 
     // Settings: ntfy
-    'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh 是一个免费的基于 HTTP 的推送通知服务。订阅者通过加入主题在 ntfy 应用、网页或任何兼容客户端上接收消息。',
+    'Send push notifications through [ntfy](https://ntfy.sh).' => '通过 [ntfy](https://ntfy.sh) 发送推送通知。',
     'Server URL' => '服务器 URL',
     'Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`.' => '可选,指向自托管的 ntfy 实例(如适用)。默认为 `https://ntfy.sh`。',
     'Access token' => '访问令牌',
     'Optional, required for protected topics or self-hosted instances with auth.' => '可选,用于受保护主题或带身份验证的自托管实例时必填。',
     'ntfy Topics' => 'ntfy 主题',
-    'Add the ntfy topics you\'d like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => '添加您希望发送消息的 ntfy 主题。配置通知时,每个主题都可在**收件人**选项卡中作为收件人使用。',
+    'Add the ntfy topics you want to send to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '添加您希望发送消息的 ntfy 主题。配置通知时,每个主题都可在**收件人**选项卡中作为收件人使用。',
     'Topics' => '主题',
     "Click any row's **Test** button to send a quick test message to that topic." => '点击任意行的 **测试** 按钮以向该主题发送快速测试消息。',
     'Label' => '标签',
@@ -361,8 +413,7 @@ return [
     'Add a topic' => '添加主题',
 
     // Settings: Slack
-    'Slack Channels' => 'Slack 频道',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '创建一个具有 `chat:write`、`chat:write.customize` 和 `chat:write.public` 权限范围的 [Slack 应用](https://api.slack.com/apps),然后为你想发布消息的每个频道添加一行。配置通知时,每个频道都可在 **收件人** 标签页中作为收件人使用。机器人令牌是机密,因此请将其存储在 `.env` 变量中并引用该变量(例如 `$SLACK_BOT_TOKEN`),而不是直接粘贴令牌。',
+    'Post messages to your Slack channels.' => '向您的 Slack 频道发送消息。',
     'Channels' => '频道',
     "Click any row's **Test** button to send a quick test message to that channel." => '点击任意行的 **测试** 按钮以向该频道发送快速测试消息。',
     'Bot Token' => '机器人令牌',
@@ -371,21 +422,59 @@ return [
     'Not a valid Bot Token. Must start with `xoxb-`.' => '无效的机器人令牌。必须以 `xoxb-` 开头。',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => '无效的频道 ID。必须类似 `C01234ABCD`。',
 
+    // Settings: Discord
+    'Post messages to your Discord channels.' => '向您的 Discord 频道发送消息。',
+    'Webhook URL' => 'Webhook URL',
+    'Not a valid Webhook URL. Must start with `https://discord.com/api/webhooks/`.' => '无效的 Webhook URL。必须以 `https://discord.com/api/webhooks/` 开头。',
+
     // Settings: Bluesky
-    '[Bluesky](https://bsky.app) posts publish to the configured account\'s feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `$BLUESKY_APP_PASSWORD`) rather than pasting the password directly.' => '[Bluesky](https://bsky.app) 帖子通过 ATProto API 发布到所配置账户的信息流中。应用专用密码在 [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords) 生成。应用专用密码是机密信息，因此请将其保存在 `.env` 变量中，并引用该变量（例如 `$BLUESKY_APP_PASSWORD`），而不是直接粘贴密码。',
+    'Publish posts to your [Bluesky](https://bsky.app) accounts.' => '向您的 [Bluesky](https://bsky.app) 账号发布帖子。',
     'PDS URL' => 'PDS URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => '默认为 https://bsky.social。如您的安装支持联邦,可指向自定义 PDS。',
     'Bluesky Accounts' => 'Bluesky 账号',
-    "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => '添加您希望用于发布的 Bluesky 账号。配置通知时,每个账号都可在**收件人**选项卡中作为收件人使用。',
+    'Add the Bluesky accounts you want to post from. Each account becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '添加您希望用于发布的 Bluesky 账号。配置通知时,每个账号都可在**收件人**选项卡中作为收件人使用。',
     'Accounts' => '账号',
     "Click any row's **Test** button to confirm the account authenticates." => '点击任意行的 **测试** 按钮以确认该账号能通过认证。',
     'Handle' => '句柄',
     'App password' => '应用密码',
     'Add an account' => '添加账号',
 
-    // ============================================================
+    // Settings: Mastodon
+    'Publish posts to your [Mastodon](https://joinmastodon.org) accounts.' => '向您的 [Mastodon](https://joinmastodon.org) 账号发布帖子。',
+    'Click any row\'s **Test** button to verify that account\'s credentials. No posts are made.' => '点击任意行的 **Test** 按钮以验证该账号的凭据。不会发布任何帖子。',
+    'Instance URL' => '实例 URL',
+    'Access Token' => '访问令牌',
+
+    // Settings: MQTT
+    'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => '向 MQTT 代理发布消息，适用于物联网和家庭自动化配置。',
+    'Host' => '主机',
+    'Broker hostname, without a protocol or port.' => '代理的主机名,不含协议或端口。',
+    'Port' => '端口',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => '可选。启用 TLS 时默认为 8883,否则为 1883。',
+    'Use TLS' => '使用 TLS',
+    'Whether to connect to the broker over a secure TLS socket.' => '是否通过安全的 TLS 套接字连接到代理。',
+    'Username' => '用户名',
+    'Optional, for brokers that require username/password authentication.' => '可选,适用于需要用户名/密码身份验证的代理。',
+    'Password' => '密码',
+    'MQTT Version' => 'MQTT 版本',
+    'Protocol version sent to the broker.' => '发送给代理的协议版本。',
+    'Client ID' => '客户端 ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => '可选。留空时会自动生成唯一的客户端 ID。',
+    'Mutual TLS' => '双向 TLS',
+    'Optional. Needed for brokers that authenticate clients with certificates, such as AWS IoT Core. Enter the server file paths to your certificate files. You can use a `.env` variable or `@alias` reference.' => '可选。适用于使用证书验证客户端的代理(如 AWS IoT Core)。请提供证书文件的服务器文件路径(允许使用 `.env` 变量或 `@alias` 引用)。',
+    'CA Certificate File' => 'CA 证书文件',
+    'Path to the certificate authority (CA) file.' => '证书颁发机构(CA)文件的路径。',
+    'Client Certificate File' => '客户端证书文件',
+    'Path to the client certificate file.' => '客户端证书文件的路径。',
+    'Client Key File' => '客户端密钥文件',
+    'Path to the client private key file.' => '客户端私钥文件的路径。',
+    'MQTT Topics' => 'MQTT 主题',
+    'Add the MQTT topics you want to publish to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '添加您希望发布的 MQTT 主题。配置通知时,每个主题都可在**收件人**选项卡中作为收件人使用。',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => '点击任意行的 **测试** 按钮以向该主题发布快速测试消息。',
+
+    // ========================================================
     // MANUAL SEND & TEST
-    // ============================================================
+    // ========================================================
 
     // Manual send & test
     'Send a test message' => '发送测试消息',
@@ -397,9 +486,9 @@ return [
     'This notification cannot be triggered manually.' => '此通知无法手动触发。',
     'This notification no longer applies to the selected element.' => '此通知不再适用于所选元素。',
 
-    // ============================================================
+    // ========================================================
     // RUNTIME OUTPUT
-    // ============================================================
+    // ========================================================
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '正在向 {recipient} 发送 {messageType}。',
@@ -428,6 +517,10 @@ return [
     'Log events deleted.' => '日志事件已删除。',
     'Notification sent.' => '通知已发送。',
     'Notification was not sent. Check the Notification Log for details.' => '通知未发送。详情请查看通知日志。',
+    'Instance URL and access token are required.' => '实例 URL 和访问令牌为必填项。',
+    'Mastodon rejected the request: {error}' => 'Mastodon 拒绝了请求：{error}',
+    'Successfully authenticated as @{handle}. No posts were made.' => '已成功以 @{handle} 身份进行认证。未发布任何帖子。',
+    'Broker host is not configured.' => '未配置代理主机。',
 
     // Outbound: per-channel send results
     'Unable to send email, no recipient specified.' => '无法发送邮件:未指定收件人。',
@@ -458,6 +551,12 @@ return [
     'Slack rejected the message: {error}' => 'Slack 拒绝了消息：{error}',
     'Slack POST failed: {reason}' => 'Slack POST 失败:{reason}',
     'Successfully sent Slack message to "{label}".' => '已成功发送 Slack 消息到 "{label}"。',
+    'Unable to send Discord message, no webhook URL.' => '无法发送 Discord 消息：没有 Webhook URL。',
+    'Unable to send Discord message, body is empty.' => '无法发送 Discord 消息：正文为空。',
+    'Unable to send Discord message, body exceeds the 2000-character limit.' => '无法发送 Discord 消息：正文超过 2000 个字符的限制。',
+    'Discord rejected the message: {error}' => 'Discord 拒绝了消息：{error}',
+    'Discord POST failed: {reason}' => 'Discord POST 失败：{reason}',
+    'Successfully sent Discord message to "{label}".' => '已成功发送 Discord 消息到 "{label}"。',
     'Unable to send Bluesky post, recipient is missing credentials.' => '无法发送 Bluesky 帖子:收件人缺少凭据。',
     'Body exceeded {max} characters, truncated.' => '正文超过 {max} 个字符,已截断。',
     'Successfully posted to Bluesky as "{label}".' => '已成功以 "{label}" 在 Bluesky 上发布。',
@@ -465,6 +564,17 @@ return [
     'Bluesky auth failed: {reason}' => 'Bluesky 身份验证失败:{reason}',
     'Bluesky post failed: {reason}' => 'Bluesky 帖子失败:{reason}',
     'Bluesky link preview skipped: {reason}' => '已跳过 Bluesky 链接预览：{reason}',
+    'Unable to send Mastodon post, no instance URL.' => '无法发送 Mastodon 帖子：没有实例 URL。',
+    'Unable to send Mastodon post, no access token.' => '无法发送 Mastodon 帖子：没有访问令牌。',
+    'Unable to send Mastodon post, body is empty.' => '无法发送 Mastodon 帖子：正文为空。',
+    'Mastodon rejected the post: {error}' => 'Mastodon 拒绝了帖子：{error}',
+    'Mastodon POST failed: {reason}' => 'Mastodon POST 失败：{reason}',
+    'Successfully sent Mastodon post to "{label}".' => '已成功发送 Mastodon 帖子到 "{label}"。',
+    'Unable to send MQTT message, no broker host configured.' => '无法发送 MQTT 消息,未配置代理主机。',
+    'Unable to send MQTT message, no topic specified.' => '无法发送 MQTT 消息,未指定主题。',
+    'Unable to send MQTT message, the payload is empty.' => '无法发送 MQTT 消息,内容为空。',
+    'MQTT publish failed: {reason}' => 'MQTT 发布失败:{reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => '已成功向主题“{topic}”发送 MQTT 消息。',
 
     // Recipient warnings
     'Recipient "{name}" has no email address.' => '收件人 "{name}" 没有电子邮件地址。',
@@ -475,9 +585,12 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => '收件人 "{name}" 没有关联的用户;无法发送 Pushover 消息。',
     '[SKIPPED] User "{name}" has no Pushover key.' => '[已跳过] 用户 "{name}" 没有 Pushover 密钥。',
     'Recipient "{name}" has no ntfy topic.' => '收件人 "{name}" 没有 ntfy 主题。',
-    'Recipient "{name}" has no Bluesky credentials.' => '收件人 "{name}" 没有 Bluesky 凭据。',
     'Recipient "{name}" has no Slack bot token.' => '收件人 "{name}" 没有 Slack 机器人令牌。',
     'Recipient "{name}" has no Slack channel ID.' => '收件人 "{name}" 没有 Slack 频道 ID。',
+    'Recipient "{name}" has no Discord webhook URL.' => '收件人 "{name}" 没有 Discord Webhook URL。',
+    'Recipient "{name}" has no Bluesky credentials.' => '收件人 "{name}" 没有 Bluesky 凭据。',
+    'Recipient "{name}" has no Mastodon credentials.' => '收件人 "{name}" 没有 Mastodon 凭据。',
+    'Recipient "{name}" has no MQTT topic.' => '收件人“{name}”没有 MQTT 主题。',
 
     // Errors & exceptions
     'Invalid element event: {class}' => '无效的元素事件:{class}',
@@ -497,14 +610,13 @@ return [
     'Element not found' => '未找到元素',
     'You do not have permission to use the Dynamic Data type.' => '您无权使用动态数据类型。',
     'The Dynamic Data snippet did not call the {tag} tag.' => 'Twig 代码片段未调用 {tag} 标签。',
-    'Invalid Slack body format.' => '无效的 Slack 正文格式。',
 
     // Config-file override note
     'This is being set in the config file. [{file}]' => '此项在配置文件中设置。[{file}]',
 
-    // ============================================================
+    // ========================================================
     // JAVASCRIPT UI
-    // ============================================================
+    // ========================================================
 
     // JavaScript: log utility & buttons
     'Test notification failed.' => '测试通知失败。',
@@ -514,66 +626,5 @@ return [
     'Unable to delete the log event, something went wrong.' => '无法删除日志事件，出错了。',
     'Log event deleted.' => '日志事件已删除。',
     'Unable to delete log events, something went wrong.' => '无法删除日志事件，出错了。',
-    'Are you sure you want to delete this log event?' => '确定要删除此日志事件吗？',
     'Are you sure you want to delete all logs from {date}?' => '确定要删除 {date} 的所有日志吗？',
-
-    // ============================================================
-    // MQTT
-    // ============================================================
-
-    'Recipient "{name}" has no MQTT topic.' => '收件人“{name}”没有 MQTT 主题。',
-    'Unable to send MQTT message, no broker host configured.' => '无法发送 MQTT 消息,未配置代理主机。',
-    'Unable to send MQTT message, no topic specified.' => '无法发送 MQTT 消息,未指定主题。',
-    'Unable to send MQTT message, the payload is empty.' => '无法发送 MQTT 消息,内容为空。',
-    'MQTT publish failed: {reason}' => 'MQTT 发布失败:{reason}',
-    'Successfully sent MQTT message to topic "{topic}".' => '已成功向主题“{topic}”发送 MQTT 消息。',
-    'MQTT Broker' => 'MQTT 代理',
-    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier 会向 MQTT 代理(如 Mosquitto、EMQX、HiveMQ 或 AWS IoT Core)发布消息。请在下方输入代理的连接信息。敏感值可以存储在 `.env` 变量中并在此引用(例如 `$MQTT_PASSWORD`)。',
-    'Host' => '主机',
-    'Broker hostname, without a protocol or port.' => '代理的主机名,不含协议或端口。',
-    'Port' => '端口',
-    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => '可选。启用 TLS 时默认为 8883,否则为 1883。',
-    'Use TLS' => '使用 TLS',
-    'Whether to connect to the broker over a secure TLS socket.' => '是否通过安全的 TLS 套接字连接到代理。',
-    'Username' => '用户名',
-    'Optional, for brokers that require username/password authentication.' => '可选,适用于需要用户名/密码身份验证的代理。',
-    'Password' => '密码',
-    'MQTT Version' => 'MQTT 版本',
-    'Protocol version sent to the broker.' => '发送给代理的协议版本。',
-    'Client ID' => '客户端 ID',
-    'Optional. A unique client ID is generated automatically when left blank.' => '可选。留空时会自动生成唯一的客户端 ID。',
-    'Mutual TLS' => '双向 TLS',
-    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => '可选。适用于使用证书验证客户端的代理(如 AWS IoT Core)。请提供证书文件的服务器文件路径(允许使用 `.env` 变量或 `@alias` 引用)。',
-    'CA Certificate File' => 'CA 证书文件',
-    'Path to the certificate authority (CA) file.' => '证书颁发机构(CA)文件的路径。',
-    'Client Certificate File' => '客户端证书文件',
-    'Path to the client certificate file.' => '客户端证书文件的路径。',
-    'Client Key File' => '客户端密钥文件',
-    'Path to the client private key file.' => '客户端私钥文件的路径。',
-    'MQTT Topics' => 'MQTT 主题',
-    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => '添加您希望发布的 MQTT 主题。配置通知时,每个主题都可在**收件人**选项卡中作为收件人使用。',
-    'Click any row\'s **Test** button to publish a quick test message to that topic.' => '点击任意行的 **测试** 按钮以向该主题发布快速测试消息。',
-    'MQTT' => 'MQTT',
-    'Payload' => '负载',
-    'The JSON or plain text message published to the MQTT topic.' => '发布到 MQTT 主题的 JSON 或纯文本消息。',
-    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => '发布到主题的消息。可以是纯文本或由 Twig 渲染的 JSON 对象。',
-    'Quality of Service' => '服务质量',
-    'Delivery guarantee for this message.' => '此消息的传递保证。',
-    'Retain' => '保留',
-    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => '代理是否将其保留为该主题的最后一条消息,并传递给将来的订阅者。',
-    'Don\'t retain' => '不保留',
-    'Select MQTT topic(s)' => '选择 MQTT 主题',
-    'Which topics should receive this message?' => '哪些主题应接收此消息?',
-    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => '未配置 MQTT 主题。请在[设置 → MQTT]({url})中添加一个。',
-    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '不是有效的主题。不能为空,也不能包含通配符 `+` 或 `#`。',
-    'Broker host is not configured.' => '未配置代理主机。',
-
-    // ============================================================
-    // Recipient empty-state (administrative changes disabled)
-    // ============================================================
-
-    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => '未配置 ntfy 主题。主题只能在允许管理更改的环境中添加。',
-    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => '未配置 Slack 频道。频道只能在允许管理更改的环境中添加。',
-    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => '未配置 Bluesky 账号。账号只能在允许管理更改的环境中添加。',
-    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => '未配置 MQTT 主题。主题只能在允许管理更改的环境中添加。',
 ];

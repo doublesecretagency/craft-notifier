@@ -10,7 +10,7 @@
     {% if channelOptions|length %}
         {{ forms.checkboxSelectField({
             label: "Select Slack channel(s)"|t('notifier'),
-            instructions: "Which Slack channels should receive this message?"|t('notifier'),
+            instructions: "Which channels should receive this message?"|t('notifier'),
             id: 'recipientsConfig-slackChannelUids',
             name: 'recipientsConfig[slackChannelUids]',
             options: channelOptions,

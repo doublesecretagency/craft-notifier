@@ -22,8 +22,9 @@
         instructions: "Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML."|t('notifier'),
         id: 'messageConfig-slackBodyFormat',
         name: 'messageConfig[slackBodyFormat]',
-        offLabel: "mrkdwn only"|t('notifier'),
-        onLabel: "mrkdwn + HTML"|t('notifier'),
+        value: 'html',
+        offLabel: "Markdown only"|t('notifier'),
+        onLabel: "Markdown + HTML"|t('notifier'),
         on: ((notification.messageConfig.slackBodyFormat ?? 'markdown') == 'html'),
     }) }}
 

@@ -1,0 +1,38 @@
+{% import '_includes/forms' as forms %}
+
+<h2>{{ "Discord"|t('notifier') }}</h2>
+<p>{{ "Post messages to your Discord channels."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'Discord', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/discord' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
+<div class="pane notifier-named-list">
+    {{ forms.editableTableField({
+        label: "Channels"|t('notifier'),
+        instructions: "Click any row's **Test** button to send a quick test message to that channel."|t('notifier'),
+        id: 'discordChannels',
+        name: 'settings[discordChannels]',
+        cols: {
+            label: {
+                heading: "Label"|t('notifier'),
+                type: 'singleline',
+                width: '30%',
+                placeholder: '#general',
+            },
+            webhookUrl: {
+                heading: "Webhook URL"|t('notifier'),
+                type: 'singleline',
+                width: '50%',
+                placeholder: '$DISCORD_WEBHOOK_URL',
+            },
+            uid: {
+                heading: '',
+                type: 'hidden',
+            },
+        },
+        rows: settings.discordChannels ?? [],
+        addRowLabel: "Add a channel"|t('notifier'),
+        staticRows: false,
+        allowAdd: true,
+        allowDelete: true,
+        allowReorder: true,
+    }) }}
+</div>

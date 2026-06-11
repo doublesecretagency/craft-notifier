@@ -11,9 +11,9 @@
 
 return [
 
-    // ============================================================
+    // ========================================================
     // PLUGIN & PERMISSIONS
-    // ============================================================
+    // ========================================================
 
     // Plugin & navigation
     'Notifier' => 'Notifier',
@@ -37,9 +37,9 @@ return [
     'View notification log' => 'Bildirim günlüğünü görüntüle',
     'Delete notification log' => 'Bildirim günlüğünü sil',
 
-    // ============================================================
+    // ========================================================
     // NOTIFICATION EDITOR
-    // ============================================================
+    // ========================================================
 
     // Editor: tabs
     'Meta' => 'Meta',
@@ -145,8 +145,8 @@ return [
     'years' => 'yıl',
     'Manual only' => 'Yalnızca manuel',
     'Scheduled sending' => 'Zamanlanmış gönderim',
-    'On a recurring schedule' => 'Yinelenen bir zamanlamayla',
-    'On demand' => 'İstek üzerine',
+    'Generate report on a recurring schedule' => 'Yinelenen bir zamanlamayla rapor oluştur',
+    'Generate report on demand' => 'İstek üzerine rapor oluştur',
     'Send on a Recurring Schedule' => 'Yinelenen bir zamanlamayla gönder',
     'Configure Recurring Schedule' => 'Yinelenen zamanlamayı yapılandır',
     'System timezone set to {timezone}' => 'Sistem saat dilimi {timezone} olarak ayarlandı',
@@ -256,8 +256,6 @@ return [
     'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => 'Standart [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) sözdizimini destekler. Opsiyonel olarak HTML\'i destekler _(aşağıya bakın)_.',
     'Render Message Body as HTML' => 'Mesaj gövdesini HTML olarak işle',
     'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => 'Yalnızca [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) olarak mı yoksa ayrıca HTML olarak da mı işlensin.',
-    'mrkdwn only' => 'yalnızca mrkdwn',
-    'mrkdwn + HTML' => 'mrkdwn + HTML',
     'Render Link Previews' => 'Bağlantı önizlemelerini göster',
     'Whether Slack should unfurl link previews for URLs in the message body.' => "Slack'in mesaj gövdesindeki URL'ler için bağlantı önizlemelerini gösterip göstermeyeceği.",
     'Don\'t unfurl' => 'Genişletme',
@@ -270,6 +268,19 @@ return [
     'Bot Emoji' => 'Simge Emojisi',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'İsteğe bağlı olarak uygulamanın simgesini bir emoji ile geçersiz kılın. Yalnızca Bot Icon URL boşken kullanılır.',
 
+    // Message tab: Discord
+    'Discord Message Body' => 'Discord Mesaj Gövdesi',
+    'Supports standard Markdown, and optionally HTML _(see below)_. Max 2000 characters.' => 'Standart Markdown\'ı ve isteğe bağlı olarak HTML\'i destekler _(aşağıya bakın)_. En fazla 2000 karakter.',
+    'Whether to only parse as Markdown, or additionally parse it as HTML.' => 'Yalnızca Markdown olarak mı yoksa ayrıca HTML olarak da mı işlensin.',
+    'Markdown only' => 'Yalnızca Markdown',
+    'Markdown + HTML' => 'Markdown + HTML',
+    'Whether Discord should unfurl link previews for URLs in the message body.' => 'Discord\'un mesaj gövdesindeki URL\'ler için bağlantı önizlemelerini gösterip göstermeyeceği.',
+    'Webhook Username' => 'Webhook Kullanıcı Adı',
+    'Optionally override the webhook\'s display name.' => 'İsteğe bağlı olarak webhook\'un görünen adını geçersiz kılın.',
+    'Dynamic Username' => 'Dinamik Kullanıcı Adı',
+    'Webhook Avatar URL' => 'Webhook Avatar URL\'si',
+    'Optionally override the webhook\'s avatar with a URL.' => 'İsteğe bağlı olarak webhook\'un avatarını bir URL ile geçersiz kılın.',
+
     // Message tab: Bluesky
     'Post Body' => 'Gönderi gövdesi',
     'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Düz metin, en fazla 300 karakter. URL\'ler ve `@handle.tld` etiketlemeleri otomatik olarak bağlantıya dönüşür.',
@@ -277,6 +288,20 @@ return [
     'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Gönderi gövdesinde bir URL olduğunda otomatik olarak önizleme kartı oluşturur.',
     'No card' => 'Kart yok',
     'Generate preview card' => 'Önizleme kartı oluştur',
+
+    // Message tab: Mastodon
+    'Plain text, max 500 characters. URLs will unfurl automatically.' => 'Düz metin, en fazla 500 karakter. URL\'ler otomatik olarak açılır.',
+    'Visibility' => 'Görünürlük',
+    'Who will be able to see this post?' => 'Bu gönderiyi kimler görebilir?',
+
+    // Message tab: MQTT
+    'Payload' => 'Yük',
+    'The JSON or plain text message published to the MQTT topic.' => 'MQTT konusunda yayınlanan JSON veya düz metin mesajı.',
+    'Quality of Service' => 'Hizmet kalitesi',
+    'Delivery guarantee for this message.' => 'Bu mesaj için teslim garantisi.',
+    'Retain' => 'Sakla',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Broker\'ın bunu konunun son mesajı olarak saklayıp gelecekteki abonelere teslim edip etmeyeceği.',
+    'Don\'t retain' => 'Saklama',
 
     // Recipients tab: type selector & user/group pickers
     'Recipients Type' => 'Alıcı türü',
@@ -286,38 +311,66 @@ return [
     'Which users will receive the message?' => 'Mesajı hangi kullanıcılar alacak?',
     'Which user groups will receive the message?' => 'Mesajı hangi kullanıcı grupları alacak?',
 
-    // Recipients tab: channel pickers (Slack / ntfy / Bluesky)
-    'Select Slack channel(s)' => 'Slack kanal(lar)ı seç',
-    'Which Slack channels should receive this message?' => 'Bu mesajı hangi Slack kanalları almalı?',
-    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Slack kanalı yapılandırılmamış. [Ayarlar → Slack]({url}) bölümünden bir tane ekleyin.',
+    // Recipients tab: channel pickers (ntfy, Slack, Discord, Bluesky, Mastodon, MQTT)
     'Select ntfy topic(s)' => 'ntfy konu(ları)nu seç',
-    'Which ntfy topics should receive this message?' => 'Bu mesajı hangi ntfy konuları almalı?',
+    'Which topics should receive this message?' => 'Bu mesajı hangi konular almalı?',
     'No ntfy topics configured. Add one in [Settings → ntfy]({url}).' => 'ntfy konusu yapılandırılmamış. [Ayarlar → ntfy]({url}) bölümünden bir tane ekleyin.',
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'ntfy konusu yapılandırılmamış. Konular yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
+    'Select Slack channel(s)' => 'Slack kanal(lar)ı seç',
+    'Which channels should receive this message?' => 'Bu mesajı hangi kanallar almalı?',
+    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Slack kanalı yapılandırılmamış. [Ayarlar → Slack]({url}) bölümünden bir tane ekleyin.',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Slack kanalı yapılandırılmamış. Kanallar yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
+    'Select Discord channel(s)' => 'Discord kanal(lar)ı seç',
+    'No Discord channels configured. Add one in [Settings → Discord]({url}).' => 'Discord kanalı yapılandırılmamış. [Ayarlar → Discord]({url}) bölümünden bir tane ekleyin.',
+    'No Discord channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Discord kanalı yapılandırılmamış. Kanallar yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
     'Select Bluesky account(s)' => 'Bluesky hesap(lar)ı seç',
-    'Which Bluesky accounts should post this message?' => 'Bu mesajı hangi Bluesky hesapları paylaşmalı?',
+    'Which accounts should post this message?' => 'Bu mesajı hangi hesaplar paylaşmalı?',
     'No Bluesky accounts configured. Add one in [Settings → Bluesky]({url}).' => 'Bluesky hesabı yapılandırılmamış. [Ayarlar → Bluesky]({url}) bölümünden bir tane ekleyin.',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Bluesky hesabı yapılandırılmamış. Hesaplar yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
+    'Select Mastodon account(s)' => 'Mastodon hesap(lar)ı seç',
+    'No Mastodon accounts configured. Add one in [Settings → Mastodon]({url}).' => 'Mastodon hesabı yapılandırılmamış. [Ayarlar → Mastodon]({url}) bölümünden bir tane ekleyin.',
+    'No Mastodon accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Mastodon hesabı yapılandırılmamış. Hesaplar yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
+    'Select MQTT topic(s)' => 'MQTT konularını seçin',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Yapılandırılmış MQTT konusu yok. [Ayarlar → MQTT]({url}) bölümünden bir tane ekleyin.',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Yapılandırılmış MQTT konusu yok. Konular yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Geçerli bir konu değil. Boş olamaz veya `+` ya da `#` joker karakterlerini içeremez.',
 
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Alıcıları belirleyen Twig parçacığı',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Mesajı [kimin alacağını belirlemek]({url}) için özel bir Twig parçacığı girin.',
     'The snippet **must** include a `{% setRecipients %}` tag.' => 'Parçacık **mutlaka** bir `{% setRecipients %}` etiketi içermelidir.',
 
-    // ============================================================
+    // ========================================================
     // SETTINGS
-    // ============================================================
+    // ========================================================
 
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier ayarları',
     'General' => 'Genel',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
-    'Slack' => 'Slack',
-    'Bluesky' => 'Bluesky',
     'ntfy' => 'ntfy',
+    'Slack' => 'Slack',
+    'Discord' => 'Discord',
+    'Bluesky' => 'Bluesky',
+    'Mastodon' => 'Mastodon',
+    'MQTT' => 'MQTT',
+
+    // Settings: shared intro lines
+    'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Eksiksiz talimatlar için [{name} kurulum kılavuzuna]({url}) bakın.',
+    'Sensitive values can be stored in your `.env` file and referenced here.' => 'Hassas değerler `.env` dosyanızda saklanabilir ve buradan referans verilebilir.',
+
+    // Settings: Notification order
+    'Notification Order' => 'Bildirim sırası',
+    'Notifications can be dragged into any order on the index page. Choose where new notifications land in that order.' => 'Bildirimler dizin sayfasında sürüklenerek özel bir sıraya dizilebilir. Yeni bildirimlerin bu sıraya nereye ekleneceğini seçin.',
+    'Default Placement' => 'Varsayılan yerleşim',
+    'Where new notifications are added to the list.' => 'Yeni bildirimlerin listeye nereye ekleneceği.',
+    'Before other notifications' => 'Diğer bildirimlerden önce',
+    'After other notifications' => 'Diğer bildirimlerden sonra',
 
     // Settings: Logging
     'Logging' => 'Günlüğe kaydetme',
-    'Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database.' => 'Notifier gönderilen mesajların sürekli bir günlüğünü tutar. Genellikle gerekli olmasa da veritabanına kaydedilen günlük olaylarının sayısını sınırlayabilirsiniz.',
+    "Notifier keeps a running log of every message it sends. You usually won't need to change this, but you can limit how many log entries are kept in the database." => 'Notifier gönderilen mesajların sürekli bir günlüğünü tutar. Genellikle gerekli olmasa da veritabanına kaydedilen günlük olaylarının sayısını sınırlayabilirsiniz.',
     'Enable Logging' => 'Günlüğe kaydetmeyi etkinleştir',
     'When disabled, Notifier will not write anything to the notification log.' => 'Devre dışı bırakıldığında, Notifier bildirim günlüğüne hiçbir şey yazmaz.',
     'Number of days to retain log events' => 'Günlük olaylarının saklanacağı gün sayısı',
@@ -327,33 +380,32 @@ return [
 
     // Settings: Scheduled sending
     'Scheduled Sending' => 'Zamanlanmış gönderim',
-    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Zamanlanmış çalıştırma web isteklerinin kimliğini doğrulamak için paylaşılan gizli anahtar. Yalnızca zamanlama web uç noktası üzerinden tetiklendiğinde gereklidir.',
+    'A shared secret that authenticates scheduled runs triggered over the web. You only need this if you trigger the schedule from the web endpoint.' => 'Zamanlanmış çalıştırma web isteklerinin kimliğini doğrulamak için paylaşılan gizli anahtar. Yalnızca zamanlama web uç noktası üzerinden tetiklendiğinde gereklidir.',
     'Scheduled-Run Token' => 'Zamanlanmış çalıştırma belirteci',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Her istekle birlikte X-Notifier-Token başlığı veya token gövde parametresi olarak gönderilir.',
 
     // Settings: Twilio
-    'Twilio API Credentials' => 'Twilio API kimlik bilgileri',
-    'If using the Twilio API to send SMS messages, the following credentials are required.' => 'SMS göndermek için Twilio API kullanılıyorsa aşağıdaki kimlik bilgileri gereklidir.',
+    'Send SMS text messages through [Twilio](https://www.twilio.com).' => '[Twilio](https://www.twilio.com) üzerinden SMS metin mesajları gönderin.',
     'Twilio Account SID' => 'Twilio Hesap SID',
     'Twilio Auth Token' => 'Twilio Kimlik Doğrulama Anahtarı',
     'Twilio phone number (sends each SMS message)' => "Twilio telefon numarası (her SMS'i gönderir)",
     'SMS Testing' => 'SMS testi',
-    'Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient.' => 'İsteğe bağlı. Ayarlandığında, gönderilen her SMS gerçek alıcı yerine bu numaraya iletilir.',
+    'Optional. When set, every SMS is sent to this number instead of the actual recipient.' => 'İsteğe bağlı. Ayarlandığında, gönderilen her SMS gerçek alıcı yerine bu numaraya iletilir.',
     'Test phone number' => 'Test telefon numarası',
 
     // Settings: Pushover
-    "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)." => '[Pushover](https://pushover.net) kayıtlı bir kullanıcının cihazlarına anlık bildirim gönderir. Her Craft kullanıcısının profilinde Pushover anahtarını saklayan özel bir alana ihtiyacı vardır; hangi alanın kullanılacağını her bildirimin Mesaj sekmesinde seçersiniz. Tüm kurulum yönergeleri için [Pushover başlangıç belgelerine](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover) bakın.',
+    'Send push notifications through [Pushover](https://pushover.net).' => '[Pushover](https://pushover.net) üzerinden anlık bildirimler gönderin.',
     'Application API Token' => 'Uygulama API anahtarı',
     'The 30-character app token from your Pushover application.' => 'Pushover uygulamanızdan 30 karakterli uygulama anahtarı.',
 
     // Settings: ntfy
-    'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => "ntfy.sh, ücretsiz HTTP tabanlı bir anlık bildirim hizmetidir. Aboneler bir konuya katılarak mesajları ntfy uygulamasında, web'de veya uyumlu herhangi bir istemcide alır.",
+    'Send push notifications through [ntfy](https://ntfy.sh).' => '[ntfy](https://ntfy.sh) üzerinden anlık bildirimler gönderin.',
     'Server URL' => "Sunucu URL'si",
     'Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`.' => 'İsteğe bağlı, kendi sunucunuzda barındırdığınız bir ntfy örneğini gösterin (geçerliyse). Varsayılan `https://ntfy.sh`.',
     'Access token' => 'Erişim anahtarı',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'İsteğe bağlı, korumalı konular veya kimlik doğrulamalı kendi sunucunuzda barındırdığınız örnekler için gereklidir.',
     'ntfy Topics' => 'ntfy konuları',
-    'Add the ntfy topics you\'d like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Mesaj göndermek istediğiniz ntfy konularını ekleyin. Bir bildirim yapılandırırken her konu **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
+    'Add the ntfy topics you want to send to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Mesaj göndermek istediğiniz ntfy konularını ekleyin. Bir bildirim yapılandırırken her konu **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
     'Topics' => 'Konular',
     "Click any row's **Test** button to send a quick test message to that topic." => 'O konuya hızlı bir test mesajı göndermek için herhangi bir satırın **Test** düğmesine tıklayın.',
     'Label' => 'Etiket',
@@ -361,8 +413,7 @@ return [
     'Add a topic' => 'Bir konu ekle',
 
     // Settings: Slack
-    'Slack Channels' => 'Slack kanalları',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`, `chat:write.customize` ve `chat:write.public` kapsamlarına sahip bir [Slack uygulaması](https://api.slack.com/apps) oluşturun, ardından paylaşım yapmak istediğiniz her kanal için bir satır ekleyin. Bir bildirim yapılandırılırken her kanal **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir. Bot belirteci bir sırdır, bu nedenle onu doğrudan yapıştırmak yerine bir `.env` değişkeninde saklayın ve o değişkene başvurun (örn. `$SLACK_BOT_TOKEN`).',
+    'Post messages to your Slack channels.' => 'Slack kanallarınıza mesaj gönderin.',
     'Channels' => 'Kanallar',
     "Click any row's **Test** button to send a quick test message to that channel." => 'O kanala hızlı bir test mesajı göndermek için herhangi bir satırın **Test** düğmesine tıklayın.',
     'Bot Token' => 'Bot Belirteci',
@@ -371,21 +422,59 @@ return [
     'Not a valid Bot Token. Must start with `xoxb-`.' => 'Geçerli bir Bot Belirteci değil. `xoxb-` ile başlamalıdır.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Geçerli bir Kanal Kimliği değil. `C01234ABCD` gibi görünmelidir.',
 
+    // Settings: Discord
+    'Post messages to your Discord channels.' => 'Discord kanallarınıza mesaj gönderin.',
+    'Webhook URL' => 'Webhook URL',
+    'Not a valid Webhook URL. Must start with `https://discord.com/api/webhooks/`.' => 'Geçerli bir Webhook URL\'si değil. `https://discord.com/api/webhooks/` ile başlamalıdır.',
+
     // Settings: Bluesky
-    "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => "[Bluesky](https://bsky.app) gönderileri ATProto API üzerinden yapılandırılmış hesabın akışına yayımlanır. Uygulama parolaları [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords) adresinde oluşturulur. Bir uygulama parolası gizli bir bilgidir; bu nedenle parolayı doğrudan yapıştırmak yerine bir `.env` değişkeninde saklayın ve o değişkene (örn. `\$BLUESKY_APP_PASSWORD`) başvurun.",
+    'Publish posts to your [Bluesky](https://bsky.app) accounts.' => '[Bluesky](https://bsky.app) hesaplarınıza gönderi yayınlayın.',
     'PDS URL' => "PDS URL'si",
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => "Varsayılan https://bsky.social. Kurulumunuz federasyon yapıyorsa özel bir PDS'i gösterin.",
     'Bluesky Accounts' => 'Bluesky hesapları',
-    "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Gönderim yapmak istediğiniz Bluesky hesaplarını ekleyin. Bir bildirim yapılandırırken her hesap **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
+    'Add the Bluesky accounts you want to post from. Each account becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Gönderim yapmak istediğiniz Bluesky hesaplarını ekleyin. Bir bildirim yapılandırırken her hesap **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
     'Accounts' => 'Hesaplar',
     "Click any row's **Test** button to confirm the account authenticates." => 'Hesabın kimlik doğrulamasından geçtiğini onaylamak için herhangi bir satırın **Test** düğmesine tıklayın.',
     'Handle' => 'Tanıtıcı',
     'App password' => 'Uygulama parolası',
     'Add an account' => 'Bir hesap ekle',
 
-    // ============================================================
+    // Settings: Mastodon
+    'Publish posts to your [Mastodon](https://joinmastodon.org) accounts.' => '[Mastodon](https://joinmastodon.org) hesaplarınıza gönderi yayınlayın.',
+    'Click any row\'s **Test** button to verify that account\'s credentials. No posts are made.' => 'O hesabın kimlik bilgilerini doğrulamak için herhangi bir satırın **Test** düğmesine tıklayın. Hiçbir gönderi yapılmaz.',
+    'Instance URL' => 'Instance URL',
+    'Access Token' => 'Erişim Belirteci',
+
+    // Settings: MQTT
+    'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Bir MQTT aracısına (broker) mesaj yayınlayın; IoT ve ev otomasyonu kurulumları için kullanışlıdır.',
+    'Host' => 'Ana bilgisayar',
+    'Broker hostname, without a protocol or port.' => 'Protokol veya port olmadan broker ana bilgisayar adı.',
+    'Port' => 'Port',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'İsteğe bağlı. TLS etkinken varsayılan 8883, aksi takdirde 1883\'tür.',
+    'Use TLS' => 'TLS Kullan',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Broker\'a güvenli bir TLS soketi üzerinden bağlanılıp bağlanılmayacağı.',
+    'Username' => 'Kullanıcı adı',
+    'Optional, for brokers that require username/password authentication.' => 'İsteğe bağlı, kullanıcı adı/parola kimlik doğrulaması gerektiren broker\'lar için.',
+    'Password' => 'Parola',
+    'MQTT Version' => 'MQTT Sürümü',
+    'Protocol version sent to the broker.' => 'Broker\'a gönderilen protokol sürümü.',
+    'Client ID' => 'İstemci Kimliği',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'İsteğe bağlı. Boş bırakıldığında benzersiz bir istemci kimliği otomatik olarak oluşturulur.',
+    'Mutual TLS' => 'Karşılıklı TLS',
+    'Optional. Needed for brokers that authenticate clients with certificates, such as AWS IoT Core. Enter the server file paths to your certificate files. You can use a `.env` variable or `@alias` reference.' => 'İsteğe bağlı. AWS IoT Core gibi istemcileri sertifikalarla doğrulayan broker\'lar için gereklidir. Sertifika dosyalarına sunucu dosya yollarını belirtin (bir `.env` değişkeni veya `@alias` referansı kullanılabilir).',
+    'CA Certificate File' => 'CA Sertifika Dosyası',
+    'Path to the certificate authority (CA) file.' => 'Sertifika yetkilisi (CA) dosyasının yolu.',
+    'Client Certificate File' => 'İstemci Sertifika Dosyası',
+    'Path to the client certificate file.' => 'İstemci sertifika dosyasının yolu.',
+    'Client Key File' => 'İstemci Anahtar Dosyası',
+    'Path to the client private key file.' => 'İstemcinin özel anahtar dosyasının yolu.',
+    'MQTT Topics' => 'MQTT Konuları',
+    'Add the MQTT topics you want to publish to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Yayın yapmak istediğiniz MQTT konularını ekleyin. Bir bildirim yapılandırırken her konu **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'O konuya hızlı bir test mesajı yayınlamak için herhangi bir satırın **Test** düğmesine tıklayın.',
+
+    // ========================================================
     // MANUAL SEND & TEST
-    // ============================================================
+    // ========================================================
 
     // Manual send & test
     'Send a test message' => 'Bir test mesajı gönder',
@@ -397,9 +486,9 @@ return [
     'This notification cannot be triggered manually.' => 'Bu bildirim manuel olarak tetiklenemez.',
     'This notification no longer applies to the selected element.' => 'Bu bildirim artık seçili öğeye uygulanmıyor.',
 
-    // ============================================================
+    // ========================================================
     // RUNTIME OUTPUT
-    // ============================================================
+    // ========================================================
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '{recipient} alıcısına {messageType} gönderiliyor.',
@@ -428,6 +517,10 @@ return [
     'Log events deleted.' => 'Günlük olayları silindi.',
     'Notification sent.' => 'Bildirim gönderildi.',
     'Notification was not sent. Check the Notification Log for details.' => 'Bildirim gönderilmedi. Ayrıntılar için Bildirim günlüğüne bakın.',
+    'Instance URL and access token are required.' => 'Instance URL\'si ve erişim belirteci gereklidir.',
+    'Mastodon rejected the request: {error}' => 'Mastodon isteği reddetti: {error}',
+    'Successfully authenticated as @{handle}. No posts were made.' => '@{handle} olarak kimlik doğrulaması başarılı. Hiçbir gönderi yapılmadı.',
+    'Broker host is not configured.' => 'Broker ana bilgisayarı yapılandırılmadı.',
 
     // Outbound: per-channel send results
     'Unable to send email, no recipient specified.' => 'E-posta gönderilemiyor, alıcı belirtilmedi.',
@@ -458,6 +551,12 @@ return [
     'Slack rejected the message: {error}' => 'Slack mesajı reddetti: {error}',
     'Slack POST failed: {reason}' => 'Slack POST başarısız: {reason}',
     'Successfully sent Slack message to "{label}".' => "\"{label}\"'a Slack mesajı başarıyla gönderildi.",
+    'Unable to send Discord message, no webhook URL.' => 'Discord mesajı gönderilemiyor: webhook URL\'si yok.',
+    'Unable to send Discord message, body is empty.' => 'Discord mesajı gönderilemiyor: gövde boş.',
+    'Unable to send Discord message, body exceeds the 2000-character limit.' => 'Discord mesajı gönderilemiyor: gövde 2000 karakter sınırını aşıyor.',
+    'Discord rejected the message: {error}' => 'Discord mesajı reddetti: {error}',
+    'Discord POST failed: {reason}' => 'Discord POST başarısız: {reason}',
+    'Successfully sent Discord message to "{label}".' => '"{label}" hedefine Discord mesajı başarıyla gönderildi.',
     'Unable to send Bluesky post, recipient is missing credentials.' => 'Bluesky gönderisi gönderilemiyor: alıcının kimlik bilgileri eksik.',
     'Body exceeded {max} characters, truncated.' => 'Gövde {max} karakteri aştı, kısaltıldı.',
     'Successfully posted to Bluesky as "{label}".' => "\"{label}\" olarak Bluesky'da başarıyla yayımlandı.",
@@ -465,6 +564,17 @@ return [
     'Bluesky auth failed: {reason}' => 'Bluesky kimlik doğrulaması başarısız: {reason}',
     'Bluesky post failed: {reason}' => 'Bluesky gönderisi başarısız: {reason}',
     'Bluesky link preview skipped: {reason}' => 'Bluesky bağlantı önizlemesi atlandı: {reason}',
+    'Unable to send Mastodon post, no instance URL.' => 'Mastodon gönderisi gönderilemiyor: instance URL\'si yok.',
+    'Unable to send Mastodon post, no access token.' => 'Mastodon gönderisi gönderilemiyor: erişim belirteci yok.',
+    'Unable to send Mastodon post, body is empty.' => 'Mastodon gönderisi gönderilemiyor: gövde boş.',
+    'Mastodon rejected the post: {error}' => 'Mastodon gönderiyi reddetti: {error}',
+    'Mastodon POST failed: {reason}' => 'Mastodon POST başarısız: {reason}',
+    'Successfully sent Mastodon post to "{label}".' => '"{label}" hedefine Mastodon gönderisi başarıyla gönderildi.',
+    'Unable to send MQTT message, no broker host configured.' => 'MQTT mesajı gönderilemiyor, hiçbir broker ana bilgisayarı yapılandırılmadı.',
+    'Unable to send MQTT message, no topic specified.' => 'MQTT mesajı gönderilemiyor, hiçbir konu belirtilmedi.',
+    'Unable to send MQTT message, the payload is empty.' => 'MQTT mesajı gönderilemiyor, içerik boş.',
+    'MQTT publish failed: {reason}' => 'MQTT yayını başarısız oldu: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT mesajı "{topic}" konusuna gönderildi.',
 
     // Recipient warnings
     'Recipient "{name}" has no email address.' => '"{name}" alıcısının e-posta adresi yok.',
@@ -475,9 +585,12 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => '"{name}" alıcısı için ilişkilendirilmiş bir Kullanıcı yok; Pushover mesajı gönderilemez.',
     '[SKIPPED] User "{name}" has no Pushover key.' => '[ATLANDI] "{name}" kullanıcısının Pushover anahtarı yok.',
     'Recipient "{name}" has no ntfy topic.' => '"{name}" alıcısının ntfy konusu yok.',
-    'Recipient "{name}" has no Bluesky credentials.' => '"{name}" alıcısının Bluesky kimlik bilgileri yok.',
     'Recipient "{name}" has no Slack bot token.' => 'Alıcı "{name}" Slack bot belirtecine sahip değil.',
     'Recipient "{name}" has no Slack channel ID.' => 'Alıcı "{name}" Slack kanal kimliğine sahip değil.',
+    'Recipient "{name}" has no Discord webhook URL.' => '"{name}" alıcısının Discord webhook URL\'si yok.',
+    'Recipient "{name}" has no Bluesky credentials.' => '"{name}" alıcısının Bluesky kimlik bilgileri yok.',
+    'Recipient "{name}" has no Mastodon credentials.' => '"{name}" alıcısının Mastodon kimlik bilgileri yok.',
+    'Recipient "{name}" has no MQTT topic.' => '"{name}" alıcısının MQTT konusu yok.',
 
     // Errors & exceptions
     'Invalid element event: {class}' => 'Geçersiz öğe olayı: {class}',
@@ -497,14 +610,13 @@ return [
     'Element not found' => 'Öğe bulunamadı',
     'You do not have permission to use the Dynamic Data type.' => 'Dinamik Veri türünü kullanma izniniz yok.',
     'The Dynamic Data snippet did not call the {tag} tag.' => 'Twig parçacığı {tag} etiketini çağırmadı.',
-    'Invalid Slack body format.' => 'Geçersiz Slack gövde biçimi.',
 
     // Config-file override note
     'This is being set in the config file. [{file}]' => 'Bu, yapılandırma dosyasında ayarlanır. [{file}]',
 
-    // ============================================================
+    // ========================================================
     // JAVASCRIPT UI
-    // ============================================================
+    // ========================================================
 
     // JavaScript: log utility & buttons
     'Test notification failed.' => 'Test bildirimi başarısız oldu.',
@@ -514,66 +626,5 @@ return [
     'Unable to delete the log event, something went wrong.' => 'Günlük olayı silinemedi, bir şeyler ters gitti.',
     'Log event deleted.' => 'Günlük olayı silindi.',
     'Unable to delete log events, something went wrong.' => 'Günlük olayları silinemedi, bir şeyler ters gitti.',
-    'Are you sure you want to delete this log event?' => 'Bu günlük olayını silmek istediğinizden emin misiniz?',
     'Are you sure you want to delete all logs from {date}?' => '{date} tarihindeki tüm günlükleri silmek istediğinizden emin misiniz?',
-
-    // ============================================================
-    // MQTT
-    // ============================================================
-
-    'Recipient "{name}" has no MQTT topic.' => '"{name}" alıcısının MQTT konusu yok.',
-    'Unable to send MQTT message, no broker host configured.' => 'MQTT mesajı gönderilemiyor, hiçbir broker ana bilgisayarı yapılandırılmadı.',
-    'Unable to send MQTT message, no topic specified.' => 'MQTT mesajı gönderilemiyor, hiçbir konu belirtilmedi.',
-    'Unable to send MQTT message, the payload is empty.' => 'MQTT mesajı gönderilemiyor, içerik boş.',
-    'MQTT publish failed: {reason}' => 'MQTT yayını başarısız oldu: {reason}',
-    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT mesajı "{topic}" konusuna gönderildi.',
-    'MQTT Broker' => 'MQTT Broker',
-    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier, bir MQTT broker\'ına (Mosquitto, EMQX, HiveMQ veya AWS IoT Core gibi) yayın yapar. Broker bağlantı bilgilerini aşağıya girin. Hassas değerler bir `.env` değişkeninde saklanabilir ve burada referans gösterilebilir (örn. `$MQTT_PASSWORD`).',
-    'Host' => 'Ana bilgisayar',
-    'Broker hostname, without a protocol or port.' => 'Protokol veya port olmadan broker ana bilgisayar adı.',
-    'Port' => 'Port',
-    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'İsteğe bağlı. TLS etkinken varsayılan 8883, aksi takdirde 1883\'tür.',
-    'Use TLS' => 'TLS Kullan',
-    'Whether to connect to the broker over a secure TLS socket.' => 'Broker\'a güvenli bir TLS soketi üzerinden bağlanılıp bağlanılmayacağı.',
-    'Username' => 'Kullanıcı adı',
-    'Optional, for brokers that require username/password authentication.' => 'İsteğe bağlı, kullanıcı adı/parola kimlik doğrulaması gerektiren broker\'lar için.',
-    'Password' => 'Parola',
-    'MQTT Version' => 'MQTT Sürümü',
-    'Protocol version sent to the broker.' => 'Broker\'a gönderilen protokol sürümü.',
-    'Client ID' => 'İstemci Kimliği',
-    'Optional. A unique client ID is generated automatically when left blank.' => 'İsteğe bağlı. Boş bırakıldığında benzersiz bir istemci kimliği otomatik olarak oluşturulur.',
-    'Mutual TLS' => 'Karşılıklı TLS',
-    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'İsteğe bağlı. AWS IoT Core gibi istemcileri sertifikalarla doğrulayan broker\'lar için gereklidir. Sertifika dosyalarına sunucu dosya yollarını belirtin (bir `.env` değişkeni veya `@alias` referansı kullanılabilir).',
-    'CA Certificate File' => 'CA Sertifika Dosyası',
-    'Path to the certificate authority (CA) file.' => 'Sertifika yetkilisi (CA) dosyasının yolu.',
-    'Client Certificate File' => 'İstemci Sertifika Dosyası',
-    'Path to the client certificate file.' => 'İstemci sertifika dosyasının yolu.',
-    'Client Key File' => 'İstemci Anahtar Dosyası',
-    'Path to the client private key file.' => 'İstemcinin özel anahtar dosyasının yolu.',
-    'MQTT Topics' => 'MQTT Konuları',
-    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Yayın yapmak istediğiniz MQTT konularını ekleyin. Bir bildirim yapılandırırken her konu **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
-    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'O konuya hızlı bir test mesajı yayınlamak için herhangi bir satırın **Test** düğmesine tıklayın.',
-    'MQTT' => 'MQTT',
-    'Payload' => 'Yük',
-    'The JSON or plain text message published to the MQTT topic.' => 'MQTT konusunda yayınlanan JSON veya düz metin mesajı.',
-    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Konuya yayınlanan mesaj. Düz metin veya Twig ile işlenmiş bir JSON nesnesi olabilir.',
-    'Quality of Service' => 'Hizmet kalitesi',
-    'Delivery guarantee for this message.' => 'Bu mesaj için teslim garantisi.',
-    'Retain' => 'Sakla',
-    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Broker\'ın bunu konunun son mesajı olarak saklayıp gelecekteki abonelere teslim edip etmeyeceği.',
-    'Don\'t retain' => 'Saklama',
-    'Select MQTT topic(s)' => 'MQTT konularını seçin',
-    'Which topics should receive this message?' => 'Bu mesajı hangi konular almalı?',
-    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Yapılandırılmış MQTT konusu yok. [Ayarlar → MQTT]({url}) bölümünden bir tane ekleyin.',
-    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Geçerli bir konu değil. Boş olamaz veya `+` ya da `#` joker karakterlerini içeremez.',
-    'Broker host is not configured.' => 'Broker ana bilgisayarı yapılandırılmadı.',
-
-    // ============================================================
-    // Recipient empty-state (administrative changes disabled)
-    // ============================================================
-
-    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'ntfy konusu yapılandırılmamış. Konular yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
-    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Slack kanalı yapılandırılmamış. Kanallar yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
-    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Bluesky hesabı yapılandırılmamış. Hesaplar yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
-    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Yapılandırılmış MQTT konusu yok. Konular yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
 ];

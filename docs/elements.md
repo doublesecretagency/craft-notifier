@@ -6,27 +6,29 @@ description: Notifications are third-party elements within Craft, organized into
 
 Notifications are third-party [elements](https://craftcms.com/docs/5.x/system/elements.html) within the Craft ecosystem.
 
-<img class="dropshadow" src="/images/elements/notification-elements.png" alt="" style="width:1252px; margin-top:10px">
+<img class="dropshadow" src="/images/elements/notification-elements.png" alt="" style="width:901px; margin-bottom:30px">
 
-Each Notification consists of four parts, separated into tabs...
+## Tabs
+
+Each individual Notification consists of four parts, separated into tabs...
+
+<img class="dropshadow" src="/images/elements/other-tabs.png" alt="" style="width:416px; margin-top:18px">
 
 ### Meta
 
 Simple "Title" and "Description" fields.
 
-<img class="dropshadow" src="/images/elements/example-notification.png" alt="" style="width:640px; margin-top:10px">
-
 ### Event
 
-Notifications are each tied to a specific [event](/events/) within the Craft system. When that particular event is triggered, the Notification will be sent out.
+Each Notification is tied to a specific [event](/events/) within the Craft system. When that particular event is triggered, the corresponding message will be sent out.
 
 ### Message
 
-Notifications will send a specific [message](/messages/), written in Twig or plain text. See more about [templating](/messages/templating) and special [variables](/messages/variables/).
+Write a custom [message](/messages/) for each Notification. Within the message's [Twig template](/messages/templating) you can use a series of [special variables](/messages/variables/) about the event which triggered it.
 
 ### Recipients
 
-Notifications get sent to a specific set of [recipients](/recipients/). Some message types can only reach a limited audience, while other types can be sent to a wide variety of recipients.
+Select which [recipients](/recipients/) will receive each Notification. The available options for recipients depends primarily on which [message type](/messages/types/) was selected.
 
 ## Fetching Notification Elements
 

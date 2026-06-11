@@ -11,9 +11,9 @@
 
 return [
 
-    // ============================================================
+    // ========================================================
     // PLUGIN & PERMISSIONS
-    // ============================================================
+    // ========================================================
 
     // Plugin & navigation
     'Notifier' => 'Notifier',
@@ -37,9 +37,9 @@ return [
     'View notification log' => 'Näytä ilmoitusloki',
     'Delete notification log' => 'Poista ilmoitusloki',
 
-    // ============================================================
+    // ========================================================
     // NOTIFICATION EDITOR
-    // ============================================================
+    // ========================================================
 
     // Editor: tabs
     'Meta' => 'Meta',
@@ -145,8 +145,8 @@ return [
     'years' => 'vuotta',
     'Manual only' => 'Vain manuaalisesti',
     'Scheduled sending' => 'Ajastettu lähetys',
-    'On a recurring schedule' => 'Toistuvan aikataulun mukaan',
-    'On demand' => 'Tarvittaessa',
+    'Generate report on a recurring schedule' => 'Luo raportti toistuvan aikataulun mukaan',
+    'Generate report on demand' => 'Luo raportti tarvittaessa',
     'Send on a Recurring Schedule' => 'Lähetä toistuvan aikataulun mukaan',
     'Configure Recurring Schedule' => 'Määritä toistuva aikataulu',
     'System timezone set to {timezone}' => 'Järjestelmän aikavyöhyke on {timezone}',
@@ -256,8 +256,6 @@ return [
     'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => 'Tukee tavallista [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) -syntaksia. Tukee valinnaisesti HTML:ää _(katso alla)_.',
     'Render Message Body as HTML' => 'Renderöi viestin sisältö HTML:nä',
     'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => 'Käsitelläänkö vain [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) vai myös HTML.',
-    'mrkdwn only' => 'vain mrkdwn',
-    'mrkdwn + HTML' => 'mrkdwn + HTML',
     'Render Link Previews' => 'Näytä linkin esikatselut',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'Pitäisikö Slackin avata linkkien esikatselut viestin sisällön URL-osoitteille.',
     'Don\'t unfurl' => 'Älä laajenna',
@@ -270,6 +268,19 @@ return [
     'Bot Emoji' => 'Kuvakkeen emoji',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'Korvaa halutessasi sovelluksen kuvake emojilla. Käytetään vain, kun Bot Icon URL on tyhjä.',
 
+    // Message tab: Discord
+    'Discord Message Body' => 'Discord-viestin sisältö',
+    'Supports standard Markdown, and optionally HTML _(see below)_. Max 2000 characters.' => 'Tukee tavallista Markdownia ja valinnaisesti HTML:ää _(katso alla)_. Enintään 2000 merkkiä.',
+    'Whether to only parse as Markdown, or additionally parse it as HTML.' => 'Käsitelläänkö vain Markdownina vai myös HTML:nä.',
+    'Markdown only' => 'Vain Markdown',
+    'Markdown + HTML' => 'Markdown + HTML',
+    'Whether Discord should unfurl link previews for URLs in the message body.' => 'Pitäisikö Discordin näyttää linkkien esikatselut viestin sisällön URL-osoitteille.',
+    'Webhook Username' => 'Webhook-käyttäjänimi',
+    'Optionally override the webhook\'s display name.' => 'Korvaa halutessasi webhookin näyttönimi.',
+    'Dynamic Username' => 'Dynaaminen käyttäjänimi',
+    'Webhook Avatar URL' => 'Webhookin avatar-URL',
+    'Optionally override the webhook\'s avatar with a URL.' => 'Korvaa halutessasi webhookin avatar URL:lla.',
+
     // Message tab: Bluesky
     'Post Body' => 'Julkaisun sisältö',
     'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Tavallinen teksti, enintään 300 merkkiä. URL-osoitteet ja `@handle.tld`-maininnat linkittyvät automaattisesti.',
@@ -277,6 +288,20 @@ return [
     'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Luo automaattisesti esikatselukortti, kun julkaisun rungossa on URL.',
     'No card' => 'Ei korttia',
     'Generate preview card' => 'Luo esikatselukortti',
+
+    // Message tab: Mastodon
+    'Plain text, max 500 characters. URLs will unfurl automatically.' => 'Pelkkää tekstiä, enintään 500 merkkiä. URL-osoitteet avautuvat automaattisesti.',
+    'Visibility' => 'Näkyvyys',
+    'Who will be able to see this post?' => 'Kuka voi nähdä tämän julkaisun?',
+
+    // Message tab: MQTT
+    'Payload' => 'Sisältö',
+    'The JSON or plain text message published to the MQTT topic.' => 'JSON- tai pelkkä tekstiviesti, joka julkaistaan MQTT-aiheeseen.',
+    'Quality of Service' => 'Palvelun laatu',
+    'Delivery guarantee for this message.' => 'Tämän viestin toimitustakuu.',
+    'Retain' => 'Säilytä',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Säilyttääkö broker tämän aiheen viimeisimpänä viestinä ja toimittaa sen tuleville tilaajille.',
+    'Don\'t retain' => 'Älä säilytä',
 
     // Recipients tab: type selector & user/group pickers
     'Recipients Type' => 'Vastaanottajatyyppi',
@@ -286,38 +311,66 @@ return [
     'Which users will receive the message?' => 'Mitkä käyttäjät vastaanottavat viestin?',
     'Which user groups will receive the message?' => 'Mitkä käyttäjäryhmät vastaanottavat viestin?',
 
-    // Recipients tab: channel pickers (Slack / ntfy / Bluesky)
-    'Select Slack channel(s)' => 'Valitse Slack-kanava(t)',
-    'Which Slack channels should receive this message?' => 'Mitkä Slack-kanavat vastaanottavat tämän viestin?',
-    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Slack-kanavia ei ole määritetty. Lisää sellainen kohdassa [Asetukset → Slack]({url}).',
+    // Recipients tab: channel pickers (ntfy, Slack, Discord, Bluesky, Mastodon, MQTT)
     'Select ntfy topic(s)' => 'Valitse ntfy-aihe(et)',
-    'Which ntfy topics should receive this message?' => 'Mitkä ntfy-aiheet vastaanottavat tämän viestin?',
+    'Which topics should receive this message?' => 'Mitkä aiheet saavat tämän viestin?',
     'No ntfy topics configured. Add one in [Settings → ntfy]({url}).' => 'ntfy-aiheita ei ole määritetty. Lisää sellainen kohdassa [Asetukset → ntfy]({url}).',
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'ntfy-aiheita ei ole määritetty. Aiheita voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
+    'Select Slack channel(s)' => 'Valitse Slack-kanava(t)',
+    'Which channels should receive this message?' => 'Mitkä kanavat saavat tämän viestin?',
+    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Slack-kanavia ei ole määritetty. Lisää sellainen kohdassa [Asetukset → Slack]({url}).',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Slack-kanavia ei ole määritetty. Kanavia voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
+    'Select Discord channel(s)' => 'Valitse Discord-kanava(t)',
+    'No Discord channels configured. Add one in [Settings → Discord]({url}).' => 'Discord-kanavia ei ole määritetty. Lisää sellainen kohdassa [Asetukset → Discord]({url}).',
+    'No Discord channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Discord-kanavia ei ole määritetty. Kanavia voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
     'Select Bluesky account(s)' => 'Valitse Bluesky-tili(t)',
-    'Which Bluesky accounts should post this message?' => 'Mitkä Bluesky-tilit julkaisevat tämän viestin?',
+    'Which accounts should post this message?' => 'Mitkä tilit julkaisevat tämän viestin?',
     'No Bluesky accounts configured. Add one in [Settings → Bluesky]({url}).' => 'Bluesky-tilejä ei ole määritetty. Lisää sellainen kohdassa [Asetukset → Bluesky]({url}).',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Bluesky-tilejä ei ole määritetty. Tilejä voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
+    'Select Mastodon account(s)' => 'Valitse Mastodon-tili(t)',
+    'No Mastodon accounts configured. Add one in [Settings → Mastodon]({url}).' => 'Mastodon-tilejä ei ole määritetty. Lisää sellainen kohdassa [Asetukset → Mastodon]({url}).',
+    'No Mastodon accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Mastodon-tilejä ei ole määritetty. Tilejä voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
+    'Select MQTT topic(s)' => 'Valitse MQTT-aihe(et)',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'MQTT-aiheita ei ole määritetty. Lisää sellainen kohdassa [Asetukset → MQTT]({url}).',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'MQTT-aiheita ei ole määritetty. Aiheita voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Virheellinen aihe. Ei saa olla tyhjä eikä sisältää jokerimerkkejä `+` tai `#`.',
 
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Twig-katkelma vastaanottajien määrittämiseen',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Anna mukautettu Twig-katkelma, joka [määrittää, kuka vastaanottaa viestin]({url}).',
     'The snippet **must** include a `{% setRecipients %}` tag.' => 'Katkelman **täytyy** sisältää `{% setRecipients %}`-tunniste.',
 
-    // ============================================================
+    // ========================================================
     // SETTINGS
-    // ============================================================
+    // ========================================================
 
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier-asetukset',
     'General' => 'Yleiset',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
-    'Slack' => 'Slack',
-    'Bluesky' => 'Bluesky',
     'ntfy' => 'ntfy',
+    'Slack' => 'Slack',
+    'Discord' => 'Discord',
+    'Bluesky' => 'Bluesky',
+    'Mastodon' => 'Mastodon',
+    'MQTT' => 'MQTT',
+
+    // Settings: shared intro lines
+    'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Katso täydelliset ohjeet [{name}-määritysoppaasta]({url}).',
+    'Sensitive values can be stored in your `.env` file and referenced here.' => 'Arkaluonteiset arvot voidaan tallentaa `.env`-tiedostoosi ja viitata niihin tästä.',
+
+    // Settings: Notification order
+    'Notification Order' => 'Ilmoitusten järjestys',
+    'Notifications can be dragged into any order on the index page. Choose where new notifications land in that order.' => 'Ilmoituksia voi vetää haluttuun järjestykseen luettelosivulla. Valitse, mihin kohtaan uudet ilmoitukset lisätään tässä järjestyksessä.',
+    'Default Placement' => 'Oletussijainti',
+    'Where new notifications are added to the list.' => 'Mihin kohtaan uudet ilmoitukset lisätään luettelossa.',
+    'Before other notifications' => 'Ennen muita ilmoituksia',
+    'After other notifications' => 'Muiden ilmoitusten jälkeen',
 
     // Settings: Logging
     'Logging' => 'Lokitus',
-    'Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database.' => 'Notifier pitää jatkuvaa lokia lähetetyistä viesteistä. Yleensä se ei ole tarpeen, mutta voit rajoittaa tietokantaan tallennettujen lokitapahtumien määrää.',
+    "Notifier keeps a running log of every message it sends. You usually won't need to change this, but you can limit how many log entries are kept in the database." => 'Notifier pitää jatkuvaa lokia lähetetyistä viesteistä. Yleensä se ei ole tarpeen, mutta voit rajoittaa tietokantaan tallennettujen lokitapahtumien määrää.',
     'Enable Logging' => 'Ota lokitus käyttöön',
     'When disabled, Notifier will not write anything to the notification log.' => 'Kun pois käytöstä, Notifier ei kirjoita ilmoituslokiin.',
     'Number of days to retain log events' => 'Lokitapahtumien säilytyspäivien määrä',
@@ -327,33 +380,32 @@ return [
 
     // Settings: Scheduled sending
     'Scheduled Sending' => 'Ajastettu lähetys',
-    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Jaettu salaisuus ajastetun suorituksen verkkopyyntöjen todentamiseen. Vaaditaan vain, kun aikataulu käynnistetään verkko-osoitteen kautta.',
+    'A shared secret that authenticates scheduled runs triggered over the web. You only need this if you trigger the schedule from the web endpoint.' => 'Jaettu salaisuus ajastetun suorituksen verkkopyyntöjen todentamiseen. Vaaditaan vain, kun aikataulu käynnistetään verkko-osoitteen kautta.',
     'Scheduled-Run Token' => 'Ajastetun suorituksen tunnus',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Lähetetään jokaisen pyynnön mukana joko X-Notifier-Token-otsikkona tai token-parametrina pyynnön rungossa.',
 
     // Settings: Twilio
-    'Twilio API Credentials' => 'Twilion API-tunnistetiedot',
-    'If using the Twilio API to send SMS messages, the following credentials are required.' => 'Jos SMS-viestejä lähetetään Twilion API:n kautta, seuraavat tunnistetiedot ovat pakollisia.',
+    'Send SMS text messages through [Twilio](https://www.twilio.com).' => 'Lähetä SMS-tekstiviestejä [Twilion](https://www.twilio.com) kautta.',
     'Twilio Account SID' => 'Twilio Account SID',
     'Twilio Auth Token' => 'Twilio Auth Token',
     'Twilio phone number (sends each SMS message)' => 'Twilio-puhelinnumero (lähettää jokaisen SMS-viestin)',
     'SMS Testing' => 'SMS-testaus',
-    'Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient.' => 'Valinnainen. Asetettuna jokainen lähetetty SMS lähetetään tähän numeroon todellisen vastaanottajan sijaan.',
+    'Optional. When set, every SMS is sent to this number instead of the actual recipient.' => 'Valinnainen. Asetettuna jokainen lähetetty SMS lähetetään tähän numeroon todellisen vastaanottajan sijaan.',
     'Test phone number' => 'Testipuhelinnumero',
 
     // Settings: Pushover
-    "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)." => '[Pushover](https://pushover.net) lähettää push-ilmoituksia rekisteröityneen käyttäjän laitteisiin. Jokainen Craft-käyttäjä tarvitsee profiilissaan mukautetun kentän, johon hänen Pushover-avaimensa tallennetaan. Valitse kenttä kunkin ilmoituksen Viesti-välilehdellä. Täydet käyttöönotto-ohjeet löytyvät [Pushover-aloituskäyttöoppaasta](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover).',
+    'Send push notifications through [Pushover](https://pushover.net).' => 'Lähetä push-ilmoituksia [Pushoverin](https://pushover.net) kautta.',
     'Application API Token' => 'Sovelluksen API-tunniste',
     'The 30-character app token from your Pushover application.' => '30 merkin sovellustunniste Pushover-sovelluksestasi.',
 
     // Settings: ntfy
-    'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh on ilmainen HTTP-pohjainen push-ilmoituspalvelu. Tilaajat saavat viestit ntfy-sovelluksessa, verkossa tai missä tahansa yhteensopivassa asiakassovelluksessa liittymällä aiheeseen.',
+    'Send push notifications through [ntfy](https://ntfy.sh).' => 'Lähetä push-ilmoituksia [ntfyn](https://ntfy.sh) kautta.',
     'Server URL' => 'Palvelimen URL',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => 'Valinnainen, osoita itse isännöityyn ntfy-instanssiin (tarvittaessa). Oletus on `https://ntfy.sh`.',
     'Access token' => 'Käyttötunniste',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'Valinnainen, pakollinen suojattuihin aiheisiin tai itse isännöityihin instansseihin, joissa on todennus.',
     'ntfy Topics' => 'ntfy-aiheet',
-    "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Lisää ntfy-aiheet, joihin haluat lähettää viestejä. Kukin aihe on käytettävissä vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
+    'Add the ntfy topics you want to send to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Lisää ntfy-aiheet, joihin haluat lähettää viestejä. Kukin aihe on käytettävissä vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
     'Topics' => 'Aiheet',
     "Click any row's **Test** button to send a quick test message to that topic." => 'Napsauta minkä tahansa rivin **Testi**-painiketta lähettääksesi nopean testiviestin kyseiselle aiheelle.',
     'Label' => 'Otsikko',
@@ -361,8 +413,7 @@ return [
     'Add a topic' => 'Lisää aihe',
 
     // Settings: Slack
-    'Slack Channels' => 'Slack-kanavat',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Luo [Slack-sovellus](https://api.slack.com/apps), jolla on oikeudet `chat:write`, `chat:write.customize` ja `chat:write.public`, ja lisää sitten rivi jokaiselle kanavalle, johon haluat lähettää viestejä. Jokainen kanava tulee saataville vastaanottajaksi **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen. Bot-token on salainen, joten tallenna se `.env`-muuttujaan ja viittaa siihen (esim. `$SLACK_BOT_TOKEN`) sen sijaan, että liittäisit tokenin suoraan.',
+    'Post messages to your Slack channels.' => 'Lähetä viestejä Slack-kanaviisi.',
     'Channels' => 'Kanavat',
     "Click any row's **Test** button to send a quick test message to that channel." => 'Napsauta minkä tahansa rivin **Testi**-painiketta lähettääksesi nopean testiviestin kyseiselle kanavalle.',
     'Bot Token' => 'Bot-token',
@@ -371,21 +422,59 @@ return [
     'Not a valid Bot Token. Must start with `xoxb-`.' => 'Virheellinen bot-token. Täytyy alkaa `xoxb-`.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Virheellinen kanavan tunnus. Pitää näyttää `C01234ABCD`.',
 
+    // Settings: Discord
+    'Post messages to your Discord channels.' => 'Lähetä viestejä Discord-kanaviisi.',
+    'Webhook URL' => 'Webhook URL',
+    'Not a valid Webhook URL. Must start with `https://discord.com/api/webhooks/`.' => 'Virheellinen Webhook URL. Täytyy alkaa `https://discord.com/api/webhooks/`.',
+
     // Settings: Bluesky
-    "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => '[Bluesky](https://bsky.app)-julkaisut julkaistaan määritetyn tilin syötteeseen ATProto-API:n kautta. Sovellussalasanat luodaan osoitteessa [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). Sovellussalasana on salaisuus, joten tallenna se `.env`-muuttujaan ja viittaa kyseiseen muuttujaan (esim. `$BLUESKY_APP_PASSWORD`) sen sijaan, että liittäisit salasanan suoraan.',
+    'Publish posts to your [Bluesky](https://bsky.app) accounts.' => 'Julkaise viestejä [Bluesky](https://bsky.app)-tileillesi.',
     'PDS URL' => 'PDS-URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'Oletus on https://bsky.social. Osoita mukautettuun PDS-instanssiin, jos asennuksesi federoituu.',
     'Bluesky Accounts' => 'Bluesky-tilit',
-    "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Lisää Bluesky-tilit, joilta haluat julkaista. Kukin tili on käytettävissä vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
+    'Add the Bluesky accounts you want to post from. Each account becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Lisää Bluesky-tilit, joilta haluat julkaista. Kukin tili on käytettävissä vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
     'Accounts' => 'Tilit',
     "Click any row's **Test** button to confirm the account authenticates." => 'Napsauta minkä tahansa rivin **Testi**-painiketta varmistaaksesi, että tili tunnistautuu.',
     'Handle' => 'Tunnus',
     'App password' => 'Sovellussalasana',
     'Add an account' => 'Lisää tili',
 
-    // ============================================================
+    // Settings: Mastodon
+    'Publish posts to your [Mastodon](https://joinmastodon.org) accounts.' => 'Julkaise viestejä [Mastodon](https://joinmastodon.org)-tileillesi.',
+    'Click any row\'s **Test** button to verify that account\'s credentials. No posts are made.' => 'Napsauta minkä tahansa rivin **Testi**-painiketta varmistaaksesi kyseisen tilin tunnistetiedot. Julkaisuja ei tehdä.',
+    'Instance URL' => 'Instanssin URL',
+    'Access Token' => 'Käyttötunniste',
+
+    // Settings: MQTT
+    'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Julkaise viestejä MQTT-välittäjälle, kätevä IoT- ja kotiautomaatiokokoonpanoihin.',
+    'Host' => 'Isäntä',
+    'Broker hostname, without a protocol or port.' => 'Brokerin isäntänimi, ilman protokollaa tai porttia.',
+    'Port' => 'Portti',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Valinnainen. Oletus on 8883, kun TLS on käytössä, muuten 1883.',
+    'Use TLS' => 'Käytä TLS:ää',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Yhdistetäänkö brokeriin suojatun TLS-soketin kautta.',
+    'Username' => 'Käyttäjätunnus',
+    'Optional, for brokers that require username/password authentication.' => 'Valinnainen, brokereille jotka vaativat käyttäjätunnus/salasana-todennuksen.',
+    'Password' => 'Salasana',
+    'MQTT Version' => 'MQTT-versio',
+    'Protocol version sent to the broker.' => 'Brokerille lähetettävä protokollaversio.',
+    'Client ID' => 'Asiakastunnus',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'Valinnainen. Yksilöllinen asiakastunnus luodaan automaattisesti, kun kenttä jätetään tyhjäksi.',
+    'Mutual TLS' => 'Molemminpuolinen TLS',
+    'Optional. Needed for brokers that authenticate clients with certificates, such as AWS IoT Core. Enter the server file paths to your certificate files. You can use a `.env` variable or `@alias` reference.' => 'Valinnainen. Vaaditaan brokereille jotka todentavat asiakkaat varmenteilla, kuten AWS IoT Core. Anna palvelimen tiedostopolut varmennetiedostoihin (`.env`-muuttuja tai `@alias`-viittaus on sallittu).',
+    'CA Certificate File' => 'CA-varmennetiedosto',
+    'Path to the certificate authority (CA) file.' => 'Polku varmenneviranomaisen (CA) tiedostoon.',
+    'Client Certificate File' => 'Asiakasvarmennetiedosto',
+    'Path to the client certificate file.' => 'Polku asiakasvarmennetiedostoon.',
+    'Client Key File' => 'Asiakasavaintiedosto',
+    'Path to the client private key file.' => 'Polku asiakkaan yksityiseen avaintiedostoon.',
+    'MQTT Topics' => 'MQTT-aiheet',
+    'Add the MQTT topics you want to publish to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Lisää MQTT-aiheet, joihin haluat julkaista. Kukin aihe on käytettävissä vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Napsauta minkä tahansa rivin **Testi**-painiketta julkaistaksesi nopean testiviestin kyseiseen aiheeseen.',
+
+    // ========================================================
     // MANUAL SEND & TEST
-    // ============================================================
+    // ========================================================
 
     // Manual send & test
     'Send a test message' => 'Lähetä testiviesti',
@@ -397,9 +486,9 @@ return [
     'This notification cannot be triggered manually.' => 'Tätä ilmoitusta ei voi käynnistää manuaalisesti.',
     'This notification no longer applies to the selected element.' => 'Tämä ilmoitus ei enää koske valittua elementtiä.',
 
-    // ============================================================
+    // ========================================================
     // RUNTIME OUTPUT
-    // ============================================================
+    // ========================================================
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Lähetetään {messageType} kohteelle {recipient}.',
@@ -428,6 +517,10 @@ return [
     'Log events deleted.' => 'Lokitapahtumat poistettu.',
     'Notification sent.' => 'Ilmoitus lähetetty.',
     'Notification was not sent. Check the Notification Log for details.' => 'Ilmoitusta ei lähetetty. Katso lisätietoja Ilmoituslokista.',
+    'Instance URL and access token are required.' => 'Instanssin URL ja käyttötunniste ovat pakollisia.',
+    'Mastodon rejected the request: {error}' => 'Mastodon hylkäsi pyynnön: {error}',
+    'Successfully authenticated as @{handle}. No posts were made.' => 'Todennettu onnistuneesti nimellä @{handle}. Julkaisuja ei tehty.',
+    'Broker host is not configured.' => 'Brokerin isäntää ei ole määritetty.',
 
     // Outbound: per-channel send results
     'Unable to send email, no recipient specified.' => 'Sähköpostia ei voi lähettää: vastaanottajaa ei ole määritetty.',
@@ -458,6 +551,12 @@ return [
     'Slack rejected the message: {error}' => 'Slack hylkäsi viestin: {error}',
     'Slack POST failed: {reason}' => 'Slack POST epäonnistui: {reason}',
     'Successfully sent Slack message to "{label}".' => 'Slack-viesti lähetetty kohteelle "{label}".',
+    'Unable to send Discord message, no webhook URL.' => 'Discord-viestiä ei voi lähettää: ei webhook-URL:ää.',
+    'Unable to send Discord message, body is empty.' => 'Discord-viestiä ei voi lähettää: sisältö on tyhjä.',
+    'Unable to send Discord message, body exceeds the 2000-character limit.' => 'Discord-viestiä ei voi lähettää: sisältö ylittää 2000 merkin rajan.',
+    'Discord rejected the message: {error}' => 'Discord hylkäsi viestin: {error}',
+    'Discord POST failed: {reason}' => 'Discord POST epäonnistui: {reason}',
+    'Successfully sent Discord message to "{label}".' => 'Discord-viesti lähetetty kohteelle "{label}".',
     'Unable to send Bluesky post, recipient is missing credentials.' => 'Bluesky-julkaisua ei voi lähettää: vastaanottajalta puuttuvat tunnistetiedot.',
     'Body exceeded {max} characters, truncated.' => 'Sisältö ylitti {max} merkkiä ja se typistettiin.',
     'Successfully posted to Bluesky as "{label}".' => 'Julkaistu Blueskyssä nimellä "{label}".',
@@ -465,6 +564,17 @@ return [
     'Bluesky auth failed: {reason}' => 'Bluesky-todennus epäonnistui: {reason}',
     'Bluesky post failed: {reason}' => 'Bluesky-julkaisu epäonnistui: {reason}',
     'Bluesky link preview skipped: {reason}' => 'Bluesky-linkin esikatselu ohitettu: {reason}',
+    'Unable to send Mastodon post, no instance URL.' => 'Mastodon-julkaisua ei voi lähettää: ei instanssin URL:ää.',
+    'Unable to send Mastodon post, no access token.' => 'Mastodon-julkaisua ei voi lähettää: ei käyttötunnistetta.',
+    'Unable to send Mastodon post, body is empty.' => 'Mastodon-julkaisua ei voi lähettää: sisältö on tyhjä.',
+    'Mastodon rejected the post: {error}' => 'Mastodon hylkäsi julkaisun: {error}',
+    'Mastodon POST failed: {reason}' => 'Mastodon POST epäonnistui: {reason}',
+    'Successfully sent Mastodon post to "{label}".' => 'Mastodon-julkaisu lähetetty kohteelle "{label}".',
+    'Unable to send MQTT message, no broker host configured.' => 'MQTT-viestiä ei voi lähettää, brokerin isäntää ei ole määritetty.',
+    'Unable to send MQTT message, no topic specified.' => 'MQTT-viestiä ei voi lähettää, aihetta ei ole määritetty.',
+    'Unable to send MQTT message, the payload is empty.' => 'MQTT-viestiä ei voi lähettää, sisältö on tyhjä.',
+    'MQTT publish failed: {reason}' => 'MQTT-julkaisu epäonnistui: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-viesti lähetettiin aiheeseen "{topic}".',
 
     // Recipient warnings
     'Recipient "{name}" has no email address.' => 'Vastaanottajalla "{name}" ei ole sähköpostiosoitetta.',
@@ -475,9 +585,12 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => 'Vastaanottajalla "{name}" ei ole liitettyä käyttäjää; Pushover-viestiä ei voi lähettää.',
     '[SKIPPED] User "{name}" has no Pushover key.' => '[OHITETTU] Käyttäjällä "{name}" ei ole Pushover-avainta.',
     'Recipient "{name}" has no ntfy topic.' => 'Vastaanottajalla "{name}" ei ole ntfy-aihetta.',
-    'Recipient "{name}" has no Bluesky credentials.' => 'Vastaanottajalla "{name}" ei ole Bluesky-tunnistetietoja.',
     'Recipient "{name}" has no Slack bot token.' => 'Vastaanottajalla "{name}" ei ole Slack-bot-tokenia.',
     'Recipient "{name}" has no Slack channel ID.' => 'Vastaanottajalla "{name}" ei ole Slack-kanavan tunnusta.',
+    'Recipient "{name}" has no Discord webhook URL.' => 'Vastaanottajalla "{name}" ei ole Discord-webhook-URL:ää.',
+    'Recipient "{name}" has no Bluesky credentials.' => 'Vastaanottajalla "{name}" ei ole Bluesky-tunnistetietoja.',
+    'Recipient "{name}" has no Mastodon credentials.' => 'Vastaanottajalla "{name}" ei ole Mastodon-tunnistetietoja.',
+    'Recipient "{name}" has no MQTT topic.' => 'Vastaanottajalla "{name}" ei ole MQTT-aihetta.',
 
     // Errors & exceptions
     'Invalid element event: {class}' => 'Virheellinen elementtitapahtuma: {class}',
@@ -497,14 +610,13 @@ return [
     'Element not found' => 'Elementtiä ei löytynyt',
     'You do not have permission to use the Dynamic Data type.' => 'Sinulla ei ole oikeutta käyttää dynaamisen datan tyyppiä.',
     'The Dynamic Data snippet did not call the {tag} tag.' => 'Twig-katkelma ei kutsunut {tag}-tunnistetta.',
-    'Invalid Slack body format.' => 'Virheellinen Slack-sisältömuoto.',
 
     // Config-file override note
     'This is being set in the config file. [{file}]' => 'Tämä asetetaan asetustiedostossa. [{file}]',
 
-    // ============================================================
+    // ========================================================
     // JAVASCRIPT UI
-    // ============================================================
+    // ========================================================
 
     // JavaScript: log utility & buttons
     'Test notification failed.' => 'Testi-ilmoitus epäonnistui.',
@@ -514,66 +626,5 @@ return [
     'Unable to delete the log event, something went wrong.' => 'Lokitapahtuman poistaminen epäonnistui, jokin meni vikaan.',
     'Log event deleted.' => 'Lokitapahtuma poistettu.',
     'Unable to delete log events, something went wrong.' => 'Lokitapahtumien poistaminen epäonnistui, jokin meni vikaan.',
-    'Are you sure you want to delete this log event?' => 'Haluatko varmasti poistaa tämän lokitapahtuman?',
     'Are you sure you want to delete all logs from {date}?' => 'Haluatko varmasti poistaa kaikki lokit päivältä {date}?',
-
-    // ============================================================
-    // MQTT
-    // ============================================================
-
-    'Recipient "{name}" has no MQTT topic.' => 'Vastaanottajalla "{name}" ei ole MQTT-aihetta.',
-    'Unable to send MQTT message, no broker host configured.' => 'MQTT-viestiä ei voi lähettää, brokerin isäntää ei ole määritetty.',
-    'Unable to send MQTT message, no topic specified.' => 'MQTT-viestiä ei voi lähettää, aihetta ei ole määritetty.',
-    'Unable to send MQTT message, the payload is empty.' => 'MQTT-viestiä ei voi lähettää, sisältö on tyhjä.',
-    'MQTT publish failed: {reason}' => 'MQTT-julkaisu epäonnistui: {reason}',
-    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-viesti lähetettiin aiheeseen "{topic}".',
-    'MQTT Broker' => 'MQTT-broker',
-    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier julkaisee MQTT-brokeriin (kuten Mosquitto, EMQX, HiveMQ tai AWS IoT Core). Anna brokerin yhteystiedot alla. Arkaluonteiset arvot voidaan tallentaa `.env`-muuttujaan ja viitata niihin tässä (esim. `$MQTT_PASSWORD`).',
-    'Host' => 'Isäntä',
-    'Broker hostname, without a protocol or port.' => 'Brokerin isäntänimi, ilman protokollaa tai porttia.',
-    'Port' => 'Portti',
-    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Valinnainen. Oletus on 8883, kun TLS on käytössä, muuten 1883.',
-    'Use TLS' => 'Käytä TLS:ää',
-    'Whether to connect to the broker over a secure TLS socket.' => 'Yhdistetäänkö brokeriin suojatun TLS-soketin kautta.',
-    'Username' => 'Käyttäjätunnus',
-    'Optional, for brokers that require username/password authentication.' => 'Valinnainen, brokereille jotka vaativat käyttäjätunnus/salasana-todennuksen.',
-    'Password' => 'Salasana',
-    'MQTT Version' => 'MQTT-versio',
-    'Protocol version sent to the broker.' => 'Brokerille lähetettävä protokollaversio.',
-    'Client ID' => 'Asiakastunnus',
-    'Optional. A unique client ID is generated automatically when left blank.' => 'Valinnainen. Yksilöllinen asiakastunnus luodaan automaattisesti, kun kenttä jätetään tyhjäksi.',
-    'Mutual TLS' => 'Molemminpuolinen TLS',
-    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'Valinnainen. Vaaditaan brokereille jotka todentavat asiakkaat varmenteilla, kuten AWS IoT Core. Anna palvelimen tiedostopolut varmennetiedostoihin (`.env`-muuttuja tai `@alias`-viittaus on sallittu).',
-    'CA Certificate File' => 'CA-varmennetiedosto',
-    'Path to the certificate authority (CA) file.' => 'Polku varmenneviranomaisen (CA) tiedostoon.',
-    'Client Certificate File' => 'Asiakasvarmennetiedosto',
-    'Path to the client certificate file.' => 'Polku asiakasvarmennetiedostoon.',
-    'Client Key File' => 'Asiakasavaintiedosto',
-    'Path to the client private key file.' => 'Polku asiakkaan yksityiseen avaintiedostoon.',
-    'MQTT Topics' => 'MQTT-aiheet',
-    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Lisää MQTT-aiheet, joihin haluat julkaista. Kukin aihe on käytettävissä vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
-    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Napsauta minkä tahansa rivin **Testi**-painiketta julkaistaksesi nopean testiviestin kyseiseen aiheeseen.',
-    'MQTT' => 'MQTT',
-    'Payload' => 'Sisältö',
-    'The JSON or plain text message published to the MQTT topic.' => 'JSON- tai pelkkä tekstiviesti, joka julkaistaan MQTT-aiheeseen.',
-    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Aiheeseen julkaistava viesti. Voi olla pelkkää tekstiä tai Twigillä renderöity JSON-objekti.',
-    'Quality of Service' => 'Palvelun laatu',
-    'Delivery guarantee for this message.' => 'Tämän viestin toimitustakuu.',
-    'Retain' => 'Säilytä',
-    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Säilyttääkö broker tämän aiheen viimeisimpänä viestinä ja toimittaa sen tuleville tilaajille.',
-    'Don\'t retain' => 'Älä säilytä',
-    'Select MQTT topic(s)' => 'Valitse MQTT-aihe(et)',
-    'Which topics should receive this message?' => 'Mitkä aiheet saavat tämän viestin?',
-    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'MQTT-aiheita ei ole määritetty. Lisää sellainen kohdassa [Asetukset → MQTT]({url}).',
-    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Virheellinen aihe. Ei saa olla tyhjä eikä sisältää jokerimerkkejä `+` tai `#`.',
-    'Broker host is not configured.' => 'Brokerin isäntää ei ole määritetty.',
-
-    // ============================================================
-    // Recipient empty-state (administrative changes disabled)
-    // ============================================================
-
-    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'ntfy-aiheita ei ole määritetty. Aiheita voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
-    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Slack-kanavia ei ole määritetty. Kanavia voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
-    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Bluesky-tilejä ei ole määritetty. Tilejä voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
-    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'MQTT-aiheita ei ole määritetty. Aiheita voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
 ];

@@ -83,7 +83,7 @@ class OutboundSlack extends BaseEnvelope
             return false;
         }
 
-        // Resolve the bot token (supports a $ENV_VAR reference)
+        // Resolve the bot token
         $botToken = App::parseEnv($this->botToken);
 
         // If the bot token is missing, log error and bail
@@ -92,7 +92,7 @@ class OutboundSlack extends BaseEnvelope
             return false;
         }
 
-        // Resolve the channel ID (supports a $ENV_VAR reference)
+        // Resolve the channel ID
         $channelId = App::parseEnv($this->channelId);
 
         // If the channel ID is missing, log error and bail

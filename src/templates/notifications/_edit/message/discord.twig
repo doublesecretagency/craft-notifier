@@ -1,0 +1,66 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+<div class="message-type-discord hidden">
+
+    <hr>
+
+    {{ codeEditor.textAreaField({
+        label: "Discord Message Body"|t('notifier'),
+        instructions: "Supports standard Markdown, and optionally HTML _(see below)_. Max 2000 characters."|t('notifier'),
+        tip: templatingTip,
+        placeholder: commonPlaceholder,
+        rows: 5,
+        id: 'messageConfig-discordBody',
+        name: 'messageConfig[discordBody]',
+        value: (notification.messageConfig.discordBody ?? null),
+        errors: notification.getErrors('messageConfig[discordBody]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {{ forms.lightswitchField({
+        label: "Render Message Body as HTML"|t('notifier'),
+        instructions: "Whether to only parse as Markdown, or additionally parse it as HTML."|t('notifier'),
+        id: 'messageConfig-discordBodyFormat',
+        name: 'messageConfig[discordBodyFormat]',
+        value: 'html',
+        offLabel: "Markdown only"|t('notifier'),
+        onLabel: "Markdown + HTML"|t('notifier'),
+        on: ((notification.messageConfig.discordBodyFormat ?? 'markdown') == 'html'),
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: "Render Link Previews"|t('notifier'),
+        instructions: "Whether Discord should unfurl link previews for URLs in the message body."|t('notifier'),
+        id: 'messageConfig-discordUnfurlLinks',
+        name: 'messageConfig[discordUnfurlLinks]',
+        offLabel: "Don't unfurl"|t('notifier'),
+        onLabel: "Expand link previews"|t('notifier'),
+        on: (notification.messageConfig.discordUnfurlLinks ?? true),
+    }) }}
+
+    <hr>
+
+    {{ codeEditor.textAreaField({
+        label: "Webhook Username"|t('notifier'),
+        instructions: "Optionally override the webhook's display name."|t('notifier'),
+        tip: templatingTip,
+        placeholder: "Dynamic Username"|t('notifier'),
+        rows: 1,
+        id: 'messageConfig-discordUsername',
+        name: 'messageConfig[discordUsername]',
+        value: (notification.messageConfig.discordUsername ?? null),
+        errors: notification.getErrors('messageConfig[discordUsername]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {{ codeEditor.textAreaField({
+        label: "Webhook Avatar URL"|t('notifier'),
+        instructions: "Optionally override the webhook's avatar with a URL."|t('notifier'),
+        tip: templatingTip,
+        placeholder: 'https://example.com/avatar.png',
+        rows: 1,
+        id: 'messageConfig-discordAvatar',
+        name: 'messageConfig[discordAvatar]',
+        value: (notification.messageConfig.discordAvatar ?? null),
+        errors: notification.getErrors('messageConfig[discordAvatar]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+</div>

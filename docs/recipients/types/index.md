@@ -10,7 +10,7 @@ description: Notifier supports an assortment of recipient types. In addition to 
 Regardless of which recipients are specified, you can always [skip a message](/messages/skip) for individual recipients who fail to meet your custom criteria.
 :::
 
-## User-centric
+## Native Users
 
 ### [Current User (who triggers the Event)](/recipients/types/current-user)
 
@@ -36,19 +36,33 @@ Sends the message to **only selected Users.**
 
 Sends the message to **a dynamically-compiled set of recipients, as defined by a Twig snippet.**
 
-## Provider-specific
+## Push Notifications
 
 ### [Selected ntfy topic(s)](/recipients/types/ntfy-topics)
 
 Sends the ntfy message to **one or more topics**.
 
+## Chat Platforms
+
 ### [Selected Slack channel(s)](/recipients/types/slack-channels)
 
 Posts the Slack message to **one or more channels**.
 
+### [Selected Discord channel(s)](/recipients/types/discord-channels)
+
+Posts the Discord message to **one or more channels**.
+
+## Social Media
+
 ### [Selected Bluesky account(s)](/recipients/types/bluesky-accounts)
 
 Posts the Bluesky message from **one or more accounts**.
+
+### [Selected Mastodon account(s)](/recipients/types/mastodon-accounts)
+
+Publishes the Mastodon post from **one or more accounts**.
+
+## Internet of Things
 
 ### [Selected MQTT topic(s)](/recipients/types/mqtt-topics)
 

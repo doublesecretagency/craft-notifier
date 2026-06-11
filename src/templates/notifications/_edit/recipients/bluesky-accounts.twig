@@ -11,7 +11,7 @@
     {% if accountOptions|length %}
         {{ forms.checkboxSelectField({
             label: "Select Bluesky account(s)"|t('notifier'),
-            instructions: "Which Bluesky accounts should post this message?"|t('notifier'),
+            instructions: "Which accounts should post this message?"|t('notifier'),
             id: 'recipientsConfig-blueskyAccountUids',
             name: 'recipientsConfig[blueskyAccountUids]',
             options: accountOptions,

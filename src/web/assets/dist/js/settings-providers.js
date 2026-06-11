@@ -1,21 +1,19 @@
 /**
  * Notifier - Settings Providers
  *
- * Injects a dedicated Test-button cell into each row of the ntfy / Slack /
- * Bluesky editableTables, and wires up the click handler that calls the
- * corresponding test action.
- *
- * Uses a MutationObserver so newly-added rows (via "+ Add") also get the
- * Test cell automatically.
+ * Injects a Test-button cell into each row of the message-type editableTables,
+ * and wires up the click handler that calls the matching test action.
  */
 (function () {
     'use strict';
 
     var TABLES = {
-        ntfyTopics:      'ntfy',
-        slackChannels:   'slack',
-        blueskyAccounts: 'bluesky',
-        mqttTopics:      'mqtt'
+        ntfyTopics:       'ntfy',
+        slackChannels:    'slack',
+        discordChannels:  'discord',
+        blueskyAccounts:  'bluesky',
+        mastodonAccounts: 'mastodon',
+        mqttTopics:       'mqtt'
     };
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -137,7 +135,7 @@
     });
 
     function collectRowPayload(provider, row) {
-        if ('ntfy' === provider || 'mqtt' === provider) {
+        if ('ntfy' === provider) {
             return { topic: readInputValue(row, '[topic]'), uid: readInputValue(row, '[uid]') };
         }
         if ('slack' === provider) {
@@ -147,12 +145,25 @@
                 uid: readInputValue(row, '[uid]')
             };
         }
+        if ('discord' === provider) {
+            return { webhookUrl: readInputValue(row, '[webhookUrl]'), uid: readInputValue(row, '[uid]') };
+        }
         if ('bluesky' === provider) {
             return {
                 handle: readInputValue(row, '[handle]'),
                 appPassword: readInputValue(row, '[appPassword]'),
                 uid: readInputValue(row, '[uid]')
             };
+        }
+        if ('mastodon' === provider) {
+            return {
+                instanceUrl: readInputValue(row, '[instanceUrl]'),
+                accessToken: readInputValue(row, '[accessToken]'),
+                uid: readInputValue(row, '[uid]')
+            };
+        }
+        if ('mqtt' === provider) {
+            return { topic: readInputValue(row, '[topic]'), uid: readInputValue(row, '[uid]') };
         }
         return null;
     }

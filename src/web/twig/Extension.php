@@ -109,6 +109,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 'eventTypeOptions'       => $eventTypeGrouped,
                 'allEvents'              => $allEvents,
                 'messageType'            => Options::MESSAGE_TYPE,
+                'messageTypeOptions'     => Options::MESSAGE_TYPE_GROUPED,
                 'emailField'             => $fieldOptions['email'],
                 'smsField'               => $fieldOptions['sms'],
                 'pushoverKeyField'       => $fieldOptions['pushoverKey'],
@@ -118,10 +119,18 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 'ntfyPriority'           => Options::NTFY_PRIORITY,
                 'ntfyTopics'             => ($settings->ntfyTopics ?? []),
                 'slackChannels'          => ($settings->slackChannels ?? []),
+                'discordChannels'        => ($settings->discordChannels ?? []),
                 'blueskyAccounts'        => ($settings->blueskyAccounts ?? []),
+                'mastodonAccounts'       => ($settings->mastodonAccounts ?? []),
+                'mastodonVisibility'     => Options::MASTODON_VISIBILITY,
                 'mqttQos'                => Options::MQTT_QOS,
                 'mqttTopics'             => ($settings->mqttTopics ?? []),
             ],
+            // Shared sidenote pointing at the templating + special variables docs
+            'templatingTip' => Craft::t('notifier', '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.', [
+                'templatingUrl' => 'https://plugins.doublesecretagency.com/notifier/messages/templating',
+                'variablesUrl' => 'https://plugins.doublesecretagency.com/notifier/messages/variables/',
+            ]),
         ];
     }
 

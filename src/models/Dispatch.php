@@ -23,6 +23,7 @@ use doublesecretagency\notifier\base\EnvelopeInterface;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\exceptions\RequiredFieldEmptyException;
 use doublesecretagency\notifier\filters\FilterInterface;
+use doublesecretagency\notifier\helpers\DiscordMarkdown;
 use doublesecretagency\notifier\helpers\SlackMrkdwn;
 use doublesecretagency\notifier\jobs\SendMessage;
 use doublesecretagency\notifier\NotifierPlugin;
@@ -490,9 +491,6 @@ class Dispatch extends Model
             case 'email':
                 $this->envelopes = $this->_compileEmail();
                 break;
-            case 'sms':
-                $this->envelopes = $this->_compileSms();
-                break;
             case 'announcement':
                 // Announcements are always queued
                 $this->useQueue = true;
@@ -503,6 +501,9 @@ class Dispatch extends Model
                 $this->useQueue = false;
                 $this->envelopes = [$this->_compileFlash()];
                 break;
+            case 'sms':
+                $this->envelopes = $this->_compileSms();
+                break;
             case 'pushover':
                 $this->envelopes = $this->_compilePushover();
                 break;
@@ -512,8 +513,14 @@ class Dispatch extends Model
             case 'slack':
                 $this->envelopes = $this->_compileSlack();
                 break;
+            case 'discord':
+                $this->envelopes = $this->_compileDiscord();
+                break;
             case 'bluesky':
                 $this->envelopes = $this->_compileBluesky();
+                break;
+            case 'mastodon':
+                $this->envelopes = $this->_compileMastodon();
                 break;
             case 'mqtt':
                 $this->envelopes = $this->_compileMqtt();
@@ -602,95 +609,6 @@ class Dispatch extends Model
 
             // Put outbound email into envelope
             $outbound[] = new OutboundEmail(array_merge([
-                'notificationId' => $this->notification->id,
-                'envelopeId' => $envelopeId,
-                'jobInfo' => $jobInfo
-            ], $details));
-
-        }
-
-        // Return all outbound messages
-        return $outbound;
-    }
-
-    /**
-     * Compile the message as one or more SMS (Text Message).
-     *
-     * @return EnvelopeInterface[]
-     */
-    private function _compileSms(): array
-    {
-        // Get phone numbers for all recipients
-        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
-
-        // Initialize outbound messages
-        $outbound = [];
-
-        // Set base configuration
-        $baseConfig = [
-            'notification' => $this->notification,
-            'event' => $this->event,
-            'data' => $this->data,
-        ];
-
-        // Get generic recipient name
-        $genericRecipient = $this->notification->getTaskRecipient();
-
-        // Loop through all recipients
-        foreach ($recipients as $recipient) {
-
-            // If the recipient has no phone number, log and skip
-            if (!$recipient->phoneNumber) {
-                $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no phone number.',
-                    ['name' => ($recipient->name ?? $genericRecipient)]
-                ));
-                continue;
-            }
-
-            // Set job info
-            $jobInfo = [
-                'messageType' => 'an SMS message',
-                'recipient' => ($recipient->name ?? $genericRecipient),
-            ];
-
-            // Compress variables for Twig
-            $config = array_merge($baseConfig, [
-                'recipient' => $recipient,
-            ]);
-
-            // Attempt to parse message body
-            try {
-                // Body is required by Twilio's SMS API
-                $this->_requireFieldNotEmpty('smsMessage', 'Body');
-                // Parse text
-                $message = $this->_parseTwig($config, $this->notification->messageConfig['smsMessage'] ?? null);
-                // No parse error by default
-                $parseError = null;
-            } catch (Exception|Throwable $e) {
-                // Unable to parse text
-                $message = ($this->notification->messageConfig['smsMessage'] ?? null);
-                // Get parse error
-                $parseError = $e;
-            }
-
-            // Get message details
-            $details = [
-                'phoneNumber' => $recipient->phoneNumber,
-                'message' => $message,
-            ];
-
-            // Initialize logging for envelope (with the test flag tagged on for the log row)
-            $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
-
-            // If a parsing error occurred, log and skip it
-            if ($parseError) {
-                $this->_logError($parseError, $envelopeId);
-                continue;
-            }
-
-            // Put outbound SMS (text) message into envelope
-            $outbound[] = new OutboundSms(array_merge([
                 'notificationId' => $this->notification->id,
                 'envelopeId' => $envelopeId,
                 'jobInfo' => $jobInfo
@@ -871,6 +789,95 @@ class Dispatch extends Model
             'notificationId' => $this->notification->id,
             'envelopeId' => $envelopeId
         ], $details));
+    }
+
+    /**
+     * Compile the message as one or more SMS (Text Message).
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileSms(): array
+    {
+        // Get phone numbers for all recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event' => $this->event,
+            'data' => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient has no phone number, log and skip
+            if (!$recipient->phoneNumber) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no phone number.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $jobInfo = [
+                'messageType' => 'an SMS message',
+                'recipient' => ($recipient->name ?? $genericRecipient),
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse message body
+            try {
+                // Body is required by Twilio's SMS API
+                $this->_requireFieldNotEmpty('smsMessage', 'Body');
+                // Parse text
+                $message = $this->_parseTwig($config, $this->notification->messageConfig['smsMessage'] ?? null);
+                // No parse error by default
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                // Unable to parse text
+                $message = ($this->notification->messageConfig['smsMessage'] ?? null);
+                // Get parse error
+                $parseError = $e;
+            }
+
+            // Get message details
+            $details = [
+                'phoneNumber' => $recipient->phoneNumber,
+                'message' => $message,
+            ];
+
+            // Initialize logging for envelope (with the test flag tagged on for the log row)
+            $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
+
+            // If a parsing error occurred, log and skip it
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound SMS (text) message into envelope
+            $outbound[] = new OutboundSms(array_merge([
+                'notificationId' => $this->notification->id,
+                'envelopeId' => $envelopeId,
+                'jobInfo' => $jobInfo
+            ], $details));
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
     }
 
     /**
@@ -1177,7 +1184,7 @@ class Dispatch extends Model
                 'unfurlLinks' => $unfurlLinks,
             ];
 
-            // Log envelope with the label only (not the bot token, to keep credentials out of the log)
+            // Log envelope
             $envelopeId = $this->notification->log->envelope($jobInfo, [
                 'label'       => $recipient->slackChannelLabel,
                 'channelId'   => $recipient->slackChannelId,
@@ -1197,6 +1204,114 @@ class Dispatch extends Model
 
             // Put outbound Slack message into envelope
             $outbound[] = new OutboundSlack(array_merge([
+                'notificationId' => $this->notification->id,
+                'envelopeId'     => $envelopeId,
+                'jobInfo'        => $jobInfo,
+            ], $details));
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
+    /**
+     * Compile the message as one or more Discord channel posts.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileDiscord(): array
+    {
+        // Get Discord channel recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Whether link previews are enabled (default to true)
+        $unfurlLinks = (bool) ($this->notification->messageConfig['discordUnfurlLinks'] ?? true);
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient has no webhook URL, log and skip
+            if (!$recipient->discordWebhookUrl) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no Discord webhook URL.',
+                    ['name' => ($recipient->discordChannelLabel ?? $recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $displayLabel = ($recipient->discordChannelLabel ?? 'a Discord channel');
+            $jobInfo = [
+                'messageType' => 'a Discord message',
+                'recipient'   => $displayLabel,
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse the body, username, and avatar URL
+            try {
+                // Body is required by Discord's webhook API (when no embeds/files)
+                $this->_requireFieldNotEmpty('discordBody', 'Body');
+                $body      = $this->_parseTwig($config, $this->notification->messageConfig['discordBody']     ?? '');
+                $username  = trim($this->_parseTwig($config, $this->notification->messageConfig['discordUsername'] ?? ''));
+                $avatarUrl = trim($this->_parseTwig($config, $this->notification->messageConfig['discordAvatar']   ?? ''));
+                // If the author opted into HTML mode, convert to Discord markdown before sending
+                if ('html' === ($this->notification->messageConfig['discordBodyFormat'] ?? 'markdown')) {
+                    $body = DiscordMarkdown::fromHtml($body);
+                }
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $body      = ($this->notification->messageConfig['discordBody']     ?? '');
+                $username  = trim((string) ($this->notification->messageConfig['discordUsername'] ?? ''));
+                $avatarUrl = trim((string) ($this->notification->messageConfig['discordAvatar']   ?? ''));
+                $parseError = $e;
+            }
+
+            // Get message details
+            $details = [
+                'webhookUrl'  => $recipient->discordWebhookUrl,
+                'label'       => $recipient->discordChannelLabel,
+                'body'        => $body,
+                'username'    => $username,
+                'avatarUrl'   => $avatarUrl,
+                'unfurlLinks' => $unfurlLinks,
+            ];
+
+            // Log envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, [
+                'label'       => $recipient->discordChannelLabel,
+                'body'        => $body,
+                'username'    => $username,
+                'avatarUrl'   => $avatarUrl,
+                'unfurlLinks' => $unfurlLinks,
+                'isTest'      => $this->isTest,
+            ]);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound Discord message into envelope
+            $outbound[] = new OutboundDiscord(array_merge([
                 'notificationId' => $this->notification->id,
                 'envelopeId'     => $envelopeId,
                 'jobInfo'        => $jobInfo,
@@ -1279,7 +1394,7 @@ class Dispatch extends Model
                 'linkCard'    => $linkCard,
             ];
 
-            // Log envelope with handle only (app password is intentionally NOT logged)
+            // Log envelope
             $envelopeId = $this->notification->log->envelope($jobInfo, [
                 'handle'   => $recipient->blueskyHandle,
                 'body'     => $body,
@@ -1295,6 +1410,103 @@ class Dispatch extends Model
 
             // Put outbound Bluesky post into envelope
             $outbound[] = new OutboundBluesky(array_merge([
+                'notificationId' => $this->notification->id,
+                'envelopeId'     => $envelopeId,
+                'jobInfo'        => $jobInfo,
+            ], $details));
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
+    /**
+     * Compile the message as one or more Mastodon posts.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileMastodon(): array
+    {
+        // Get Mastodon account recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Get the post visibility (default to public)
+        $visibility = ($this->notification->messageConfig['mastodonVisibility'] ?? 'public');
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient is missing required credentials, log and skip
+            if (!$recipient->mastodonInstanceUrl || !$recipient->mastodonAccessToken) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    'Recipient "{name}" has no Mastodon credentials.',
+                    ['name' => ($recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $jobInfo = [
+                'messageType' => 'a Mastodon post',
+                'recipient'   => ($recipient->name ?? $recipient->mastodonInstanceUrl),
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse the body
+            try {
+                // Body is required by Mastodon's statuses API (when no media)
+                $this->_requireFieldNotEmpty('mastodonBody', 'Body');
+                $body = $this->_parseTwig($config, $this->notification->messageConfig['mastodonBody'] ?? '');
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $body = ($this->notification->messageConfig['mastodonBody'] ?? '');
+                $parseError = $e;
+            }
+
+            // Get message details
+            $details = [
+                'instanceUrl' => $recipient->mastodonInstanceUrl,
+                'accessToken' => $recipient->mastodonAccessToken,
+                'label'       => $recipient->name,
+                'body'        => $body,
+                'visibility'  => $visibility,
+            ];
+
+            // Log envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, [
+                'instanceUrl' => $recipient->mastodonInstanceUrl,
+                'label'       => $recipient->name,
+                'body'        => $body,
+                'visibility'  => $visibility,
+                'isTest'      => $this->isTest,
+            ]);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound Mastodon post into envelope
+            $outbound[] = new OutboundMastodon(array_merge([
                 'notificationId' => $this->notification->id,
                 'envelopeId'     => $envelopeId,
                 'jobInfo'        => $jobInfo,

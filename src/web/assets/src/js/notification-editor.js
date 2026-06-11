@@ -24,13 +24,16 @@
         '#recipients',
         '.event-type-dynamic-data',
         '.message-type-email',
-        '.message-type-sms',
         '.message-type-announcement',
         '.message-type-flash',
+        '.message-type-sms',
         '.message-type-pushover',
         '.message-type-ntfy',
         '.message-type-slack',
+        '.message-type-discord',
         '.message-type-bluesky',
+        '.message-type-mastodon',
+        '.message-type-mqtt',
         '.recipients-type-dynamic-recipients'
     ];
 

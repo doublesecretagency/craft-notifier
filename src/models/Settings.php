@@ -26,6 +26,28 @@ class Settings extends Model
      */
     public const DEFAULT_PDS_URL = 'https://bsky.social';
 
+    /**
+     * @var string New notifications are added before the others (top of the list).
+     */
+    public const DEFAULT_PLACEMENT_BEGINNING = 'beginning';
+
+    /**
+     * @var string New notifications are added after the others (bottom of the list).
+     */
+    public const DEFAULT_PLACEMENT_END = 'end';
+
+    // ========================================================================= //
+
+    /**
+     * @var string Where new notifications are added in the manual order.
+     */
+    public string $defaultPlacement = self::DEFAULT_PLACEMENT_END;
+
+    /**
+     * @var string|null UID of the Structure that backs the manual notification order.
+     */
+    public ?string $structureUid = null;
+
     // ========================================================================= //
 
     /**
@@ -106,6 +128,13 @@ class Settings extends Model
     // ========================================================================= //
 
     /**
+     * @var array Named list of Discord channels. Each row: ['uid' => string, 'label' => string, 'webhookUrl' => string]. The webhookUrl may be a $ENV_VAR reference, resolved at send time.
+     */
+    public array $discordChannels = [];
+
+    // ========================================================================= //
+
+    /**
      * @var string|null Bluesky PDS URL (default https://bsky.social).
      */
     public ?string $blueskyPdsUrl = self::DEFAULT_PDS_URL;
@@ -114,6 +143,13 @@ class Settings extends Model
      * @var array Named list of Bluesky accounts. Each row: ['uid' => string, 'label' => string, 'handle' => string, 'appPassword' => string]. The appPassword may be a $ENV_VAR reference, resolved at send time.
      */
     public array $blueskyAccounts = [];
+
+    // ========================================================================= //
+
+    /**
+     * @var array Named list of Mastodon accounts. Each row: ['uid' => string, 'label' => string, 'instanceUrl' => string, 'accessToken' => string]. The accessToken may be a $ENV_VAR reference, resolved at send time.
+     */
+    public array $mastodonAccounts = [];
 
     // ========================================================================= //
 
@@ -171,5 +207,21 @@ class Settings extends Model
      * @var array Named list of MQTT topics. Each row: ['uid' => string, 'label' => string, 'topic' => string].
      */
     public array $mqttTopics = [];
+
+    // ========================================================================= //
+
+    /**
+     * @inheritdoc
+     */
+    public function defineRules(): array
+    {
+        return [
+            // Default placement must be one of the two known values
+            ['defaultPlacement', 'in', 'range' => [
+                self::DEFAULT_PLACEMENT_BEGINNING,
+                self::DEFAULT_PLACEMENT_END,
+            ]],
+        ];
+    }
 
 }

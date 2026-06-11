@@ -16,12 +16,6 @@
    read-only rendering without per-field disabled flags. #}
 {% set readOnly = (readOnly ?? false) %}
 
-{# Shared sidenote pointing at the templating + special variables docs #}
-{% set templatingTip = "[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported."|t('notifier', {
-    'templatingUrl': 'https://plugins.doublesecretagency.com/notifier/messages/templating',
-    'variablesUrl': 'https://plugins.doublesecretagency.com/notifier/messages/variables/',
-}) %}
-
 {# Render hidden inputs #}
 {{ notification.id ? hiddenInput('elementId', notification.id) }}
 {{ notification.siteId ? hiddenInput('siteId', notification.siteId) }}

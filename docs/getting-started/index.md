@@ -1,64 +1,30 @@
 ---
-description: Follow these instructions to set up the Notifier plugin for Craft CMS. This simple step-by-step guide shows how to get started.
+description: Configure a wide range of notifications from within your Craft control panel. Here's how to get up and running...
 ---
 
 # Getting Started
 
-## Installation via Plugin Store
+Notifier sends a notification whenever something happens in Craft. Pick an [event](/events/), choose a [message](/messages/) type, and decide who will [receive](/recipients/) it. You build each notification in the control panel, writing the message body with Twig so it can pull in details from whatever triggered it.
 
-To install the Notifier plugin via the plugin store, follow these steps:
+When the event fires, Notifier checks any conditions you've set, builds the message from your template, and sends it through the channels you configured. Recipients can be Craft users, dynamically chosen people, or anyone you specify, so the right people hear about the right things at the right time.
 
-1. In your site's control panel, visit the Plugin Store page. If you do not see a link to the Plugin Store, be sure you are working in an environment which [allows admin changes](https://craftcms.com/docs/5.x/reference/config/general.html#allowadminchanges).
+## Where to begin
 
-2. Search for "Notifier".
+If you're just getting started, the first steps will be:
 
-3. Install the plugin titled **Notifier**.
+1. [Install](/getting-started/installation) the plugin.
+2. Configure the plugin's [settings](/getting-started/settings/).
+3. Configure any third-party [integrations](/getting-started/integrations/) you need.
 
-<div style="
-    display: flex;
-    padding: 20px 23px 2px;
-    border: 1px solid #e3e5e8;
-    border-radius: 5px;
-    box-sizing: border-box;
-    position: relative;
-    width: 360px;
-    margin: 0 10px;
-    font-size: 14px; margin-bottom:16px
-">
-    <div style="margin-right:20px">
-        <img src="/images/icon.svg" width="70" alt="">
-    </div>
-    <div>
-        <strong style="font-size:17px">Notifier</strong>
-        <div style="font-size:15px; margin-top:9px;">First-class Notifications for Craft CMS.</div>
-        <p style="color:#8f98a3 !important; font-weight:normal;">$49</p>
-    </div>
-</div>
-
-## Installation via Console Commands
-
-To install the Notifier plugin via the console, follow these steps:
-
-1. Open your terminal and go to your Craft project:
-
-```sh
-cd /path/to/project
-```
-
-2. Then tell Composer to load the plugin:
-
-```sh
-composer require doublesecretagency/craft-notifier
-```
-
-3. Then tell Craft to install the plugin:
-
-```sh
-./craft plugin/install notifier
-```
-
-:::warning Finish installing via Console or Settings page
-Alternatively, you can visit the **Settings > Plugins** page to complete the installation.
-
-If installed via the control panel, you'll be automatically redirected to configure the plugin.
+:::warning Run the Schedule
+If you're running any **time-based** or **scheduled** notifications, you'll also need to [run the schedule](/getting-started/run-the-schedule), which is how Notifier checks for things that should be sent at a certain time or on a recurring basis.
 :::
+
+Once you've got the basics set up, you can start building notifications.
+- [Events](/events/) are the triggers which cause notifications to send.
+- [Messages](/messages/) are the types of notifications you can send.
+- [Recipients](/recipients/) are the people who will receive each notification.
+
+<img class="dropshadow" src="/images/getting-started/instructions.png" alt="The notification editor's Event, Message, and Recipients tabs annotated: which event triggers it, what message is sent, and who receives it" style="width:416px; margin-top:30px; margin-bottom:40px">
+
+**Enjoy!** If you have any questions or feedback, feel free to create an issue on [GitHub](https://github.com/doublesecretagency/craft-notifier/issues). 🙏

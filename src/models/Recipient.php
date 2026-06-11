@@ -73,6 +73,16 @@ class Recipient extends Model
     public ?string $slackChannelLabel = null;
 
     /**
+     * @var string|null Discord webhook URL. May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $discordWebhookUrl = null;
+
+    /**
+     * @var string|null Discord channel label (e.g. "#general").
+     */
+    public ?string $discordChannelLabel = null;
+
+    /**
      * @var string|null Bluesky handle (e.g. "example.bsky.social").
      */
     public ?string $blueskyHandle = null;
@@ -81,6 +91,16 @@ class Recipient extends Model
      * @var string|null Bluesky app password. May be a $ENV_VAR reference, resolved at send time.
      */
     public ?string $blueskyAppPassword = null;
+
+    /**
+     * @var string|null Mastodon instance base URL (e.g. "https://mastodon.social").
+     */
+    public ?string $mastodonInstanceUrl = null;
+
+    /**
+     * @var string|null Mastodon access token. May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $mastodonAccessToken = null;
 
     /**
      * Populate missing data from the attached User or raw contact info.
@@ -156,7 +176,9 @@ class Recipient extends Model
             ?? $this->phoneNumber
             ?? $this->topic
             ?? $this->slackChannelLabel
+            ?? $this->discordChannelLabel
             ?? $this->blueskyHandle
+            ?? $this->mastodonInstanceUrl
         );
     }
 

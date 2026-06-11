@@ -1,0 +1,29 @@
+{% import '_includes/forms' as forms %}
+
+{% set accountOptions = [] %}
+{% for row in (notificationOptions.mastodonAccounts ?? []) %}
+    {% set accountOptions = accountOptions|merge([{ label: row.label, value: row.uid }]) %}
+{% endfor %}
+
+<div class="recipients-type-mastodon-accounts">
+
+    {% if accountOptions|length %}
+        {{ forms.checkboxSelectField({
+            label: "Select Mastodon account(s)"|t('notifier'),
+            instructions: "Which accounts should post this message?"|t('notifier'),
+            id: 'recipientsConfig-mastodonAccountUids',
+            name: 'recipientsConfig[mastodonAccountUids]',
+            options: accountOptions,
+            values: (notification.recipientsConfig.mastodonAccountUids ?? []),
+        }) }}
+    {% else %}
+        <p class="instructions warning">
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No Mastodon accounts configured. Add one in [Settings → Mastodon]({url})."|t('notifier', { url: url('settings/plugins/notifier/mastodon') })|md }}
+            {% else %}
+                {{ "No Mastodon accounts configured. Accounts can only be added in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+</div>

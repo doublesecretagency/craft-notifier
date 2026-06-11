@@ -36,117 +36,150 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
 
-      {text: 'Getting Started', link: '/getting-started/'},
       {
-        text: 'Events',
-        activeMatch: '/events/',
-        items: [
-          {
-            items: [
-              {text: 'Overview',          link: '/events/'},
-              {text: 'Manual Sending',    link: '/events/manual-sending'},
-              {text: 'Scheduled Sending', link: '/events/scheduled-sending'},
-              {text: 'All Event Types',   link: '/events/types/'},
-            ]
-          },
-          {
-            items: [
+        component: 'NestedNavMenu',
+        props: {
+          text: 'Getting Started',
+          activeMatch: '/getting-started/',
+          items: [
+            {text: 'Overview',         link: '/getting-started/'},
+            {divider: true},
+            {text: 'Installation',     link: '/getting-started/installation'},
+            {text: 'Settings',         link: '/getting-started/settings/'},
+            {text: 'User Permissions', link: '/getting-started/permissions'},
+            {divider: true},
+            {text: 'All Integrations', link: '/getting-started/integrations/'},
+            {text: 'Push Notifications', items: [
+              {text: 'Twilio',   link: '/getting-started/integrations/twilio'},
+              {text: 'Pushover', link: '/getting-started/integrations/pushover'},
+              {text: 'ntfy',     link: '/getting-started/integrations/ntfy'},
+            ]},
+            {text: 'Chat Platforms', items: [
+              {text: 'Slack',   link: '/getting-started/integrations/slack'},
+              {text: 'Discord', link: '/getting-started/integrations/discord'},
+            ]},
+            {text: 'Social Media', items: [
+              {text: 'Bluesky',  link: '/getting-started/integrations/bluesky'},
+              {text: 'Mastodon', link: '/getting-started/integrations/mastodon'},
+            ]},
+            {text: 'Internet of Things', items: [
+              {text: 'MQTT', link: '/getting-started/integrations/mqtt'},
+            ]},
+            {divider: true},
+            {text: 'Run the Schedule', link: '/getting-started/run-the-schedule'},
+          ],
+        },
+      },
+      {
+        component: 'NestedNavMenu',
+        props: {
+          text: 'Events',
+          activeMatch: '/events/',
+          items: [
+            {text: 'Overview',          link: '/events/'},
+            {divider: true},
+            {text: 'All Event Types',   link: '/events/types/'},
+            {text: 'Native Elements', items: [
               {text: 'Entries', link: '/events/types/entries/'},
               {text: 'Assets',  link: '/events/types/assets/'},
               {text: 'Users',   link: '/events/types/users/'},
-            ]
-          },
-          {
-            items: [
+            ]},
+            {text: 'Plugin Elements', items: [
               {text: 'Craft Commerce',    link: '/events/types/craft-commerce/'},
               {text: 'Digital Products',  link: '/events/types/digital-products/'},
               {text: 'Solspace Calendar', link: '/events/types/solspace-calendar/'},
-            ]
-          },
-          {
-            items: [
+            ]},
+            {text: 'Other Data Sources', items: [
+              {text: 'RSS/JSON Feed',   link: '/events/types/feed/'},
               {text: 'System Snapshot', link: '/events/types/system-snapshot/'},
               {text: 'Dynamic Data',    link: '/events/types/dynamic-data/'},
-              {text: 'RSS/JSON Feed',   link: '/events/types/feed/'},
-            ]
-          },
-        ]
+            ]},
+            {divider: true},
+            {text: 'Manual Sending',    link: '/events/manual-sending'},
+            {text: 'Scheduled Sending', link: '/events/scheduled-sending'},
+          ],
+        },
       },
       {
-        text: 'Messages',
-        activeMatch: '/messages/',
-        items: [
-          {
-            items: [
-              {text: 'Overview',          link: '/messages/'},
-              {text: 'All Message Types', link: '/messages/types/'},
-            ]
-          },
-          {
-            items: [
-              {text: 'Email',              link: '/messages/types/email'},
-              {text: 'Announcement',       link: '/messages/types/announcement'},
-              {text: 'Flash Message',      link: '/messages/types/flash'},
-            ]
-          },
-          {
-            items: [
+        component: 'NestedNavMenu',
+        props: {
+          text: 'Messages',
+          activeMatch: '/messages/',
+          items: [
+            {text: 'Overview',          link: '/messages/'},
+            {divider: true},
+            {text: 'All Message Types', link: '/messages/types/'},
+            {text: 'Native Pings', items: [
+              {text: 'Email',         link: '/messages/types/email'},
+              {text: 'Announcement',  link: '/messages/types/announcement'},
+              {text: 'Flash Message', link: '/messages/types/flash'},
+            ]},
+            {text: 'Push Notifications', items: [
               {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
               {text: 'Pushover',           link: '/messages/types/pushover'},
               {text: 'ntfy',               link: '/messages/types/ntfy'},
-              {text: 'Slack',              link: '/messages/types/slack'},
-              {text: 'Bluesky',            link: '/messages/types/bluesky'},
-              {text: 'MQTT',               link: '/messages/types/mqtt'},
-            ]
-          },
-          {
-            items: [
-              {text: 'Message Templating',     link: '/messages/templating'},
-              {text: 'Special Variables',      link: '/messages/variables/'},
-              {text: 'Skip Sending a Message', link: '/messages/skip'},
-              {text: 'Optional Queue',         link: '/messages/queue'},
-              {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
-            ]
-          },
-        ]
+            ]},
+            {text: 'Chat Platforms', items: [
+              {text: 'Slack',   link: '/messages/types/slack'},
+              {text: 'Discord', link: '/messages/types/discord'},
+            ]},
+            {text: 'Social Media', items: [
+              {text: 'Bluesky',  link: '/messages/types/bluesky'},
+              {text: 'Mastodon', link: '/messages/types/mastodon'},
+            ]},
+            {text: 'Internet of Things', items: [
+              {text: 'MQTT', link: '/messages/types/mqtt'},
+            ]},
+            {divider: true},
+            {text: 'Message Templating',     link: '/messages/templating'},
+            {text: 'Special Variables',      link: '/messages/variables/'},
+            {text: 'Skip Sending a Message', link: '/messages/skip'},
+            {text: 'Optional Queue',         link: '/messages/queue'},
+            {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
+          ],
+        },
       },
       {
-        text: 'Recipients',
-        activeMatch: '/recipients/',
-        items: [
-          {
-            items: [
-              {text: 'Overview',            link: '/recipients/'},
-              {text: 'All Recipient Types', link: '/recipients/types/'},
-            ]
-          },
-          {
-            items: [
+        component: 'NestedNavMenu',
+        props: {
+          text: 'Recipients',
+          activeMatch: '/recipients/',
+          items: [
+            {text: 'Overview',            link: '/recipients/'},
+            {divider: true},
+            {text: 'All Recipient Types', link: '/recipients/types/'},
+            {text: 'Native Users', items: [
               {text: 'Current User',       link: '/recipients/types/current-user'},
               {text: 'All Users',          link: '/recipients/types/all-users'},
               {text: 'All Admins',         link: '/recipients/types/all-admins'},
               {text: 'Selected Groups',    link: '/recipients/types/selected-groups'},
               {text: 'Selected Users',     link: '/recipients/types/selected-users'},
               {text: 'Dynamic Recipients', link: '/recipients/types/dynamic-recipients'},
-            ]
-          },
-          {
-            items: [
-              {text: 'ntfy Topics',      link: '/recipients/types/ntfy-topics'},
+            ]},
+            {text: 'Push Notifications', items: [
+              {text: 'ntfy Topics', link: '/recipients/types/ntfy-topics'},
+            ]},
+            {text: 'Chat Platforms', items: [
               {text: 'Slack Channels',   link: '/recipients/types/slack-channels'},
-              {text: 'Bluesky Accounts', link: '/recipients/types/bluesky-accounts'},
-              {text: 'MQTT Topics',      link: '/recipients/types/mqtt-topics'},
-            ]
-          },
-        ]
+              {text: 'Discord Channels', link: '/recipients/types/discord-channels'},
+            ]},
+            {text: 'Social Media', items: [
+              {text: 'Bluesky Accounts',  link: '/recipients/types/bluesky-accounts'},
+              {text: 'Mastodon Accounts', link: '/recipients/types/mastodon-accounts'},
+            ]},
+            {text: 'Internet of Things', items: [
+              {text: 'MQTT Topics', link: '/recipients/types/mqtt-topics'},
+            ]},
+          ],
+        },
       },
       {
         text: 'More',
         items: [
-          {text: 'Elements',     link: '/elements'},
-          {text: 'Testing',      link: '/testing'},
-          {text: 'Logging',      link: '/logging'},
-          {text: 'Translations', link: '/translations'}
+          {text: 'Notification Elements', link: '/elements'},
+          {text: 'Testing Notifications', link: '/testing'},
+          {text: 'Notification Log',      link: '/logging'},
+          {text: 'Translations',          link: '/translations'}
         ]
       },
       // {
@@ -208,30 +241,51 @@ export default defineConfig({
         {
           text: 'Getting Started',
           items: [
-            {text: 'Overview',        link: '/getting-started/',
-              items: [
-                {text: 'Install via Plugin Store', link: '/getting-started/#installation-via-plugin-store'},
-                {text: 'Install via CLI',          link: '/getting-started/#installation-via-console-commands'}
-              ]
-            },
-            {text: 'Settings',          link: '/getting-started/settings/',
-              items: [
-                {text: 'Control Panel',   link: '/getting-started/settings/control-panel'},
-                {text: 'PHP Config File', link: '/getting-started/settings/php-config'},
-              ]
-            },
+            {text: 'Overview', link: '/getting-started/'},
+          ]
+        },
+        {
+          items: [
+            {text: 'Installation', link: '/getting-started/installation'},
+            {text: 'Settings', link: '/getting-started/settings/'},
             {text: 'User Permissions', link: '/getting-started/permissions'},
-            {text: 'Run the Schedule', link: '/getting-started/run-the-schedule'},
-            {text: 'Integrations',     link: '/getting-started/integrations/',
+          ]
+        },
+        {
+          items: [
+            {text: 'All Integrations', link: '/getting-started/integrations/',
               items: [
-                {text: 'Twilio',   link: '/getting-started/integrations/twilio'},
-                {text: 'Pushover', link: '/getting-started/integrations/pushover'},
-                {text: 'ntfy',     link: '/getting-started/integrations/ntfy'},
-                {text: 'Slack',    link: '/getting-started/integrations/slack'},
-                {text: 'Bluesky',  link: '/getting-started/integrations/bluesky'},
-                {text: 'MQTT',     link: '/getting-started/integrations/mqtt'},
+                {text: 'Push Notifications', collapsed: true,
+                  items: [
+                    {text: 'Twilio',   link: '/getting-started/integrations/twilio'},
+                    {text: 'Pushover', link: '/getting-started/integrations/pushover'},
+                    {text: 'ntfy',     link: '/getting-started/integrations/ntfy'},
+                  ]
+                },
+                {text: 'Chat Platforms', collapsed: true,
+                  items: [
+                    {text: 'Slack',   link: '/getting-started/integrations/slack'},
+                    {text: 'Discord', link: '/getting-started/integrations/discord'},
+                  ]
+                },
+                {text: 'Social Media', collapsed: true,
+                  items: [
+                    {text: 'Bluesky',  link: '/getting-started/integrations/bluesky'},
+                    {text: 'Mastodon', link: '/getting-started/integrations/mastodon'},
+                  ]
+                },
+                {text: 'Internet of Things', collapsed: true,
+                  items: [
+                    {text: 'MQTT', link: '/getting-started/integrations/mqtt'},
+                  ]
+                },
               ]
             },
+          ]
+        },
+        {
+          items: [
+            {text: 'Run the Schedule', link: '/getting-started/run-the-schedule'},
           ]
         }
       ],
@@ -242,8 +296,10 @@ export default defineConfig({
           text: 'Events',
           items: [
             {text: 'Overview',          link: '/events/'},
-            {text: 'Manual Sending',    link: '/events/manual-sending'},
-            {text: 'Scheduled Sending', link: '/events/scheduled-sending'},
+          ]
+        },
+        {
+          items: [
             {text: 'All Event Types',   link: '/events/types/',
               items: [
                 {text: 'Entries', link: '/events/types/entries/', collapsed: true,
@@ -301,11 +357,17 @@ export default defineConfig({
                     {text: 'Event is restored', link: '/events/types/solspace-calendar/event-restored'},
                   ]
                 },
+                {text: 'RSS/JSON Feed',   link: '/events/types/feed/'},
                 {text: 'System Snapshot', link: '/events/types/system-snapshot/'},
                 {text: 'Dynamic Data',    link: '/events/types/dynamic-data/'},
-                {text: 'RSS/JSON Feed',   link: '/events/types/feed/'},
               ]
             },
+          ]
+        },
+        {
+          items: [
+            {text: 'Manual Sending',    link: '/events/manual-sending'},
+            {text: 'Scheduled Sending', link: '/events/scheduled-sending'},
           ]
         }
       ],
@@ -315,19 +377,49 @@ export default defineConfig({
           text: 'Messages',
           items: [
             {text: 'Overview',               link: '/messages/'},
+          ]
+        },
+        {
+          items: [
             {text: 'All Message Types',      link: '/messages/types/',
               items: [
-                {text: 'Email',              link: '/messages/types/email'},
-                {text: 'Announcement',       link: '/messages/types/announcement'},
-                {text: 'Flash Message',      link: '/messages/types/flash'},
-                {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
-                {text: 'Pushover',           link: '/messages/types/pushover'},
-                {text: 'ntfy',               link: '/messages/types/ntfy'},
-                {text: 'Slack',              link: '/messages/types/slack'},
-                {text: 'Bluesky',            link: '/messages/types/bluesky'},
-                {text: 'MQTT',               link: '/messages/types/mqtt'},
+                {text: 'Native Pings', collapsed: true,
+                  items: [
+                    {text: 'Email',              link: '/messages/types/email'},
+                    {text: 'Announcement',       link: '/messages/types/announcement'},
+                    {text: 'Flash Message',      link: '/messages/types/flash'},
+                  ]
+                },
+                {text: 'Push Notifications', collapsed: true,
+                  items: [
+                    {text: 'SMS (Text Message)', link: '/messages/types/sms-text'},
+                    {text: 'Pushover',           link: '/messages/types/pushover'},
+                    {text: 'ntfy',               link: '/messages/types/ntfy'},
+                  ]
+                },
+                {text: 'Chat Platforms', collapsed: true,
+                  items: [
+                    {text: 'Slack',              link: '/messages/types/slack'},
+                    {text: 'Discord',            link: '/messages/types/discord'},
+                  ]
+                },
+                {text: 'Social Media', collapsed: true,
+                  items: [
+                    {text: 'Bluesky',            link: '/messages/types/bluesky'},
+                    {text: 'Mastodon',           link: '/messages/types/mastodon'},
+                  ]
+                },
+                {text: 'Internet of Things', collapsed: true,
+                  items: [
+                    {text: 'MQTT',               link: '/messages/types/mqtt'},
+                  ]
+                },
               ]
             },
+          ]
+        },
+        {
+          items: [
             {text: 'Message Templating',     link: '/messages/templating'},
             {text: 'Special Variables',      link: '/messages/variables/', collapsed: true,
               items: [
@@ -349,18 +441,44 @@ export default defineConfig({
           text: 'Recipients',
           items: [
             {text: 'Overview',            link: '/recipients/'},
+          ]
+        },
+        {
+          items: [
             {text: 'All Recipient Types', link: '/recipients/types/',
               items: [
-                {text: 'Current User',       link: '/recipients/types/current-user'},
-                {text: 'All Users',          link: '/recipients/types/all-users'},
-                {text: 'All Admins',         link: '/recipients/types/all-admins'},
-                {text: 'Selected Groups',    link: '/recipients/types/selected-groups'},
-                {text: 'Selected Users',     link: '/recipients/types/selected-users'},
-                {text: 'Dynamic Recipients', link: '/recipients/types/dynamic-recipients'},
-                {text: 'ntfy Topics',        link: '/recipients/types/ntfy-topics'},
-                {text: 'Slack Channels',     link: '/recipients/types/slack-channels'},
-                {text: 'Bluesky Accounts',   link: '/recipients/types/bluesky-accounts'},
-                {text: 'MQTT Topics',        link: '/recipients/types/mqtt-topics'},
+                {text: 'Native Users', collapsed: true,
+                  items: [
+                    {text: 'Current User',       link: '/recipients/types/current-user'},
+                    {text: 'All Users',          link: '/recipients/types/all-users'},
+                    {text: 'All Admins',         link: '/recipients/types/all-admins'},
+                    {text: 'Selected Groups',    link: '/recipients/types/selected-groups'},
+                    {text: 'Selected Users',     link: '/recipients/types/selected-users'},
+                    {text: 'Dynamic Recipients', link: '/recipients/types/dynamic-recipients'},
+                  ]
+                },
+                {text: 'Push Notifications', collapsed: true,
+                  items: [
+                    {text: 'ntfy Topics', link: '/recipients/types/ntfy-topics'},
+                  ]
+                },
+                {text: 'Chat Platforms', collapsed: true,
+                  items: [
+                    {text: 'Slack Channels',   link: '/recipients/types/slack-channels'},
+                    {text: 'Discord Channels', link: '/recipients/types/discord-channels'},
+                  ]
+                },
+                {text: 'Social Media', collapsed: true,
+                  items: [
+                    {text: 'Bluesky Accounts',  link: '/recipients/types/bluesky-accounts'},
+                    {text: 'Mastodon Accounts', link: '/recipients/types/mastodon-accounts'},
+                  ]
+                },
+                {text: 'Internet of Things', collapsed: true,
+                  items: [
+                    {text: 'MQTT Topics', link: '/recipients/types/mqtt-topics'},
+                  ]
+                },
               ]
             }
           ]
@@ -372,10 +490,10 @@ export default defineConfig({
         {
           text: 'More',
           items: [
-            {text: 'Elements',     link: '/elements'},
-            {text: 'Testing',      link: '/testing'},
-            {text: 'Logging',      link: '/logging'},
-            {text: 'Translations', link: '/translations'}
+            {text: 'Notification Elements', link: '/elements'},
+            {text: 'Testing Notifications', link: '/testing'},
+            {text: 'Notification Log',      link: '/logging'},
+            {text: 'Translations',          link: '/translations'}
           ]
         }
       ]

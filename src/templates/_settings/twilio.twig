@@ -1,8 +1,10 @@
 {% import '_includes/forms' as forms %}
 {% set autosuggest = 'notifier/_form/autosuggest' %}
 
-<h2>{{ "Twilio API Credentials"|t('notifier') }}</h2>
-<p>{{ "If using the Twilio API to send SMS messages, the following credentials are required."|t('notifier') }}</p>
+<h2>{{ "Twilio"|t('notifier') }}</h2>
+<p>{{ "Send SMS text messages through [Twilio](https://www.twilio.com)."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'Twilio', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/twilio' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
 <div class="pane">
     {% include autosuggest with {
         config: {
@@ -25,7 +27,7 @@
 </div>
 
 <h2>{{ "SMS Testing"|t('notifier') }}</h2>
-<p>{{ "Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient."|t('notifier') }}</p>
+<p>{{ "Optional. When set, every SMS is sent to this number instead of the actual recipient."|t('notifier') }}</p>
 <div class="pane">
     {% include autosuggest with {
         config: {

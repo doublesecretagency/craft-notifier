@@ -6,7 +6,7 @@ description: Notifier supports a large collection of message types, including em
 
 <img class="dropshadow" src="/images/messages/message-types.png" alt="" style="width:416px; margin-top:10px">
 
-## Craft Native
+## Native Pings
 
 ### [Email](/messages/types/email)
 
@@ -20,7 +20,7 @@ Posts an [announcement](https://craftcms.com/docs/5.x/system/control-panel.html#
 
 Posts a short-term message for near-immediate consumption. On the following page load, the logged-in user will see the flash message appear in the lower-left corner.
 
-## Third-party Integrations
+## Push Notifications
 
 ### [SMS (Text Message)](/messages/types/sms-text)
 
@@ -34,13 +34,27 @@ Sends a push notification to one or more Craft users via [Pushover](https://push
 
 Sends a push notification to one or more [ntfy](https://ntfy.sh) topics.
 
+## Chat Platforms
+
 ### [Slack](/messages/types/slack)
 
 Posts a message to one or more Slack channels via [Incoming Webhooks](https://api.slack.com/messaging/webhooks).
 
+### [Discord](/messages/types/discord)
+
+Posts a message to one or more Discord channels via [Incoming Webhooks](https://discord.com/developers/docs/resources/webhook).
+
+## Social Media
+
 ### [Bluesky](/messages/types/bluesky)
 
 Publishes a post to one or more [Bluesky](https://bsky.app) accounts via the ATProto API.
+
+### [Mastodon](/messages/types/mastodon)
+
+Publishes a post to one or more [Mastodon](https://joinmastodon.org) accounts.
+
+## Internet of Things
 
 ### [MQTT](/messages/types/mqtt)
 

@@ -24,7 +24,7 @@ Before sending MQTT messages, configure a broker and add one or more topics via 
 
 The message to be published. Can be plain text or JSON.
 
-<!--@include: @/messages/types/_docs-links.md-->
+<!--@include: @/messages/types/_special-variables.md-->
 
 ### Quality of Service
 

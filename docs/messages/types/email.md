@@ -12,7 +12,7 @@ Sends **an email** when the notification event is triggered.
 
 <img class="dropshadow" src="/images/messages/email-config.png" alt="" style="width:640px; margin-top:10px">
 
-<!--@include: @/messages/types/_docs-links.md-->
+<!--@include: @/messages/types/_special-variables.md-->
 
 ## Body Editor
 

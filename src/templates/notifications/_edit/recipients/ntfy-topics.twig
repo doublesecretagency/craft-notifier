@@ -10,7 +10,7 @@
     {% if topicOptions|length %}
         {{ forms.checkboxSelectField({
             label: "Select ntfy topic(s)"|t('notifier'),
-            instructions: "Which ntfy topics should receive this message?"|t('notifier'),
+            instructions: "Which topics should receive this message?"|t('notifier'),
             id: 'recipientsConfig-ntfyTopicUids',
             name: 'recipientsConfig[ntfyTopicUids]',
             options: topicOptions,

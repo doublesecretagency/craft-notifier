@@ -1,0 +1,44 @@
+{% import '_includes/forms' as forms %}
+
+<h2>{{ "Mastodon"|t('notifier') }}</h2>
+<p>{{ "Publish posts to your [Mastodon](https://joinmastodon.org) accounts."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'Mastodon', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/mastodon' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
+<div class="pane notifier-named-list">
+    {{ forms.editableTableField({
+        label: "Accounts"|t('notifier'),
+        instructions: "Click any row's **Test** button to verify that account's credentials. No posts are made."|t('notifier'),
+        id: 'mastodonAccounts',
+        name: 'settings[mastodonAccounts]',
+        cols: {
+            label: {
+                heading: "Label"|t('notifier'),
+                type: 'singleline',
+                width: '25%',
+                placeholder: '@team@mastodon.social',
+            },
+            instanceUrl: {
+                heading: "Instance URL"|t('notifier'),
+                type: 'singleline',
+                width: '30%',
+                placeholder: 'https://mastodon.social',
+            },
+            accessToken: {
+                heading: "Access Token"|t('notifier'),
+                type: 'singleline',
+                width: '25%',
+                placeholder: '$MASTODON_ACCESS_TOKEN',
+            },
+            uid: {
+                heading: '',
+                type: 'hidden',
+            },
+        },
+        rows: settings.mastodonAccounts ?? [],
+        addRowLabel: "Add an account"|t('notifier'),
+        staticRows: false,
+        allowAdd: true,
+        allowDelete: true,
+        allowReorder: true,
+    }) }}
+</div>

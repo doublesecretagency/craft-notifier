@@ -16,15 +16,14 @@ Many control panel fields also accept an `$ENV_VAR` reference, so you can keep s
 
 ## Where each setting lives
 
-Most settings can be configured in either place. The exceptions:
+Most settings can be configured in either place. The only exceptions are the per-row channel, account, and topic lists, which live in the control panel only:
 
-**Control panel only:**
-- Slack bot tokens (per-channel)
-- ntfy topics (per-topic)
-- Bluesky accounts (per-account)
-
-**PHP config file only:**
-- `testToPhoneNumber` (Twilio test recipient)
+- ntfy topics
+- Slack channels
+- Discord channels
+- Bluesky accounts
+- Mastodon accounts
+- MQTT topics
 
 ## [Control Panel](/getting-started/settings/control-panel)
 

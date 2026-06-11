@@ -67,7 +67,7 @@ class OutboundPushover extends BaseEnvelope
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        // Resolve the app token (supports a $ENV_VAR reference)
+        // Resolve the app token
         $appToken = App::parseEnv($settings->pushoverApplicationToken);
 
         // If app token is missing, log error and bail

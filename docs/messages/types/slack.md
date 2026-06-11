@@ -6,7 +6,7 @@ description: Post a message to one or more Slack channels.
 
 Posts **a message to one or more Slack channels** when the notification event is triggered.
 
-<img class="dropshadow" src="/images/messages/slack-example.png" alt="" style="width:393px; margin-top:10px">
+<img class="dropshadow" src="/images/messages/slack-example.png" alt="" style="width:484px; margin-top:10px">
 
 Slack uses a Slack app's bot token to post to individual channels. One bot token can post to as many channels as the bot has access to.
 
@@ -48,7 +48,7 @@ The bot's icon can be overridden when the message is sent, using a simple emoji 
 
 Used only when **Bot Icon URL** is empty. Leave blank to use the app's default icon.
 
-<!--@include: @/messages/types/_docs-links.md-->
+<!--@include: @/messages/types/_special-variables.md-->
 
 ## mrkdwn Syntax
 
@@ -95,7 +95,7 @@ Here are some of the most useful tokens:
 
 **Dynamic bot icon via RSS feed**
 
-Set the **Bot Icon URL** with Twig, using the enclosure URL of each individual feed [item](/events/types/feed/#item-tags):
+Set the **Bot Icon URL** with Twig, using the enclosure URL of each individual feed [item](/messages/variables/rss-json-feed):
 
 ```twig
 {{ item.enclosure.url ?? '' }}

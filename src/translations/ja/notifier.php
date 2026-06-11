@@ -11,9 +11,9 @@
 
 return [
 
-    // ============================================================
+    // ========================================================
     // PLUGIN & PERMISSIONS
-    // ============================================================
+    // ========================================================
 
     // Plugin & navigation
     'Notifier' => 'Notifier',
@@ -37,9 +37,9 @@ return [
     'View notification log' => '通知ログを表示',
     'Delete notification log' => '通知ログを削除',
 
-    // ============================================================
+    // ========================================================
     // NOTIFICATION EDITOR
-    // ============================================================
+    // ========================================================
 
     // Editor: tabs
     'Meta' => 'メタ',
@@ -145,8 +145,8 @@ return [
     'years' => '年',
     'Manual only' => '手動のみ',
     'Scheduled sending' => 'スケジュール送信',
-    'On a recurring schedule' => '繰り返しスケジュールで',
-    'On demand' => '手動で',
+    'Generate report on a recurring schedule' => '繰り返しスケジュールでレポートを生成',
+    'Generate report on demand' => '手動でレポートを生成',
     'Send on a Recurring Schedule' => '繰り返しスケジュールで送信',
     'Configure Recurring Schedule' => '繰り返しスケジュールを設定',
     'System timezone set to {timezone}' => 'システムのタイムゾーンは {timezone} に設定されています',
@@ -256,8 +256,6 @@ return [
     'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => '標準の[Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)構文をサポートします。オプションでHTMLもサポートします _(下記参照)_。',
     'Render Message Body as HTML' => 'メッセージ本文をHTMLとしてレンダリング',
     'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => '[Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)のみとして解析するか、HTMLも追加で解析するか。',
-    'mrkdwn only' => 'mrkdwnのみ',
-    'mrkdwn + HTML' => 'mrkdwn + HTML',
     'Render Link Previews' => 'リンクプレビューを表示',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'メッセージ本文のURLに対してSlackがリンクプレビューを展開するかどうか。',
     'Don\'t unfurl' => '展開しない',
@@ -270,6 +268,19 @@ return [
     'Bot Emoji' => 'アイコン絵文字',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'オプションでアプリのアイコンを絵文字で上書きします。Bot Icon URL が空のときのみ使用されます。',
 
+    // Message tab: Discord
+    'Discord Message Body' => 'Discord メッセージ本文',
+    'Supports standard Markdown, and optionally HTML _(see below)_. Max 2000 characters.' => '標準の Markdown と、オプションで HTML をサポートします _(下記参照)_。最大 2000 文字。',
+    'Whether to only parse as Markdown, or additionally parse it as HTML.' => 'Markdown のみとして解析するか、HTML も追加で解析するか。',
+    'Markdown only' => 'Markdown のみ',
+    'Markdown + HTML' => 'Markdown + HTML',
+    'Whether Discord should unfurl link previews for URLs in the message body.' => 'メッセージ本文の URL に対して Discord がリンクプレビューを表示するかどうか。',
+    'Webhook Username' => 'Webhook ユーザー名',
+    'Optionally override the webhook\'s display name.' => 'オプションで Webhook の表示名を上書きします。',
+    'Dynamic Username' => '動的なユーザー名',
+    'Webhook Avatar URL' => 'Webhook アバター URL',
+    'Optionally override the webhook\'s avatar with a URL.' => 'オプションで Webhook のアバターを URL で上書きします。',
+
     // Message tab: Bluesky
     'Post Body' => '投稿本文',
     'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'プレーンテキスト、最大 300 文字。URL と `@handle.tld` のメンションは自動的にリンクになります。',
@@ -277,6 +288,20 @@ return [
     'Whether to automatically generate a preview card when a URL is included in the post body.' => '投稿本文に URL が含まれる場合、自動的にプレビューカードを生成します。',
     'No card' => 'カードなし',
     'Generate preview card' => 'プレビューカードを生成',
+
+    // Message tab: Mastodon
+    'Plain text, max 500 characters. URLs will unfurl automatically.' => 'プレーンテキスト、最大 500 文字。URL は自動的に展開されます。',
+    'Visibility' => '公開範囲',
+    'Who will be able to see this post?' => 'この投稿を誰が閲覧できますか?',
+
+    // Message tab: MQTT
+    'Payload' => 'ペイロード',
+    'The JSON or plain text message published to the MQTT topic.' => 'MQTT トピックに公開される JSON またはプレーンテキストのメッセージ。',
+    'Quality of Service' => 'サービス品質',
+    'Delivery guarantee for this message.' => 'このメッセージの配信保証。',
+    'Retain' => '保持',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'ブローカーがこれをトピックの最新メッセージとして保持し、今後の購読者に配信するかどうか。',
+    'Don\'t retain' => '保持しない',
 
     // Recipients tab: type selector & user/group pickers
     'Recipients Type' => '受信者タイプ',
@@ -286,38 +311,66 @@ return [
     'Which users will receive the message?' => 'どのユーザーがメッセージを受け取りますか?',
     'Which user groups will receive the message?' => 'どのユーザーグループがメッセージを受け取りますか?',
 
-    // Recipients tab: channel pickers (Slack / ntfy / Bluesky)
-    'Select Slack channel(s)' => 'Slack チャンネルを選択',
-    'Which Slack channels should receive this message?' => 'どの Slack チャンネルがこのメッセージを受け取りますか?',
-    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Slack チャンネルが設定されていません。[設定 → Slack]({url}) で追加してください。',
+    // Recipients tab: channel pickers (ntfy, Slack, Discord, Bluesky, Mastodon, MQTT)
     'Select ntfy topic(s)' => 'ntfy トピックを選択',
-    'Which ntfy topics should receive this message?' => 'どの ntfy トピックがこのメッセージを受け取りますか?',
+    'Which topics should receive this message?' => 'どのトピックがこのメッセージを受信しますか?',
     'No ntfy topics configured. Add one in [Settings → ntfy]({url}).' => 'ntfy トピックが設定されていません。[設定 → ntfy]({url}) で追加してください。',
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'ntfy トピックが設定されていません。トピックは、管理者による変更が許可された環境でのみ追加できます。',
+    'Select Slack channel(s)' => 'Slack チャンネルを選択',
+    'Which channels should receive this message?' => 'どのチャンネルがこのメッセージを受信しますか?',
+    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Slack チャンネルが設定されていません。[設定 → Slack]({url}) で追加してください。',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Slack チャンネルが設定されていません。チャンネルは、管理者による変更が許可された環境でのみ追加できます。',
+    'Select Discord channel(s)' => 'Discord チャンネルを選択',
+    'No Discord channels configured. Add one in [Settings → Discord]({url}).' => 'Discord チャンネルが設定されていません。[設定 → Discord]({url}) で追加してください。',
+    'No Discord channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Discord チャンネルが設定されていません。チャンネルは、管理者による変更が許可された環境でのみ追加できます。',
     'Select Bluesky account(s)' => 'Bluesky アカウントを選択',
-    'Which Bluesky accounts should post this message?' => 'どの Bluesky アカウントがこのメッセージを投稿しますか?',
+    'Which accounts should post this message?' => 'どのアカウントがこのメッセージを投稿しますか?',
     'No Bluesky accounts configured. Add one in [Settings → Bluesky]({url}).' => 'Bluesky アカウントが設定されていません。[設定 → Bluesky]({url}) で追加してください。',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Bluesky アカウントが設定されていません。アカウントは、管理者による変更が許可された環境でのみ追加できます。',
+    'Select Mastodon account(s)' => 'Mastodon アカウントを選択',
+    'No Mastodon accounts configured. Add one in [Settings → Mastodon]({url}).' => 'Mastodon アカウントが設定されていません。[設定 → Mastodon]({url}) で追加してください。',
+    'No Mastodon accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Mastodon アカウントが設定されていません。アカウントは、管理者による変更が許可された環境でのみ追加できます。',
+    'Select MQTT topic(s)' => 'MQTT トピックを選択',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'MQTT トピックが設定されていません。[設定 → MQTT]({url}) で追加してください。',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'MQTT トピックが設定されていません。トピックは、管理者による変更が許可された環境でのみ追加できます。',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '有効なトピックではありません。空にしたり、ワイルドカード `+` や `#` を含めたりすることはできません。',
 
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => '受信者を決定する Twig スニペット',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => '[メッセージの受信者を決定する]({url})ためのカスタムTwigスニペットを入力してください。',
     'The snippet **must** include a `{% setRecipients %}` tag.' => 'スニペットには`{% setRecipients %}`タグを**必ず**含める必要があります。',
 
-    // ============================================================
+    // ========================================================
     // SETTINGS
-    // ============================================================
+    // ========================================================
 
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier 設定',
     'General' => '一般',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
-    'Slack' => 'Slack',
-    'Bluesky' => 'Bluesky',
     'ntfy' => 'ntfy',
+    'Slack' => 'Slack',
+    'Discord' => 'Discord',
+    'Bluesky' => 'Bluesky',
+    'Mastodon' => 'Mastodon',
+    'MQTT' => 'MQTT',
+
+    // Settings: shared intro lines
+    'Consult the [{name} setup guide]({url}) for complete instructions.' => '詳しい手順については、[{name} セットアップガイド]({url}) を参照してください。',
+    'Sensitive values can be stored in your `.env` file and referenced here.' => '機密性の高い値は `.env` ファイルに保存し、ここから参照できます。',
+
+    // Settings: Notification order
+    'Notification Order' => '通知の並び順',
+    'Notifications can be dragged into any order on the index page. Choose where new notifications land in that order.' => '通知は一覧ページでドラッグして好きな順序に並べ替えられます。新しい通知をその順序のどこに追加するかを選択します。',
+    'Default Placement' => 'デフォルトの配置',
+    'Where new notifications are added to the list.' => '新しい通知をリストのどこに追加するか。',
+    'Before other notifications' => '他の通知より前',
+    'After other notifications' => '他の通知より後',
 
     // Settings: Logging
     'Logging' => 'ロギング',
-    'Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database.' => 'Notifier は送信されたメッセージのログを継続的に保持します。通常は不要ですが、データベースに記録するログイベントの数を制限できます。',
+    "Notifier keeps a running log of every message it sends. You usually won't need to change this, but you can limit how many log entries are kept in the database." => 'Notifier は送信されたメッセージのログを継続的に保持します。通常は不要ですが、データベースに記録するログイベントの数を制限できます。',
     'Enable Logging' => 'ロギングを有効化',
     'When disabled, Notifier will not write anything to the notification log.' => '無効にすると、Notifier は通知ログに何も書き込みません。',
     'Number of days to retain log events' => 'ログイベントを保持する日数',
@@ -327,33 +380,32 @@ return [
 
     // Settings: Scheduled sending
     'Scheduled Sending' => 'スケジュール送信',
-    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'スケジュール実行のWebリクエストを認証するための共有シークレット。Webエンドポイント経由でスケジュールを起動する場合のみ必要です。',
+    'A shared secret that authenticates scheduled runs triggered over the web. You only need this if you trigger the schedule from the web endpoint.' => 'スケジュール実行のWebリクエストを認証するための共有シークレット。Webエンドポイント経由でスケジュールを起動する場合のみ必要です。',
     'Scheduled-Run Token' => 'スケジュール実行トークン',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => '各リクエストとともに X-Notifier-Token ヘッダーまたは token ボディパラメータとして送信されます。',
 
     // Settings: Twilio
-    'Twilio API Credentials' => 'Twilio API 認証情報',
-    'If using the Twilio API to send SMS messages, the following credentials are required.' => 'SMS の送信に Twilio API を使用する場合、以下の認証情報が必要です。',
+    'Send SMS text messages through [Twilio](https://www.twilio.com).' => '[Twilio](https://www.twilio.com) を通じて SMS テキストメッセージを送信します。',
     'Twilio Account SID' => 'Twilio アカウント SID',
     'Twilio Auth Token' => 'Twilio 認証トークン',
     'Twilio phone number (sends each SMS message)' => 'Twilio 電話番号 (各 SMS の送信元)',
     'SMS Testing' => 'SMS テスト',
-    'Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient.' => '任意。設定されている場合、送信されるすべての SMS は解決された受信者ではなくこの番号に送られます。',
+    'Optional. When set, every SMS is sent to this number instead of the actual recipient.' => '任意。設定されている場合、送信されるすべての SMS は解決された受信者ではなくこの番号に送られます。',
     'Test phone number' => 'テスト用電話番号',
 
     // Settings: Pushover
-    "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)." => '[Pushover](https://pushover.net) は登録ユーザーのデバイスにプッシュ通知を送信します。各 Craft ユーザーは自分のプロフィールに Pushover ユーザーキーを保存するカスタムフィールドが必要です。各通知のメッセージタブでどのフィールドを使うか選択します。詳細なセットアップ手順は [Pushover の入門ドキュメント](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)を参照してください。',
+    'Send push notifications through [Pushover](https://pushover.net).' => '[Pushover](https://pushover.net) を通じてプッシュ通知を送信します。',
     'Application API Token' => 'アプリケーション API トークン',
     'The 30-character app token from your Pushover application.' => 'Pushover アプリケーションの 30 文字のアプリトークン。',
 
     // Settings: ntfy
-    'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh は無料の HTTP ベースのプッシュ通知サービスです。購読者はトピックに参加することで、ntfy アプリ、ウェブ、または互換クライアントでメッセージを受け取ります。',
+    'Send push notifications through [ntfy](https://ntfy.sh).' => '[ntfy](https://ntfy.sh) を通じてプッシュ通知を送信します。',
     'Server URL' => 'サーバー URL',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => '任意。該当する場合は自前ホストの ntfy インスタンスを指定します。デフォルトは `https://ntfy.sh` です。',
     'Access token' => 'アクセストークン',
     'Optional, required for protected topics or self-hosted instances with auth.' => '任意。保護されたトピックや認証付きの自前ホストインスタンスでは必要です。',
     'ntfy Topics' => 'ntfy トピック',
-    "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'メッセージの送信先にしたい ntfy トピックを追加します。各トピックは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
+    'Add the ntfy topics you want to send to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'メッセージの送信先にしたい ntfy トピックを追加します。各トピックは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
     'Topics' => 'トピック',
     "Click any row's **Test** button to send a quick test message to that topic." => '任意の行の **テスト** ボタンをクリックして、そのトピックに簡単なテストメッセージを送信します。',
     'Label' => 'ラベル',
@@ -361,8 +413,7 @@ return [
     'Add a topic' => 'トピックを追加',
 
     // Settings: Slack
-    'Slack Channels' => 'Slack チャンネル',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`、`chat:write.customize`、`chat:write.public` のスコープを持つ [Slack アプリ](https://api.slack.com/apps) を作成し、投稿したい各チャンネルに対して行を追加します。通知の設定時に、各チャンネルが **受信者** タブで受信者として利用可能になります。ボットトークンは秘密情報なので、`.env` 変数に保存し、その変数を参照してください(例: `$SLACK_BOT_TOKEN`)。トークンを直接貼り付けないでください。',
+    'Post messages to your Slack channels.' => 'Slack チャンネルにメッセージを送信します。',
     'Channels' => 'チャンネル',
     "Click any row's **Test** button to send a quick test message to that channel." => '任意の行の **テスト** ボタンをクリックして、そのチャンネルに簡単なテストメッセージを送信します。',
     'Bot Token' => 'ボットトークン',
@@ -371,21 +422,59 @@ return [
     'Not a valid Bot Token. Must start with `xoxb-`.' => '有効なボットトークンではありません。`xoxb-`で始まる必要があります。',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => '有効なチャンネルIDではありません。`C01234ABCD`のような形式である必要があります。',
 
+    // Settings: Discord
+    'Post messages to your Discord channels.' => 'Discord チャンネルにメッセージを送信します。',
+    'Webhook URL' => 'Webhook URL',
+    'Not a valid Webhook URL. Must start with `https://discord.com/api/webhooks/`.' => '有効な Webhook URL ではありません。`https://discord.com/api/webhooks/` で始まる必要があります。',
+
     // Settings: Bluesky
-    "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => '[Bluesky](https://bsky.app) の投稿は ATProto API を介して設定されたアカウントのフィードに公開されます。アプリパスワードは [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords) で生成されます。アプリパスワードは機密情報であるため、パスワードを直接貼り付けるのではなく、`.env` 変数に保存し、その変数(例: `$BLUESKY_APP_PASSWORD`)を参照してください。',
+    'Publish posts to your [Bluesky](https://bsky.app) accounts.' => '[Bluesky](https://bsky.app) アカウントに投稿します。',
     'PDS URL' => 'PDS URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'デフォルトは https://bsky.social です。インストールがフェデレートしている場合はカスタム PDS を指定してください。',
     'Bluesky Accounts' => 'Bluesky アカウント',
-    "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => '投稿元にしたい Bluesky アカウントを追加します。各アカウントは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
+    'Add the Bluesky accounts you want to post from. Each account becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '投稿元にしたい Bluesky アカウントを追加します。各アカウントは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
     'Accounts' => 'アカウント',
     "Click any row's **Test** button to confirm the account authenticates." => '任意の行の **テスト** ボタンをクリックして、アカウントが認証されることを確認します。',
     'Handle' => 'ハンドル',
     'App password' => 'アプリパスワード',
     'Add an account' => 'アカウントを追加',
 
-    // ============================================================
+    // Settings: Mastodon
+    'Publish posts to your [Mastodon](https://joinmastodon.org) accounts.' => '[Mastodon](https://joinmastodon.org) アカウントに投稿します。',
+    'Click any row\'s **Test** button to verify that account\'s credentials. No posts are made.' => '任意の行の **テスト** ボタンをクリックして、そのアカウントの認証情報を検証します。投稿は行われません。',
+    'Instance URL' => 'インスタンス URL',
+    'Access Token' => 'アクセストークン',
+
+    // Settings: MQTT
+    'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'MQTT ブローカーにメッセージを公開します。IoT やホームオートメーションの構成に便利です。',
+    'Host' => 'ホスト',
+    'Broker hostname, without a protocol or port.' => 'ブローカーのホスト名(プロトコルやポートは含めません)。',
+    'Port' => 'ポート',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => '任意。TLS が有効な場合は既定で 8883、それ以外は 1883 です。',
+    'Use TLS' => 'TLS を使用',
+    'Whether to connect to the broker over a secure TLS socket.' => 'セキュアな TLS ソケットでブローカーに接続するかどうか。',
+    'Username' => 'ユーザー名',
+    'Optional, for brokers that require username/password authentication.' => '任意。ユーザー名/パスワード認証を必要とするブローカー向けです。',
+    'Password' => 'パスワード',
+    'MQTT Version' => 'MQTT バージョン',
+    'Protocol version sent to the broker.' => 'ブローカーに送信するプロトコルバージョン。',
+    'Client ID' => 'クライアント ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => '任意。空欄の場合、一意のクライアント ID が自動生成されます。',
+    'Mutual TLS' => '相互 TLS',
+    'Optional. Needed for brokers that authenticate clients with certificates, such as AWS IoT Core. Enter the server file paths to your certificate files. You can use a `.env` variable or `@alias` reference.' => '任意。AWS IoT Core など、証明書でクライアントを認証するブローカーに必要です。証明書ファイルへのサーバーファイルパスを指定してください(`.env` 変数または `@alias` 参照を使用できます)。',
+    'CA Certificate File' => 'CA 証明書ファイル',
+    'Path to the certificate authority (CA) file.' => '認証局(CA)ファイルへのパス。',
+    'Client Certificate File' => 'クライアント証明書ファイル',
+    'Path to the client certificate file.' => 'クライアント証明書ファイルへのパス。',
+    'Client Key File' => 'クライアントキーファイル',
+    'Path to the client private key file.' => 'クライアントの秘密鍵ファイルへのパス。',
+    'MQTT Topics' => 'MQTT トピック',
+    'Add the MQTT topics you want to publish to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '発行先にしたい MQTT トピックを追加します。各トピックは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => '任意の行の **テスト** ボタンをクリックして、そのトピックに簡単なテストメッセージを発行します。',
+
+    // ========================================================
     // MANUAL SEND & TEST
-    // ============================================================
+    // ========================================================
 
     // Manual send & test
     'Send a test message' => 'テストメッセージを送信',
@@ -397,9 +486,9 @@ return [
     'This notification cannot be triggered manually.' => 'この通知は手動でトリガーできません。',
     'This notification no longer applies to the selected element.' => 'この通知は選択された要素には適用されなくなりました。',
 
-    // ============================================================
+    // ========================================================
     // RUNTIME OUTPUT
-    // ============================================================
+    // ========================================================
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '{recipient} に {messageType} を送信中。',
@@ -428,6 +517,10 @@ return [
     'Log events deleted.' => 'ログイベントを削除しました。',
     'Notification sent.' => '通知を送信しました。',
     'Notification was not sent. Check the Notification Log for details.' => '通知は送信されませんでした。詳細は通知ログをご確認ください。',
+    'Instance URL and access token are required.' => 'インスタンス URL とアクセストークンは必須です。',
+    'Mastodon rejected the request: {error}' => 'Mastodon がリクエストを拒否しました: {error}',
+    'Successfully authenticated as @{handle}. No posts were made.' => '@{handle} として認証に成功しました。投稿は行われていません。',
+    'Broker host is not configured.' => 'ブローカーのホストが設定されていません。',
 
     // Outbound: per-channel send results
     'Unable to send email, no recipient specified.' => 'メールを送信できません。受信者が指定されていません。',
@@ -458,6 +551,12 @@ return [
     'Slack rejected the message: {error}' => 'Slackがメッセージを拒否しました: {error}',
     'Slack POST failed: {reason}' => 'Slack POST が失敗しました: {reason}',
     'Successfully sent Slack message to "{label}".' => '"{label}" に Slack メッセージを正常に送信しました。',
+    'Unable to send Discord message, no webhook URL.' => 'Discord メッセージを送信できません。Webhook URL がありません。',
+    'Unable to send Discord message, body is empty.' => 'Discord メッセージを送信できません。本文が空です。',
+    'Unable to send Discord message, body exceeds the 2000-character limit.' => 'Discord メッセージを送信できません。本文が 2000 文字の制限を超えています。',
+    'Discord rejected the message: {error}' => 'Discord がメッセージを拒否しました: {error}',
+    'Discord POST failed: {reason}' => 'Discord POST が失敗しました: {reason}',
+    'Successfully sent Discord message to "{label}".' => '"{label}" に Discord メッセージを正常に送信しました。',
     'Unable to send Bluesky post, recipient is missing credentials.' => 'Bluesky 投稿を送信できません。受信者の認証情報がありません。',
     'Body exceeded {max} characters, truncated.' => '本文が {max} 文字を超えたため切り詰められました。',
     'Successfully posted to Bluesky as "{label}".' => '"{label}" として Bluesky に正常に投稿しました。',
@@ -465,6 +564,17 @@ return [
     'Bluesky auth failed: {reason}' => 'Bluesky 認証に失敗しました: {reason}',
     'Bluesky post failed: {reason}' => 'Bluesky 投稿に失敗しました: {reason}',
     'Bluesky link preview skipped: {reason}' => 'Bluesky のリンクプレビューをスキップしました: {reason}',
+    'Unable to send Mastodon post, no instance URL.' => 'Mastodon の投稿を送信できません。インスタンス URL がありません。',
+    'Unable to send Mastodon post, no access token.' => 'Mastodon の投稿を送信できません。アクセストークンがありません。',
+    'Unable to send Mastodon post, body is empty.' => 'Mastodon の投稿を送信できません。本文が空です。',
+    'Mastodon rejected the post: {error}' => 'Mastodon が投稿を拒否しました: {error}',
+    'Mastodon POST failed: {reason}' => 'Mastodon POST が失敗しました: {reason}',
+    'Successfully sent Mastodon post to "{label}".' => '"{label}" に Mastodon の投稿を正常に送信しました。',
+    'Unable to send MQTT message, no broker host configured.' => 'MQTT メッセージを送信できません。ブローカーのホストが設定されていません。',
+    'Unable to send MQTT message, no topic specified.' => 'MQTT メッセージを送信できません。トピックが指定されていません。',
+    'Unable to send MQTT message, the payload is empty.' => 'MQTT メッセージを送信できません。ペイロードが空です。',
+    'MQTT publish failed: {reason}' => 'MQTT の発行に失敗しました: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'トピック「{topic}」に MQTT メッセージを送信しました。',
 
     // Recipient warnings
     'Recipient "{name}" has no email address.' => '受信者「{name}」にはメールアドレスがありません。',
@@ -475,9 +585,12 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => '受信者「{name}」に関連付けられたユーザーがないため、Pushover メッセージを送信できません。',
     '[SKIPPED] User "{name}" has no Pushover key.' => '[スキップ] ユーザー「{name}」には Pushover キーがありません。',
     'Recipient "{name}" has no ntfy topic.' => '受信者「{name}」には ntfy トピックがありません。',
-    'Recipient "{name}" has no Bluesky credentials.' => '受信者「{name}」には Bluesky の認証情報がありません。',
     'Recipient "{name}" has no Slack bot token.' => '受信者「{name}」にSlackボットトークンがありません。',
     'Recipient "{name}" has no Slack channel ID.' => '受信者「{name}」にSlackチャンネルIDがありません。',
+    'Recipient "{name}" has no Discord webhook URL.' => '受信者「{name}」には Discord の Webhook URL がありません。',
+    'Recipient "{name}" has no Bluesky credentials.' => '受信者「{name}」には Bluesky の認証情報がありません。',
+    'Recipient "{name}" has no Mastodon credentials.' => '受信者「{name}」には Mastodon の認証情報がありません。',
+    'Recipient "{name}" has no MQTT topic.' => '受信者「{name}」に MQTT トピックがありません。',
 
     // Errors & exceptions
     'Invalid element event: {class}' => '無効な要素イベント: {class}',
@@ -497,14 +610,13 @@ return [
     'Element not found' => '要素が見つかりません',
     'You do not have permission to use the Dynamic Data type.' => '動的データタイプを使用する権限がありません。',
     'The Dynamic Data snippet did not call the {tag} tag.' => 'Twig スニペットが {tag} タグを呼び出しませんでした。',
-    'Invalid Slack body format.' => 'Slackの本文形式が無効です。',
 
     // Config-file override note
     'This is being set in the config file. [{file}]' => 'これは設定ファイルで設定されています。[{file}]',
 
-    // ============================================================
+    // ========================================================
     // JAVASCRIPT UI
-    // ============================================================
+    // ========================================================
 
     // JavaScript: log utility & buttons
     'Test notification failed.' => 'テスト通知に失敗しました。',
@@ -514,66 +626,5 @@ return [
     'Unable to delete the log event, something went wrong.' => 'ログイベントを削除できませんでした。問題が発生しました。',
     'Log event deleted.' => 'ログイベントを削除しました。',
     'Unable to delete log events, something went wrong.' => 'ログイベントを削除できませんでした。問題が発生しました。',
-    'Are you sure you want to delete this log event?' => 'このログイベントを削除してもよろしいですか？',
     'Are you sure you want to delete all logs from {date}?' => '{date}のすべてのログを削除してもよろしいですか？',
-
-    // ============================================================
-    // MQTT
-    // ============================================================
-
-    'Recipient "{name}" has no MQTT topic.' => '受信者「{name}」に MQTT トピックがありません。',
-    'Unable to send MQTT message, no broker host configured.' => 'MQTT メッセージを送信できません。ブローカーのホストが設定されていません。',
-    'Unable to send MQTT message, no topic specified.' => 'MQTT メッセージを送信できません。トピックが指定されていません。',
-    'Unable to send MQTT message, the payload is empty.' => 'MQTT メッセージを送信できません。ペイロードが空です。',
-    'MQTT publish failed: {reason}' => 'MQTT の発行に失敗しました: {reason}',
-    'Successfully sent MQTT message to topic "{topic}".' => 'トピック「{topic}」に MQTT メッセージを送信しました。',
-    'MQTT Broker' => 'MQTT ブローカー',
-    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier は MQTT ブローカー(Mosquitto、EMQX、HiveMQ、AWS IoT Core など)に発行します。以下にブローカーの接続情報を入力してください。機密情報は `.env` 変数に保存し、ここで参照できます(例: `$MQTT_PASSWORD`)。',
-    'Host' => 'ホスト',
-    'Broker hostname, without a protocol or port.' => 'ブローカーのホスト名(プロトコルやポートは含めません)。',
-    'Port' => 'ポート',
-    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => '任意。TLS が有効な場合は既定で 8883、それ以外は 1883 です。',
-    'Use TLS' => 'TLS を使用',
-    'Whether to connect to the broker over a secure TLS socket.' => 'セキュアな TLS ソケットでブローカーに接続するかどうか。',
-    'Username' => 'ユーザー名',
-    'Optional, for brokers that require username/password authentication.' => '任意。ユーザー名/パスワード認証を必要とするブローカー向けです。',
-    'Password' => 'パスワード',
-    'MQTT Version' => 'MQTT バージョン',
-    'Protocol version sent to the broker.' => 'ブローカーに送信するプロトコルバージョン。',
-    'Client ID' => 'クライアント ID',
-    'Optional. A unique client ID is generated automatically when left blank.' => '任意。空欄の場合、一意のクライアント ID が自動生成されます。',
-    'Mutual TLS' => '相互 TLS',
-    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => '任意。AWS IoT Core など、証明書でクライアントを認証するブローカーに必要です。証明書ファイルへのサーバーファイルパスを指定してください(`.env` 変数または `@alias` 参照を使用できます)。',
-    'CA Certificate File' => 'CA 証明書ファイル',
-    'Path to the certificate authority (CA) file.' => '認証局(CA)ファイルへのパス。',
-    'Client Certificate File' => 'クライアント証明書ファイル',
-    'Path to the client certificate file.' => 'クライアント証明書ファイルへのパス。',
-    'Client Key File' => 'クライアントキーファイル',
-    'Path to the client private key file.' => 'クライアントの秘密鍵ファイルへのパス。',
-    'MQTT Topics' => 'MQTT トピック',
-    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => '発行先にしたい MQTT トピックを追加します。各トピックは通知の設定時に **受信者** タブで受信者として利用できるようになります。',
-    'Click any row\'s **Test** button to publish a quick test message to that topic.' => '任意の行の **テスト** ボタンをクリックして、そのトピックに簡単なテストメッセージを発行します。',
-    'MQTT' => 'MQTT',
-    'Payload' => 'ペイロード',
-    'The JSON or plain text message published to the MQTT topic.' => 'MQTT トピックに公開される JSON またはプレーンテキストのメッセージ。',
-    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'トピックに発行されるメッセージ。プレーンテキストまたは Twig でレンダリングした JSON オブジェクトを使用できます。',
-    'Quality of Service' => 'サービス品質',
-    'Delivery guarantee for this message.' => 'このメッセージの配信保証。',
-    'Retain' => '保持',
-    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'ブローカーがこれをトピックの最新メッセージとして保持し、今後の購読者に配信するかどうか。',
-    'Don\'t retain' => '保持しない',
-    'Select MQTT topic(s)' => 'MQTT トピックを選択',
-    'Which topics should receive this message?' => 'どのトピックがこのメッセージを受信しますか?',
-    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'MQTT トピックが設定されていません。[設定 → MQTT]({url}) で追加してください。',
-    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '有効なトピックではありません。空にしたり、ワイルドカード `+` や `#` を含めたりすることはできません。',
-    'Broker host is not configured.' => 'ブローカーのホストが設定されていません。',
-
-    // ============================================================
-    // Recipient empty-state (administrative changes disabled)
-    // ============================================================
-
-    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'ntfy トピックが設定されていません。トピックは、管理者による変更が許可された環境でのみ追加できます。',
-    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Slack チャンネルが設定されていません。チャンネルは、管理者による変更が許可された環境でのみ追加できます。',
-    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Bluesky アカウントが設定されていません。アカウントは、管理者による変更が許可された環境でのみ追加できます。',
-    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'MQTT トピックが設定されていません。トピックは、管理者による変更が許可された環境でのみ追加できます。',
 ];

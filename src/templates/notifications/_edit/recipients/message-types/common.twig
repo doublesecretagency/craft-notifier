@@ -46,10 +46,22 @@
     {% include 'notifier/notifications/_edit/recipients/slack-channels' %}
 </div>
 
+{# Discord: locked to discord-channels #}
+<div class="message-type-discord hidden">
+    <input type="hidden" name="recipientsType" value="discord-channels" disabled>
+    {% include 'notifier/notifications/_edit/recipients/discord-channels' %}
+</div>
+
 {# Bluesky: locked to bluesky-accounts #}
 <div class="message-type-bluesky hidden">
     <input type="hidden" name="recipientsType" value="bluesky-accounts" disabled>
     {% include 'notifier/notifications/_edit/recipients/bluesky-accounts' %}
+</div>
+
+{# Mastodon: locked to mastodon-accounts #}
+<div class="message-type-mastodon hidden">
+    <input type="hidden" name="recipientsType" value="mastodon-accounts" disabled>
+    {% include 'notifier/notifications/_edit/recipients/mastodon-accounts' %}
 </div>
 
 {# MQTT: locked to mqtt-topics #}

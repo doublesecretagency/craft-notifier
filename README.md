@@ -89,7 +89,7 @@ Every outgoing message is [logged](https://plugins.doublesecretagency.com/notifi
 
 ## How to Install the Plugin
 
-To get started, see the [**complete installation instructions ➡️**](https://plugins.doublesecretagency.com/notifier/getting-started/)
+To get started, see the [**complete installation instructions ➡️**](https://plugins.doublesecretagency.com/notifier/getting-started/installation)
 
 ---
 

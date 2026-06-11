@@ -96,7 +96,7 @@ class OutboundBluesky extends BaseEnvelope
         // Resolve PDS URL, falling back to the default Bluesky PDS
         $pdsUrl = App::parseEnv($settings->blueskyPdsUrl) ?: Settings::DEFAULT_PDS_URL;
 
-        // Resolve the app password (supports a $ENV_VAR reference)
+        // Resolve the app password
         $appPassword = (string) App::parseEnv($this->appPassword);
 
         // If recipient is missing required fields, log error and bail

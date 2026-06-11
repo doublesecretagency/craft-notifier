@@ -8,7 +8,16 @@ To access the plugin settings, log into your control panel and visit **Settings 
 
 <img class="dropshadow" src="/images/settings/settings-general.png" alt="Screenshot of the Notifier settings page showing the sidebar and General sub-page" style="width:1044px; margin-top:10px">
 
-### Logging
+## Notification Order
+
+The index page for [Notifications](/elements) can be sorted manually, much like entries in a Structure section.
+
+Use **Default Placement** to choose where new notifications will be placed:
+
+- **Before other notifications** - New notifications will be added to the top of the list.
+- **After other notifications** - New notifications will be added to the bottom of the list. _(default)_
+
+## Logging
 
 By default, Notifier writes a [log event](/logging) every time a message is sent.
 
@@ -21,7 +30,7 @@ Here you can decide:
 Learn more about [restricting log size](/logging#restricting-log-size).
 :::
 
-### Scheduled Sending
+## Scheduled Sending
 
 If you plan to run the schedule via its [web endpoint](/getting-started/run-the-schedule#web-endpoint), be sure to set a **Scheduled-Run Token**.
 
@@ -43,4 +52,7 @@ Each [integration](/getting-started/integrations/) lives on its own sub-page. Pe
 - [Pushover](/getting-started/integrations/pushover) for push notifications to Craft users
 - [ntfy](/getting-started/integrations/ntfy) for push notifications via topics
 - [Slack](/getting-started/integrations/slack) for channel posts via Incoming Webhooks
+- [Discord](/getting-started/integrations/discord) for channel posts via webhooks
 - [Bluesky](/getting-started/integrations/bluesky) for posts via the ATProto API
+- [Mastodon](/getting-started/integrations/mastodon) for posts via the Mastodon API
+- [MQTT](/getting-started/integrations/mqtt) for publishing to an MQTT broker

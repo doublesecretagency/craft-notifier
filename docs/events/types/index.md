@@ -20,7 +20,7 @@ Sends a notification for certain **Asset** events.
 
 Sends a notification for certain **User** events.
 
-## Plugins
+## Plugin Elements
 
 ### [Craft Commerce](/events/types/craft-commerce/)
 
@@ -36,6 +36,10 @@ Sends a notification for certain **Calendar Event** events. _(requires [Solspace
 
 ## Other Data Sources
 
+### [RSS/JSON Feed](/events/types/feed/)
+
+Sends a notification when a new item appears in an external **RSS**, **Atom**, or **JSON** feed.
+
 ### [System Snapshot](/events/types/system-snapshot/)
 
 Sends a notification with a report of **internal Craft system info**.
@@ -43,7 +47,3 @@ Sends a notification with a report of **internal Craft system info**.
 ### [Dynamic Data](/events/types/dynamic-data/)
 
 Sends a notification with **data you build yourself** in a Twig snippet.
-
-### [RSS/JSON Feed](/events/types/feed/)
-
-Sends a notification when a new item appears in an external **RSS**, **Atom**, or **JSON** feed.

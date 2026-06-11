@@ -225,6 +225,26 @@ class SettingsModelTest extends TestCase
     }
 
     // ========================================================================= //
+    // Discord properties
+    // ========================================================================= //
+
+    public function testDiscordChannelsDefaultsToEmptyArray(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertSame([], $defaults['discordChannels']);
+    }
+
+    // ========================================================================= //
+    // Mastodon properties
+    // ========================================================================= //
+
+    public function testMastodonAccountsDefaultsToEmptyArray(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertSame([], $defaults['mastodonAccounts']);
+    }
+
+    // ========================================================================= //
     // Encryption surface removed
     // ========================================================================= //
 

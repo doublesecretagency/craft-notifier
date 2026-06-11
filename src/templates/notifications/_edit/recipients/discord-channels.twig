@@ -1,0 +1,29 @@
+{% import '_includes/forms' as forms %}
+
+{% set channelOptions = [] %}
+{% for row in (notificationOptions.discordChannels ?? []) %}
+    {% set channelOptions = channelOptions|merge([{ label: row.label, value: row.uid }]) %}
+{% endfor %}
+
+<div class="recipients-type-discord-channels">
+
+    {% if channelOptions|length %}
+        {{ forms.checkboxSelectField({
+            label: "Select Discord channel(s)"|t('notifier'),
+            instructions: "Which channels should receive this message?"|t('notifier'),
+            id: 'recipientsConfig-discordChannelUids',
+            name: 'recipientsConfig[discordChannelUids]',
+            options: channelOptions,
+            values: (notification.recipientsConfig.discordChannelUids ?? []),
+        }) }}
+    {% else %}
+        <p class="instructions warning">
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No Discord channels configured. Add one in [Settings → Discord]({url})."|t('notifier', { url: url('settings/plugins/notifier/discord') })|md }}
+            {% else %}
+                {{ "No Discord channels configured. Channels can only be added in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+</div>

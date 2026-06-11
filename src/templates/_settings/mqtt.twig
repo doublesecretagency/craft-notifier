@@ -5,8 +5,10 @@
 
 {% set versionOverride = ('mqttProtocolLevel' in configFile|keys) %}
 
-<h2>{{ "MQTT Broker"|t('notifier') }}</h2>
-<p>{{ "Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`)."|t('notifier')|md }}</p>
+<h2>{{ "MQTT"|t('notifier') }}</h2>
+<p>{{ "Publish messages to an MQTT broker, handy for IoT and home-automation setups."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'MQTT', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/mqtt' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
 <div class="pane">
     {% include autosuggest with {
         config: {
@@ -64,7 +66,7 @@
 </div>
 
 <h2>{{ "Mutual TLS"|t('notifier') }}</h2>
-<p>{{ "Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed)."|t('notifier')|md }}</p>
+<p>{{ "Optional. Needed for brokers that authenticate clients with certificates, such as AWS IoT Core. Enter the server file paths to your certificate files. You can use a `.env` variable or `@alias` reference."|t('notifier')|md }}</p>
 <div class="pane">
     {% include autosuggest with {
         config: {
@@ -90,7 +92,7 @@
 </div>
 
 <h2>{{ "MQTT Topics"|t('notifier') }}</h2>
-<p>{{ "Add the MQTT topics you'd like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification."|t('notifier')|md }}</p>
+<p>{{ "Add the MQTT topics you want to publish to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification."|t('notifier')|md }}</p>
 <div class="pane notifier-named-list">
     {{ forms.editableTableField({
         label: "Topics"|t('notifier'),

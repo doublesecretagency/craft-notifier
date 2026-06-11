@@ -18,7 +18,7 @@ use craft\helpers\Json;
 /**
  * Adds a top-level `queue` column and backfills it from the per-type queue settings.
  *
- * @since 3.2.0
+ * @since 3.1.0
  */
 class m260610_120000_queue_column extends Migration
 {

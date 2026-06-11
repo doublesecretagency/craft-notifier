@@ -11,9 +11,9 @@
 
 return [
 
-    // ============================================================
+    // ========================================================
     // PLUGIN & PERMISSIONS
-    // ============================================================
+    // ========================================================
 
     // Plugin & navigation
     'Notifier' => 'Notifier',
@@ -37,9 +37,9 @@ return [
     'View notification log' => 'Ver registo de notificações',
     'Delete notification log' => 'Eliminar registo de notificações',
 
-    // ============================================================
+    // ========================================================
     // NOTIFICATION EDITOR
-    // ============================================================
+    // ========================================================
 
     // Editor: tabs
     'Meta' => 'Meta',
@@ -145,8 +145,8 @@ return [
     'years' => 'anos',
     'Manual only' => 'Apenas manual',
     'Scheduled sending' => 'Envio agendado',
-    'On a recurring schedule' => 'Segundo um agendamento recorrente',
-    'On demand' => 'A pedido',
+    'Generate report on a recurring schedule' => 'Gerar relatório segundo um agendamento recorrente',
+    'Generate report on demand' => 'Gerar relatório a pedido',
     'Send on a Recurring Schedule' => 'Enviar segundo um agendamento recorrente',
     'Configure Recurring Schedule' => 'Configurar agendamento recorrente',
     'System timezone set to {timezone}' => 'Fuso horário do sistema definido para {timezone}',
@@ -256,8 +256,6 @@ return [
     'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => 'Suporta a sintaxe [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) padrão. Opcionalmente suporta HTML _(ver abaixo)_.',
     'Render Message Body as HTML' => 'Renderizar corpo da mensagem como HTML',
     'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => 'Analisar apenas como [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), ou também como HTML.',
-    'mrkdwn only' => 'apenas mrkdwn',
-    'mrkdwn + HTML' => 'mrkdwn + HTML',
     'Render Link Previews' => 'Mostrar pré-visualizações',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'Se o Slack deve apresentar pré-visualizações de ligações para URLs no corpo da mensagem.',
     'Don\'t unfurl' => 'Não expandir',
@@ -270,6 +268,19 @@ return [
     'Bot Emoji' => 'Emoji do ícone',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'Opcionalmente substitua o ícone da aplicação por um emoji. Utilizado apenas quando Bot Icon URL está vazio.',
 
+    // Message tab: Discord
+    'Discord Message Body' => 'Corpo da mensagem Discord',
+    'Supports standard Markdown, and optionally HTML _(see below)_. Max 2000 characters.' => 'Suporta Markdown padrão e, opcionalmente, HTML _(ver abaixo)_. Máx. 2000 carateres.',
+    'Whether to only parse as Markdown, or additionally parse it as HTML.' => 'Analisar apenas como Markdown, ou também como HTML.',
+    'Markdown only' => 'apenas Markdown',
+    'Markdown + HTML' => 'Markdown + HTML',
+    'Whether Discord should unfurl link previews for URLs in the message body.' => 'Se o Discord deve mostrar pré-visualizações de ligações para URLs no corpo da mensagem.',
+    'Webhook Username' => 'Nome de utilizador do Webhook',
+    'Optionally override the webhook\'s display name.' => 'Opcionalmente substitua o nome de apresentação do Webhook.',
+    'Dynamic Username' => 'Nome de utilizador dinâmico',
+    'Webhook Avatar URL' => 'URL do avatar do Webhook',
+    'Optionally override the webhook\'s avatar with a URL.' => 'Opcionalmente substitua o avatar do Webhook por um URL.',
+
     // Message tab: Bluesky
     'Post Body' => 'Corpo da publicação',
     'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Texto simples, máximo 300 caracteres. URLs e menções `@handle.tld` são transformadas em links automaticamente.',
@@ -277,6 +288,20 @@ return [
     'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Gerar automaticamente um cartão de pré-visualização quando o corpo do post incluir um URL.',
     'No card' => 'Sem cartão',
     'Generate preview card' => 'Gerar cartão de pré-visualização',
+
+    // Message tab: Mastodon
+    'Plain text, max 500 characters. URLs will unfurl automatically.' => 'Texto simples, máx. 500 carateres. Os URLs expandem-se automaticamente.',
+    'Visibility' => 'Visibilidade',
+    'Who will be able to see this post?' => 'Quem poderá ver esta publicação?',
+
+    // Message tab: MQTT
+    'Payload' => 'Conteúdo',
+    'The JSON or plain text message published to the MQTT topic.' => 'A mensagem JSON ou de texto simples publicada no tópico MQTT.',
+    'Quality of Service' => 'Qualidade de serviço',
+    'Delivery guarantee for this message.' => 'Garantia de entrega desta mensagem.',
+    'Retain' => 'Reter',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Se o broker mantém esta como a última mensagem do tópico, entregando-a a futuros subscritores.',
+    'Don\'t retain' => 'Não reter',
 
     // Recipients tab: type selector & user/group pickers
     'Recipients Type' => 'Tipo de destinatários',
@@ -286,38 +311,66 @@ return [
     'Which users will receive the message?' => 'Que utilizadores receberão a mensagem?',
     'Which user groups will receive the message?' => 'Que grupos de utilizadores receberão a mensagem?',
 
-    // Recipients tab: channel pickers (Slack / ntfy / Bluesky)
-    'Select Slack channel(s)' => 'Selecionar canal/canais de Slack',
-    'Which Slack channels should receive this message?' => 'Que canais do Slack receberão esta mensagem?',
-    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Sem canais de Slack configurados. Adicione um em [Definições → Slack]({url}).',
+    // Recipients tab: channel pickers (ntfy, Slack, Discord, Bluesky, Mastodon, MQTT)
     'Select ntfy topic(s)' => 'Selecionar tópico(s) ntfy',
-    'Which ntfy topics should receive this message?' => 'Que tópicos ntfy receberão esta mensagem?',
+    'Which topics should receive this message?' => 'Que tópicos devem receber esta mensagem?',
     'No ntfy topics configured. Add one in [Settings → ntfy]({url}).' => 'Sem tópicos ntfy configurados. Adicione um em [Definições → ntfy]({url}).',
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Sem tópicos ntfy configurados. Os tópicos só podem ser adicionados num ambiente que permita alterações administrativas.',
+    'Select Slack channel(s)' => 'Selecionar canal/canais de Slack',
+    'Which channels should receive this message?' => 'Que canais devem receber esta mensagem?',
+    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Sem canais de Slack configurados. Adicione um em [Definições → Slack]({url}).',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Sem canais de Slack configurados. Os canais só podem ser adicionados num ambiente que permita alterações administrativas.',
+    'Select Discord channel(s)' => 'Selecionar canal/canais do Discord',
+    'No Discord channels configured. Add one in [Settings → Discord]({url}).' => 'Sem canais do Discord configurados. Adicione um em [Definições → Discord]({url}).',
+    'No Discord channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Sem canais do Discord configurados. Os canais só podem ser adicionados num ambiente que permita alterações administrativas.',
     'Select Bluesky account(s)' => 'Selecionar conta(s) Bluesky',
-    'Which Bluesky accounts should post this message?' => 'Que contas Bluesky devem publicar esta mensagem?',
+    'Which accounts should post this message?' => 'Que contas devem publicar esta mensagem?',
     'No Bluesky accounts configured. Add one in [Settings → Bluesky]({url}).' => 'Sem contas Bluesky configuradas. Adicione uma em [Definições → Bluesky]({url}).',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Sem contas Bluesky configuradas. As contas só podem ser adicionadas num ambiente que permita alterações administrativas.',
+    'Select Mastodon account(s)' => 'Selecionar conta(s) Mastodon',
+    'No Mastodon accounts configured. Add one in [Settings → Mastodon]({url}).' => 'Sem contas Mastodon configuradas. Adicione uma em [Definições → Mastodon]({url}).',
+    'No Mastodon accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Sem contas Mastodon configuradas. As contas só podem ser adicionadas num ambiente que permita alterações administrativas.',
+    'Select MQTT topic(s)' => 'Selecionar tópico(s) MQTT',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Nenhum tópico MQTT configurado. Adicione um em [Definições → MQTT]({url}).',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Nenhum tópico MQTT configurado. Os tópicos só podem ser adicionados num ambiente que permita alterações administrativas.',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Tópico inválido. Não pode estar vazio nem conter os caracteres universais `+` ou `#`.',
 
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Fragmento Twig para determinar os destinatários',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Introduza um snippet Twig personalizado para [determinar quem receberá a mensagem]({url}).',
     'The snippet **must** include a `{% setRecipients %}` tag.' => 'O snippet **deve** incluir uma etiqueta `{% setRecipients %}`.',
 
-    // ============================================================
+    // ========================================================
     // SETTINGS
-    // ============================================================
+    // ========================================================
 
     // Settings: nav & page chrome
     'Notifier Settings' => 'Definições Notifier',
     'General' => 'Geral',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
-    'Slack' => 'Slack',
-    'Bluesky' => 'Bluesky',
     'ntfy' => 'ntfy',
+    'Slack' => 'Slack',
+    'Discord' => 'Discord',
+    'Bluesky' => 'Bluesky',
+    'Mastodon' => 'Mastodon',
+    'MQTT' => 'MQTT',
+
+    // Settings: shared intro lines
+    'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Consulte o [guia de configuração do {name}]({url}) para instruções completas.',
+    'Sensitive values can be stored in your `.env` file and referenced here.' => 'Os valores sensíveis podem ser guardados no seu ficheiro `.env` e referenciados aqui.',
+
+    // Settings: Notification order
+    'Notification Order' => 'Ordem das notificações',
+    'Notifications can be dragged into any order on the index page. Choose where new notifications land in that order.' => 'As notificações podem ser arrastadas para uma ordem personalizada na página de índice. Escolha onde as novas notificações são adicionadas nessa ordem.',
+    'Default Placement' => 'Colocação predefinida',
+    'Where new notifications are added to the list.' => 'Onde as novas notificações são adicionadas à lista.',
+    'Before other notifications' => 'Antes das outras notificações',
+    'After other notifications' => 'Depois das outras notificações',
 
     // Settings: Logging
     'Logging' => 'Registo',
-    'Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database.' => 'O Notifier mantém um registo contínuo das mensagens enviadas. Normalmente não é necessário, mas pode limitar a quantidade de eventos guardados na base de dados.',
+    "Notifier keeps a running log of every message it sends. You usually won't need to change this, but you can limit how many log entries are kept in the database." => 'O Notifier mantém um registo contínuo das mensagens enviadas. Normalmente não é necessário, mas pode limitar a quantidade de eventos guardados na base de dados.',
     'Enable Logging' => 'Ativar registo',
     'When disabled, Notifier will not write anything to the notification log.' => 'Quando desativado, o Notifier não escreve nada no registo de notificações.',
     'Number of days to retain log events' => 'Número de dias para reter eventos de registo',
@@ -327,33 +380,32 @@ return [
 
     // Settings: Scheduled sending
     'Scheduled Sending' => 'Envio agendado',
-    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Segredo partilhado para autenticar pedidos web de execução agendada. Necessário apenas quando o agendamento é acionado através do endpoint web.',
+    'A shared secret that authenticates scheduled runs triggered over the web. You only need this if you trigger the schedule from the web endpoint.' => 'Segredo partilhado para autenticar pedidos web de execução agendada. Necessário apenas quando o agendamento é acionado através do endpoint web.',
     'Scheduled-Run Token' => 'Token de execução agendada',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Enviado em cada pedido como o cabeçalho X-Notifier-Token ou parâmetro token no corpo.',
 
     // Settings: Twilio
-    'Twilio API Credentials' => 'Credenciais da API Twilio',
-    'If using the Twilio API to send SMS messages, the following credentials are required.' => 'Se utilizar a API Twilio para enviar mensagens SMS, são necessárias as credenciais seguintes.',
+    'Send SMS text messages through [Twilio](https://www.twilio.com).' => 'Envie mensagens de texto SMS através do [Twilio](https://www.twilio.com).',
     'Twilio Account SID' => 'Twilio Account SID',
     'Twilio Auth Token' => 'Twilio Auth Token',
     'Twilio phone number (sends each SMS message)' => 'Número de telefone Twilio (envia cada SMS)',
     'SMS Testing' => 'Testes de SMS',
-    'Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient.' => 'Opcional. Quando definido, todos os SMS enviados serão para este número em vez do destinatário resolvido.',
+    'Optional. When set, every SMS is sent to this number instead of the actual recipient.' => 'Opcional. Quando definido, todos os SMS enviados serão para este número em vez do destinatário resolvido.',
     'Test phone number' => 'Número de telefone de teste',
 
     // Settings: Pushover
-    "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)." => 'O [Pushover](https://pushover.net) envia notificações push para os dispositivos de um utilizador registado. Cada utilizador Craft precisa de um campo personalizado no perfil que armazene a sua chave Pushover; selecione qual campo no separador Mensagem de cada notificação. Para instruções completas de configuração, consulte a [documentação inicial do Pushover](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover).',
+    'Send push notifications through [Pushover](https://pushover.net).' => 'Envie notificações push através do [Pushover](https://pushover.net).',
     'Application API Token' => 'Token de API da aplicação',
     'The 30-character app token from your Pushover application.' => 'O token de aplicação de 30 caracteres da sua aplicação Pushover.',
 
     // Settings: ntfy
-    'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'O ntfy.sh é um serviço gratuito de notificações push baseado em HTTP. Os subscritores recebem mensagens na aplicação ntfy, na web ou em qualquer cliente compatível ao subscrever um tópico.',
+    'Send push notifications through [ntfy](https://ntfy.sh).' => 'Envie notificações push através do [ntfy](https://ntfy.sh).',
     'Server URL' => 'URL do servidor',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => 'Opcional. Aponte para uma instância ntfy auto-hospedada, se aplicável. Predefinição `https://ntfy.sh`.',
     'Access token' => 'Token de acesso',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'Opcional. Necessário para tópicos protegidos ou instâncias auto-hospedadas com autenticação.',
     'ntfy Topics' => 'Tópicos ntfy',
-    "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Adicione os tópicos ntfy para os quais pretende enviar mensagens. Cada tópico fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação.',
+    'Add the ntfy topics you want to send to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Adicione os tópicos ntfy para os quais pretende enviar mensagens. Cada tópico fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação.',
     'Topics' => 'Tópicos',
     "Click any row's **Test** button to send a quick test message to that topic." => 'Clique no botão **Testar** de qualquer linha para enviar uma mensagem de teste rápida a esse tópico.',
     'Label' => 'Etiqueta',
@@ -361,8 +413,7 @@ return [
     'Add a topic' => 'Adicionar um tópico',
 
     // Settings: Slack
-    'Slack Channels' => 'Canais de Slack',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Crie uma [app Slack](https://api.slack.com/apps) com os scopes `chat:write`, `chat:write.customize` e `chat:write.public`, e depois adicione uma linha para cada canal onde queira publicar. Cada canal fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação. Um token do bot é um segredo, por isso guarde-o numa variável `.env` e referencie essa variável (por exemplo `$SLACK_BOT_TOKEN`) em vez de colar o token diretamente.',
+    'Post messages to your Slack channels.' => 'Publique mensagens nos seus canais do Slack.',
     'Channels' => 'Canais',
     "Click any row's **Test** button to send a quick test message to that channel." => 'Clique no botão **Testar** de qualquer linha para enviar uma mensagem de teste rápida a esse canal.',
     'Bot Token' => 'Token do bot',
@@ -371,21 +422,59 @@ return [
     'Not a valid Bot Token. Must start with `xoxb-`.' => 'Token do bot inválido. Deve começar com `xoxb-`.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'ID de canal inválido. Deve parecer-se com `C01234ABCD`.',
 
+    // Settings: Discord
+    'Post messages to your Discord channels.' => 'Publique mensagens nos seus canais do Discord.',
+    'Webhook URL' => 'URL do Webhook',
+    'Not a valid Webhook URL. Must start with `https://discord.com/api/webhooks/`.' => 'URL de Webhook inválido. Deve começar com `https://discord.com/api/webhooks/`.',
+
     // Settings: Bluesky
-    '[Bluesky](https://bsky.app) posts publish to the configured account\'s feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `$BLUESKY_APP_PASSWORD`) rather than pasting the password directly.' => 'As publicações do [Bluesky](https://bsky.app) são publicadas no feed da conta configurada através da API ATProto. As palavras-passe de aplicação são geradas em [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). Uma palavra-passe de aplicação é um segredo, por isso guarde-a numa variável `.env` e referencie essa variável (por exemplo, `$BLUESKY_APP_PASSWORD`) em vez de colar a palavra-passe diretamente.',
+    'Publish posts to your [Bluesky](https://bsky.app) accounts.' => 'Publique publicações nas suas contas do [Bluesky](https://bsky.app).',
     'PDS URL' => 'URL do PDS',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'Predefinição https://bsky.social. Aponte para um PDS personalizado se a sua instalação federar.',
     'Bluesky Accounts' => 'Contas Bluesky',
-    "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Adicione as contas Bluesky a partir das quais pretende publicar. Cada conta fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação.',
+    'Add the Bluesky accounts you want to post from. Each account becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Adicione as contas Bluesky a partir das quais pretende publicar. Cada conta fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação.',
     'Accounts' => 'Contas',
     "Click any row's **Test** button to confirm the account authenticates." => 'Clique no botão **Testar** de qualquer linha para confirmar que a conta autentica.',
     'Handle' => 'Identificador',
     'App password' => 'Palavra-passe de aplicação',
     'Add an account' => 'Adicionar uma conta',
 
-    // ============================================================
+    // Settings: Mastodon
+    'Publish posts to your [Mastodon](https://joinmastodon.org) accounts.' => 'Publique publicações nas suas contas do [Mastodon](https://joinmastodon.org).',
+    'Click any row\'s **Test** button to verify that account\'s credentials. No posts are made.' => 'Clique no botão **Testar** de qualquer linha para verificar as credenciais dessa conta. Não são feitas publicações.',
+    'Instance URL' => 'URL da instância',
+    'Access Token' => 'Token de acesso',
+
+    // Settings: MQTT
+    'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Publique mensagens num broker MQTT, útil para configurações de IoT e domótica.',
+    'Host' => 'Host',
+    'Broker hostname, without a protocol or port.' => 'Nome de host do broker, sem protocolo ou porta.',
+    'Port' => 'Porta',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Opcional. O valor predefinido é 8883 quando o TLS está ativado; caso contrário, 1883.',
+    'Use TLS' => 'Usar TLS',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Se deve ligar-se ao broker através de um socket TLS seguro.',
+    'Username' => 'Nome de utilizador',
+    'Optional, for brokers that require username/password authentication.' => 'Opcional, para brokers que exigem autenticação com nome de utilizador/palavra-passe.',
+    'Password' => 'Palavra-passe',
+    'MQTT Version' => 'Versão do MQTT',
+    'Protocol version sent to the broker.' => 'Versão do protocolo enviada ao broker.',
+    'Client ID' => 'ID do cliente',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'Opcional. É gerado automaticamente um ID de cliente único quando deixado em branco.',
+    'Mutual TLS' => 'TLS mútuo',
+    'Optional. Needed for brokers that authenticate clients with certificates, such as AWS IoT Core. Enter the server file paths to your certificate files. You can use a `.env` variable or `@alias` reference.' => 'Opcional. Necessário para brokers que autenticam clientes com certificados, como o AWS IoT Core. Indique os caminhos de ficheiro no servidor para os ficheiros de certificado (é permitida uma variável `.env` ou uma referência `@alias`).',
+    'CA Certificate File' => 'Ficheiro de certificado da CA',
+    'Path to the certificate authority (CA) file.' => 'Caminho para o ficheiro da autoridade de certificação (CA).',
+    'Client Certificate File' => 'Ficheiro de certificado do cliente',
+    'Path to the client certificate file.' => 'Caminho para o ficheiro de certificado do cliente.',
+    'Client Key File' => 'Ficheiro de chave do cliente',
+    'Path to the client private key file.' => 'Caminho para o ficheiro de chave privada do cliente.',
+    'MQTT Topics' => 'Tópicos MQTT',
+    'Add the MQTT topics you want to publish to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Adicione os tópicos MQTT nos quais pretende publicar. Cada tópico fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Clique no botão **Testar** de qualquer linha para publicar uma mensagem de teste rápida nesse tópico.',
+
+    // ========================================================
     // MANUAL SEND & TEST
-    // ============================================================
+    // ========================================================
 
     // Manual send & test
     'Send a test message' => 'Enviar uma mensagem de teste',
@@ -397,9 +486,9 @@ return [
     'This notification cannot be triggered manually.' => 'Esta notificação não pode ser acionada manualmente.',
     'This notification no longer applies to the selected element.' => 'Esta notificação já não se aplica ao elemento selecionado.',
 
-    // ============================================================
+    // ========================================================
     // RUNTIME OUTPUT
-    // ============================================================
+    // ========================================================
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'A enviar {messageType} para {recipient}.',
@@ -428,6 +517,10 @@ return [
     'Log events deleted.' => 'Eventos de registo eliminados.',
     'Notification sent.' => 'Notificação enviada.',
     'Notification was not sent. Check the Notification Log for details.' => 'A notificação não foi enviada. Consulte o Registo de notificações para mais detalhes.',
+    'Instance URL and access token are required.' => 'O URL da instância e o token de acesso são obrigatórios.',
+    'Mastodon rejected the request: {error}' => 'O Mastodon rejeitou o pedido: {error}',
+    'Successfully authenticated as @{handle}. No posts were made.' => 'Autenticado com sucesso como @{handle}. Não foram feitas publicações.',
+    'Broker host is not configured.' => 'O host do broker não está configurado.',
 
     // Outbound: per-channel send results
     'Unable to send email, no recipient specified.' => 'Não é possível enviar o e-mail: nenhum destinatário especificado.',
@@ -458,6 +551,12 @@ return [
     'Slack rejected the message: {error}' => 'O Slack rejeitou a mensagem: {error}',
     'Slack POST failed: {reason}' => 'POST Slack falhou: {reason}',
     'Successfully sent Slack message to "{label}".' => 'Mensagem Slack enviada com sucesso para "{label}".',
+    'Unable to send Discord message, no webhook URL.' => 'Não é possível enviar a mensagem Discord: sem URL de Webhook.',
+    'Unable to send Discord message, body is empty.' => 'Não é possível enviar a mensagem Discord: o corpo está vazio.',
+    'Unable to send Discord message, body exceeds the 2000-character limit.' => 'Não é possível enviar a mensagem Discord: o corpo excede o limite de 2000 carateres.',
+    'Discord rejected the message: {error}' => 'O Discord rejeitou a mensagem: {error}',
+    'Discord POST failed: {reason}' => 'POST Discord falhou: {reason}',
+    'Successfully sent Discord message to "{label}".' => 'Mensagem Discord enviada com sucesso para "{label}".',
     'Unable to send Bluesky post, recipient is missing credentials.' => 'Não é possível enviar a publicação Bluesky: o destinatário não tem credenciais.',
     'Body exceeded {max} characters, truncated.' => 'O corpo ultrapassou {max} carateres e foi truncado.',
     'Successfully posted to Bluesky as "{label}".' => 'Publicado com sucesso no Bluesky como "{label}".',
@@ -465,6 +564,17 @@ return [
     'Bluesky auth failed: {reason}' => 'Falha de autenticação Bluesky: {reason}',
     'Bluesky post failed: {reason}' => 'Publicação Bluesky falhou: {reason}',
     'Bluesky link preview skipped: {reason}' => 'Pré-visualização da ligação Bluesky ignorada: {reason}',
+    'Unable to send Mastodon post, no instance URL.' => 'Não é possível enviar a publicação Mastodon: sem URL da instância.',
+    'Unable to send Mastodon post, no access token.' => 'Não é possível enviar a publicação Mastodon: sem token de acesso.',
+    'Unable to send Mastodon post, body is empty.' => 'Não é possível enviar a publicação Mastodon: o corpo está vazio.',
+    'Mastodon rejected the post: {error}' => 'O Mastodon rejeitou a publicação: {error}',
+    'Mastodon POST failed: {reason}' => 'POST Mastodon falhou: {reason}',
+    'Successfully sent Mastodon post to "{label}".' => 'Publicação Mastodon enviada com sucesso para "{label}".',
+    'Unable to send MQTT message, no broker host configured.' => 'Não foi possível enviar a mensagem MQTT, nenhum host de broker configurado.',
+    'Unable to send MQTT message, no topic specified.' => 'Não foi possível enviar a mensagem MQTT, nenhum tópico especificado.',
+    'Unable to send MQTT message, the payload is empty.' => 'Não foi possível enviar a mensagem MQTT, o conteúdo está vazio.',
+    'MQTT publish failed: {reason}' => 'Falha ao publicar no MQTT: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'Mensagem MQTT enviada para o tópico "{topic}".',
 
     // Recipient warnings
     'Recipient "{name}" has no email address.' => 'O destinatário "{name}" não tem endereço de e-mail.',
@@ -475,9 +585,12 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => 'O destinatário "{name}" não tem utilizador associado; não é possível enviar a mensagem Pushover.',
     '[SKIPPED] User "{name}" has no Pushover key.' => '[IGNORADO] O utilizador "{name}" não tem chave Pushover.',
     'Recipient "{name}" has no ntfy topic.' => 'O destinatário "{name}" não tem tópico ntfy.',
-    'Recipient "{name}" has no Bluesky credentials.' => 'O destinatário "{name}" não tem credenciais Bluesky.',
     'Recipient "{name}" has no Slack bot token.' => 'O destinatário "{name}" não tem token do bot Slack.',
     'Recipient "{name}" has no Slack channel ID.' => 'O destinatário "{name}" não tem ID de canal do Slack.',
+    'Recipient "{name}" has no Discord webhook URL.' => 'O destinatário "{name}" não tem URL de Webhook do Discord.',
+    'Recipient "{name}" has no Bluesky credentials.' => 'O destinatário "{name}" não tem credenciais Bluesky.',
+    'Recipient "{name}" has no Mastodon credentials.' => 'O destinatário "{name}" não tem credenciais do Mastodon.',
+    'Recipient "{name}" has no MQTT topic.' => 'O destinatário "{name}" não tem tópico MQTT.',
 
     // Errors & exceptions
     'Invalid element event: {class}' => 'Evento de elemento inválido: {class}',
@@ -497,14 +610,13 @@ return [
     'Element not found' => 'Elemento não encontrado',
     'You do not have permission to use the Dynamic Data type.' => 'Não tens permissão para usar o tipo Dados dinâmicos.',
     'The Dynamic Data snippet did not call the {tag} tag.' => 'O fragmento Twig não chamou a tag {tag}.',
-    'Invalid Slack body format.' => 'Formato de corpo Slack inválido.',
 
     // Config-file override note
     'This is being set in the config file. [{file}]' => 'Isto está a ser definido no ficheiro de configuração. [{file}]',
 
-    // ============================================================
+    // ========================================================
     // JAVASCRIPT UI
-    // ============================================================
+    // ========================================================
 
     // JavaScript: log utility & buttons
     'Test notification failed.' => 'Falha na notificação de teste.',
@@ -514,66 +626,5 @@ return [
     'Unable to delete the log event, something went wrong.' => 'Não foi possível eliminar o evento de registo, algo correu mal.',
     'Log event deleted.' => 'Evento de registo eliminado.',
     'Unable to delete log events, something went wrong.' => 'Não foi possível eliminar os eventos de registo, algo correu mal.',
-    'Are you sure you want to delete this log event?' => 'Tem a certeza de que pretende eliminar este evento de registo?',
     'Are you sure you want to delete all logs from {date}?' => 'Tem a certeza de que pretende eliminar todos os registos de {date}?',
-
-    // ============================================================
-    // MQTT
-    // ============================================================
-
-    'Recipient "{name}" has no MQTT topic.' => 'O destinatário "{name}" não tem tópico MQTT.',
-    'Unable to send MQTT message, no broker host configured.' => 'Não foi possível enviar a mensagem MQTT, nenhum host de broker configurado.',
-    'Unable to send MQTT message, no topic specified.' => 'Não foi possível enviar a mensagem MQTT, nenhum tópico especificado.',
-    'Unable to send MQTT message, the payload is empty.' => 'Não foi possível enviar a mensagem MQTT, o conteúdo está vazio.',
-    'MQTT publish failed: {reason}' => 'Falha ao publicar no MQTT: {reason}',
-    'Successfully sent MQTT message to topic "{topic}".' => 'Mensagem MQTT enviada para o tópico "{topic}".',
-    'MQTT Broker' => 'Broker MQTT',
-    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'O Notifier publica num broker MQTT (como Mosquitto, EMQX, HiveMQ ou AWS IoT Core). Introduza abaixo os detalhes de ligação do broker. Os valores sensíveis podem ser armazenados numa variável `.env` e referenciados aqui (por exemplo `$MQTT_PASSWORD`).',
-    'Host' => 'Host',
-    'Broker hostname, without a protocol or port.' => 'Nome de host do broker, sem protocolo ou porta.',
-    'Port' => 'Porta',
-    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Opcional. O valor predefinido é 8883 quando o TLS está ativado; caso contrário, 1883.',
-    'Use TLS' => 'Usar TLS',
-    'Whether to connect to the broker over a secure TLS socket.' => 'Se deve ligar-se ao broker através de um socket TLS seguro.',
-    'Username' => 'Nome de utilizador',
-    'Optional, for brokers that require username/password authentication.' => 'Opcional, para brokers que exigem autenticação com nome de utilizador/palavra-passe.',
-    'Password' => 'Palavra-passe',
-    'MQTT Version' => 'Versão do MQTT',
-    'Protocol version sent to the broker.' => 'Versão do protocolo enviada ao broker.',
-    'Client ID' => 'ID do cliente',
-    'Optional. A unique client ID is generated automatically when left blank.' => 'Opcional. É gerado automaticamente um ID de cliente único quando deixado em branco.',
-    'Mutual TLS' => 'TLS mútuo',
-    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'Opcional. Necessário para brokers que autenticam clientes com certificados, como o AWS IoT Core. Indique os caminhos de ficheiro no servidor para os ficheiros de certificado (é permitida uma variável `.env` ou uma referência `@alias`).',
-    'CA Certificate File' => 'Ficheiro de certificado da CA',
-    'Path to the certificate authority (CA) file.' => 'Caminho para o ficheiro da autoridade de certificação (CA).',
-    'Client Certificate File' => 'Ficheiro de certificado do cliente',
-    'Path to the client certificate file.' => 'Caminho para o ficheiro de certificado do cliente.',
-    'Client Key File' => 'Ficheiro de chave do cliente',
-    'Path to the client private key file.' => 'Caminho para o ficheiro de chave privada do cliente.',
-    'MQTT Topics' => 'Tópicos MQTT',
-    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Adicione os tópicos MQTT nos quais pretende publicar. Cada tópico fica disponível como destinatário no separador **Destinatários** ao configurar uma notificação.',
-    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Clique no botão **Testar** de qualquer linha para publicar uma mensagem de teste rápida nesse tópico.',
-    'MQTT' => 'MQTT',
-    'Payload' => 'Conteúdo',
-    'The JSON or plain text message published to the MQTT topic.' => 'A mensagem JSON ou de texto simples publicada no tópico MQTT.',
-    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'A mensagem publicada no tópico. Pode ser texto simples ou um objeto JSON renderizado com Twig.',
-    'Quality of Service' => 'Qualidade de serviço',
-    'Delivery guarantee for this message.' => 'Garantia de entrega desta mensagem.',
-    'Retain' => 'Reter',
-    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Se o broker mantém esta como a última mensagem do tópico, entregando-a a futuros subscritores.',
-    'Don\'t retain' => 'Não reter',
-    'Select MQTT topic(s)' => 'Selecionar tópico(s) MQTT',
-    'Which topics should receive this message?' => 'Que tópicos devem receber esta mensagem?',
-    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Nenhum tópico MQTT configurado. Adicione um em [Definições → MQTT]({url}).',
-    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Tópico inválido. Não pode estar vazio nem conter os caracteres universais `+` ou `#`.',
-    'Broker host is not configured.' => 'O host do broker não está configurado.',
-
-    // ============================================================
-    // Recipient empty-state (administrative changes disabled)
-    // ============================================================
-
-    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Sem tópicos ntfy configurados. Os tópicos só podem ser adicionados num ambiente que permita alterações administrativas.',
-    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Sem canais de Slack configurados. Os canais só podem ser adicionados num ambiente que permita alterações administrativas.',
-    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Sem contas Bluesky configuradas. As contas só podem ser adicionadas num ambiente que permita alterações administrativas.',
-    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Nenhum tópico MQTT configurado. Os tópicos só podem ser adicionados num ambiente que permita alterações administrativas.',
 ];

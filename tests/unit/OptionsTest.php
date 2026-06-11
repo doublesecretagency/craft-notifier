@@ -90,8 +90,8 @@ class OptionsTest extends TestCase
     {
         // The order is load-bearing - the CP dropdown renders options in
         // source order. Native elements first, then the plugin event types,
-        // then the data-source event types (System Snapshot, Dynamic Data,
-        // RSS/JSON Feed) last.
+        // then the data-source event types (RSS/JSON Feed, System Snapshot,
+        // Dynamic Data) last.
         $this->assertSame(
             [
                 'entries',
@@ -102,9 +102,9 @@ class OptionsTest extends TestCase
                 'digital-products-products',
                 'digital-products-licenses',
                 'solspace-calendar-events',
+                'feed',
                 'system-snapshot',
                 'dynamic-data',
-                'feed',
             ],
             array_keys(Options::EVENT_TYPE)
         );
@@ -382,9 +382,9 @@ class OptionsTest extends TestCase
     // Other channel/recipient maps (regression coverage)
     // ========================================================================= //
 
-    public function testMessageTypeIncludesAllNineChannels(): void
+    public function testMessageTypeIncludesAllElevenChannels(): void
     {
-        // The nine channels Notifier understands; any addition would also need a Dispatch case branch.
+        // The eleven channels Notifier understands; any addition would also need a Dispatch case branch.
         $this->assertArrayHasKey('email', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('sms', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('announcement', Options::MESSAGE_TYPE);
@@ -394,6 +394,8 @@ class OptionsTest extends TestCase
         $this->assertArrayHasKey('slack', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('bluesky', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('mqtt', Options::MESSAGE_TYPE);
+        $this->assertArrayHasKey('discord', Options::MESSAGE_TYPE);
+        $this->assertArrayHasKey('mastodon', Options::MESSAGE_TYPE);
     }
 
     public function testMessageTypeIconCoversEveryMessageType(): void
@@ -406,9 +408,9 @@ class OptionsTest extends TestCase
         }
     }
 
-    public function testRecipientsTypeIncludesAllTenStrategies(): void
+    public function testRecipientsTypeIncludesAllTwelveStrategies(): void
     {
-        // The ten recipient strategies must each remain addressable by key.
+        // The twelve recipient strategies must each remain addressable by key.
         $this->assertArrayHasKey('current-user', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('all-users', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('all-admins', Options::RECIPIENTS_TYPE);
@@ -419,6 +421,8 @@ class OptionsTest extends TestCase
         $this->assertArrayHasKey('slack-channels', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('bluesky-accounts', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('mqtt-topics', Options::RECIPIENTS_TYPE);
+        $this->assertArrayHasKey('discord-channels', Options::RECIPIENTS_TYPE);
+        $this->assertArrayHasKey('mastodon-accounts', Options::RECIPIENTS_TYPE);
     }
 
     public function testAllowedRecipientTypesMapIsExhaustive(): void
@@ -476,6 +480,67 @@ class OptionsTest extends TestCase
     {
         // No MQTT brand icon exists; tower-broadcast is the chosen Font Awesome glyph.
         $this->assertSame('tower-broadcast', Options::MESSAGE_TYPE_ICON['mqtt']);
+    }
+
+    public function testDiscordAndMastodonUseBrandIcons(): void
+    {
+        // Both resolve to Font Awesome brand icons, matching the slack/bluesky precedent.
+        $this->assertSame('discord', Options::MESSAGE_TYPE_ICON['discord']);
+        $this->assertSame('mastodon', Options::MESSAGE_TYPE_ICON['mastodon']);
+    }
+
+    public function testMastodonVisibilityMapHasFourLevels(): void
+    {
+        // The four Mastodon post visibilities, surfaced in the message-type picker.
+        $this->assertCount(4, Options::MASTODON_VISIBILITY);
+        $this->assertArrayHasKey('public', Options::MASTODON_VISIBILITY);
+        $this->assertArrayHasKey('unlisted', Options::MASTODON_VISIBILITY);
+        $this->assertArrayHasKey('private', Options::MASTODON_VISIBILITY);
+        $this->assertArrayHasKey('direct', Options::MASTODON_VISIBILITY);
+    }
+
+    // ========================================================================= //
+    // MESSAGE_TYPE_GROUPED (optgroups for the Message Type dropdown)
+    // ========================================================================= //
+
+    public function testMessageTypeGroupedListsEveryFlatSlugInSameOrder(): void
+    {
+        // Pull the slug keys out of the grouped map (skipping the optgroup divider entries).
+        // The grouped map must list exactly the flat MESSAGE_TYPE slugs, in the same canonical order;
+        // this guards against a new type being added to one map but not the other.
+        $groupedSlugs = [];
+        foreach (Options::MESSAGE_TYPE_GROUPED as $key => $value) {
+            if (is_string($key)) {
+                $groupedSlugs[] = $key;
+            }
+        }
+        $this->assertSame(array_keys(Options::MESSAGE_TYPE), $groupedSlugs);
+    }
+
+    public function testMessageTypeGroupedDeclaresEveryOptgroupInOrder(): void
+    {
+        // Pin the five category labels and their order. Drift here re-shapes the CP dropdown.
+        $optgroups = [];
+        foreach (Options::MESSAGE_TYPE_GROUPED as $key => $value) {
+            if (is_int($key) && is_array($value) && isset($value['optgroup'])) {
+                $optgroups[] = $value['optgroup'];
+            }
+        }
+        $this->assertSame(
+            ['Native Pings', 'Push Notifications', 'Chat Platforms', 'Social Media', 'Internet of Things'],
+            $optgroups
+        );
+    }
+
+    public function testMessageTypeGroupedLabelsMatchFlatLabels(): void
+    {
+        // Each slug's label in the grouped map must match its flat-map label.
+        foreach (Options::MESSAGE_TYPE_GROUPED as $key => $value) {
+            if (is_string($key)) {
+                $this->assertSame(Options::MESSAGE_TYPE[$key], $value,
+                    "Grouped label for '{$key}' must match the flat MESSAGE_TYPE label");
+            }
+        }
     }
 
     // ========================================================================= //
@@ -601,8 +666,8 @@ class OptionsTest extends TestCase
     public function testDataSourcesGroupComesLastInOrder(): void
     {
         // In the dropdown's grouped form, the data-source event types sit in a
-        // trailing "Other Data Sources" optgroup, in the order System Snapshot,
-        // Dynamic Data, RSS/JSON Feed - after every plugin optgroup.
+        // trailing "Other Data Sources" optgroup, in the order RSS/JSON Feed,
+        // System Snapshot, Dynamic Data - after every plugin optgroup.
         $keys = array_keys(Options::EVENT_TYPE_GROUPED);
 
         // Find the "Other Data Sources" optgroup divider
@@ -617,9 +682,9 @@ class OptionsTest extends TestCase
         $this->assertNotNull($dividerIndex, 'Missing the "Other Data Sources" optgroup');
 
         // The three data sources follow the divider, in order, and close out the list
-        $this->assertSame('system-snapshot', $keys[$dividerIndex + 1]);
-        $this->assertSame('dynamic-data',    $keys[$dividerIndex + 2]);
-        $this->assertSame('feed',            $keys[$dividerIndex + 3]);
+        $this->assertSame('feed',            $keys[$dividerIndex + 1]);
+        $this->assertSame('system-snapshot', $keys[$dividerIndex + 2]);
+        $this->assertSame('dynamic-data',    $keys[$dividerIndex + 3]);
         $this->assertArrayNotHasKey($dividerIndex + 4, $keys, 'Data sources must be the final group');
     }
 

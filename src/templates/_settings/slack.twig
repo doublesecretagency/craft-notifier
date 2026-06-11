@@ -1,7 +1,9 @@
 {% import '_includes/forms' as forms %}
 
-<h2>{{ "Slack Channels"|t('notifier') }}</h2>
-<p>{{ "Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you'd like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly."|t('notifier')|md }}</p>
+<h2>{{ "Slack"|t('notifier') }}</h2>
+<p>{{ "Post messages to your Slack channels."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'Slack', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/slack' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
 <div class="pane notifier-named-list">
     {{ forms.editableTableField({
         label: "Channels"|t('notifier'),

@@ -24,9 +24,17 @@ Required for sending [ntfy](/messages/types/ntfy) push notifications.
 
 Required for posting [Slack](/messages/types/slack) channel messages.
 
+## [Discord](/getting-started/integrations/discord)
+
+Required for posting [Discord](/messages/types/discord) channel messages.
+
 ## [Bluesky](/getting-started/integrations/bluesky)
 
 Required for publishing [Bluesky](/messages/types/bluesky) posts.
+
+## [Mastodon](/getting-started/integrations/mastodon)
+
+Required for publishing [Mastodon](/messages/types/mastodon) posts.
 
 ## [MQTT](/getting-started/integrations/mqtt)
 

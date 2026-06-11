@@ -14,7 +14,7 @@ Announcements are posted in the upper-right corner of the control panel for each
 
 <img class="dropshadow" src="/images/messages/announcement-config.png" alt="" style="width:640px; margin-top:10px">
 
-<!--@include: @/messages/types/_docs-links.md-->
+<!--@include: @/messages/types/_special-variables.md-->
 
 ## Announcement Recipients
 

@@ -31,9 +31,9 @@ abstract class Options
         'digital-products-products' => 'Digital Products',
         'digital-products-licenses' => 'Digital Product Licenses',
         'solspace-calendar-events'  => 'Solspace Calendar',
+        'feed'                      => 'RSS/JSON Feed',
         'system-snapshot'           => 'System Snapshot',
         'dynamic-data'              => 'Dynamic Data',
-        'feed'                      => 'RSS/JSON Feed',
     ];
 
     /**
@@ -53,9 +53,9 @@ abstract class Options
         ['optgroup' => 'Solspace Calendar'],
         'solspace-calendar-events' => 'Calendar Events',
         ['optgroup' => 'Other Data Sources'],
+        'feed'            => 'RSS/JSON Feed',
         'system-snapshot' => 'System Snapshot',
         'dynamic-data'    => 'Dynamic Data',
-        'feed'            => 'RSS/JSON Feed',
     ];
 
     /**
@@ -295,6 +295,12 @@ abstract class Options
                 'value' => 'manually-triggered'
             ],
         ],
+        'feed' => [
+            [
+                'label' => 'When a new RSS feed item is found',
+                'value' => 'new-item'
+            ],
+        ],
         'system-snapshot' => [
             [
                 'label' => 'System Snapshot',
@@ -305,12 +311,6 @@ abstract class Options
             [
                 'label' => 'Dynamic Data',
                 'value' => 'compile'
-            ],
-        ],
-        'feed' => [
-            [
-                'label' => 'When a new RSS feed item is found',
-                'value' => 'new-item'
             ],
         ],
     ];
@@ -326,7 +326,31 @@ abstract class Options
         'pushover'     => 'Pushover',
         'ntfy'         => 'ntfy',
         'slack'        => 'Slack',
+        'discord'      => 'Discord',
         'bluesky'      => 'Bluesky',
+        'mastodon'     => 'Mastodon',
+        'mqtt'         => 'MQTT',
+    ];
+
+    /**
+     * @var array Message types grouped into optgroups for the Message Type dropdown.
+     */
+    public const MESSAGE_TYPE_GROUPED = [
+        ['optgroup' => 'Native Pings'],
+        'email'        => 'Email',
+        'announcement' => 'Announcement',
+        'flash'        => 'Flash Message',
+        ['optgroup' => 'Push Notifications'],
+        'sms'          => 'SMS (Text Message)',
+        'pushover'     => 'Pushover',
+        'ntfy'         => 'ntfy',
+        ['optgroup' => 'Chat Platforms'],
+        'slack'        => 'Slack',
+        'discord'      => 'Discord',
+        ['optgroup' => 'Social Media'],
+        'bluesky'      => 'Bluesky',
+        'mastodon'     => 'Mastodon',
+        ['optgroup' => 'Internet of Things'],
         'mqtt'         => 'MQTT',
     ];
 
@@ -341,7 +365,9 @@ abstract class Options
         'pushover'     => 'mobile-screen',
         'ntfy'         => 'angle-right',
         'slack'        => 'slack',
+        'discord'      => 'discord',
         'bluesky'      => 'bluesky',
+        'mastodon'     => 'mastodon',
         'mqtt'         => 'tower-broadcast',
     ];
 
@@ -366,7 +392,9 @@ abstract class Options
         'dynamic-recipients' => 'Dynamic Recipients',
         'ntfy-topics'        => 'Selected ntfy topic(s)',
         'slack-channels'     => 'Selected Slack channel(s)',
+        'discord-channels'   => 'Selected Discord channel(s)',
         'bluesky-accounts'   => 'Selected Bluesky account(s)',
+        'mastodon-accounts'  => 'Selected Mastodon account(s)',
         'mqtt-topics'        => 'Selected MQTT topic(s)',
     ];
 
@@ -383,7 +411,9 @@ abstract class Options
         'pushover'     => ['current-user', 'all-users', 'all-admins', 'selected-groups', 'selected-users', 'dynamic-recipients'],
         'ntfy'         => ['ntfy-topics'],
         'slack'        => ['slack-channels'],
+        'discord'      => ['discord-channels'],
         'bluesky'      => ['bluesky-accounts'],
+        'mastodon'     => ['mastodon-accounts'],
         'mqtt'         => ['mqtt-topics'],
     ];
 
@@ -413,6 +443,16 @@ abstract class Options
     public const MQTT_VERSION = [
         '3.1'   => 'MQTT 3.1',
         '3.1.1' => 'MQTT 3.1.1',
+    ];
+
+    /**
+     * @var array Mastodon post visibility levels. Default "public".
+     */
+    public const MASTODON_VISIBILITY = [
+        'public'   => 'Public',
+        'unlisted' => 'Unlisted',
+        'private'  => 'Followers only',
+        'direct'   => 'Direct',
     ];
 
 }

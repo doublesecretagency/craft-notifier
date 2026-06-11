@@ -12,6 +12,8 @@
 namespace doublesecretagency\notifier\migrations;
 
 use craft\db\Migration;
+use doublesecretagency\notifier\helpers\NotificationStructure;
+use Throwable;
 
 /**
  * Creates the database tables Notifier needs.
@@ -53,6 +55,7 @@ class Install extends Migration
     {
         $this->createTables();
         $this->addForeignKeys();
+        $this->seedStructure();
     }
 
     /**
@@ -139,6 +142,21 @@ class Install extends Migration
                 'itemId'         => $this->string(255)->notNull(),
             ]);
             $this->createIndex(null, self::TRACK_FEEDS, ['notificationId', 'itemId'], true);
+        }
+    }
+
+    /**
+     * Seed the Structure that backs the manual notification order.
+     *
+     * @return void
+     */
+    protected function seedStructure(): void
+    {
+        try {
+            // Ensure the structure exists (also persists its UID to settings)
+            NotificationStructure::getStructureId();
+        } catch (Throwable) {
+            // If it fails here, the index resolves it lazily on first use
         }
     }
 

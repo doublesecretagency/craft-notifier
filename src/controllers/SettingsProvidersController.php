@@ -16,6 +16,7 @@ use craft\helpers\App;
 use craft\helpers\StringHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\helpers\BlueskySession;
+use doublesecretagency\notifier\models\OutboundDiscord;
 use doublesecretagency\notifier\models\OutboundMqtt;
 use doublesecretagency\notifier\models\OutboundSlack;
 use doublesecretagency\notifier\models\Settings;
@@ -83,6 +84,16 @@ class SettingsProvidersController extends Controller
     }
 
     /**
+     * Render the Pushover sub-page.
+     *
+     * @return Response
+     */
+    public function actionPushover(): Response
+    {
+        return $this->_renderSubPage('pushover', 'Pushover');
+    }
+
+    /**
      * Render the ntfy sub-page.
      *
      * @return Response
@@ -103,13 +114,13 @@ class SettingsProvidersController extends Controller
     }
 
     /**
-     * Render the Pushover sub-page.
+     * Render the Discord sub-page.
      *
      * @return Response
      */
-    public function actionPushover(): Response
+    public function actionDiscord(): Response
     {
-        return $this->_renderSubPage('pushover', 'Pushover');
+        return $this->_renderSubPage('discord', 'Discord');
     }
 
     /**
@@ -120,6 +131,16 @@ class SettingsProvidersController extends Controller
     public function actionBluesky(): Response
     {
         return $this->_renderSubPage('bluesky', 'Bluesky');
+    }
+
+    /**
+     * Render the Mastodon sub-page.
+     *
+     * @return Response
+     */
+    public function actionMastodon(): Response
+    {
+        return $this->_renderSubPage('mastodon', 'Mastodon');
     }
 
     /**
@@ -151,7 +172,7 @@ class SettingsProvidersController extends Controller
         $section = $this->request->getRequiredBodyParam('section');
 
         // Only allow known sections
-        $whitelist = ['general', 'twilio', 'pushover', 'ntfy', 'slack', 'bluesky', 'mqtt'];
+        $whitelist = ['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'bluesky', 'mastodon', 'mqtt'];
         if (!in_array($section, $whitelist, true)) {
             throw new BadRequestHttpException(Craft::t('notifier', 'Invalid settings section: {section}', ['section' => $section]));
         }
@@ -166,8 +187,14 @@ class SettingsProvidersController extends Controller
         if ('slack' === $section && isset($posted['slackChannels'])) {
             $posted['slackChannels'] = $this->_assignUids($posted['slackChannels']);
         }
+        if ('discord' === $section && isset($posted['discordChannels'])) {
+            $posted['discordChannels'] = $this->_assignUids($posted['discordChannels']);
+        }
         if ('bluesky' === $section && isset($posted['blueskyAccounts'])) {
             $posted['blueskyAccounts'] = $this->_assignUids($posted['blueskyAccounts']);
+        }
+        if ('mastodon' === $section && isset($posted['mastodonAccounts'])) {
+            $posted['mastodonAccounts'] = $this->_assignUids($posted['mastodonAccounts']);
         }
         if ('mqtt' === $section && isset($posted['mqttTopics'])) {
             $posted['mqttTopics'] = $this->_assignUids($posted['mqttTopics']);
@@ -245,28 +272,39 @@ class SettingsProvidersController extends Controller
         }
 
         try {
+
+            // Get a Guzzle client
             $client = Craft::createGuzzleClient();
+
+            // Send a test message to the topic
             $response = $client->post($endpoint, [
                 'headers'     => $headers,
                 'body'        => Craft::t('notifier', 'Test message from Notifier.'),
                 'http_errors' => false,
                 'timeout'     => 10,
             ]);
+
+            // Get the response status code
             $status = $response->getStatusCode();
 
+            // If the server rejected the message, bail with an error
             if ($status < 200 || $status >= 300) {
                 return $this->asJson([
                     'success' => false,
                     'message' => Craft::t('notifier', 'HTTP {status}', ['status' => $status]),
                 ]);
             }
+
         } catch (Throwable $e) {
+
+            // Request failed, bail with an error
             return $this->asJson([
                 'success' => false,
                 'message' => $e->getMessage(),
             ]);
         }
 
+        // Return success
         return $this->asJson([
             'success' => true,
             'message' => Craft::t('notifier', 'Test message sent successfully.'),
@@ -306,7 +344,11 @@ class SettingsProvidersController extends Controller
         }
 
         try {
+
+            // Get a Guzzle client
             $client = Craft::createGuzzleClient();
+
+            // Send a test message to the channel
             $response = $client->post('https://slack.com/api/chat.postMessage', [
                 'headers'     => [
                     'Authorization' => 'Bearer ' . $botToken,
@@ -320,23 +362,100 @@ class SettingsProvidersController extends Controller
                 'http_errors' => false,
                 'timeout'     => 10,
             ]);
+
+            // Decode the response body
             $decoded = json_decode((string) $response->getBody(), true);
 
             // If Slack rejected the message, return the error code
             if (!is_array($decoded) || true !== ($decoded['ok'] ?? false)) {
+
+                // Get the error code
                 $error = ($decoded['error'] ?? 'unknown');
+
                 return $this->asJson([
                     'success' => false,
                     'message' => Craft::t('notifier', 'Slack rejected the message: {error}', ['error' => $error]),
                 ]);
             }
+
         } catch (Throwable $e) {
+
+            // Request failed, bail with an error
             return $this->asJson([
                 'success' => false,
                 'message' => $e->getMessage(),
             ]);
         }
 
+        // Return success
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Test message sent successfully.'),
+        ]);
+    }
+
+    /**
+     * Send a test message to a specific Discord channel webhook.
+     *
+     * @return Response
+     */
+    public function actionTestDiscord(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Get the posted webhook URL
+        $webhookUrl = App::parseEnv((string) $this->request->getRequiredBodyParam('webhookUrl'));
+
+        // If the webhook URL isn't valid, bail
+        if (!OutboundDiscord::isValidWebhookUrl($webhookUrl)) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Not a valid Webhook URL. Must start with `https://discord.com/api/webhooks/`.'),
+            ]);
+        }
+
+        try {
+
+            // Get a Guzzle client
+            $client = Craft::createGuzzleClient();
+
+            // Send a test message to the webhook
+            $response = $client->post($webhookUrl.'?wait=true', [
+                'json'        => ['content' => 'Notifier test message.'],
+                'http_errors' => false,
+                'timeout'     => 10,
+            ]);
+
+            // Get the response status code
+            $status = $response->getStatusCode();
+
+            // If Discord rejected the message
+            if ($status < 200 || $status >= 300) {
+
+                // Decode the response body
+                $decoded = json_decode((string) $response->getBody(), true);
+
+                // Get the error message
+                $error = (is_array($decoded) ? ($decoded['message'] ?? "HTTP {$status}") : "HTTP {$status}");
+
+                // Message was rejected, bail with an error
+                return $this->asJson([
+                    'success' => false,
+                    'message' => Craft::t('notifier', 'Discord rejected the message: {error}', ['error' => $error]),
+                ]);
+            }
+
+        } catch (Throwable $e) {
+
+            // Request failed, bail with an error
+            return $this->asJson([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        // Return success
         return $this->asJson([
             'success' => true,
             'message' => Craft::t('notifier', 'Test message sent successfully.'),
@@ -378,7 +497,7 @@ class SettingsProvidersController extends Controller
         $err = null;
         $session = BlueskySession::createSession($pdsUrl, $handle, $appPassword, $err);
 
-        // If authentication failed, return the error
+        // If authentication failed, bail with an error
         if (!$session) {
             return $this->asJson([
                 'success' => false,
@@ -389,6 +508,80 @@ class SettingsProvidersController extends Controller
         return $this->asJson([
             'success' => true,
             'message' => Craft::t('notifier', 'Successfully authenticated. No messages were posted.'),
+        ]);
+    }
+
+    /**
+     * Verify a Mastodon credential by calling verify_credentials.
+     *
+     * @return Response
+     */
+    public function actionTestMastodon(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Get the posted instance URL
+        $instanceUrl = App::parseEnv((string) $this->request->getRequiredBodyParam('instanceUrl'));
+
+        // Get the posted access token
+        $accessToken = App::parseEnv((string) $this->request->getRequiredBodyParam('accessToken'));
+
+        // If the instance URL or access token is empty, bail with an error
+        if (!$instanceUrl || !$accessToken) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Instance URL and access token are required.'),
+            ]);
+        }
+
+        try {
+
+            // Get a Guzzle client
+            $client = Craft::createGuzzleClient();
+
+            // Verify the credentials against the Mastodon instance
+            $response = $client->get(rtrim($instanceUrl, '/').'/api/v1/accounts/verify_credentials', [
+                'headers'     => ['Authorization' => 'Bearer '.$accessToken],
+                'http_errors' => false,
+                'timeout'     => 10,
+            ]);
+
+            // Get the response status code
+            $status = $response->getStatusCode();
+
+            // Decode the response body
+            $decoded = json_decode((string) $response->getBody(), true);
+
+            // If the credentials didn't verify
+            if ($status < 200 || $status >= 300 || !is_array($decoded) || !isset($decoded['username'])) {
+
+                // Get the error message
+                $error = (is_array($decoded) ? ($decoded['error'] ?? "HTTP {$status}") : "HTTP {$status}");
+
+                // Credentials didn't verify, bail with an error
+                return $this->asJson([
+                    'success' => false,
+                    'message' => Craft::t('notifier', 'Mastodon rejected the request: {error}', ['error' => $error]),
+                ]);
+            }
+
+            // Get the authenticated account handle
+            $handle = $decoded['username'];
+
+        } catch (Throwable $e) {
+
+            // Request failed, bail with an error
+            return $this->asJson([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        // Return success
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Successfully authenticated as @{handle}. No posts were made.', ['handle' => $handle]),
         ]);
     }
 
@@ -472,12 +665,15 @@ class SettingsProvidersController extends Controller
             $client->disconnect();
 
         } catch (Throwable $e) {
+
+            // Connection failed, bail with an error
             return $this->asJson([
                 'success' => false,
                 'message' => $e->getMessage(),
             ]);
         }
 
+        // Return success
         return $this->asJson([
             'success' => true,
             'message' => Craft::t('notifier', 'Test message sent successfully.'),

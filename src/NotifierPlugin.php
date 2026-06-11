@@ -363,7 +363,9 @@ class NotifierPlugin extends Plugin
                 $event->rules['settings/plugins/notifier/pushover'] = 'notifier/settings-providers/pushover';
                 $event->rules['settings/plugins/notifier/ntfy']     = 'notifier/settings-providers/ntfy';
                 $event->rules['settings/plugins/notifier/slack']    = 'notifier/settings-providers/slack';
+                $event->rules['settings/plugins/notifier/discord']  = 'notifier/settings-providers/discord';
                 $event->rules['settings/plugins/notifier/bluesky']  = 'notifier/settings-providers/bluesky';
+                $event->rules['settings/plugins/notifier/mastodon'] = 'notifier/settings-providers/mastodon';
                 $event->rules['settings/plugins/notifier/mqtt']     = 'notifier/settings-providers/mqtt';
             }
         );
@@ -431,8 +433,8 @@ class NotifierPlugin extends Plugin
                         // Report event types show their schedule state
                         if ($notification->isReportType()) {
                             $event->html = ($notification->eventConfig['recurring'] ?? false)
-                                ? Craft::t('notifier', 'On a recurring schedule')
-                                : Craft::t('notifier', 'On demand');
+                                ? Craft::t('notifier', 'Generate report on a recurring schedule')
+                                : Craft::t('notifier', 'Generate report on demand');
                             break;
                         }
                         // Get all events within specified type

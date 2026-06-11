@@ -45,6 +45,8 @@ class SettingsProvidersControllerTest extends TestCase
             ['actionSlack'],
             ['actionBluesky'],
             ['actionMqtt'],
+            ['actionDiscord'],
+            ['actionMastodon'],
         ];
     }
 
@@ -73,6 +75,8 @@ class SettingsProvidersControllerTest extends TestCase
             ['actionTestSlack'],
             ['actionTestBluesky'],
             ['actionTestMqtt'],
+            ['actionTestDiscord'],
+            ['actionTestMastodon'],
         ];
     }
 
@@ -96,7 +100,7 @@ class SettingsProvidersControllerTest extends TestCase
 
     public function testSaveActionWhitelistsSection(): void
     {
-        $this->assertStringContainsString("['general', 'twilio', 'pushover', 'ntfy', 'slack', 'bluesky', 'mqtt']", $this->controllerSource);
+        $this->assertStringContainsString("['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'bluesky', 'mastodon', 'mqtt']", $this->controllerSource);
     }
 
     public function testSaveActionAssignsUidsToNamedListRows(): void

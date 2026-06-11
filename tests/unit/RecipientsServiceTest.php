@@ -100,6 +100,8 @@ class RecipientsServiceTest extends TestCase
             ['_slackChannels'],
             ['_blueskyAccounts'],
             ['_mqttTopics'],
+            ['_discordChannels'],
+            ['_mastodonAccounts'],
         ];
     }
 
@@ -124,9 +126,9 @@ class RecipientsServiceTest extends TestCase
     // Strategy dispatch (source-level)
     // ========================================================================= //
 
-    public function testGetRecipientsDispatchesAllTenStrategies(): void
+    public function testGetRecipientsDispatchesAllTwelveStrategies(): void
     {
-        // The switch on recipientsType must cover all ten strategies.
+        // The switch on recipientsType must cover all twelve strategies.
         $this->assertMatchesRegularExpression("/case\s+'current-user'/", $this->recipientsSource);
         $this->assertMatchesRegularExpression("/case\s+'all-users'/", $this->recipientsSource);
         $this->assertMatchesRegularExpression("/case\s+'all-admins'/", $this->recipientsSource);
@@ -137,6 +139,8 @@ class RecipientsServiceTest extends TestCase
         $this->assertMatchesRegularExpression("/case\s+'slack-channels'/", $this->recipientsSource);
         $this->assertMatchesRegularExpression("/case\s+'bluesky-accounts'/", $this->recipientsSource);
         $this->assertMatchesRegularExpression("/case\s+'mqtt-topics'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'discord-channels'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'mastodon-accounts'/", $this->recipientsSource);
     }
 
     public function testEachCaseDelegatesToItsStrategy(): void

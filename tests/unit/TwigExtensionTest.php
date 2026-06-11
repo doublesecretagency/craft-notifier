@@ -145,6 +145,22 @@ class TwigExtensionTest extends TestCase
         $this->assertStringContainsString("'flashType'", $source);
     }
 
+    public function testRegistersTemplatingTipGlobal(): void
+    {
+        // The templatingTip sidenote must be a Twig global, not a {% set %} that
+        // only lives in the full-page editor's _edit/index.twig wrapper. The
+        // slideout renders each tab through the *FieldLayoutElement::formHtml()
+        // classes, which never run that wrapper. When templatingTip was only set
+        // in the wrapper, double-clicking a notification crashed the slideout with
+        // "Variable templatingTip does not exist" (the event, message, and
+        // recipients leaf templates all reference it). Registering it as a global
+        // keeps it in scope for every render path. Guards against that regression.
+        $path = $this->reflection->getFileName();
+        $source = file_get_contents($path);
+
+        $this->assertStringContainsString("'templatingTip'", $source);
+    }
+
     // ========================================================================= //
     // Tier 2 filter-source helpers
     // ========================================================================= //

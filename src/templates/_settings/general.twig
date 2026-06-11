@@ -2,11 +2,28 @@
 {% set lightswitch = 'notifier/_form/lightswitch' %}
 {% set number = 'notifier/_form/number' %}
 {% set autosuggest = 'notifier/_form/autosuggest' %}
+{% set select = 'notifier/_form/select' %}
 
 {% set loggingOn = (configFile.loggingEnabled ?? settings.loggingEnabled ?? true) ? true : false %}
 
+<h2>{{ "Notification Order"|t('notifier') }}</h2>
+<p>{{ "Notifications can be dragged into any order on the index page. Choose where new notifications land in that order."|t('notifier') }}</p>
+<div class="pane">
+    {% include select with {
+        config: {
+            label: "Default Placement"|t('notifier'),
+            instructions: "Where new notifications are added to the list."|t('notifier'),
+            name: 'defaultPlacement',
+            options: [
+                { label: "Before other notifications"|t('notifier'), value: 'beginning' },
+                { label: "After other notifications"|t('notifier'), value: 'end' },
+            ],
+        }
+    } %}
+</div>
+
 <h2>{{ "Logging"|t('notifier') }}</h2>
-<p>{{ "Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database."|t('notifier') }}</p>
+<p>{{ "Notifier keeps a running log of every message it sends. You usually won't need to change this, but you can limit how many log entries are kept in the database."|t('notifier') }}</p>
 <div class="pane">
     {% include lightswitch with {
         config: {
@@ -37,7 +54,7 @@
 </div>
 
 <h2>{{ "Scheduled Sending"|t('notifier') }}</h2>
-<p>{{ "Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint."|t('notifier') }}</p>
+<p>{{ "A shared secret that authenticates scheduled runs triggered over the web. You only need this if you trigger the schedule from the web endpoint."|t('notifier') }}</p>
 <div class="pane">
     {% include autosuggest with {
         config: {

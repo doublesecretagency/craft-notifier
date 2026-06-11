@@ -7,15 +7,21 @@
  * /config/notifier.php
  *
  * For complete configuration details, visit:
- * https://plugins.doublesecretagency.com/notifier/getting-started/config
+ * https://plugins.doublesecretagency.com/notifier/getting-started/settings/php-config
  */
 
 return [
+
+    // Notification order (optional)
+    //'defaultPlacement' => 'end', // 'beginning' or 'end' (default)
 
     // Logging (all optional)
     //'loggingEnabled'      => true,
     //'logRetentionDays'    => 30,
     //'logRetentionRecords' => 1000,
+
+    // Scheduled sending (only needed if running the schedule via its web endpoint)
+    //'scheduledToken' => getenv('NOTIFIER_SCHEDULED_TOKEN'),
 
     // Twilio (if using Twilio to send SMS messages)
     //'twilioAccountSid'  => getenv('TWILIO_ACCOUNT_SID'),
@@ -37,20 +43,22 @@ return [
 
     // MQTT (if publishing to an MQTT broker)
     //'mqttHost'              => getenv('MQTT_HOST'),
+    //'mqttPort'              => 8883,
+    //'mqttUseTls'            => true,
     //'mqttUsername'          => getenv('MQTT_USERNAME'),
     //'mqttPassword'          => getenv('MQTT_PASSWORD'),
+    //'mqttClientId'          => 'my-craft-site',
+    //'mqttProtocolLevel'     => '3.1.1',
     //'mqttTlsCaFile'         => getenv('MQTT_TLS_CA_FILE'),
     //'mqttTlsClientCertFile' => getenv('MQTT_TLS_CLIENT_CERT_FILE'),
     //'mqttTlsClientKeyFile'  => getenv('MQTT_TLS_CLIENT_KEY_FILE'),
 
     /**
-     * Your ntfy topics, Slack channels, Bluesky accounts, and MQTT topics are
-     * managed in the control panel, not in this file.
+     * Your messaging channels are managed in the control panel, not in this file.
      *
-     * To keep sensitive values out of the database (Slack bot tokens, Bluesky
-     * app passwords, MQTT passwords and certificate paths), store each secret
-     * in a .env variable and reference that variable in the control-panel field
-     * instead of typing the value directly.
+     * To keep secrets out of the database, store each one in a .env variable and
+     * reference that variable in the control-panel field instead of typing the
+     * value directly.
      */
 
 ];

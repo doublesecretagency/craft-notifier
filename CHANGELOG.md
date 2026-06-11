@@ -6,11 +6,19 @@
 - Added the ability to send a [System Snapshot](https://plugins.doublesecretagency.com/notifier/events/types/system-snapshot/).
 - Added the ability to send [Dynamic Data](https://plugins.doublesecretagency.com/notifier/events/types/dynamic-data/).
 - Added user permissions for authoring Dynamic Data snippets.
+- Added support for posting [Discord](https://plugins.doublesecretagency.com/notifier/messages/types/discord) messages via [Incoming Webhooks](https://discord.com/developers/docs/resources/webhook).
+- Added support for publishing [Mastodon](https://plugins.doublesecretagency.com/notifier/messages/types/mastodon) posts.
 - Added support for sending [MQTT](https://plugins.doublesecretagency.com/notifier/messages/types/mqtt) notifications.
+- Added the [Discord channels](https://plugins.doublesecretagency.com/notifier/recipients/types/discord-channels) recipient type for posting to one or more Discord channels.
+- Added the [Mastodon accounts](https://plugins.doublesecretagency.com/notifier/recipients/types/mastodon-accounts) recipient type for posting from one or more Mastodon accounts.
 - Added the [MQTT topics](https://plugins.doublesecretagency.com/notifier/recipients/types/mqtt-topics) recipient type for posting to one or more MQTT topics.
 
 ### Changed
 - Moved the ["Use Queue"](https://plugins.doublesecretagency.com/notifier/messages/queue) setting to the right sidebar, below "Enabled".
+- Notifications can now be ordered manually (like a Structure section).
+
+### Fixed
+- Fixed broken slideout bug.
 
 ## 3.0.2 - 2026-05-28
 

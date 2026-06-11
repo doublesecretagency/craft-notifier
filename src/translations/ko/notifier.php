@@ -11,9 +11,9 @@
 
 return [
 
-    // ============================================================
+    // ========================================================
     // PLUGIN & PERMISSIONS
-    // ============================================================
+    // ========================================================
 
     // Plugin & navigation
     'Notifier' => 'Notifier',
@@ -37,9 +37,9 @@ return [
     'View notification log' => '알림 로그 보기',
     'Delete notification log' => '알림 로그 삭제',
 
-    // ============================================================
+    // ========================================================
     // NOTIFICATION EDITOR
-    // ============================================================
+    // ========================================================
 
     // Editor: tabs
     'Meta' => '메타',
@@ -145,8 +145,8 @@ return [
     'years' => '년',
     'Manual only' => '수동 전용',
     'Scheduled sending' => '예약 발송',
-    'On a recurring schedule' => '반복 일정에 따라',
-    'On demand' => '필요 시',
+    'Generate report on a recurring schedule' => '반복 일정에 따라 보고서 생성',
+    'Generate report on demand' => '필요 시 보고서 생성',
     'Send on a Recurring Schedule' => '반복 일정에 따라 발송',
     'Configure Recurring Schedule' => '반복 일정 구성',
     'System timezone set to {timezone}' => '시스템 시간대가 {timezone}(으)로 설정됨',
@@ -256,8 +256,6 @@ return [
     'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => '표준 [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) 구문을 지원합니다. 선택적으로 HTML도 지원합니다 _(아래 참조)_.',
     'Render Message Body as HTML' => '메시지 본문을 HTML로 렌더링',
     'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => '[Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)으로만 파싱할지, HTML도 추가로 파싱할지 여부.',
-    'mrkdwn only' => 'mrkdwn만',
-    'mrkdwn + HTML' => 'mrkdwn + HTML',
     'Render Link Previews' => '링크 미리보기 표시',
     'Whether Slack should unfurl link previews for URLs in the message body.' => 'Slack이 메시지 본문의 URL에 대해 링크 미리보기를 펼칠지 여부입니다.',
     'Don\'t unfurl' => '펼치지 않기',
@@ -270,6 +268,19 @@ return [
     'Bot Emoji' => '아이콘 이모지',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => '선택적으로 앱의 아이콘을 이모지로 재정의합니다. Bot Icon URL이 비어 있을 때만 사용됩니다.',
 
+    // Message tab: Discord
+    'Discord Message Body' => 'Discord 메시지 본문',
+    'Supports standard Markdown, and optionally HTML _(see below)_. Max 2000 characters.' => '표준 Markdown과 선택적으로 HTML을 지원합니다 _(아래 참조)_. 최대 2000자.',
+    'Whether to only parse as Markdown, or additionally parse it as HTML.' => 'Markdown으로만 파싱할지, HTML도 추가로 파싱할지 여부.',
+    'Markdown only' => 'Markdown만',
+    'Markdown + HTML' => 'Markdown + HTML',
+    'Whether Discord should unfurl link previews for URLs in the message body.' => 'Discord가 메시지 본문의 URL에 대해 링크 미리보기를 표시할지 여부입니다.',
+    'Webhook Username' => 'Webhook 사용자 이름',
+    'Optionally override the webhook\'s display name.' => '선택적으로 Webhook의 표시 이름을 재정의합니다.',
+    'Dynamic Username' => '동적 사용자 이름',
+    'Webhook Avatar URL' => 'Webhook 아바타 URL',
+    'Optionally override the webhook\'s avatar with a URL.' => '선택적으로 Webhook의 아바타를 URL로 재정의합니다.',
+
     // Message tab: Bluesky
     'Post Body' => '게시물 본문',
     'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => '일반 텍스트, 최대 300자. URL과 `@handle.tld` 멘션은 자동으로 링크됩니다.',
@@ -277,6 +288,20 @@ return [
     'Whether to automatically generate a preview card when a URL is included in the post body.' => '게시물 본문에 URL이 포함되어 있을 때 미리보기 카드를 자동으로 생성합니다.',
     'No card' => '카드 없음',
     'Generate preview card' => '미리보기 카드 생성',
+
+    // Message tab: Mastodon
+    'Plain text, max 500 characters. URLs will unfurl automatically.' => '일반 텍스트, 최대 500자. URL은 자동으로 펼쳐집니다.',
+    'Visibility' => '공개 범위',
+    'Who will be able to see this post?' => '누가 이 게시물을 볼 수 있나요?',
+
+    // Message tab: MQTT
+    'Payload' => '페이로드',
+    'The JSON or plain text message published to the MQTT topic.' => 'MQTT 토픽에 게시되는 JSON 또는 일반 텍스트 메시지.',
+    'Quality of Service' => '서비스 품질',
+    'Delivery guarantee for this message.' => '이 메시지의 전달 보장 수준.',
+    'Retain' => '보존',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => '브로커가 이 메시지를 토픽의 마지막 메시지로 보존하여 이후 구독자에게 전달할지 여부.',
+    'Don\'t retain' => '보존 안 함',
 
     // Recipients tab: type selector & user/group pickers
     'Recipients Type' => '수신자 유형',
@@ -286,38 +311,66 @@ return [
     'Which users will receive the message?' => '어떤 사용자가 메시지를 받습니까?',
     'Which user groups will receive the message?' => '어떤 사용자 그룹이 메시지를 받습니까?',
 
-    // Recipients tab: channel pickers (Slack / ntfy / Bluesky)
-    'Select Slack channel(s)' => 'Slack 채널 선택',
-    'Which Slack channels should receive this message?' => '어떤 Slack 채널이 이 메시지를 받습니까?',
-    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => '구성된 Slack 채널이 없습니다. [설정 → Slack]({url})에서 추가하세요.',
+    // Recipients tab: channel pickers (ntfy, Slack, Discord, Bluesky, Mastodon, MQTT)
     'Select ntfy topic(s)' => 'ntfy 토픽 선택',
-    'Which ntfy topics should receive this message?' => '어떤 ntfy 토픽이 이 메시지를 받습니까?',
+    'Which topics should receive this message?' => '어떤 토픽이 이 메시지를 받아야 합니까?',
     'No ntfy topics configured. Add one in [Settings → ntfy]({url}).' => '구성된 ntfy 토픽이 없습니다. [설정 → ntfy]({url})에서 추가하세요.',
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => '구성된 ntfy 토픽이 없습니다. 토픽은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
+    'Select Slack channel(s)' => 'Slack 채널 선택',
+    'Which channels should receive this message?' => '어떤 채널이 이 메시지를 받아야 합니까?',
+    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => '구성된 Slack 채널이 없습니다. [설정 → Slack]({url})에서 추가하세요.',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => '구성된 Slack 채널이 없습니다. 채널은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
+    'Select Discord channel(s)' => 'Discord 채널 선택',
+    'No Discord channels configured. Add one in [Settings → Discord]({url}).' => '구성된 Discord 채널이 없습니다. [설정 → Discord]({url})에서 추가하세요.',
+    'No Discord channels configured. Channels can only be added in an environment that allows administrative changes.' => '구성된 Discord 채널이 없습니다. 채널은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
     'Select Bluesky account(s)' => 'Bluesky 계정 선택',
-    'Which Bluesky accounts should post this message?' => '어떤 Bluesky 계정이 이 메시지를 게시합니까?',
+    'Which accounts should post this message?' => '어떤 계정이 이 메시지를 게시합니까?',
     'No Bluesky accounts configured. Add one in [Settings → Bluesky]({url}).' => '구성된 Bluesky 계정이 없습니다. [설정 → Bluesky]({url})에서 추가하세요.',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => '구성된 Bluesky 계정이 없습니다. 계정은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
+    'Select Mastodon account(s)' => 'Mastodon 계정 선택',
+    'No Mastodon accounts configured. Add one in [Settings → Mastodon]({url}).' => '구성된 Mastodon 계정이 없습니다. [설정 → Mastodon]({url})에서 추가하세요.',
+    'No Mastodon accounts configured. Accounts can only be added in an environment that allows administrative changes.' => '구성된 Mastodon 계정이 없습니다. 계정은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
+    'Select MQTT topic(s)' => 'MQTT 토픽 선택',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => '구성된 MQTT 토픽이 없습니다. [설정 → MQTT]({url})에서 추가하세요.',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => '구성된 MQTT 토픽이 없습니다. 토픽은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '유효한 토픽이 아닙니다. 비어 있거나 와일드카드 `+` 또는 `#`를 포함할 수 없습니다.',
 
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => '수신자를 결정하는 Twig 스니펫',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => '[메시지를 받을 대상을 결정할]({url}) 사용자 지정 Twig 스니펫을 입력하세요.',
     'The snippet **must** include a `{% setRecipients %}` tag.' => '스니펫에는 `{% setRecipients %}` 태그가 **반드시** 포함되어야 합니다.',
 
-    // ============================================================
+    // ========================================================
     // SETTINGS
-    // ============================================================
+    // ========================================================
 
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier 설정',
     'General' => '일반',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
-    'Slack' => 'Slack',
-    'Bluesky' => 'Bluesky',
     'ntfy' => 'ntfy',
+    'Slack' => 'Slack',
+    'Discord' => 'Discord',
+    'Bluesky' => 'Bluesky',
+    'Mastodon' => 'Mastodon',
+    'MQTT' => 'MQTT',
+
+    // Settings: shared intro lines
+    'Consult the [{name} setup guide]({url}) for complete instructions.' => '전체 지침은 [{name} 설정 가이드]({url})를 참조하십시오.',
+    'Sensitive values can be stored in your `.env` file and referenced here.' => '민감한 값은 `.env` 파일에 저장하고 여기에서 참조할 수 있습니다.',
+
+    // Settings: Notification order
+    'Notification Order' => '알림 순서',
+    'Notifications can be dragged into any order on the index page. Choose where new notifications land in that order.' => '알림은 목록 페이지에서 드래그하여 원하는 순서로 정렬할 수 있습니다. 새 알림을 이 순서에서 어디에 추가할지 선택하세요.',
+    'Default Placement' => '기본 위치',
+    'Where new notifications are added to the list.' => '새 알림이 목록에 추가되는 위치입니다.',
+    'Before other notifications' => '다른 알림 앞',
+    'After other notifications' => '다른 알림 뒤',
 
     // Settings: Logging
     'Logging' => '로깅',
-    'Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database.' => 'Notifier 는 보낸 메시지를 지속적으로 기록합니다. 일반적으로 필요하지 않지만 데이터베이스에 기록되는 로그 이벤트 수를 제한할 수 있습니다.',
+    "Notifier keeps a running log of every message it sends. You usually won't need to change this, but you can limit how many log entries are kept in the database." => 'Notifier 는 보낸 메시지를 지속적으로 기록합니다. 일반적으로 필요하지 않지만 데이터베이스에 기록되는 로그 이벤트 수를 제한할 수 있습니다.',
     'Enable Logging' => '로깅 활성화',
     'When disabled, Notifier will not write anything to the notification log.' => '비활성화 시 Notifier 는 알림 로그에 아무것도 기록하지 않습니다.',
     'Number of days to retain log events' => '로그 이벤트를 보관할 일수',
@@ -327,33 +380,32 @@ return [
 
     // Settings: Scheduled sending
     'Scheduled Sending' => '예약 발송',
-    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => '예약 실행 웹 요청을 인증하기 위한 공유 비밀입니다. 일정이 웹 엔드포인트를 통해 트리거되는 경우에만 필요합니다.',
+    'A shared secret that authenticates scheduled runs triggered over the web. You only need this if you trigger the schedule from the web endpoint.' => '예약 실행 웹 요청을 인증하기 위한 공유 비밀입니다. 일정이 웹 엔드포인트를 통해 트리거되는 경우에만 필요합니다.',
     'Scheduled-Run Token' => '예약 실행 토큰',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => '각 요청과 함께 X-Notifier-Token 헤더 또는 token 본문 매개변수로 전송됩니다.',
 
     // Settings: Twilio
-    'Twilio API Credentials' => 'Twilio API 자격 증명',
-    'If using the Twilio API to send SMS messages, the following credentials are required.' => 'SMS 메시지를 보내기 위해 Twilio API 를 사용한다면, 다음 자격 증명이 필요합니다.',
+    'Send SMS text messages through [Twilio](https://www.twilio.com).' => '[Twilio](https://www.twilio.com)를 통해 SMS 문자 메시지를 보냅니다.',
     'Twilio Account SID' => 'Twilio 계정 SID',
     'Twilio Auth Token' => 'Twilio 인증 토큰',
     'Twilio phone number (sends each SMS message)' => 'Twilio 전화번호 (각 SMS 메시지 발신)',
     'SMS Testing' => 'SMS 테스트',
-    'Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient.' => '선택 사항. 설정하면 발송되는 모든 SMS 가 실제 수신자 대신 이 번호로 전송됩니다.',
+    'Optional. When set, every SMS is sent to this number instead of the actual recipient.' => '선택 사항. 설정하면 발송되는 모든 SMS 가 실제 수신자 대신 이 번호로 전송됩니다.',
     'Test phone number' => '테스트 전화번호',
 
     // Settings: Pushover
-    "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)." => '[Pushover](https://pushover.net) 는 등록된 사용자의 기기에 푸시 알림을 보냅니다. 각 Craft 사용자는 프로필에 Pushover 사용자 키를 저장하는 사용자 정의 필드가 필요하며, 각 알림의 메시지 탭에서 어떤 필드를 사용할지 선택합니다. 자세한 설정 방법은 [Pushover 시작 문서](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)를 참고하세요.',
+    'Send push notifications through [Pushover](https://pushover.net).' => '[Pushover](https://pushover.net)를 통해 푸시 알림을 보냅니다.',
     'Application API Token' => '애플리케이션 API 토큰',
     'The 30-character app token from your Pushover application.' => 'Pushover 애플리케이션의 30자 앱 토큰입니다.',
 
     // Settings: ntfy
-    'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh 는 무료 HTTP 기반 푸시 알림 서비스입니다. 구독자는 토픽에 가입하여 ntfy 앱, 웹 또는 호환 클라이언트에서 메시지를 받습니다.',
+    'Send push notifications through [ntfy](https://ntfy.sh).' => '[ntfy](https://ntfy.sh)를 통해 푸시 알림을 보냅니다.',
     'Server URL' => '서버 URL',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => '선택 사항. 해당하는 경우 자체 호스팅 ntfy 인스턴스를 지정하세요. 기본값은 `https://ntfy.sh` 입니다.',
     'Access token' => '액세스 토큰',
     'Optional, required for protected topics or self-hosted instances with auth.' => '선택 사항. 보호된 토픽이나 인증이 있는 자체 호스팅 인스턴스에 필요합니다.',
     'ntfy Topics' => 'ntfy 토픽',
-    "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => '메시지를 보낼 ntfy 토픽을 추가하세요. 각 토픽은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
+    'Add the ntfy topics you want to send to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '메시지를 보낼 ntfy 토픽을 추가하세요. 각 토픽은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
     'Topics' => '토픽',
     "Click any row's **Test** button to send a quick test message to that topic." => '아무 행의 **테스트** 버튼을 클릭하여 해당 토픽에 빠른 테스트 메시지를 보내세요.',
     'Label' => '레이블',
@@ -361,8 +413,7 @@ return [
     'Add a topic' => '토픽 추가',
 
     // Settings: Slack
-    'Slack Channels' => 'Slack 채널',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => '`chat:write`, `chat:write.customize`, `chat:write.public` 스코프가 있는 [Slack 앱](https://api.slack.com/apps)을 만든 다음, 게시하려는 각 채널에 대한 행을 추가하세요. 알림을 구성할 때 각 채널은 **수신자** 탭에서 수신자로 사용할 수 있습니다. 봇 토큰은 비밀이므로, 토큰을 직접 붙여넣지 말고 `.env` 변수에 저장한 다음 해당 변수(예: `$SLACK_BOT_TOKEN`)를 참조하세요.',
+    'Post messages to your Slack channels.' => 'Slack 채널에 메시지를 게시합니다.',
     'Channels' => '채널',
     "Click any row's **Test** button to send a quick test message to that channel." => '아무 행의 **테스트** 버튼을 클릭하여 해당 채널에 빠른 테스트 메시지를 보내세요.',
     'Bot Token' => '봇 토큰',
@@ -371,21 +422,59 @@ return [
     'Not a valid Bot Token. Must start with `xoxb-`.' => '유효하지 않은 봇 토큰입니다. `xoxb-`로 시작해야 합니다.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => '유효하지 않은 채널 ID입니다. `C01234ABCD`와 같은 형식이어야 합니다.',
 
+    // Settings: Discord
+    'Post messages to your Discord channels.' => 'Discord 채널에 메시지를 게시합니다.',
+    'Webhook URL' => 'Webhook URL',
+    'Not a valid Webhook URL. Must start with `https://discord.com/api/webhooks/`.' => '유효하지 않은 Webhook URL입니다. `https://discord.com/api/webhooks/`로 시작해야 합니다.',
+
     // Settings: Bluesky
-    "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => '[Bluesky](https://bsky.app) 게시물은 ATProto API 를 통해 구성된 계정의 피드에 게시됩니다. 앱 비밀번호는 [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords) 에서 생성됩니다. 앱 비밀번호는 비밀이므로 비밀번호를 직접 붙여넣지 말고 `.env` 변수에 저장한 다음 해당 변수(예: `$BLUESKY_APP_PASSWORD`)를 참조하세요.',
+    'Publish posts to your [Bluesky](https://bsky.app) accounts.' => '[Bluesky](https://bsky.app) 계정에 게시물을 게시합니다.',
     'PDS URL' => 'PDS URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => '기본값은 https://bsky.social 입니다. 설치가 페더레이션된다면 사용자 정의 PDS 를 지정하세요.',
     'Bluesky Accounts' => 'Bluesky 계정',
-    "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => '게시할 때 사용할 Bluesky 계정을 추가하세요. 각 계정은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
+    'Add the Bluesky accounts you want to post from. Each account becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '게시할 때 사용할 Bluesky 계정을 추가하세요. 각 계정은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
     'Accounts' => '계정',
     "Click any row's **Test** button to confirm the account authenticates." => '아무 행의 **테스트** 버튼을 클릭하여 계정이 인증되는지 확인하세요.',
     'Handle' => '핸들',
     'App password' => '앱 비밀번호',
     'Add an account' => '계정 추가',
 
-    // ============================================================
+    // Settings: Mastodon
+    'Publish posts to your [Mastodon](https://joinmastodon.org) accounts.' => '[Mastodon](https://joinmastodon.org) 계정에 게시물을 게시합니다.',
+    'Click any row\'s **Test** button to verify that account\'s credentials. No posts are made.' => '아무 행의 **테스트** 버튼을 클릭하여 해당 계정의 자격 증명을 확인하세요. 게시물은 작성되지 않습니다.',
+    'Instance URL' => '인스턴스 URL',
+    'Access Token' => '액세스 토큰',
+
+    // Settings: MQTT
+    'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'MQTT 브로커에 메시지를 게시합니다. IoT 및 홈 오토메이션 구성에 유용합니다.',
+    'Host' => '호스트',
+    'Broker hostname, without a protocol or port.' => '프로토콜이나 포트를 제외한 브로커 호스트 이름.',
+    'Port' => '포트',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => '선택 사항. TLS가 활성화된 경우 기본값은 8883이고, 그렇지 않으면 1883입니다.',
+    'Use TLS' => 'TLS 사용',
+    'Whether to connect to the broker over a secure TLS socket.' => '보안 TLS 소켓을 통해 브로커에 연결할지 여부.',
+    'Username' => '사용자 이름',
+    'Optional, for brokers that require username/password authentication.' => '선택 사항. 사용자 이름/비밀번호 인증이 필요한 브로커에 사용합니다.',
+    'Password' => '비밀번호',
+    'MQTT Version' => 'MQTT 버전',
+    'Protocol version sent to the broker.' => '브로커에 전송되는 프로토콜 버전.',
+    'Client ID' => '클라이언트 ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => '선택 사항. 비워 두면 고유한 클라이언트 ID가 자동으로 생성됩니다.',
+    'Mutual TLS' => '상호 TLS',
+    'Optional. Needed for brokers that authenticate clients with certificates, such as AWS IoT Core. Enter the server file paths to your certificate files. You can use a `.env` variable or `@alias` reference.' => '선택 사항. AWS IoT Core처럼 인증서로 클라이언트를 인증하는 브로커에 필요합니다. 인증서 파일에 대한 서버 파일 경로를 입력하세요(`.env` 변수 또는 `@alias` 참조가 허용됩니다).',
+    'CA Certificate File' => 'CA 인증서 파일',
+    'Path to the certificate authority (CA) file.' => '인증 기관(CA) 파일 경로.',
+    'Client Certificate File' => '클라이언트 인증서 파일',
+    'Path to the client certificate file.' => '클라이언트 인증서 파일 경로.',
+    'Client Key File' => '클라이언트 키 파일',
+    'Path to the client private key file.' => '클라이언트 개인 키 파일 경로.',
+    'MQTT Topics' => 'MQTT 토픽',
+    'Add the MQTT topics you want to publish to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '게시할 MQTT 토픽을 추가하세요. 각 토픽은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => '아무 행의 **테스트** 버튼을 클릭하여 해당 토픽에 빠른 테스트 메시지를 게시하세요.',
+
+    // ========================================================
     // MANUAL SEND & TEST
-    // ============================================================
+    // ========================================================
 
     // Manual send & test
     'Send a test message' => '테스트 메시지 보내기',
@@ -397,9 +486,9 @@ return [
     'This notification cannot be triggered manually.' => '이 알림은 수동으로 트리거할 수 없습니다.',
     'This notification no longer applies to the selected element.' => '이 알림은 더 이상 선택한 요소에 적용되지 않습니다.',
 
-    // ============================================================
+    // ========================================================
     // RUNTIME OUTPUT
-    // ============================================================
+    // ========================================================
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '{recipient} 에게 {messageType} 을(를) 보내는 중입니다.',
@@ -428,6 +517,10 @@ return [
     'Log events deleted.' => '로그 이벤트가 삭제되었습니다.',
     'Notification sent.' => '알림을 보냈습니다.',
     'Notification was not sent. Check the Notification Log for details.' => '알림이 전송되지 않았습니다. 자세한 내용은 알림 로그를 확인하세요.',
+    'Instance URL and access token are required.' => '인스턴스 URL과 액세스 토큰이 필요합니다.',
+    'Mastodon rejected the request: {error}' => 'Mastodon이 요청을 거부했습니다: {error}',
+    'Successfully authenticated as @{handle}. No posts were made.' => '@{handle}(으)로 인증에 성공했습니다. 게시물은 작성되지 않았습니다.',
+    'Broker host is not configured.' => '브로커 호스트가 구성되지 않았습니다.',
 
     // Outbound: per-channel send results
     'Unable to send email, no recipient specified.' => '이메일을 보낼 수 없습니다: 수신자가 지정되지 않았습니다.',
@@ -458,6 +551,12 @@ return [
     'Slack rejected the message: {error}' => 'Slack이 메시지를 거부했습니다: {error}',
     'Slack POST failed: {reason}' => 'Slack POST 실패: {reason}',
     'Successfully sent Slack message to "{label}".' => '"{label}" 에 Slack 메시지를 성공적으로 보냈습니다.',
+    'Unable to send Discord message, no webhook URL.' => 'Discord 메시지를 보낼 수 없습니다: Webhook URL이 없습니다.',
+    'Unable to send Discord message, body is empty.' => 'Discord 메시지를 보낼 수 없습니다: 본문이 비어 있습니다.',
+    'Unable to send Discord message, body exceeds the 2000-character limit.' => 'Discord 메시지를 보낼 수 없습니다: 본문이 2000자 제한을 초과합니다.',
+    'Discord rejected the message: {error}' => 'Discord가 메시지를 거부했습니다: {error}',
+    'Discord POST failed: {reason}' => 'Discord POST 실패: {reason}',
+    'Successfully sent Discord message to "{label}".' => '"{label}"에 Discord 메시지를 성공적으로 보냈습니다.',
     'Unable to send Bluesky post, recipient is missing credentials.' => 'Bluesky 게시물을 보낼 수 없습니다: 수신자 자격 증명이 없습니다.',
     'Body exceeded {max} characters, truncated.' => '본문이 {max} 자를 초과하여 잘렸습니다.',
     'Successfully posted to Bluesky as "{label}".' => '"{label}" 로 Bluesky 에 성공적으로 게시했습니다.',
@@ -465,6 +564,17 @@ return [
     'Bluesky auth failed: {reason}' => 'Bluesky 인증 실패: {reason}',
     'Bluesky post failed: {reason}' => 'Bluesky 게시 실패: {reason}',
     'Bluesky link preview skipped: {reason}' => 'Bluesky 링크 미리 보기 건너뜀: {reason}',
+    'Unable to send Mastodon post, no instance URL.' => 'Mastodon 게시물을 보낼 수 없습니다: 인스턴스 URL이 없습니다.',
+    'Unable to send Mastodon post, no access token.' => 'Mastodon 게시물을 보낼 수 없습니다: 액세스 토큰이 없습니다.',
+    'Unable to send Mastodon post, body is empty.' => 'Mastodon 게시물을 보낼 수 없습니다: 본문이 비어 있습니다.',
+    'Mastodon rejected the post: {error}' => 'Mastodon이 게시물을 거부했습니다: {error}',
+    'Mastodon POST failed: {reason}' => 'Mastodon POST 실패: {reason}',
+    'Successfully sent Mastodon post to "{label}".' => '"{label}"에 Mastodon 게시물을 성공적으로 보냈습니다.',
+    'Unable to send MQTT message, no broker host configured.' => 'MQTT 메시지를 보낼 수 없습니다. 브로커 호스트가 구성되지 않았습니다.',
+    'Unable to send MQTT message, no topic specified.' => 'MQTT 메시지를 보낼 수 없습니다. 토픽이 지정되지 않았습니다.',
+    'Unable to send MQTT message, the payload is empty.' => 'MQTT 메시지를 보낼 수 없습니다. 페이로드가 비어 있습니다.',
+    'MQTT publish failed: {reason}' => 'MQTT 게시에 실패했습니다: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => '토픽 "{topic}"에 MQTT 메시지를 보냈습니다.',
 
     // Recipient warnings
     'Recipient "{name}" has no email address.' => '수신자 "{name}" 에 이메일 주소가 없습니다.',
@@ -475,9 +585,12 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => '수신자 "{name}" 에 연결된 사용자가 없어 Pushover 메시지를 보낼 수 없습니다.',
     '[SKIPPED] User "{name}" has no Pushover key.' => '[건너뜀] 사용자 "{name}" 에 Pushover 키가 없습니다.',
     'Recipient "{name}" has no ntfy topic.' => '수신자 "{name}" 에 ntfy 토픽이 없습니다.',
-    'Recipient "{name}" has no Bluesky credentials.' => '수신자 "{name}" 에 Bluesky 자격 증명이 없습니다.',
     'Recipient "{name}" has no Slack bot token.' => '수신자 "{name}"에게 Slack 봇 토큰이 없습니다.',
     'Recipient "{name}" has no Slack channel ID.' => '수신자 "{name}"에게 Slack 채널 ID가 없습니다.',
+    'Recipient "{name}" has no Discord webhook URL.' => '수신자 "{name}"에 Discord Webhook URL이 없습니다.',
+    'Recipient "{name}" has no Bluesky credentials.' => '수신자 "{name}" 에 Bluesky 자격 증명이 없습니다.',
+    'Recipient "{name}" has no Mastodon credentials.' => '수신자 "{name}"에 Mastodon 자격 증명이 없습니다.',
+    'Recipient "{name}" has no MQTT topic.' => '수신자 "{name}"에 MQTT 토픽이 없습니다.',
 
     // Errors & exceptions
     'Invalid element event: {class}' => '유효하지 않은 요소 이벤트: {class}',
@@ -497,14 +610,13 @@ return [
     'Element not found' => '요소를 찾을 수 없습니다',
     'You do not have permission to use the Dynamic Data type.' => '동적 데이터 유형을 사용할 권한이 없습니다.',
     'The Dynamic Data snippet did not call the {tag} tag.' => 'Twig 스니펫이 {tag} 태그를 호출하지 않았습니다.',
-    'Invalid Slack body format.' => '잘못된 Slack 본문 형식입니다.',
 
     // Config-file override note
     'This is being set in the config file. [{file}]' => '이는 구성 파일에서 설정됩니다. [{file}]',
 
-    // ============================================================
+    // ========================================================
     // JAVASCRIPT UI
-    // ============================================================
+    // ========================================================
 
     // JavaScript: log utility & buttons
     'Test notification failed.' => '테스트 알림을 보내지 못했습니다.',
@@ -514,66 +626,5 @@ return [
     'Unable to delete the log event, something went wrong.' => '로그 이벤트를 삭제하지 못했습니다. 문제가 발생했습니다.',
     'Log event deleted.' => '로그 이벤트가 삭제되었습니다.',
     'Unable to delete log events, something went wrong.' => '로그 이벤트를 삭제하지 못했습니다. 문제가 발생했습니다.',
-    'Are you sure you want to delete this log event?' => '이 로그 이벤트를 삭제하시겠습니까?',
     'Are you sure you want to delete all logs from {date}?' => '{date}의 모든 로그를 삭제하시겠습니까?',
-
-    // ============================================================
-    // MQTT
-    // ============================================================
-
-    'Recipient "{name}" has no MQTT topic.' => '수신자 "{name}"에 MQTT 토픽이 없습니다.',
-    'Unable to send MQTT message, no broker host configured.' => 'MQTT 메시지를 보낼 수 없습니다. 브로커 호스트가 구성되지 않았습니다.',
-    'Unable to send MQTT message, no topic specified.' => 'MQTT 메시지를 보낼 수 없습니다. 토픽이 지정되지 않았습니다.',
-    'Unable to send MQTT message, the payload is empty.' => 'MQTT 메시지를 보낼 수 없습니다. 페이로드가 비어 있습니다.',
-    'MQTT publish failed: {reason}' => 'MQTT 게시에 실패했습니다: {reason}',
-    'Successfully sent MQTT message to topic "{topic}".' => '토픽 "{topic}"에 MQTT 메시지를 보냈습니다.',
-    'MQTT Broker' => 'MQTT 브로커',
-    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier는 MQTT 브로커(Mosquitto, EMQX, HiveMQ 또는 AWS IoT Core 등)에 게시합니다. 아래에 브로커 연결 정보를 입력하세요. 민감한 값은 `.env` 변수에 저장하고 여기에서 참조할 수 있습니다(예: `$MQTT_PASSWORD`).',
-    'Host' => '호스트',
-    'Broker hostname, without a protocol or port.' => '프로토콜이나 포트를 제외한 브로커 호스트 이름.',
-    'Port' => '포트',
-    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => '선택 사항. TLS가 활성화된 경우 기본값은 8883이고, 그렇지 않으면 1883입니다.',
-    'Use TLS' => 'TLS 사용',
-    'Whether to connect to the broker over a secure TLS socket.' => '보안 TLS 소켓을 통해 브로커에 연결할지 여부.',
-    'Username' => '사용자 이름',
-    'Optional, for brokers that require username/password authentication.' => '선택 사항. 사용자 이름/비밀번호 인증이 필요한 브로커에 사용합니다.',
-    'Password' => '비밀번호',
-    'MQTT Version' => 'MQTT 버전',
-    'Protocol version sent to the broker.' => '브로커에 전송되는 프로토콜 버전.',
-    'Client ID' => '클라이언트 ID',
-    'Optional. A unique client ID is generated automatically when left blank.' => '선택 사항. 비워 두면 고유한 클라이언트 ID가 자동으로 생성됩니다.',
-    'Mutual TLS' => '상호 TLS',
-    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => '선택 사항. AWS IoT Core처럼 인증서로 클라이언트를 인증하는 브로커에 필요합니다. 인증서 파일에 대한 서버 파일 경로를 입력하세요(`.env` 변수 또는 `@alias` 참조가 허용됩니다).',
-    'CA Certificate File' => 'CA 인증서 파일',
-    'Path to the certificate authority (CA) file.' => '인증 기관(CA) 파일 경로.',
-    'Client Certificate File' => '클라이언트 인증서 파일',
-    'Path to the client certificate file.' => '클라이언트 인증서 파일 경로.',
-    'Client Key File' => '클라이언트 키 파일',
-    'Path to the client private key file.' => '클라이언트 개인 키 파일 경로.',
-    'MQTT Topics' => 'MQTT 토픽',
-    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => '게시할 MQTT 토픽을 추가하세요. 각 토픽은 알림을 구성할 때 **수신자** 탭에서 수신자로 사용할 수 있습니다.',
-    'Click any row\'s **Test** button to publish a quick test message to that topic.' => '아무 행의 **테스트** 버튼을 클릭하여 해당 토픽에 빠른 테스트 메시지를 게시하세요.',
-    'MQTT' => 'MQTT',
-    'Payload' => '페이로드',
-    'The JSON or plain text message published to the MQTT topic.' => 'MQTT 토픽에 게시되는 JSON 또는 일반 텍스트 메시지.',
-    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => '토픽에 게시되는 메시지입니다. 일반 텍스트 또는 Twig로 렌더링된 JSON 객체일 수 있습니다.',
-    'Quality of Service' => '서비스 품질',
-    'Delivery guarantee for this message.' => '이 메시지의 전달 보장 수준.',
-    'Retain' => '보존',
-    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => '브로커가 이 메시지를 토픽의 마지막 메시지로 보존하여 이후 구독자에게 전달할지 여부.',
-    'Don\'t retain' => '보존 안 함',
-    'Select MQTT topic(s)' => 'MQTT 토픽 선택',
-    'Which topics should receive this message?' => '어떤 토픽이 이 메시지를 받아야 합니까?',
-    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => '구성된 MQTT 토픽이 없습니다. [설정 → MQTT]({url})에서 추가하세요.',
-    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '유효한 토픽이 아닙니다. 비어 있거나 와일드카드 `+` 또는 `#`를 포함할 수 없습니다.',
-    'Broker host is not configured.' => '브로커 호스트가 구성되지 않았습니다.',
-
-    // ============================================================
-    // Recipient empty-state (administrative changes disabled)
-    // ============================================================
-
-    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => '구성된 ntfy 토픽이 없습니다. 토픽은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
-    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => '구성된 Slack 채널이 없습니다. 채널은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
-    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => '구성된 Bluesky 계정이 없습니다. 계정은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
-    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => '구성된 MQTT 토픽이 없습니다. 토픽은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
 ];

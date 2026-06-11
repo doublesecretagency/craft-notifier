@@ -65,7 +65,9 @@ class Recipients extends Component
             case 'dynamic-recipients': return ($notification ? $this->_dynamicRecipients($notification, $dispatch) : []);
             case 'ntfy-topics':        return ($notification ? $this->_ntfyTopics($notification)        : []);
             case 'slack-channels':     return ($notification ? $this->_slackChannels($notification)     : []);
+            case 'discord-channels':   return ($notification ? $this->_discordChannels($notification)  : []);
             case 'bluesky-accounts':   return ($notification ? $this->_blueskyAccounts($notification)   : []);
+            case 'mastodon-accounts':  return ($notification ? $this->_mastodonAccounts($notification) : []);
             case 'mqtt-topics':        return ($notification ? $this->_mqttTopics($notification)        : []);
         }
 
@@ -310,28 +312,6 @@ class Recipients extends Component
     }
 
     /**
-     * Get MQTT topic recipients by resolving selected UIDs against the named-list in plugin settings.
-     *
-     * @param Notification $notification
-     * @return Recipient[]
-     */
-    private function _mqttTopics(Notification $notification): array
-    {
-        return $this->_resolveByUid(
-            $notification,
-            'mqttTopicUids',
-            NotifierPlugin::$plugin->getSettings()->mqttTopics,
-            'MQTT topic',
-            static function (array $row): Recipient {
-                return new Recipient([
-                    'name'  => $row['label'] ?? null,
-                    'topic' => $row['topic'] ?? null,
-                ]);
-            }
-        );
-    }
-
-    /**
      * Get Slack channel recipients by resolving selected UIDs against the named-list in plugin settings.
      *
      * @param Notification $notification
@@ -356,6 +336,29 @@ class Recipients extends Component
     }
 
     /**
+     * Get Discord channel recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _discordChannels(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'discordChannelUids',
+            NotifierPlugin::$plugin->getSettings()->discordChannels,
+            'Discord channel',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'                => $row['label'] ?? null,
+                    'discordChannelLabel' => $row['label'] ?? null,
+                    'discordWebhookUrl'   => $row['webhookUrl'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
      * Get Bluesky account recipients by resolving selected UIDs against the named-list in plugin settings.
      *
      * @param Notification $notification
@@ -373,6 +376,51 @@ class Recipients extends Component
                     'name'               => $row['label'] ?? $row['handle'] ?? null,
                     'blueskyHandle'      => $row['handle'] ?? null,
                     'blueskyAppPassword' => $row['appPassword'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Get Mastodon account recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _mastodonAccounts(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'mastodonAccountUids',
+            NotifierPlugin::$plugin->getSettings()->mastodonAccounts,
+            'Mastodon account',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'                => $row['label'] ?? null,
+                    'mastodonInstanceUrl' => $row['instanceUrl'] ?? null,
+                    'mastodonAccessToken' => $row['accessToken'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Get MQTT topic recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _mqttTopics(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'mqttTopicUids',
+            NotifierPlugin::$plugin->getSettings()->mqttTopics,
+            'MQTT topic',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'  => $row['label'] ?? null,
+                    'topic' => $row['topic'] ?? null,
                 ]);
             }
         );

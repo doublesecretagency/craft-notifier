@@ -2,7 +2,9 @@
 {% set autosuggest = 'notifier/_form/autosuggest' %}
 
 <h2>{{ "Bluesky"|t('notifier') }}</h2>
-<p>{{ "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `$BLUESKY_APP_PASSWORD`) rather than pasting the password directly."|t('notifier')|md }}</p>
+<p>{{ "Publish posts to your [Bluesky](https://bsky.app) accounts."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'Bluesky', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/bluesky' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
 <div class="pane">
     {% include autosuggest with {
         config: {
@@ -15,7 +17,7 @@
 </div>
 
 <h2>{{ "Bluesky Accounts"|t('notifier') }}</h2>
-<p>{{ "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification."|t('notifier')|md }}</p>
+<p>{{ "Add the Bluesky accounts you want to post from. Each account becomes available as a recipient on the **Recipients** tab when you set up a notification."|t('notifier')|md }}</p>
 <div class="pane notifier-named-list">
     {{ forms.editableTableField({
         label: "Accounts"|t('notifier'),

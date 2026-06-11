@@ -82,7 +82,7 @@ class OutboundNtfy extends BaseEnvelope
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        // Resolve the server URL (supports a $ENV_VAR reference), falling back to the public ntfy.sh server
+        // Resolve the server URL, falling back to the public ntfy.sh server
         $serverUrl = App::parseEnv($settings->ntfyServerUrl) ?: 'https://ntfy.sh';
 
         // If recipient has no topic, log error and bail

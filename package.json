@@ -2,7 +2,7 @@
   "private": true,
   "main": "index.js",
   "devDependencies": {
-    "vitepress": "^1.0.0-rc"
+    "vitepress": "^1.6.4"
   },
   "directories": {
     "doc": "docs"

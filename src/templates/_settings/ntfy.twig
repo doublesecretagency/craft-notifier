@@ -2,7 +2,9 @@
 {% set autosuggest = 'notifier/_form/autosuggest' %}
 
 <h2>{{ "ntfy"|t('notifier') }}</h2>
-<p>{{ "ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic."|t('notifier') }}</p>
+<p>{{ "Send push notifications through [ntfy](https://ntfy.sh)."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'ntfy', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/ntfy' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
 <div class="pane">
     {% include autosuggest with {
         config: {
@@ -22,7 +24,7 @@
 </div>
 
 <h2>{{ "ntfy Topics"|t('notifier') }}</h2>
-<p>{{ "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification."|t('notifier')|md }}</p>
+<p>{{ "Add the ntfy topics you want to send to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification."|t('notifier')|md }}</p>
 <div class="pane notifier-named-list">
     {{ forms.editableTableField({
         label: "Topics"|t('notifier'),

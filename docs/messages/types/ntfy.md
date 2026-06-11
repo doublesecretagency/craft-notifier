@@ -32,7 +32,7 @@ Adds emoji to the notification. Enter a comma-separated list of [emoji shortcode
 
 Attaches a URL to the notification. Tapping the notification will open that URL on the recipient's device.
 
-<!--@include: @/messages/types/_docs-links.md-->
+<!--@include: @/messages/types/_special-variables.md-->
 
 ### Enable Markdown
 

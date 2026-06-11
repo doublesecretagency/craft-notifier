@@ -2,7 +2,9 @@
 {% set autosuggest = 'notifier/_form/autosuggest' %}
 
 <h2>{{ "Pushover"|t('notifier') }}</h2>
-<p>{{ "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)."|t('notifier')|md }}</p>
+<p>{{ "Send push notifications through [Pushover](https://pushover.net)."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'Pushover', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
 <div class="pane">
     {% include autosuggest with {
         config: {

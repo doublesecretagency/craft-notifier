@@ -14,7 +14,7 @@ Some examples of recipient types are:
 
 If the provided recipient types don't meet your needs, it's also possible to write a [custom Twig snippet](/recipients/types/dynamic-recipients) to generate a dynamic list of recipients at runtime.
 
-:::warning List of Recipient Types
+:::warning All Recipient Types
 For more information, see the [complete list of recipient types...](/recipients/types/)
 :::
 

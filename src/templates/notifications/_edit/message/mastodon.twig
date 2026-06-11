@@ -1,0 +1,28 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+<div class="message-type-mastodon hidden">
+
+    {{ forms.selectField({
+        label: "Visibility"|t('notifier'),
+        instructions: "Who will be able to see this post?"|t('notifier'),
+        id: 'messageConfig-mastodonVisibility',
+        name: 'messageConfig[mastodonVisibility]',
+        value: (notification.messageConfig.mastodonVisibility ?? 'public'),
+        options: notificationOptions.mastodonVisibility,
+    }) }}
+
+    <hr>
+
+    {{ codeEditor.textAreaField({
+        label: "Post Body"|t('notifier'),
+        instructions: "Plain text, max 500 characters. URLs will unfurl automatically."|t('notifier'),
+        tip: templatingTip,
+        placeholder: commonPlaceholder,
+        rows: 5,
+        id: 'messageConfig-mastodonBody',
+        name: 'messageConfig[mastodonBody]',
+        value: (notification.messageConfig.mastodonBody ?? null),
+        errors: notification.getErrors('messageConfig[mastodonBody]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+</div>

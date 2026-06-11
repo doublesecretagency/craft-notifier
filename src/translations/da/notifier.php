@@ -11,9 +11,9 @@
 
 return [
 
-    // ============================================================
+    // ========================================================
     // PLUGIN & PERMISSIONS
-    // ============================================================
+    // ========================================================
 
     // Plugin & navigation
     'Notifier' => 'Notifier',
@@ -37,9 +37,9 @@ return [
     'View notification log' => 'Vis notifikationslog',
     'Delete notification log' => 'Slet notifikationslog',
 
-    // ============================================================
+    // ========================================================
     // NOTIFICATION EDITOR
-    // ============================================================
+    // ========================================================
 
     // Editor: tabs
     'Meta' => 'Meta',
@@ -145,8 +145,8 @@ return [
     'years' => 'år',
     'Manual only' => 'Kun manuelt',
     'Scheduled sending' => 'Planlagt afsendelse',
-    'On a recurring schedule' => 'Efter en tilbagevendende tidsplan',
-    'On demand' => 'Efter behov',
+    'Generate report on a recurring schedule' => 'Generer rapport efter en tilbagevendende tidsplan',
+    'Generate report on demand' => 'Generer rapport efter behov',
     'Send on a Recurring Schedule' => 'Send efter en tilbagevendende tidsplan',
     'Configure Recurring Schedule' => 'Konfigurer tilbagevendende tidsplan',
     'System timezone set to {timezone}' => 'Systemets tidszone er sat til {timezone}',
@@ -256,8 +256,6 @@ return [
     'Supports standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) syntax. Optionally supports HTML _(see below)_.' => 'Understøtter standard [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting)-syntaks. Understøtter valgfrit HTML _(se nedenfor)_.',
     'Render Message Body as HTML' => 'Vis indhold som HTML',
     'Whether to only parse as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting), or additionally parse it as HTML.' => 'Vælg om kun [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting) skal parses, eller om HTML også skal parses.',
-    'mrkdwn only' => 'kun mrkdwn',
-    'mrkdwn + HTML' => 'mrkdwn + HTML',
     'Render Link Previews' => 'Vis linkforhåndsvisninger',
     'Whether Slack should unfurl link previews for URLs in the message body.' => "Om Slack skal vise linkforhåndsvisninger for URL'er i beskedteksten.",
     'Don\'t unfurl' => 'Foldé ikke ud',
@@ -270,6 +268,19 @@ return [
     'Bot Emoji' => 'Ikon-emoji',
     'Optionally override the app\'s icon with an emoji. Used only when Bot Icon URL is empty.' => 'Overskriv eventuelt appens ikon med en emoji. Bruges kun, når Bot Icon URL er tom.',
 
+    // Message tab: Discord
+    'Discord Message Body' => 'Discord-beskedtekst',
+    'Supports standard Markdown, and optionally HTML _(see below)_. Max 2000 characters.' => 'Understøtter standard-Markdown og valgfrit HTML _(se nedenfor)_. Maks. 2000 tegn.',
+    'Whether to only parse as Markdown, or additionally parse it as HTML.' => 'Vælg om der kun skal parses som Markdown, eller om HTML også skal parses.',
+    'Markdown only' => 'Kun Markdown',
+    'Markdown + HTML' => 'Markdown + HTML',
+    'Whether Discord should unfurl link previews for URLs in the message body.' => 'Om Discord skal vise linkforhåndsvisninger for URL\'er i beskedteksten.',
+    'Webhook Username' => 'Webhook-brugernavn',
+    'Optionally override the webhook\'s display name.' => 'Overskriv eventuelt webhookens visningsnavn.',
+    'Dynamic Username' => 'Dynamisk brugernavn',
+    'Webhook Avatar URL' => 'Webhook-avatar-URL',
+    'Optionally override the webhook\'s avatar with a URL.' => 'Overskriv eventuelt webhookens avatar med en URL.',
+
     // Message tab: Bluesky
     'Post Body' => 'Indlægstekst',
     'Plain text, max 300 characters. URLs and `@handle.tld` mentions will link automatically.' => 'Ren tekst, maks. 300 tegn. URL\'er og `@handle.tld`-omtaler bliver automatisk links.',
@@ -277,6 +288,20 @@ return [
     'Whether to automatically generate a preview card when a URL is included in the post body.' => 'Generér automatisk et forhåndsvisningskort, når der er en URL i indlæggets tekst.',
     'No card' => 'Intet kort',
     'Generate preview card' => 'Generér forhåndsvisningskort',
+
+    // Message tab: Mastodon
+    'Plain text, max 500 characters. URLs will unfurl automatically.' => 'Almindelig tekst, maks. 500 tegn. URL\'er udfoldes automatisk.',
+    'Visibility' => 'Synlighed',
+    'Who will be able to see this post?' => 'Hvem vil kunne se dette indlæg?',
+
+    // Message tab: MQTT
+    'Payload' => 'Indhold',
+    'The JSON or plain text message published to the MQTT topic.' => 'JSON- eller almindelig tekstbesked, der publiceres til MQTT-emnet.',
+    'Quality of Service' => 'Servicekvalitet',
+    'Delivery guarantee for this message.' => 'Leveringsgaranti for denne besked.',
+    'Retain' => 'Behold',
+    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Om brokeren beholder denne som den seneste besked på emnet og leverer den til fremtidige abonnenter.',
+    'Don\'t retain' => 'Behold ikke',
 
     // Recipients tab: type selector & user/group pickers
     'Recipients Type' => 'Modtagertype',
@@ -286,38 +311,66 @@ return [
     'Which users will receive the message?' => 'Hvilke brugere skal modtage beskeden?',
     'Which user groups will receive the message?' => 'Hvilke brugergrupper skal modtage beskeden?',
 
-    // Recipients tab: channel pickers (Slack / ntfy / Bluesky)
-    'Select Slack channel(s)' => 'Vælg Slack-kanal(er)',
-    'Which Slack channels should receive this message?' => 'Hvilke Slack-kanaler skal modtage denne besked?',
-    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Ingen Slack-kanaler er konfigureret. Tilføj en i [Indstillinger → Slack]({url}).',
+    // Recipients tab: channel pickers (ntfy, Slack, Discord, Bluesky, Mastodon, MQTT)
     'Select ntfy topic(s)' => 'Vælg ntfy-emne(r)',
-    'Which ntfy topics should receive this message?' => 'Hvilke ntfy-emner skal modtage denne besked?',
+    'Which topics should receive this message?' => 'Hvilke emner skal modtage denne besked?',
     'No ntfy topics configured. Add one in [Settings → ntfy]({url}).' => 'Ingen ntfy-emner er konfigureret. Tilføj et i [Indstillinger → ntfy]({url}).',
+    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Ingen ntfy-emner er konfigureret. Emner kan kun tilføjes i et miljø, der tillader administrative ændringer.',
+    'Select Slack channel(s)' => 'Vælg Slack-kanal(er)',
+    'Which channels should receive this message?' => 'Hvilke kanaler skal modtage denne besked?',
+    'No Slack channels configured. Add one in [Settings → Slack]({url}).' => 'Ingen Slack-kanaler er konfigureret. Tilføj en i [Indstillinger → Slack]({url}).',
+    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Ingen Slack-kanaler er konfigureret. Kanaler kan kun tilføjes i et miljø, der tillader administrative ændringer.',
+    'Select Discord channel(s)' => 'Vælg Discord-kanal(er)',
+    'No Discord channels configured. Add one in [Settings → Discord]({url}).' => 'Ingen Discord-kanaler er konfigureret. Tilføj en i [Indstillinger → Discord]({url}).',
+    'No Discord channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Ingen Discord-kanaler er konfigureret. Kanaler kan kun tilføjes i et miljø, der tillader administrative ændringer.',
     'Select Bluesky account(s)' => 'Vælg Bluesky-konto(er)',
-    'Which Bluesky accounts should post this message?' => 'Hvilke Bluesky-konti skal udgive denne besked?',
+    'Which accounts should post this message?' => 'Hvilke konti skal udgive denne besked?',
     'No Bluesky accounts configured. Add one in [Settings → Bluesky]({url}).' => 'Ingen Bluesky-konti er konfigureret. Tilføj en i [Indstillinger → Bluesky]({url}).',
+    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Ingen Bluesky-konti er konfigureret. Konti kan kun tilføjes i et miljø, der tillader administrative ændringer.',
+    'Select Mastodon account(s)' => 'Vælg Mastodon-konto(er)',
+    'No Mastodon accounts configured. Add one in [Settings → Mastodon]({url}).' => 'Ingen Mastodon-konti er konfigureret. Tilføj en i [Indstillinger → Mastodon]({url}).',
+    'No Mastodon accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Ingen Mastodon-konti er konfigureret. Konti kan kun tilføjes i et miljø, der tillader administrative ændringer.',
+    'Select MQTT topic(s)' => 'Vælg MQTT-emne(r)',
+    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Ingen MQTT-emner konfigureret. Tilføj et under [Indstillinger → MQTT]({url}).',
+    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Ingen MQTT-emner konfigureret. Emner kan kun tilføjes i et miljø, der tillader administrative ændringer.',
+    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Ikke et gyldigt emne. Må ikke være tomt eller indeholde wildcards `+` eller `#`.',
 
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Twig-snippet til at bestemme modtagere',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Indtast et brugerdefineret Twig-snippet for at [bestemme, hvem der skal modtage beskeden]({url}).',
     'The snippet **must** include a `{% setRecipients %}` tag.' => 'Snippettet **skal** indeholde et `{% setRecipients %}`-tag.',
 
-    // ============================================================
+    // ========================================================
     // SETTINGS
-    // ============================================================
+    // ========================================================
 
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier-indstillinger',
     'General' => 'Generelt',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
-    'Slack' => 'Slack',
-    'Bluesky' => 'Bluesky',
     'ntfy' => 'ntfy',
+    'Slack' => 'Slack',
+    'Discord' => 'Discord',
+    'Bluesky' => 'Bluesky',
+    'Mastodon' => 'Mastodon',
+    'MQTT' => 'MQTT',
+
+    // Settings: shared intro lines
+    'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Se [{name}-opsætningsguiden]({url}) for fuldstændige instruktioner.',
+    'Sensitive values can be stored in your `.env` file and referenced here.' => 'Følsomme værdier kan gemmes i din `.env`-fil og refereres her.',
+
+    // Settings: Notification order
+    'Notification Order' => 'Rækkefølge af notifikationer',
+    'Notifications can be dragged into any order on the index page. Choose where new notifications land in that order.' => 'Notifikationer kan trækkes til en valgfri rækkefølge på oversigtssiden. Vælg, hvor nye notifikationer tilføjes i den rækkefølge.',
+    'Default Placement' => 'Standardplacering',
+    'Where new notifications are added to the list.' => 'Hvor nye notifikationer tilføjes på listen.',
+    'Before other notifications' => 'Før andre notifikationer',
+    'After other notifications' => 'Efter andre notifikationer',
 
     // Settings: Logging
     'Logging' => 'Logning',
-    'Notifier keeps an ongoing log of sent messages. While not typically necessary, you can limit the amount of log events recorded in the database.' => 'Notifier fører en løbende log over sendte beskeder. Det er normalt ikke nødvendigt, men du kan begrænse antallet af loghændelser, der gemmes i databasen.',
+    "Notifier keeps a running log of every message it sends. You usually won't need to change this, but you can limit how many log entries are kept in the database." => 'Notifier fører en løbende log over sendte beskeder. Det er normalt ikke nødvendigt, men du kan begrænse antallet af loghændelser, der gemmes i databasen.',
     'Enable Logging' => 'Aktivér logning',
     'When disabled, Notifier will not write anything to the notification log.' => 'Når deaktiveret, skriver Notifier intet til notifikationsloggen.',
     'Number of days to retain log events' => 'Antal dage loghændelser skal opbevares',
@@ -327,33 +380,32 @@ return [
 
     // Settings: Scheduled sending
     'Scheduled Sending' => 'Planlagt afsendelse',
-    'Shared secret for authenticating scheduled-run web requests. Required only when the schedule is triggered via the web endpoint.' => 'Delt hemmelighed til at autentificere planlagte kørselsanmodninger over web. Kræves kun, når tidsplanen udløses via webendpointet.',
+    'A shared secret that authenticates scheduled runs triggered over the web. You only need this if you trigger the schedule from the web endpoint.' => 'Delt hemmelighed til at autentificere planlagte kørselsanmodninger over web. Kræves kun, når tidsplanen udløses via webendpointet.',
     'Scheduled-Run Token' => 'Token til planlagt kørsel',
     'Sent with each request as the X-Notifier-Token header or token body parameter.' => 'Sendes med hver forespørgsel som headeren X-Notifier-Token eller som parameteren token i brødteksten.',
 
     // Settings: Twilio
-    'Twilio API Credentials' => 'Twilio API-legitimationsoplysninger',
-    'If using the Twilio API to send SMS messages, the following credentials are required.' => 'Hvis Twilio API bruges til at sende SMS-beskeder, kræves følgende legitimationsoplysninger.',
+    'Send SMS text messages through [Twilio](https://www.twilio.com).' => 'Send SMS-tekstbeskeder via [Twilio](https://www.twilio.com).',
     'Twilio Account SID' => 'Twilio Account SID',
     'Twilio Auth Token' => 'Twilio Auth Token',
     'Twilio phone number (sends each SMS message)' => 'Twilio-telefonnummer (sender hver SMS-besked)',
     'SMS Testing' => 'SMS-test',
-    'Optional. When set, every SMS dispatched will be sent to this number instead of the resolved recipient.' => 'Valgfrit. Når angivet, sendes hver afsendt SMS til dette nummer i stedet for den oprindelige modtager.',
+    'Optional. When set, every SMS is sent to this number instead of the actual recipient.' => 'Valgfrit. Når angivet, sendes hver afsendt SMS til dette nummer i stedet for den oprindelige modtager.',
     'Test phone number' => 'Test-telefonnummer',
 
     // Settings: Pushover
-    "[Pushover](https://pushover.net) sends push notifications to a registered user's devices. Each Craft user needs a custom field on their profile storing their Pushover user key; you select which field on each Notification's Message tab. For full setup instructions, see the [Pushover getting-started docs](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover)." => '[Pushover](https://pushover.net) sender push-notifikationer til en registreret brugers enheder. Hver Craft-bruger har brug for et brugerdefineret felt på sin profil, der gemmer brugerens Pushover-nøgle. Du vælger feltet på fanen Besked på hver notifikation. Se [Pushover-kom-i-gang-dokumentationen](https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover) for fuld konfigurationsvejledning.',
+    'Send push notifications through [Pushover](https://pushover.net).' => 'Send push-notifikationer via [Pushover](https://pushover.net).',
     'Application API Token' => 'Applikations-API-token',
     'The 30-character app token from your Pushover application.' => 'Det 30-tegns app-token fra din Pushover-applikation.',
 
     // Settings: ntfy
-    'ntfy.sh is a free HTTP-based push notification service. Subscribers receive messages on the ntfy app, web, or any compatible client by joining a topic.' => 'ntfy.sh er en gratis HTTP-baseret push-notifikationstjeneste. Abonnenter modtager beskeder i ntfy-appen, på nettet eller via en kompatibel klient ved at tilmelde sig et emne.',
+    'Send push notifications through [ntfy](https://ntfy.sh).' => 'Send push-notifikationer via [ntfy](https://ntfy.sh).',
     'Server URL' => 'Server-URL',
     "Optional, point at a self-hosted ntfy instance (if applicable). Defaults to `https://ntfy.sh`." => 'Valgfrit, peg på en selvhostet ntfy-instans (hvis relevant). Standard er `https://ntfy.sh`.',
     'Access token' => 'Adgangstoken',
     'Optional, required for protected topics or self-hosted instances with auth.' => 'Valgfrit, kræves til beskyttede emner eller selvhostede instanser med godkendelse.',
     'ntfy Topics' => 'ntfy-emner',
-    "Add the ntfy topics you'd like to send messages to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Tilføj de ntfy-emner, du vil sende beskeder til. Hvert emne bliver tilgængeligt som modtager på fanen **Modtagere**, når du konfigurerer en notifikation.',
+    'Add the ntfy topics you want to send to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Tilføj de ntfy-emner, du vil sende beskeder til. Hvert emne bliver tilgængeligt som modtager på fanen **Modtagere**, når du konfigurerer en notifikation.',
     'Topics' => 'Emner',
     "Click any row's **Test** button to send a quick test message to that topic." => 'Klik på en vilkårlig rækkes **Test**-knap for at sende en hurtig testbesked til det emne.',
     'Label' => 'Etiket',
@@ -361,8 +413,7 @@ return [
     'Add a topic' => 'Tilføj et emne',
 
     // Settings: Slack
-    'Slack Channels' => 'Slack-kanaler',
-    'Create a [Slack app](https://api.slack.com/apps) with the `chat:write`, `chat:write.customize`, and `chat:write.public` scopes, then add a row for each channel you\'d like to post into. Each channel becomes available as a recipient on the **Recipients** tab when configuring a notification. A bot token is a secret, so store it in a `.env` variable and reference that variable (e.g. `$SLACK_BOT_TOKEN`) rather than pasting the token directly.' => 'Opret en [Slack-app](https://api.slack.com/apps) med scopes `chat:write`, `chat:write.customize` og `chat:write.public`, og tilføj derefter en række for hver kanal, du gerne vil sende beskeder til. Hver kanal bliver tilgængelig som modtager på fanen **Modtagere** ved konfiguration af en notifikation. Et bot-token er en hemmelighed, så gem det i en `.env`-variabel og henvis til den variabel (f.eks. `$SLACK_BOT_TOKEN`) i stedet for at indsætte tokenet direkte.',
+    'Post messages to your Slack channels.' => 'Send beskeder til dine Slack-kanaler.',
     'Channels' => 'Kanaler',
     "Click any row's **Test** button to send a quick test message to that channel." => 'Klik på en vilkårlig rækkes **Test**-knap for at sende en hurtig testbesked til den kanal.',
     'Bot Token' => 'Bot-token',
@@ -371,21 +422,59 @@ return [
     'Not a valid Bot Token. Must start with `xoxb-`.' => 'Ugyldigt bot-token. Skal starte med `xoxb-`.',
     'Not a valid Channel ID. Must look like `C01234ABCD`.' => 'Ugyldigt kanal-ID. Skal ligne `C01234ABCD`.',
 
+    // Settings: Discord
+    'Post messages to your Discord channels.' => 'Send beskeder til dine Discord-kanaler.',
+    'Webhook URL' => 'Webhook-URL',
+    'Not a valid Webhook URL. Must start with `https://discord.com/api/webhooks/`.' => 'Ugyldig webhook-URL. Skal starte med `https://discord.com/api/webhooks/`.',
+
     // Settings: Bluesky
-    "[Bluesky](https://bsky.app) posts publish to the configured account's feed via the ATProto API. App passwords are generated at [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). An app password is a secret, so store it in a `.env` variable and reference that variable (e.g. `\$BLUESKY_APP_PASSWORD`) rather than pasting the password directly." => '[Bluesky](https://bsky.app)-indlæg udgives på den konfigurerede kontos feed via ATProto API. App-adgangskoder genereres på [bsky.app/settings/app-passwords](https://bsky.app/settings/app-passwords). En app-adgangskode er en hemmelighed, så gem den i en `.env`-variabel og henvis til den variabel (f.eks. `$BLUESKY_APP_PASSWORD`) i stedet for at indsætte adgangskoden direkte.',
+    'Publish posts to your [Bluesky](https://bsky.app) accounts.' => 'Udgiv opslag til dine [Bluesky](https://bsky.app)-konti.',
     'PDS URL' => 'PDS-URL',
     'Defaults to https://bsky.social. Point at a custom PDS if your installation federates.' => 'Standard er https://bsky.social. Peg på en brugerdefineret PDS, hvis din installation fødererer.',
     'Bluesky Accounts' => 'Bluesky-konti',
-    "Add the Bluesky accounts you'd like to post from. Each account becomes available as a recipient on the **Recipients** tab when configuring a notification." => 'Tilføj de Bluesky-konti, du vil udgive fra. Hver konto bliver tilgængelig som modtager på fanen **Modtagere**, når du konfigurerer en notifikation.',
+    'Add the Bluesky accounts you want to post from. Each account becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Tilføj de Bluesky-konti, du vil udgive fra. Hver konto bliver tilgængelig som modtager på fanen **Modtagere**, når du konfigurerer en notifikation.',
     'Accounts' => 'Konti',
     "Click any row's **Test** button to confirm the account authenticates." => 'Klik på en vilkårlig rækkes **Test**-knap for at bekræfte, at kontoen kan godkendes.',
     'Handle' => 'Handle',
     'App password' => 'App-adgangskode',
     'Add an account' => 'Tilføj en konto',
 
-    // ============================================================
+    // Settings: Mastodon
+    'Publish posts to your [Mastodon](https://joinmastodon.org) accounts.' => 'Udgiv opslag til dine [Mastodon](https://joinmastodon.org)-konti.',
+    'Click any row\'s **Test** button to verify that account\'s credentials. No posts are made.' => 'Klik på en vilkårlig rækkes **Test**-knap for at verificere den kontos legitimationsoplysninger. Der sendes ingen indlæg.',
+    'Instance URL' => 'Instans-URL',
+    'Access Token' => 'Adgangstoken',
+
+    // Settings: MQTT
+    'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Udgiv beskeder til en MQTT-broker, praktisk til IoT- og home automation-opsætninger.',
+    'Host' => 'Vært',
+    'Broker hostname, without a protocol or port.' => 'Brokerens værtsnavn, uden protokol eller port.',
+    'Port' => 'Port',
+    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Valgfri. Standard er 8883, når TLS er aktiveret, ellers 1883.',
+    'Use TLS' => 'Brug TLS',
+    'Whether to connect to the broker over a secure TLS socket.' => 'Om der skal oprettes forbindelse til brokeren via en sikker TLS-socket.',
+    'Username' => 'Brugernavn',
+    'Optional, for brokers that require username/password authentication.' => 'Valgfri, for brokere der kræver godkendelse med brugernavn/adgangskode.',
+    'Password' => 'Adgangskode',
+    'MQTT Version' => 'MQTT-version',
+    'Protocol version sent to the broker.' => 'Protokolversion sendt til brokeren.',
+    'Client ID' => 'Klient-ID',
+    'Optional. A unique client ID is generated automatically when left blank.' => 'Valgfri. Et unikt klient-ID genereres automatisk, når feltet er tomt.',
+    'Mutual TLS' => 'Gensidig TLS',
+    'Optional. Needed for brokers that authenticate clients with certificates, such as AWS IoT Core. Enter the server file paths to your certificate files. You can use a `.env` variable or `@alias` reference.' => 'Valgfri. Kræves for brokere der godkender klienter med certifikater, såsom AWS IoT Core. Angiv serverfilstier til certifikatfilerne (en `.env`-variabel eller `@alias`-reference er tilladt).',
+    'CA Certificate File' => 'CA-certifikatfil',
+    'Path to the certificate authority (CA) file.' => 'Sti til certifikatautoritetsfilen (CA).',
+    'Client Certificate File' => 'Klientcertifikatfil',
+    'Path to the client certificate file.' => 'Sti til klientcertifikatfilen.',
+    'Client Key File' => 'Klientnøglefil',
+    'Path to the client private key file.' => 'Sti til klientens private nøglefil.',
+    'MQTT Topics' => 'MQTT-emner',
+    'Add the MQTT topics you want to publish to. Each topic becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Tilføj de MQTT-emner, du vil publicere til. Hvert emne bliver tilgængeligt som modtager på fanen **Modtagere**, når du konfigurerer en notifikation.',
+    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Klik på en vilkårlig rækkes **Test**-knap for at publicere en hurtig testbesked til det emne.',
+
+    // ========================================================
     // MANUAL SEND & TEST
-    // ============================================================
+    // ========================================================
 
     // Manual send & test
     'Send a test message' => 'Send en testbesked',
@@ -397,9 +486,9 @@ return [
     'This notification cannot be triggered manually.' => 'Denne notifikation kan ikke udløses manuelt.',
     'This notification no longer applies to the selected element.' => 'Denne notifikation gælder ikke længere for det valgte element.',
 
-    // ============================================================
+    // ========================================================
     // RUNTIME OUTPUT
-    // ============================================================
+    // ========================================================
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Sender {messageType} til {recipient}.',
@@ -428,6 +517,10 @@ return [
     'Log events deleted.' => 'Loghændelser slettet.',
     'Notification sent.' => 'Notifikation sendt.',
     'Notification was not sent. Check the Notification Log for details.' => 'Notifikationen blev ikke sendt. Tjek Notifikationslog for detaljer.',
+    'Instance URL and access token are required.' => 'Instans-URL og adgangstoken er påkrævet.',
+    'Mastodon rejected the request: {error}' => 'Mastodon afviste anmodningen: {error}',
+    'Successfully authenticated as @{handle}. No posts were made.' => 'Godkendt som @{handle}. Der blev ikke sendt nogen indlæg.',
+    'Broker host is not configured.' => 'Broker-vært er ikke konfigureret.',
 
     // Outbound: per-channel send results
     'Unable to send email, no recipient specified.' => 'Kan ikke sende e-mail: ingen modtager angivet.',
@@ -458,6 +551,12 @@ return [
     'Slack rejected the message: {error}' => 'Slack afviste beskeden: {error}',
     'Slack POST failed: {reason}' => 'Slack POST mislykkedes: {reason}',
     'Successfully sent Slack message to "{label}".' => 'Slack-besked sendt til "{label}".',
+    'Unable to send Discord message, no webhook URL.' => 'Kan ikke sende Discord-besked, ingen webhook-URL.',
+    'Unable to send Discord message, body is empty.' => 'Kan ikke sende Discord-besked, teksten er tom.',
+    'Unable to send Discord message, body exceeds the 2000-character limit.' => 'Kan ikke sende Discord-besked, teksten overstiger grænsen på 2000 tegn.',
+    'Discord rejected the message: {error}' => 'Discord afviste beskeden: {error}',
+    'Discord POST failed: {reason}' => 'Discord POST mislykkedes: {reason}',
+    'Successfully sent Discord message to "{label}".' => 'Discord-besked sendt til "{label}".',
     'Unable to send Bluesky post, recipient is missing credentials.' => 'Kan ikke sende Bluesky-indlæg: modtageren mangler legitimationsoplysninger.',
     'Body exceeded {max} characters, truncated.' => 'Teksten oversteg {max} tegn og blev afkortet.',
     'Successfully posted to Bluesky as "{label}".' => 'Udgivet på Bluesky som "{label}".',
@@ -465,6 +564,17 @@ return [
     'Bluesky auth failed: {reason}' => 'Bluesky-godkendelse mislykkedes: {reason}',
     'Bluesky post failed: {reason}' => 'Bluesky-indlæg mislykkedes: {reason}',
     'Bluesky link preview skipped: {reason}' => 'Bluesky-linkforhåndsvisning sprunget over: {reason}',
+    'Unable to send Mastodon post, no instance URL.' => 'Kan ikke sende Mastodon-indlæg, ingen instans-URL.',
+    'Unable to send Mastodon post, no access token.' => 'Kan ikke sende Mastodon-indlæg, intet adgangstoken.',
+    'Unable to send Mastodon post, body is empty.' => 'Kan ikke sende Mastodon-indlæg, teksten er tom.',
+    'Mastodon rejected the post: {error}' => 'Mastodon afviste indlægget: {error}',
+    'Mastodon POST failed: {reason}' => 'Mastodon POST mislykkedes: {reason}',
+    'Successfully sent Mastodon post to "{label}".' => 'Mastodon-indlæg sendt til "{label}".',
+    'Unable to send MQTT message, no broker host configured.' => 'Kan ikke sende MQTT-besked, ingen broker-vært er konfigureret.',
+    'Unable to send MQTT message, no topic specified.' => 'Kan ikke sende MQTT-besked, intet emne angivet.',
+    'Unable to send MQTT message, the payload is empty.' => 'Kan ikke sende MQTT-besked, indholdet er tomt.',
+    'MQTT publish failed: {reason}' => 'MQTT-publicering mislykkedes: {reason}',
+    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-besked sendt til emnet "{topic}".',
 
     // Recipient warnings
     'Recipient "{name}" has no email address.' => 'Modtageren "{name}" har ingen e-mailadresse.',
@@ -475,9 +585,12 @@ return [
     'Recipient "{name}" has no associated User; cannot send Pushover message.' => 'Modtageren "{name}" har ingen tilknyttet bruger; kan ikke sende Pushover-besked.',
     '[SKIPPED] User "{name}" has no Pushover key.' => '[OVERSPRUNGET] Brugeren "{name}" har ingen Pushover-nøgle.',
     'Recipient "{name}" has no ntfy topic.' => 'Modtageren "{name}" har intet ntfy-emne.',
-    'Recipient "{name}" has no Bluesky credentials.' => 'Modtageren "{name}" har ingen Bluesky-legitimationsoplysninger.',
     'Recipient "{name}" has no Slack bot token.' => 'Modtageren "{name}" har intet Slack bot-token.',
     'Recipient "{name}" has no Slack channel ID.' => 'Modtageren "{name}" har intet Slack kanal-ID.',
+    'Recipient "{name}" has no Discord webhook URL.' => 'Modtageren "{name}" har ingen Discord-webhook-URL.',
+    'Recipient "{name}" has no Bluesky credentials.' => 'Modtageren "{name}" har ingen Bluesky-legitimationsoplysninger.',
+    'Recipient "{name}" has no Mastodon credentials.' => 'Modtageren "{name}" har ingen Mastodon-legitimationsoplysninger.',
+    'Recipient "{name}" has no MQTT topic.' => 'Modtageren "{name}" har ikke noget MQTT-emne.',
 
     // Errors & exceptions
     'Invalid element event: {class}' => 'Ugyldig elementhændelse: {class}',
@@ -497,14 +610,13 @@ return [
     'Element not found' => 'Element ikke fundet',
     'You do not have permission to use the Dynamic Data type.' => 'Du har ikke tilladelse til at bruge typen Dynamiske data.',
     'The Dynamic Data snippet did not call the {tag} tag.' => 'Twig-snippet kaldte ikke {tag}-tagget.',
-    'Invalid Slack body format.' => 'Ugyldigt Slack-indholdsformat.',
 
     // Config-file override note
     'This is being set in the config file. [{file}]' => 'Dette indstilles i konfigurationsfilen. [{file}]',
 
-    // ============================================================
+    // ========================================================
     // JAVASCRIPT UI
-    // ============================================================
+    // ========================================================
 
     // JavaScript: log utility & buttons
     'Test notification failed.' => 'Testnotifikation mislykkedes.',
@@ -514,66 +626,5 @@ return [
     'Unable to delete the log event, something went wrong.' => 'Kunne ikke slette loghændelsen, noget gik galt.',
     'Log event deleted.' => 'Loghændelse slettet.',
     'Unable to delete log events, something went wrong.' => 'Kunne ikke slette loghændelser, noget gik galt.',
-    'Are you sure you want to delete this log event?' => 'Er du sikker på, at du vil slette denne loghændelse?',
     'Are you sure you want to delete all logs from {date}?' => 'Er du sikker på, at du vil slette alle logfiler fra {date}?',
-
-    // ============================================================
-    // MQTT
-    // ============================================================
-
-    'Recipient "{name}" has no MQTT topic.' => 'Modtageren "{name}" har ikke noget MQTT-emne.',
-    'Unable to send MQTT message, no broker host configured.' => 'Kan ikke sende MQTT-besked, ingen broker-vært er konfigureret.',
-    'Unable to send MQTT message, no topic specified.' => 'Kan ikke sende MQTT-besked, intet emne angivet.',
-    'Unable to send MQTT message, the payload is empty.' => 'Kan ikke sende MQTT-besked, indholdet er tomt.',
-    'MQTT publish failed: {reason}' => 'MQTT-publicering mislykkedes: {reason}',
-    'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-besked sendt til emnet "{topic}".',
-    'MQTT Broker' => 'MQTT-broker',
-    'Notifier publishes to an MQTT broker (such as Mosquitto, EMQX, HiveMQ, or AWS IoT Core). Enter the broker connection details below. Sensitive values can be stored in a `.env` variable and referenced here (e.g. `$MQTT_PASSWORD`).' => 'Notifier publicerer til en MQTT-broker (såsom Mosquitto, EMQX, HiveMQ eller AWS IoT Core). Indtast brokerens forbindelsesoplysninger nedenfor. Følsomme værdier kan gemmes i en `.env`-variabel og refereres her (f.eks. `$MQTT_PASSWORD`).',
-    'Host' => 'Vært',
-    'Broker hostname, without a protocol or port.' => 'Brokerens værtsnavn, uden protokol eller port.',
-    'Port' => 'Port',
-    'Optional. Defaults to 8883 when TLS is enabled, otherwise 1883.' => 'Valgfri. Standard er 8883, når TLS er aktiveret, ellers 1883.',
-    'Use TLS' => 'Brug TLS',
-    'Whether to connect to the broker over a secure TLS socket.' => 'Om der skal oprettes forbindelse til brokeren via en sikker TLS-socket.',
-    'Username' => 'Brugernavn',
-    'Optional, for brokers that require username/password authentication.' => 'Valgfri, for brokere der kræver godkendelse med brugernavn/adgangskode.',
-    'Password' => 'Adgangskode',
-    'MQTT Version' => 'MQTT-version',
-    'Protocol version sent to the broker.' => 'Protokolversion sendt til brokeren.',
-    'Client ID' => 'Klient-ID',
-    'Optional. A unique client ID is generated automatically when left blank.' => 'Valgfri. Et unikt klient-ID genereres automatisk, når feltet er tomt.',
-    'Mutual TLS' => 'Gensidig TLS',
-    'Optional. Required for brokers that authenticate clients with certificates, such as AWS IoT Core. Provide server file paths to the certificate files (a `.env` variable or `@alias` reference is allowed).' => 'Valgfri. Kræves for brokere der godkender klienter med certifikater, såsom AWS IoT Core. Angiv serverfilstier til certifikatfilerne (en `.env`-variabel eller `@alias`-reference er tilladt).',
-    'CA Certificate File' => 'CA-certifikatfil',
-    'Path to the certificate authority (CA) file.' => 'Sti til certifikatautoritetsfilen (CA).',
-    'Client Certificate File' => 'Klientcertifikatfil',
-    'Path to the client certificate file.' => 'Sti til klientcertifikatfilen.',
-    'Client Key File' => 'Klientnøglefil',
-    'Path to the client private key file.' => 'Sti til klientens private nøglefil.',
-    'MQTT Topics' => 'MQTT-emner',
-    'Add the MQTT topics you\'d like to publish to. Each topic becomes available as a recipient on the **Recipients** tab when configuring a notification.' => 'Tilføj de MQTT-emner, du vil publicere til. Hvert emne bliver tilgængeligt som modtager på fanen **Modtagere**, når du konfigurerer en notifikation.',
-    'Click any row\'s **Test** button to publish a quick test message to that topic.' => 'Klik på en vilkårlig rækkes **Test**-knap for at publicere en hurtig testbesked til det emne.',
-    'MQTT' => 'MQTT',
-    'Payload' => 'Indhold',
-    'The JSON or plain text message published to the MQTT topic.' => 'JSON- eller almindelig tekstbesked, der publiceres til MQTT-emnet.',
-    'The message published to the topic. Can be plain text or a Twig-rendered JSON object.' => 'Beskeden, der publiceres til emnet. Kan være ren tekst eller et Twig-renderet JSON-objekt.',
-    'Quality of Service' => 'Servicekvalitet',
-    'Delivery guarantee for this message.' => 'Leveringsgaranti for denne besked.',
-    'Retain' => 'Behold',
-    'Whether the broker keeps this as the topic\'s last message for future subscribers.' => 'Om brokeren beholder denne som den seneste besked på emnet og leverer den til fremtidige abonnenter.',
-    'Don\'t retain' => 'Behold ikke',
-    'Select MQTT topic(s)' => 'Vælg MQTT-emne(r)',
-    'Which topics should receive this message?' => 'Hvilke emner skal modtage denne besked?',
-    'No MQTT topics configured. Add one in [Settings → MQTT]({url}).' => 'Ingen MQTT-emner konfigureret. Tilføj et under [Indstillinger → MQTT]({url}).',
-    'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Ikke et gyldigt emne. Må ikke være tomt eller indeholde wildcards `+` eller `#`.',
-    'Broker host is not configured.' => 'Broker-vært er ikke konfigureret.',
-
-    // ============================================================
-    // Recipient empty-state (administrative changes disabled)
-    // ============================================================
-
-    'No ntfy topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Ingen ntfy-emner er konfigureret. Emner kan kun tilføjes i et miljø, der tillader administrative ændringer.',
-    'No Slack channels configured. Channels can only be added in an environment that allows administrative changes.' => 'Ingen Slack-kanaler er konfigureret. Kanaler kan kun tilføjes i et miljø, der tillader administrative ændringer.',
-    'No Bluesky accounts configured. Accounts can only be added in an environment that allows administrative changes.' => 'Ingen Bluesky-konti er konfigureret. Konti kan kun tilføjes i et miljø, der tillader administrative ændringer.',
-    'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Ingen MQTT-emner konfigureret. Emner kan kun tilføjes i et miljø, der tillader administrative ændringer.',
 ];
