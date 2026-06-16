@@ -1,0 +1,48 @@
+{% import '_includes/forms' as forms %}
+
+<h2>{{ "Instagram"|t('notifier') }}</h2>
+<p>{{ "Publish posts to your [Instagram](https://instagram.com) Business accounts."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'Instagram', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/instagram' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
+<div class="pane notifier-named-list">
+    {{ forms.editableTableField({
+        label: "Accounts"|t('notifier'),
+        instructions: "Click any row's **Test** button to resolve the linked Instagram account. No posts are made."|t('notifier'),
+        id: 'instagramAccounts',
+        name: 'settings[instagramAccounts]',
+        cols: {
+            label: {
+                heading: "Label"|t('notifier'),
+                type: 'singleline',
+                width: '25%',
+                placeholder: 'Brand IG',
+            },
+            pageId: {
+                heading: "Page ID"|t('notifier'),
+                type: 'singleline',
+                width: '30%',
+                placeholder: '123456789012345',
+            },
+            pageAccessToken: {
+                heading: "Page Access Token"|t('notifier'),
+                type: 'singleline',
+                width: '25%',
+                placeholder: '$FACEBOOK_PAGE_TOKEN',
+            },
+            igUserId: {
+                heading: '',
+                type: 'hidden',
+            },
+            uid: {
+                heading: '',
+                type: 'hidden',
+            },
+        },
+        rows: settings.instagramAccounts ?? [],
+        addRowLabel: "Add an account"|t('notifier'),
+        staticRows: false,
+        allowAdd: true,
+        allowDelete: true,
+        allowReorder: true,
+    }) }}
+</div>

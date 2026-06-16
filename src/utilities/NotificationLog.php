@@ -184,28 +184,21 @@ class NotificationLog extends Utility
         // Loop through every row
         foreach ($rows as $row) {
 
-            // If the row is an envelope, attach its children
-            if ('envelope' === $row->type) {
-                $envelopeLog = Log::find()
-                    ->where(['envelopeId' => $row->id])
-                    ->orderBy('id')
-                    ->all();
-                $dayLog[] = [
-                    'envelope' => $row,
-                    'logs'     => $envelopeLog,
-                ];
-                continue;
-            }
-
-            // If the row is a child of an envelope, skip it
+            // If the row belongs to a parent, it renders as that parent's child
             if (null !== $row->envelopeId) {
                 continue;
             }
 
-            // Otherwise, render as a standalone leaf
+            // Get any child rows pointing at this top-level row
+            $children = Log::find()
+                ->where(['envelopeId' => $row->id])
+                ->orderBy('id')
+                ->all();
+
+            // Add the row with its children
             $dayLog[] = [
                 'envelope' => $row,
-                'logs'     => [],
+                'logs'     => $children,
             ];
 
         }

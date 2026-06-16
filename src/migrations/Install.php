@@ -105,7 +105,7 @@ class Install extends Migration
                 'notificationId' => $this->integer(),
                 'envelopeId'     => $this->integer(),
                 'type'           => $this->string(),
-                'message'        => $this->string(),
+                'message'        => $this->text(),
                 'details'        => $this->text(),
                 'dateCreated'    => $this->dateTime()->notNull(),
                 'dateUpdated'    => $this->dateTime()->notNull(),

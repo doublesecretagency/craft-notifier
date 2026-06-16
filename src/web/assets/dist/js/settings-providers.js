@@ -8,12 +8,15 @@
     'use strict';
 
     var TABLES = {
-        ntfyTopics:       'ntfy',
-        slackChannels:    'slack',
-        discordChannels:  'discord',
-        blueskyAccounts:  'bluesky',
-        mastodonAccounts: 'mastodon',
-        mqttTopics:       'mqtt'
+        ntfyTopics:        'ntfy',
+        slackChannels:     'slack',
+        discordChannels:   'discord',
+        facebookPages:     'facebook',
+        instagramAccounts: 'instagram',
+        xTwitterAccounts:  'x-twitter',
+        blueskyAccounts:   'bluesky',
+        mastodonAccounts:  'mastodon',
+        mqttTopics:        'mqtt'
     };
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -147,6 +150,29 @@
         }
         if ('discord' === provider) {
             return { webhookUrl: readInputValue(row, '[webhookUrl]'), uid: readInputValue(row, '[uid]') };
+        }
+        if ('facebook' === provider) {
+            return {
+                pageId: readInputValue(row, '[pageId]'),
+                pageAccessToken: readInputValue(row, '[pageAccessToken]'),
+                uid: readInputValue(row, '[uid]')
+            };
+        }
+        if ('instagram' === provider) {
+            return {
+                pageId: readInputValue(row, '[pageId]'),
+                pageAccessToken: readInputValue(row, '[pageAccessToken]'),
+                uid: readInputValue(row, '[uid]')
+            };
+        }
+        if ('x-twitter' === provider) {
+            return {
+                consumerKey: readInputValue(row, '[consumerKey]'),
+                consumerKeySecret: readInputValue(row, '[consumerKeySecret]'),
+                accessToken: readInputValue(row, '[accessToken]'),
+                accessTokenSecret: readInputValue(row, '[accessTokenSecret]'),
+                uid: readInputValue(row, '[uid]')
+            };
         }
         if ('bluesky' === provider) {
             return {

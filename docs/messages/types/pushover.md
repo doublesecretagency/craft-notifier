@@ -22,6 +22,18 @@ For each Pushover notification, be sure to specify the **field containing each u
 
 <img class="dropshadow" src="/images/messages/pushover-config.png" alt="" style="width:640px; margin-top:10px">
 
+### Field containing each user's Pushover key
+
+Select which User field holds the recipient's Pushover user key.
+
+### Pushover Title
+
+Optionally include a heading above the body.
+
+### Pushover Body
+
+The body of the Pushover notification. Plain text only.
+
 <!--@include: @/messages/types/_special-variables.md-->
 
 ## Pushover Recipients

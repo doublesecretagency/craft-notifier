@@ -83,6 +83,66 @@ class Recipient extends Model
     public ?string $discordChannelLabel = null;
 
     /**
+     * @var string|null Facebook page label (e.g. "Company Page").
+     */
+    public ?string $facebookPageLabel = null;
+
+    /**
+     * @var string|null Facebook page ID.
+     */
+    public ?string $facebookPageId = null;
+
+    /**
+     * @var string|null Facebook Page Access Token. May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $facebookPageAccessToken = null;
+
+    /**
+     * @var string|null Instagram account label (e.g. "Brand IG").
+     */
+    public ?string $instagramAccountLabel = null;
+
+    /**
+     * @var string|null Facebook page ID linked to the Instagram account.
+     */
+    public ?string $instagramPageId = null;
+
+    /**
+     * @var string|null Instagram business account ID, resolved from the linked Page.
+     */
+    public ?string $instagramIgUserId = null;
+
+    /**
+     * @var string|null Page Access Token for the Instagram account. May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $instagramPageAccessToken = null;
+
+    /**
+     * @var string|null X (Twitter) account label.
+     */
+    public ?string $xTwitterLabel = null;
+
+    /**
+     * @var string|null X (Twitter) API key (consumer key). May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $xTwitterConsumerKey = null;
+
+    /**
+     * @var string|null X (Twitter) API secret (consumer secret). May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $xTwitterConsumerKeySecret = null;
+
+    /**
+     * @var string|null X (Twitter) access token. May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $xTwitterAccessToken = null;
+
+    /**
+     * @var string|null X (Twitter) access token secret. May be a $ENV_VAR reference, resolved at send time.
+     */
+    public ?string $xTwitterAccessTokenSecret = null;
+
+    /**
      * @var string|null Bluesky handle (e.g. "example.bsky.social").
      */
     public ?string $blueskyHandle = null;
@@ -177,6 +237,9 @@ class Recipient extends Model
             ?? $this->topic
             ?? $this->slackChannelLabel
             ?? $this->discordChannelLabel
+            ?? $this->facebookPageLabel
+            ?? $this->instagramAccountLabel
+            ?? $this->xTwitterLabel
             ?? $this->blueskyHandle
             ?? $this->mastodonInstanceUrl
         );

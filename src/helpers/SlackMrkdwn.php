@@ -38,8 +38,7 @@ class SlackMrkdwn
         }
 
         // Configure the converter for Slack-friendly output
-        // Picking `_` for italic up front means bold can stay as `**`
-        // and the two never collide on a shared asterisk
+        // Picking `_` for italic keeps bold on `**` so they never collide
         $converter = new HtmlConverter([
             'strip_tags'      => true,
             'header_style'    => 'atx',
@@ -63,9 +62,8 @@ class SlackMrkdwn
     /**
      * Translate a CommonMark string into Slack's mrkdwn dialect.
      *
-     * Italic already lands as `_x_` from the converter config, so this only
-     * needs to rewrite bold, headings, links, list markers, and a few
-     * whitespace quirks.
+     * Italic already lands as `_x_` from the converter config, so this only rewrites
+     * bold, headings, links, list markers, and a few whitespace quirks.
      *
      * @param string $markdown
      * @return string
@@ -93,8 +91,7 @@ class SlackMrkdwn
         // Decode entities the converter left intact (`&amp;`, `&lt;`, etc.)
         $markdown = html_entity_decode($markdown, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-        // Strip CommonMark backslash escapes (Slack doesn't recognize `\` as
-        // an escape character, so `\#16147` displays as literal `\#16147`)
+        // Strip CommonMark backslash escapes (Slack shows `\#16147` literally)
         $markdown = preg_replace('/\\\\([!"#$%&\'()*+,\-.\/:;<=>?@\[\]^_`{|}~])/', '$1', $markdown);
 
         // Trim trailing whitespace

@@ -46,23 +46,21 @@ abstract class Compat
     // ========================================================================= //
 
     /**
-     * Resolve the correct utility-types registration event name for the active Craft version.
+     * Get the utility-types registration event name for the active Craft version.
      *
      * Craft 5 dispatches `Utilities::EVENT_REGISTER_UTILITIES` (`'registerUtilities'`).
      * Craft 4 dispatched the older `Utilities::EVENT_REGISTER_UTILITY_TYPES` (`'registerUtilityTypes'`).
-     *
-     * Raw string literals (not class constants) are used: referencing a constant absent on
-     * the loaded Craft version is a fatal error, and these literals are Craft's stable dispatch contract.
      *
      * @return string
      */
     public static function utilitiesEventName(): string
     {
+        // Raw literals, not class constants: a constant missing on the loaded Craft version would fatal
         return static::isCraft5() ? 'registerUtilities' : 'registerUtilityTypes';
     }
 
     /**
-     * Resolve the correct element table-attribute-html event name for the active Craft version.
+     * Get the element table-attribute-html event name for the active Craft version.
      *
      * Craft 5 dispatches `Element::EVENT_DEFINE_ATTRIBUTE_HTML` (`'defineAttributeHtml'`).
      * Craft 4 dispatched `Element::EVENT_SET_TABLE_ATTRIBUTE_HTML` (`'setTableAttributeHtml'`).
@@ -75,7 +73,7 @@ abstract class Compat
     }
 
     /**
-     * Resolve the correct CpScreenResponseBehavior method name for the meta sidebar.
+     * Get the CpScreenResponseBehavior method name for the meta sidebar.
      *
      * Craft 5 exposes `metaSidebarTemplate(...)`.
      * Craft 4 exposed `sidebarTemplate(...)`.
@@ -91,7 +89,7 @@ abstract class Compat
     }
 
     /**
-     * Resolve the correct condition-rules registration event name for the active Craft version.
+     * Get the condition-rules registration event name for the active Craft version.
      *
      * Craft 5 dispatches `BaseCondition::EVENT_REGISTER_CONDITION_RULES` (`'registerConditionRules'`).
      * Craft 4 dispatched `BaseCondition::EVENT_REGISTER_CONDITION_RULE_TYPES` (`'registerConditionRuleTypes'`).
@@ -104,7 +102,7 @@ abstract class Compat
     }
 
     /**
-     * Resolve the correct event property name carrying the condition rules array.
+     * Get the event property name carrying the condition rules array.
      *
      * Craft 5's `RegisterConditionRulesEvent` exposes `$conditionRules`.
      * Craft 4's `RegisterConditionRuleTypesEvent` exposed `$conditionRuleTypes`.

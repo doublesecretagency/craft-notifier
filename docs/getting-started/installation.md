@@ -58,7 +58,7 @@ composer require doublesecretagency/craft-notifier
 ```
 
 :::warning Finish installing via Console or Settings page
-Alternatively, you can visit the **Settings > Plugins** page to complete the installation.
+Alternatively, you can visit the **Settings → Plugins** page to complete the installation.
 
 If installed via the control panel, you'll be automatically redirected to configure the plugin.
 :::

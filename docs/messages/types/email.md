@@ -14,25 +14,25 @@ Sends **an email** when the notification event is triggered.
 
 <!--@include: @/messages/types/_special-variables.md-->
 
-## Body Editor
+### User's Email Address Field
 
-The **Email Body** field offers two editing modes, switchable at any time via the mode toggle in the field heading.
+Select which User field holds the recipient's email address.
+
+### Email Subject
+
+The subject line of the email.
+
+### Email Body
+
+The body of the email, supports HTML. Switch between "Rich Text" and "Code" modes at any time.
 
 <img class="dropshadow" src="/images/messages/email-body-toggle.png" alt="" style="width:644px; margin-top:10px">
 
-### `Rich Text`
+- `Rich Text` - A basic WYSIWYG editor for writing prose-heavy notifications, with minimal inline Twig interpolations.
 
-Provides a basic WYSIWYG editor for writing prose-heavy notifications with a few inline Twig interpolations.
+- `Code` - A code-editing interface which provides Twig hints and syntax highlighting, making it easier to write complex Twig logic.
 
-### `Code`
-
-A code-editing interface which provides Twig hints and syntax highlighting, making it easier to write complex Twig logic.
-
-:::tip For intricate Twig logic, use Code mode or an `{% include %}`
-Writing a lot of Twig tags? Switch to code mode to get hints and syntax highlighting.
-
-For extremely long or complex messages, use an `{% include %}` pointed to a hard-coded Twig template file.
-:::
+For intricate Twig logic, use Code mode or an `{% include %}` pointed to a hard-coded Twig template file.
 
 ## Troubleshooting
 

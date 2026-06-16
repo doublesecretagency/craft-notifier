@@ -4,8 +4,14 @@
 {# Ensure the user can edit the snippet #}
 {% set canEditDynamicData = currentUser.can('notifier-editDynamicData') %}
 
-{# Load the snippet placeholder #}
-{% set placeholder = include('notifier/notifications/_edit/event/dynamic-data/placeholder') %}
+{# Placeholder snippet #}
+{% set placeholder %}{%- verbatim -%}<pre>
+{% setData {
+    song: "Any Way You Want It",
+    band: "Journey",
+    album: "Departure",
+} %}
+</pre>{%- endverbatim -%}{% endset %}
 
 {% set instructions %}
 {{ 'Enter a custom Twig snippet to [determine which data will be included]({url}).'|t('notifier', {url: 'https://plugins.doublesecretagency.com/notifier/events/types/dynamic-data/'})|md }}
@@ -24,9 +30,6 @@
         on: (notification.eventConfig.recurring ?? false),
         toggle: 'recurring-schedule-dynamic-data',
     }) }}
-    <div id="recurring-schedule-dynamic-data" class="{% if not (notification.eventConfig.recurring ?? false) %}hidden{% endif %}">
-        {% include 'notifier/notifications/_edit/event/_recurring-schedule' with { eventType: 'dynamic-data' } %}
-    </div>
 
     <hr>
 
@@ -49,6 +52,10 @@
             </blockquote>
         </div>
     {% endif %}
+
+    <div id="recurring-schedule-dynamic-data" class="{% if not (notification.eventConfig.recurring ?? false) %}hidden{% endif %}">
+        {% include 'notifier/notifications/_edit/event/_recurring-schedule' with { eventType: 'dynamic-data' } %}
+    </div>
 
     {# Hidden input goes last so the first visible field keeps :first-child (and Craft's margin reset) #}
     <input type="hidden" name="event[dynamic-data]" value="compile">

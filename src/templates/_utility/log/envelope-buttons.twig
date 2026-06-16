@@ -1,6 +1,8 @@
-<div class="envelope-button">
-    <button onclick="openDetails({{ envelope.envelope.id }})">Details</button>
-</div>
+{% if envelope.envelope.details|json_decode %}
+    <div class="envelope-button">
+        <button onclick="openDetails({{ envelope.envelope.id }})">Details</button>
+    </div>
+{% endif %}
 
 <div class="envelope-button">
     <button onclick="openConfig({{ envelope.envelope.notificationId }})">Config</button>

@@ -27,6 +27,7 @@ use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\helpers\RecurringSchedule;
 use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\web\twig\tokenparsers\SetDataTokenParser;
+use doublesecretagency\notifier\web\twig\tokenparsers\SetMediaTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SetRecipientsTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
 use Twig\Extension\AbstractExtension;
@@ -48,8 +49,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
     {
         return [
             new SkipMessageTokenParser(),
-            new SetRecipientsTokenParser(),
             new SetDataTokenParser(),
+            new SetMediaTokenParser(),
+            new SetRecipientsTokenParser(),
         ];
     }
 
@@ -120,6 +122,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 'ntfyTopics'             => ($settings->ntfyTopics ?? []),
                 'slackChannels'          => ($settings->slackChannels ?? []),
                 'discordChannels'        => ($settings->discordChannels ?? []),
+                'facebookPages'          => ($settings->facebookPages ?? []),
+                'instagramAccounts'      => ($settings->instagramAccounts ?? []),
+                'xTwitterAccounts'       => ($settings->xTwitterAccounts ?? []),
                 'blueskyAccounts'        => ($settings->blueskyAccounts ?? []),
                 'mastodonAccounts'       => ($settings->mastodonAccounts ?? []),
                 'mastodonVisibility'     => Options::MASTODON_VISIBILITY,
@@ -127,7 +132,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 'mqttTopics'             => ($settings->mqttTopics ?? []),
             ],
             // Shared sidenote pointing at the templating + special variables docs
-            'templatingTip' => Craft::t('notifier', '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are also supported.', [
+            'templatingTip' => Craft::t('notifier', '[Templating]({templatingUrl}) and [special variables]({variablesUrl}) are supported.', [
                 'templatingUrl' => 'https://plugins.doublesecretagency.com/notifier/messages/templating',
                 'variablesUrl' => 'https://plugins.doublesecretagency.com/notifier/messages/variables/',
             ]),

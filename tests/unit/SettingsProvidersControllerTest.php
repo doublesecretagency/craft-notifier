@@ -100,7 +100,7 @@ class SettingsProvidersControllerTest extends TestCase
 
     public function testSaveActionWhitelistsSection(): void
     {
-        $this->assertStringContainsString("['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'bluesky', 'mastodon', 'mqtt']", $this->controllerSource);
+        $this->assertStringContainsString("['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'facebook', 'instagram', 'x-twitter', 'bluesky', 'mastodon', 'mqtt']", $this->controllerSource);
     }
 
     public function testSaveActionAssignsUidsToNamedListRows(): void
@@ -169,6 +169,15 @@ class SettingsProvidersControllerTest extends TestCase
         );
         $this->assertMatchesRegularExpression(
             "/function\s+actionTestBluesky[\s\S]*?App::parseEnv\(/",
+            $this->controllerSource
+        );
+    }
+
+    public function testTestBlueskyResolvesHandleEnvReference(): void
+    {
+        // The handle supports $ENV references, so the test action must parse it like the send path does
+        $this->assertMatchesRegularExpression(
+            "/function\s+actionTestBluesky[\s\S]*?\\\$handle\s*=\s*\(string\)\s*App::parseEnv\(/",
             $this->controllerSource
         );
     }

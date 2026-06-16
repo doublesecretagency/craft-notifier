@@ -1,0 +1,44 @@
+{% import '_includes/forms' as forms %}
+
+<h2>{{ "Facebook"|t('notifier') }}</h2>
+<p>{{ "Publish posts to your [Facebook](https://facebook.com) pages."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'Facebook', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/facebook' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
+<div class="pane notifier-named-list">
+    {{ forms.editableTableField({
+        label: "Pages"|t('notifier'),
+        instructions: "Click any row's **Test** button to verify that page's credentials. No posts are made."|t('notifier'),
+        id: 'facebookPages',
+        name: 'settings[facebookPages]',
+        cols: {
+            label: {
+                heading: "Label"|t('notifier'),
+                type: 'singleline',
+                width: '25%',
+                placeholder: 'Company Page',
+            },
+            pageId: {
+                heading: "Page ID"|t('notifier'),
+                type: 'singleline',
+                width: '30%',
+                placeholder: '123456789012345',
+            },
+            pageAccessToken: {
+                heading: "Page Access Token"|t('notifier'),
+                type: 'singleline',
+                width: '25%',
+                placeholder: '$FACEBOOK_PAGE_TOKEN',
+            },
+            uid: {
+                heading: '',
+                type: 'hidden',
+            },
+        },
+        rows: settings.facebookPages ?? [],
+        addRowLabel: "Add a page"|t('notifier'),
+        staticRows: false,
+        allowAdd: true,
+        allowDelete: true,
+        allowReorder: true,
+    }) }}
+</div>

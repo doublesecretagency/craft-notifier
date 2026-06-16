@@ -197,7 +197,15 @@ abstract class Feed
 
         // If no channel, bail with an empty result
         if (!$channel) {
-            return ['feed' => ['url' => '', 'title' => '', 'link' => '', 'description' => ''], 'items' => []];
+            return [
+                'feed' => [
+                    'url' => '',
+                    'title' => '',
+                    'link' => '',
+                    'description' => ''
+                ],
+                'items' => []
+            ];
         }
 
         // Compose the feed-level metadata
@@ -227,7 +235,10 @@ abstract class Feed
         }
 
         // Return the parsed feed
-        return ['feed' => $feed, 'items' => $items];
+        return [
+            'feed' => $feed,
+            'items' => $items
+        ];
     }
 
     /**
@@ -339,7 +350,10 @@ abstract class Feed
         }
 
         // Return the parsed feed
-        return ['feed' => $feed, 'items' => $items];
+        return [
+            'feed' => $feed,
+            'items' => $items
+        ];
     }
 
     /**
@@ -590,7 +604,7 @@ abstract class Feed
 
         // Loop through every prefix => uri pair
         foreach ($namespaces as $prefix => $uri) {
-            // Skip the default (no-prefix) namespace
+            // If it's the default (no-prefix) namespace, skip
             if ('' === $prefix) {
                 continue;
             }
@@ -661,8 +675,10 @@ abstract class Feed
      */
     private static function _xmlNodeToValue(SimpleXMLElement $node, string $ns): string|array
     {
-        // Get every attribute on the node
+        // Initialize the attributes
         $attributes = [];
+
+        // Get every attribute on the node
         foreach ($node->attributes() as $key => $value) {
             $attributes[(string) $key] = trim((string) $value);
         }

@@ -15,7 +15,7 @@ use DateTime;
 use DateTimeZone;
 
 /**
- * Works out the next run time for a Daily / Weekly / Monthly schedule.
+ * Works out the next run time for a Daily / Weekly / Monthly / Yearly schedule.
  *
  * @since 3.1.0
  */
@@ -51,12 +51,12 @@ abstract class RecurringSchedule
     }
 
     /**
-     * Get the next run time strictly after a given moment.
+     * Get the next run time strictly after a given datetime.
      *
      * The cadence is anchored to the start date. A missing start date means no
      * floor (the Unix epoch), so an old config keeps its next-slot-from-now behavior.
      *
-     * @param DateTime $reference The moment to find the next run after.
+     * @param DateTime $reference The datetime to find the next run after.
      * @param array $config The schedule config (frequency / interval / startDate / pins / time).
      * @param DateTimeZone $tz The Craft system timezone.
      * @return DateTime The next run time, in the system timezone.
@@ -203,7 +203,7 @@ abstract class RecurringSchedule
     }
 
     /**
-     * Get the first weekly slot on or after a given moment.
+     * Get the first weekly slot on or after a given datetime.
      *
      * @param DateTime $start
      * @param int $dayOfWeek ISO-8601 day of week (1=Monday).
@@ -229,7 +229,7 @@ abstract class RecurringSchedule
     }
 
     /**
-     * Get the first monthly slot on or after a given moment.
+     * Get the first monthly slot on or after a given datetime.
      *
      * @param DateTime $start
      * @param int $dayOfMonth Day of month (1-28, already clamped).
@@ -255,7 +255,7 @@ abstract class RecurringSchedule
     }
 
     /**
-     * Get the first yearly slot on or after a given moment.
+     * Get the first yearly slot on or after a given datetime.
      *
      * @param DateTime $start
      * @param int $pinMonth Month of year (1-12).
@@ -320,7 +320,7 @@ abstract class RecurringSchedule
      */
     private static function _periodsBetween(DateTime $anchor, DateTime $reference, string $frequency, int $interval): int
     {
-        // Count the whole units (days / weeks / months / years) between the two moments
+        // Count the whole units (days / weeks / months / years) between the two datetimes
         switch ($frequency) {
             case 'daily':
                 $units = intdiv($reference->getTimestamp() - $anchor->getTimestamp(), 86400);

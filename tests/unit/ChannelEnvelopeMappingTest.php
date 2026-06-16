@@ -30,9 +30,9 @@ class ChannelEnvelopeMappingTest extends TestCase
     // Switch coverage
     // ========================================================================= //
 
-    public function testSwitchCoversAllElevenMessageTypes(): void
+    public function testSwitchCoversAllFourteenMessageTypes(): void
     {
-        // The eleven message types must each have a dedicated case branch.
+        // The fourteen message types must each have a dedicated case branch.
         $this->assertMatchesRegularExpression("/case\s+'email':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'sms':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'announcement':/", $this->dispatchSource);
@@ -40,16 +40,19 @@ class ChannelEnvelopeMappingTest extends TestCase
         $this->assertMatchesRegularExpression("/case\s+'pushover':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'ntfy':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'slack':/", $this->dispatchSource);
-        $this->assertMatchesRegularExpression("/case\s+'bluesky':/", $this->dispatchSource);
-        $this->assertMatchesRegularExpression("/case\s+'mqtt':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'discord':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'facebook':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'instagram':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'x-twitter':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'bluesky':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'mastodon':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'mqtt':/", $this->dispatchSource);
     }
 
-    public function testNoOrphanedChannelsBeyondTheKnownEleven(): void
+    public function testNoOrphanedChannelsBeyondTheKnownFourteen(): void
     {
         // The switch is on $this->notification->messageType. Any case beyond
-        // the canonical eleven would indicate a half-implemented channel.
+        // the canonical fourteen would indicate a half-implemented channel.
         // Isolate the configureByMessageType() body so cases from other
         // switches (filterByEventType, etc.) don't leak into the match.
         preg_match(
@@ -58,7 +61,7 @@ class ChannelEnvelopeMappingTest extends TestCase
             $body
         );
         preg_match_all(
-            "/case\s+'([a-z]+)':/",
+            "/case\s+'([a-z-]+)':/",
             $body[0] ?? '',
             $matches
         );
@@ -67,9 +70,9 @@ class ChannelEnvelopeMappingTest extends TestCase
         sort($cases);
 
         $this->assertSame(
-            ['announcement', 'bluesky', 'discord', 'email', 'flash', 'mastodon', 'mqtt', 'ntfy', 'pushover', 'slack', 'sms'],
+            ['announcement', 'bluesky', 'discord', 'email', 'facebook', 'flash', 'instagram', 'mastodon', 'mqtt', 'ntfy', 'pushover', 'slack', 'sms', 'x-twitter'],
             $cases,
-            'Dispatch::configureByMessageType should switch on exactly the eleven canonical channels'
+            'Dispatch::configureByMessageType should switch on exactly the fourteen canonical channels'
         );
     }
 
@@ -161,6 +164,30 @@ class ChannelEnvelopeMappingTest extends TestCase
     {
         $this->assertMatchesRegularExpression(
             "/case 'mastodon':[\s\S]*?\\\$this->_compileMastodon\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testFacebookCaseDelegatesToFacebookCompiler(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'facebook':[\s\S]*?\\\$this->_compileFacebook\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testInstagramCaseDelegatesToInstagramCompiler(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'instagram':[\s\S]*?\\\$this->_compileInstagram\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testXTwitterCaseDelegatesToXTwitterCompiler(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'x-twitter':[\s\S]*?\\\$this->_compileXTwitter\(\)/",
             $this->dispatchSource
         );
     }
@@ -259,6 +286,30 @@ class ChannelEnvelopeMappingTest extends TestCase
         );
     }
 
+    public function testFacebookCompilerInstantiatesOutboundFacebook(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/_compileFacebook[\s\S]*?new OutboundFacebook/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testInstagramCompilerInstantiatesOutboundInstagram(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/_compileInstagram[\s\S]*?new OutboundInstagram/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testXTwitterCompilerInstantiatesOutboundXTwitter(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/_compileXTwitter[\s\S]*?new OutboundXTwitter/',
+            $this->dispatchSource
+        );
+    }
+
     // ========================================================================= //
     // Queue policy per channel
     // ========================================================================= //
@@ -277,7 +328,7 @@ class ChannelEnvelopeMappingTest extends TestCase
     public function testNoPerTypeQueueKeysRemainInDispatch(): void
     {
         // None of the old per-channel queue keys should survive the collapse.
-        foreach (['emailQueue', 'smsQueue', 'pushoverQueue', 'ntfyQueue', 'slackQueue', 'blueskyQueue', 'mqttQueue', 'discordQueue', 'mastodonQueue'] as $key) {
+        foreach (['emailQueue', 'smsQueue', 'pushoverQueue', 'ntfyQueue', 'slackQueue', 'blueskyQueue', 'mqttQueue', 'discordQueue', 'mastodonQueue', 'facebookQueue', 'instagramQueue', 'xTwitterQueue'] as $key) {
             $this->assertStringNotContainsString("messageConfig['{$key}']", $this->dispatchSource);
         }
     }

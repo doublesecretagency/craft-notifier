@@ -108,16 +108,52 @@ class NotificationStructureTest extends TestCase
 
     public function testNewNotificationsPlacedByConfiguredEnd(): void
     {
-        // afterSave adds brand-new notifications to whichever end the setting names.
+        // afterSave adds the notification to whichever end the setting names.
         $this->assertStringContainsString('prependToRoot', $this->elementSource);
         $this->assertStringContainsString('appendToRoot', $this->elementSource);
     }
 
     public function testPlacementSkipsDraftsAndRevisions(): void
     {
-        // Only canonical, brand-new saves are placed (drafts / revisions are skipped).
+        // Only canonical saves are placed (drafts / revisions are skipped).
         $this->assertMatchesRegularExpression(
             '/_ensureStructurePlacement[\s\S]*?getIsDraft\(\)[\s\S]*?getIsRevision\(\)/',
+            $this->elementSource
+        );
+    }
+
+    public function testPlacementRunsOnEveryCanonicalSaveNotJustNew(): void
+    {
+        // The afterSave call must NOT pass $isNew. Notifications are created
+        // through the draft/apply-draft flow, so the canonical element already
+        // exists when the draft is applied (isNew is false there). A new-only
+        // guard would never place it, leaving it orphaned out of the structure.
+        $this->assertStringContainsString(
+            '$this->_ensureStructurePlacement();',
+            $this->elementSource
+        );
+
+        // The old new-only guard must be gone from the placement method.
+        $this->assertDoesNotMatchRegularExpression(
+            '/private function _ensureStructurePlacement\([\s\S]*?if \(!\$isNew\)/',
+            $this->elementSource
+        );
+    }
+
+    public function testPlacementSkipsNotificationsAlreadyInStructure(): void
+    {
+        // Membership is what gates placement now: a notification already in the
+        // structure keeps its position, so re-saves (and apply-draft on an
+        // existing canonical) are a no-op rather than a reset.
+        $this->assertStringContainsString('_isInStructure', $this->elementSource);
+        $this->assertMatchesRegularExpression(
+            '/if \(\$this->_isInStructure\(\$structureId\)\) \{\s*return;/',
+            $this->elementSource
+        );
+
+        // The membership check reads the structure elements table for this element.
+        $this->assertMatchesRegularExpression(
+            '/_isInStructure[\s\S]*?Table::STRUCTUREELEMENTS[\s\S]*?->exists\(\)/',
             $this->elementSource
         );
     }

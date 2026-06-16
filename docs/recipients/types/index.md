@@ -54,6 +54,18 @@ Posts the Discord message to **one or more channels**.
 
 ## Social Media
 
+### [Selected Facebook page(s)](/recipients/types/facebook-pages)
+
+Posts the Facebook message to **one or more pages**.
+
+### [Selected Instagram account(s)](/recipients/types/instagram-accounts)
+
+Posts the Instagram message from **one or more accounts**.
+
+### [Selected X (Twitter) account(s)](/recipients/types/x-twitter-accounts)
+
+Posts the X (Twitter) message from **one or more accounts**.
+
 ### [Selected Bluesky account(s)](/recipients/types/bluesky-accounts)
 
 Posts the Bluesky message from **one or more accounts**.

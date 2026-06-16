@@ -169,7 +169,7 @@ class OutboundSlackTest extends TestCase
     public function testSendLogsSlackErrorOnFailure(): void
     {
         // On failure, surface decoded.error in the notification log
-        $this->assertStringContainsString("'Slack rejected the message:", $this->slackSource);
+        $this->assertStringContainsString('[REJECTED BY SLACK]', $this->slackSource);
     }
 
     public function testSendLogsSuccessAndError(): void

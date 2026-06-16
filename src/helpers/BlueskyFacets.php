@@ -72,7 +72,7 @@ abstract class BlueskyFacets
             // Strip trailing punctuation that shouldn't be part of the link
             $trimmed = rtrim($url, static::URL_TRAILING_TRIM);
 
-            // Compute UTF-8 byte offsets (preg_match offsets are byte offsets already in PHP)
+            // Get the UTF-8 byte offsets (preg_match offsets are byte offsets already in PHP)
             $byteStart = $charOffset;
             $byteEnd   = $charOffset + strlen($trimmed);
 
@@ -118,13 +118,14 @@ abstract class BlueskyFacets
             // Extract the bare handle (without leading @)
             $handle = $matches[1][$i][0];
 
-            // Resolve to DID if a resolver was provided; skip when unresolved
+            // Get the DID when a resolver was provided
             $did = ($resolveHandleToDid ? $resolveHandleToDid($handle) : null);
+            // If unresolved, skip
             if (!$did) {
                 continue;
             }
 
-            // Compute UTF-8 byte offsets including the leading @
+            // Get the UTF-8 byte offsets including the leading @
             $byteStart = $charOffset;
             $byteEnd   = $charOffset + strlen($fullMatch);
 
@@ -161,7 +162,7 @@ abstract class BlueskyFacets
         // Prefer grapheme_strlen from intl
         if (function_exists('grapheme_strlen')) {
             $count = grapheme_strlen($text);
-            // grapheme_strlen returns false on failure
+            // If grapheme_strlen succeeded, return the count
             if (false !== $count) {
                 return $count;
             }
@@ -188,7 +189,7 @@ abstract class BlueskyFacets
         // Reserve one grapheme for the trailing ellipsis
         $keep = max(0, $maxGraphemes - 1);
 
-        // Use grapheme_substr when available
+        // If grapheme_substr is available, use it
         if (function_exists('grapheme_substr')) {
             $clipped = grapheme_substr($text, 0, $keep);
             if (false !== $clipped) {

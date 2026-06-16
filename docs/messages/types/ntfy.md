@@ -28,15 +28,23 @@ Sets how prominently the notification displays, from 1 (lowest) to 5 (highest). 
 
 Adds emoji to the notification. Enter a comma-separated list of [emoji shortcodes](https://docs.ntfy.sh/emojis/).
 
-### Link URL
+### ntfy Title
+
+Optionally include a heading above the body.
+
+### ntfy Body
+
+The body of the ntfy notification.
+
+### ntfy Link URL
 
 Attaches a URL to the notification. Tapping the notification will open that URL on the recipient's device.
-
-<!--@include: @/messages/types/_special-variables.md-->
 
 ### Enable Markdown
 
 Renders the body as Markdown. Some ntfy clients (like the web app) will properly format Markdown syntax, while others (like the iOS app) do not support it and will show the raw text.
+
+<!--@include: @/messages/types/_special-variables.md-->
 
 ## Examples
 

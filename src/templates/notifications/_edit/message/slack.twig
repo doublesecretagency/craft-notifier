@@ -40,11 +40,16 @@
 
     <hr>
 
+    {# Placeholder snippet #}
+    {% set placeholder %}<pre>
+{{ "Dynamic Bot Name"|t('notifier') }}
+</pre>{% endset %}
+
     {{ codeEditor.textAreaField({
         label: "Bot Name"|t('notifier'),
         instructions: "Optionally override the app's display name."|t('notifier'),
         tip: templatingTip,
-        placeholder: "Dynamic Bot Name"|t('notifier'),
+        placeholder: placeholder,
         rows: 1,
         id: 'messageConfig-slackUsername',
         name: 'messageConfig[slackUsername]',
@@ -52,11 +57,16 @@
         errors: notification.getErrors('messageConfig[slackUsername]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
+    {# Placeholder snippet #}
+    {% set placeholder %}{%- verbatim -%}<pre>
+https://example.com/icon.png
+</pre>{%- endverbatim -%}{% endset %}
+
     {{ codeEditor.textAreaField({
         label: "Bot Icon URL"|t('notifier'),
         instructions: "Optionally override the app's icon with a URL."|t('notifier'),
         tip: templatingTip,
-        placeholder: 'https://example.com/icon.png',
+        placeholder: placeholder,
         rows: 1,
         id: 'messageConfig-slackIcon',
         name: 'messageConfig[slackIcon]',
@@ -64,11 +74,16 @@
         errors: notification.getErrors('messageConfig[slackIcon]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
+    {# Placeholder snippet #}
+    {% set placeholder %}{%- verbatim -%}<pre>
+:rocket:
+</pre>{%- endverbatim -%}{% endset %}
+
     {{ codeEditor.textAreaField({
         label: "Bot Emoji"|t('notifier'),
         instructions: "Optionally override the app's icon with an emoji. Used only when Bot Icon URL is empty."|t('notifier'),
         tip: templatingTip,
-        placeholder: ':rocket:',
+        placeholder: placeholder,
         rows: 1,
         id: 'messageConfig-slackEmoji',
         name: 'messageConfig[slackEmoji]',

@@ -1,0 +1,35 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+<div class="message-type-instagram hidden">
+
+    <div class="readable">
+        <blockquote class="note tip">
+            <p><strong>Image Requirements</strong></p>
+            <ul>
+                <li><strong>JPEG format only.</strong></li>
+                <li>Max 8 MB filesize.</li>
+                <li>Width between 320px - 1440px.</li>
+                <li>Aspect ratio between 4:5 - 1.91:1.</li>
+                <li>Must resolve to a <strong>publicly-accessible URL</strong>.</li>
+            </ul>
+            <p>Be sure to use <code>{{ '{% setMedia %}' }}</code> to specify an image.</p>
+        </blockquote>
+    </div>
+
+    <hr>
+
+    {% include 'notifier/notifications/_edit/message/_media' with { channel: 'instagram' } %}
+
+    {{ codeEditor.textAreaField({
+        label: "Caption"|t('notifier'),
+        instructions: "Optional caption, max 2200 characters."|t('notifier'),
+        tip: templatingTip,
+        placeholder: commonPlaceholder,
+        rows: 5,
+        id: 'messageConfig-instagramCaption',
+        name: 'messageConfig[instagramCaption]',
+        value: (notification.messageConfig.instagramCaption ?? null),
+        errors: notification.getErrors('messageConfig[instagramCaption]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+</div>

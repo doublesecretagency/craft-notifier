@@ -25,9 +25,9 @@ class DispatchLogRedactionTest extends TestCase
 
     public function testCompileSlackDoesNotLogWebhookUrl(): void
     {
-        // The envelope-log call in _compileSlack records the label, not the webhook URL
+        // The envelope-log call in _compileSlack records the channel, not the webhook URL
         $this->assertMatchesRegularExpression(
-            "/function _compileSlack[\s\S]*?envelope\(\\\$jobInfo,\s*\[\s*'label'/",
+            "/function _compileSlack[\s\S]*?envelope\(\\\$jobInfo,\s*\[\s*'channel'/",
             $this->dispatchSource
         );
     }

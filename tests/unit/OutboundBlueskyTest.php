@@ -152,8 +152,8 @@ class OutboundBlueskyTest extends TestCase
 
     public function testSendDistinguishesAuthFailureFromPostFailure(): void
     {
-        $this->assertStringContainsString('Bluesky auth failed', $this->blueskySource);
-        $this->assertStringContainsString('Bluesky post failed', $this->blueskySource);
+        $this->assertStringContainsString('[SEND FAILED] Authentication failed', $this->blueskySource);
+        $this->assertStringContainsString('[SEND FAILED] {reason}', $this->blueskySource);
     }
 
     public function testSendFallsBackToDefaultPdsUrl(): void
@@ -164,9 +164,9 @@ class OutboundBlueskyTest extends TestCase
 
     public function testSendBailsWhenCredentialsMissing(): void
     {
-        // A recipient missing either the handle or the resolved app password must bail
+        // A recipient missing either the resolved handle or the resolved app password must bail
         $this->assertMatchesRegularExpression(
-            '/if\s*\(\s*!\$this->handle\s*\|\|\s*!\$appPassword\s*\)/',
+            '/if\s*\(\s*!\$handle\s*\|\|\s*!\$appPassword\s*\)/',
             $this->blueskySource
         );
     }
@@ -175,6 +175,12 @@ class OutboundBlueskyTest extends TestCase
     {
         // The app password is resolved through App::parseEnv() so a $ENV_VAR reference works
         $this->assertStringContainsString('App::parseEnv($this->appPassword)', $this->blueskySource);
+    }
+
+    public function testSendResolvesHandleViaEnvParse(): void
+    {
+        // The handle supports $ENV references just like the app password, so it must be parsed at send time
+        $this->assertStringContainsString('App::parseEnv($this->handle)', $this->blueskySource);
     }
 
     // ========================================================================= //
@@ -190,9 +196,9 @@ class OutboundBlueskyTest extends TestCase
 
     public function testSendAttachesLinkCardOnlyWhenToggleIsOn(): void
     {
-        // The card is attached behind the linkCard flag
+        // The card is attached behind the linkCard flag (and only when no image embed is set)
         $this->assertMatchesRegularExpression(
-            '/if\s*\(\s*\$this->linkCard\s*\)\s*\{[\s\S]*?_attachLinkCard\(/',
+            '/\$this->linkCard\s*\)\s*\{[\s\S]*?_attachLinkCard\(/',
             $this->blueskySource
         );
     }
@@ -238,6 +244,6 @@ class OutboundBlueskyTest extends TestCase
             '/_attachLinkCard\([\s\S]*?catch\s*\(\s*Throwable/',
             $this->blueskySource
         );
-        $this->assertStringContainsString('Bluesky link preview skipped: {reason}', $this->blueskySource);
+        $this->assertStringContainsString('[LINK PREVIEW SKIPPED] {reason}', $this->blueskySource);
     }
 }

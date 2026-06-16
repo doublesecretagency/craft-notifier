@@ -75,7 +75,7 @@ class OutboundFlash extends BaseEnvelope
                 $session->setError($this->title, $details);
                 break;
             default:
-                $notification->log->warning(Craft::t('notifier', 'Unable to send the flash message, invalid flash type.'), $this->envelopeId);
+                $notification->log->error(Craft::t('notifier', '[INVALID TYPE] The flash message type is invalid.'), $this->envelopeId);
                 return false;
         }
 

@@ -8,7 +8,7 @@ Notifier registers a series of permissions under a **Notifier** heading. These a
 
 <img class="dropshadow" src="/images/permissions/permissions-tree.png" alt="Screenshot of the Notifier permissions tree" style="width:328px; margin-top:10px">
 
-Permissions are managed at the user-group level via **Settings > Users > User Groups**, or at the user level by viewing an individual user's **Permissions**.
+Permissions are managed at the user-group level via **Settings → Users → User Groups**, or at the user level by viewing an individual user's **Permissions**.
 
 ## Notifications
 
@@ -36,14 +36,18 @@ Allows users to [manually send](/events/manual-sending) a notification from an e
 
 Allows users to delete notifications.
 
+##### `Use the Dynamic Data type`
+
+Allows users to select and configure the [Dynamic Data](/events/types/dynamic-data/) event type, which executes custom Twig snippets at send time. Nested beneath "Save notifications" because authoring those snippets is a privileged action.
+
 ##### `Use the Dynamic Recipients type`
 
 Allows users to select and configure the [Dynamic Recipients](/recipients/types/dynamic-recipients) recipient type, which executes custom Twig snippets at send time. Nested beneath "Save notifications" because authoring those snippets is a privileged action.
 
 :::warning ⚠️ Security Warning - For Highly Trusted Users Only!
-Do not grant "Use the Dynamic Recipients type" permission to untrusted users, because it will allow them to execute arbitrary Twig code at runtime.
+Do not grant the "Use the Dynamic Data type" or "Use the Dynamic Recipients type" permissions to untrusted users, because they allow executing arbitrary Twig code at runtime.
 
-Though the snippet will be processed in a [Twig sandbox](/messages/twig-sandbox), you are still encouraged to only grant this permission to highly-trusted users, and guide those users on how to write secure Twig code.
+Though the snippets will be processed in a [Twig sandbox](/messages/twig-sandbox), you are still encouraged to only grant these permissions to highly-trusted users, and guide those users on how to write secure Twig code.
 :::
 
 ## Notification Log

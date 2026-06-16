@@ -52,6 +52,24 @@
     {% include 'notifier/notifications/_edit/recipients/discord-channels' %}
 </div>
 
+{# Facebook: locked to facebook-pages #}
+<div class="message-type-facebook hidden">
+    <input type="hidden" name="recipientsType" value="facebook-pages" disabled>
+    {% include 'notifier/notifications/_edit/recipients/facebook-pages' %}
+</div>
+
+{# Instagram: locked to instagram-accounts #}
+<div class="message-type-instagram hidden">
+    <input type="hidden" name="recipientsType" value="instagram-accounts" disabled>
+    {% include 'notifier/notifications/_edit/recipients/instagram-accounts' %}
+</div>
+
+{# X (Twitter): locked to x-twitter-accounts #}
+<div class="message-type-x-twitter hidden">
+    <input type="hidden" name="recipientsType" value="x-twitter-accounts" disabled>
+    {% include 'notifier/notifications/_edit/recipients/x-twitter-accounts' %}
+</div>
+
 {# Bluesky: locked to bluesky-accounts #}
 <div class="message-type-bluesky hidden">
     <input type="hidden" name="recipientsType" value="bluesky-accounts" disabled>

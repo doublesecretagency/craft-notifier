@@ -152,6 +152,16 @@ class InstallMigrationTest extends TestCase
         );
     }
 
+    public function testLogMessageColumnIsText(): void
+    {
+        // The message column holds provider errors that can exceed 255 chars, so it must be text, not a string.
+        $this->assertMatchesRegularExpression(
+            "/'message'\s*=>\s*\\\$this->text\(\)/",
+            $this->migrationSource,
+            'notifier_log.message must be a text column'
+        );
+    }
+
     // ========================================================================= //
     // Foreign keys
     // ========================================================================= //

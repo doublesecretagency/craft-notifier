@@ -1,0 +1,24 @@
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+{# The message-type prefix for this field's key (e.g. 'bluesky', 'xTwitter') #}
+{% set channel = (channel ?? 'media') %}
+
+{# Placeholder snippet #}
+{% set placeholder %}{%- verbatim -%}<pre>
+{% setMedia entry.photo.one() %}
+</pre>{%- endverbatim -%}{% endset %}
+
+{% set instructions %}
+{{ 'Attach an image by calling `{% setMedia %}` in a [custom Twig snippet]({url}).'|t('notifier', {url: 'https://plugins.doublesecretagency.com/notifier/messages/media'})|md }}
+{% endset %}
+
+{{ codeEditor.textAreaField({
+    label: "Image Attachment"|t('notifier'),
+    instructions: instructions,
+    tip: templatingTip,
+    placeholder: placeholder,
+    id: "config-message-#{channel}-media",
+    name: "messageConfig[#{channel}Media]",
+    value: (notification.messageConfig[channel ~ 'Media'] ?? ''),
+    rows: 3,
+}, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}

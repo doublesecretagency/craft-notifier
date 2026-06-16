@@ -5,11 +5,19 @@
 ### Added
 - Added the ability to send a [System Snapshot](https://plugins.doublesecretagency.com/notifier/events/types/system-snapshot/).
 - Added the ability to send [Dynamic Data](https://plugins.doublesecretagency.com/notifier/events/types/dynamic-data/).
-- Added user permissions for authoring Dynamic Data snippets.
+- Added a [`{% setData %}` tag](https://plugins.doublesecretagency.com/notifier/events/types/dynamic-data/#configuring-dynamic-data) for configuring dynamic data.
+- Added a [`{% setMedia %}` tag](https://plugins.doublesecretagency.com/notifier/messages/media) for attaching images to posts.
+- Added media support to [Bluesky](https://plugins.doublesecretagency.com/notifier/messages/types/bluesky) posts.
 - Added support for posting [Discord](https://plugins.doublesecretagency.com/notifier/messages/types/discord) messages via [Incoming Webhooks](https://discord.com/developers/docs/resources/webhook).
+- Added support for posting [Facebook](https://plugins.doublesecretagency.com/notifier/messages/types/facebook) page updates.
+- Added support for posting [Instagram](https://plugins.doublesecretagency.com/notifier/messages/types/instagram) photos.
+- Added support for posting [X (Twitter)](https://plugins.doublesecretagency.com/notifier/messages/types/x-twitter) updates.
 - Added support for publishing [Mastodon](https://plugins.doublesecretagency.com/notifier/messages/types/mastodon) posts.
 - Added support for sending [MQTT](https://plugins.doublesecretagency.com/notifier/messages/types/mqtt) notifications.
 - Added the [Discord channels](https://plugins.doublesecretagency.com/notifier/recipients/types/discord-channels) recipient type for posting to one or more Discord channels.
+- Added the [Facebook pages](https://plugins.doublesecretagency.com/notifier/recipients/types/facebook-pages) recipient type for posting to one or more Facebook pages.
+- Added the [Instagram accounts](https://plugins.doublesecretagency.com/notifier/recipients/types/instagram-accounts) recipient type for posting from one or more Instagram accounts.
+- Added the [X (Twitter) accounts](https://plugins.doublesecretagency.com/notifier/recipients/types/x-twitter-accounts) recipient type for posting from one or more X (Twitter) accounts.
 - Added the [Mastodon accounts](https://plugins.doublesecretagency.com/notifier/recipients/types/mastodon-accounts) recipient type for posting from one or more Mastodon accounts.
 - Added the [MQTT topics](https://plugins.doublesecretagency.com/notifier/recipients/types/mqtt-topics) recipient type for posting to one or more MQTT topics.
 

@@ -5,11 +5,16 @@
 
     <hr>
 
+    {# Placeholder snippet #}
+    {% set placeholder %}{%- verbatim -%}<pre>
+{{ data | json_encode }}
+</pre>{%- endverbatim -%}{% endset %}
+
     {{ codeEditor.textAreaField({
         label: "Payload"|t('notifier'),
         instructions: "The JSON or plain text message published to the MQTT topic."|t('notifier'),
         tip: templatingTip,
-        placeholder: '{{ data | json_encode }}',
+        placeholder: placeholder,
         rows: 4,
         id: 'messageConfig-mqttBody',
         name: 'messageConfig[mqttBody]',

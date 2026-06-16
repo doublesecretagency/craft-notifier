@@ -97,13 +97,13 @@ class OutboundFlashTest extends TestCase
         );
     }
 
-    public function testInvalidFlashTypeFallsThroughToWarning(): void
+    public function testInvalidFlashTypeIsLoggedAsError(): void
     {
-        // An unknown flash type must be logged as a warning rather than
-        // silently dropped or incorrectly mapped to a default.
+        // An unknown flash type is a blocker (the flash can't be sent), so it is
+        // logged as an error rather than silently dropped or mapped to a default.
         $this->assertStringContainsString('default:', $this->flashSource);
         $this->assertMatchesRegularExpression(
-            '/log->warning.*invalid flash type/i',
+            '/log->error.*INVALID TYPE/i',
             $this->flashSource
         );
     }

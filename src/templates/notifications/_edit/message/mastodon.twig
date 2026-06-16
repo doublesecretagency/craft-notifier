@@ -25,4 +25,7 @@
         value: (notification.messageConfig.mastodonBody ?? null),
         errors: notification.getErrors('messageConfig[mastodonBody]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {% include 'notifier/notifications/_edit/message/_media' with { channel: 'mastodon' } %}
+
 </div>

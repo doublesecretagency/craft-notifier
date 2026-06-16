@@ -59,6 +59,9 @@ export default defineConfig({
               {text: 'Discord', link: '/getting-started/integrations/discord'},
             ]},
             {text: 'Social Media', items: [
+              {text: 'Facebook',    link: '/getting-started/integrations/facebook'},
+              {text: 'Instagram',   link: '/getting-started/integrations/instagram'},
+              {text: 'X (Twitter)', link: '/getting-started/integrations/x-twitter'},
               {text: 'Bluesky',  link: '/getting-started/integrations/bluesky'},
               {text: 'Mastodon', link: '/getting-started/integrations/mastodon'},
             ]},
@@ -124,6 +127,9 @@ export default defineConfig({
               {text: 'Discord', link: '/messages/types/discord'},
             ]},
             {text: 'Social Media', items: [
+              {text: 'Facebook',    link: '/messages/types/facebook'},
+              {text: 'Instagram',   link: '/messages/types/instagram'},
+              {text: 'X (Twitter)', link: '/messages/types/x-twitter'},
               {text: 'Bluesky',  link: '/messages/types/bluesky'},
               {text: 'Mastodon', link: '/messages/types/mastodon'},
             ]},
@@ -133,6 +139,7 @@ export default defineConfig({
             {divider: true},
             {text: 'Message Templating',     link: '/messages/templating'},
             {text: 'Special Variables',      link: '/messages/variables/'},
+            {text: 'Image Attachments',      link: '/messages/media'},
             {text: 'Skip Sending a Message', link: '/messages/skip'},
             {text: 'Optional Queue',         link: '/messages/queue'},
             {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
@@ -164,6 +171,9 @@ export default defineConfig({
               {text: 'Discord Channels', link: '/recipients/types/discord-channels'},
             ]},
             {text: 'Social Media', items: [
+              {text: 'Facebook Pages',      link: '/recipients/types/facebook-pages'},
+              {text: 'Instagram Accounts',  link: '/recipients/types/instagram-accounts'},
+              {text: 'X (Twitter) Accounts', link: '/recipients/types/x-twitter-accounts'},
               {text: 'Bluesky Accounts',  link: '/recipients/types/bluesky-accounts'},
               {text: 'Mastodon Accounts', link: '/recipients/types/mastodon-accounts'},
             ]},
@@ -270,6 +280,9 @@ export default defineConfig({
                 },
                 {text: 'Social Media', collapsed: true,
                   items: [
+                    {text: 'Facebook',    link: '/getting-started/integrations/facebook'},
+                    {text: 'Instagram',   link: '/getting-started/integrations/instagram'},
+                    {text: 'X (Twitter)', link: '/getting-started/integrations/x-twitter'},
                     {text: 'Bluesky',  link: '/getting-started/integrations/bluesky'},
                     {text: 'Mastodon', link: '/getting-started/integrations/mastodon'},
                   ]
@@ -405,6 +418,9 @@ export default defineConfig({
                 },
                 {text: 'Social Media', collapsed: true,
                   items: [
+                    {text: 'Facebook',           link: '/messages/types/facebook'},
+                    {text: 'Instagram',          link: '/messages/types/instagram'},
+                    {text: 'X (Twitter)',        link: '/messages/types/x-twitter'},
                     {text: 'Bluesky',            link: '/messages/types/bluesky'},
                     {text: 'Mastodon',           link: '/messages/types/mastodon'},
                   ]
@@ -429,6 +445,7 @@ export default defineConfig({
                 {text: 'Dynamic Data',    link: '/messages/variables/dynamic-data'},
               ]
             },
+            {text: 'Image Attachments',      link: '/messages/media'},
             {text: 'Skip Sending a Message', link: '/messages/skip'},
             {text: 'Optional Queue',         link: '/messages/queue'},
             {text: 'Twig Sandbox',           link: '/messages/twig-sandbox'},
@@ -470,6 +487,9 @@ export default defineConfig({
                 },
                 {text: 'Social Media', collapsed: true,
                   items: [
+                    {text: 'Facebook Pages',       link: '/recipients/types/facebook-pages'},
+                    {text: 'Instagram Accounts',   link: '/recipients/types/instagram-accounts'},
+                    {text: 'X (Twitter) Accounts', link: '/recipients/types/x-twitter-accounts'},
                     {text: 'Bluesky Accounts',  link: '/recipients/types/bluesky-accounts'},
                     {text: 'Mastodon Accounts', link: '/recipients/types/mastodon-accounts'},
                   ]

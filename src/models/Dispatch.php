@@ -16,6 +16,7 @@ use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\base\Model;
 use craft\errors\InvalidPluginException;
+use craft\helpers\App;
 use craft\helpers\Queue;
 use craft\helpers\StringHelper;
 use craft\web\View;
@@ -24,6 +25,8 @@ use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\exceptions\RequiredFieldEmptyException;
 use doublesecretagency\notifier\filters\FilterInterface;
 use doublesecretagency\notifier\helpers\DiscordMarkdown;
+use doublesecretagency\notifier\helpers\Media;
+use doublesecretagency\notifier\helpers\MetaGraph;
 use doublesecretagency\notifier\helpers\SlackMrkdwn;
 use doublesecretagency\notifier\jobs\SendMessage;
 use doublesecretagency\notifier\NotifierPlugin;
@@ -72,16 +75,6 @@ class Dispatch extends Model
     public array $envelopes = [];
 
     /**
-     * @var array Raw items collected from the Dynamic Recipients Twig snippet.
-     */
-    public array $collectedDynamicRecipients = [];
-
-    /**
-     * @var bool Whether the `{% setRecipients %}` tag was invoked during the snippet parse.
-     */
-    public bool $setRecipientsInvoked = false;
-
-    /**
      * @var array Keyed values collected from the Dynamic Data Twig snippet.
      */
     public array $collectedDynamicData = [];
@@ -90,6 +83,41 @@ class Dispatch extends Model
      * @var bool Whether the `{% setData %}` tag was invoked during the snippet parse.
      */
     public bool $setDataInvoked = false;
+
+    /**
+     * @var array Raw items collected from the media Twig snippet.
+     */
+    public array $collectedMedia = [];
+
+    /**
+     * @var bool Whether the `{% setMedia %}` tag was invoked during the snippet parse.
+     */
+    public bool $setMediaInvoked = false;
+
+    /**
+     * @var array Skip reasons for media items that could not be resolved for this channel.
+     */
+    private array $_mediaSkips = [];
+
+    /**
+     * @var string State of the media field after resolving: 'set', 'empty', 'unset', or 'error'.
+     */
+    private string $_mediaFieldState = 'set';
+
+    /**
+     * @var string|null Pending warning for an optional-media channel whose field had content but never called setMedia.
+     */
+    private ?string $_mediaFieldNotice = null;
+
+    /**
+     * @var array Raw items collected from the Dynamic Recipients Twig snippet.
+     */
+    public array $collectedDynamicRecipients = [];
+
+    /**
+     * @var bool Whether the `{% setRecipients %}` tag was invoked during the snippet parse.
+     */
+    public bool $setRecipientsInvoked = false;
 
     /**
      * @var SandboxView|null Secure Twig sandbox environment.
@@ -474,12 +502,13 @@ class Dispatch extends Model
     {
         // If this is a Dynamic Data notification, run the user's snippet first
         if ('dynamic-data' === $this->notification->eventType) {
-            // If the snippet fails to parse or never calls setData, send nothing
-            if (!$this->parseDynamicDataSnippet($this->notification) || !$this->setDataInvoked) {
+            // If the snippet fails to parse, send nothing
+            if (!$this->parseDynamicDataSnippet($this->notification)) {
                 $this->envelopes = [];
                 return;
             }
             // Expose the collected data to the message body as {{ data.* }}
+            // (an empty array if the snippet never called setData)
             $this->data['data'] = $this->collectedDynamicData;
         }
 
@@ -516,6 +545,15 @@ class Dispatch extends Model
             case 'discord':
                 $this->envelopes = $this->_compileDiscord();
                 break;
+            case 'facebook':
+                $this->envelopes = $this->_compileFacebook();
+                break;
+            case 'instagram':
+                $this->envelopes = $this->_compileInstagram();
+                break;
+            case 'x-twitter':
+                $this->envelopes = $this->_compileXTwitter();
+                break;
             case 'bluesky':
                 $this->envelopes = $this->_compileBluesky();
                 break;
@@ -525,6 +563,11 @@ class Dispatch extends Model
             case 'mqtt':
                 $this->envelopes = $this->_compileMqtt();
                 break;
+        }
+
+        // If a Dynamic Data snippet ran without calling setData, note it under each envelope
+        if ('dynamic-data' === $this->notification->eventType && !$this->setDataInvoked) {
+            $this->_logNoData();
         }
     }
 
@@ -559,7 +602,7 @@ class Dispatch extends Model
             // If the recipient has no email address, log and skip
             if (!$recipient->emailAddress) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no email address.',
+                    '[SKIPPED] Recipient "{name}" has no email address.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -654,7 +697,7 @@ class Dispatch extends Model
             // If the recipient has no associated User, log and skip
             if (!$recipient->user) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no associated User; cannot send announcement.',
+                    '[SKIPPED] Recipient "{name}" has no Craft user account.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -663,7 +706,7 @@ class Dispatch extends Model
             // If the User cannot access the control panel, log and skip
             if (!$recipient->user->can('accessCp')) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" cannot access the control panel; cannot send announcement.',
+                    '[SKIPPED] Recipient "{name}" cannot access the control panel.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -820,7 +863,7 @@ class Dispatch extends Model
             // If the recipient has no phone number, log and skip
             if (!$recipient->phoneNumber) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no phone number.',
+                    '[SKIPPED] Recipient "{name}" has no phone number.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -912,7 +955,7 @@ class Dispatch extends Model
             // If no key field is configured, log and stop
             if (!$keyFieldHandle) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Pushover user-key field is not configured on this notification.'
+                    '[SKIPPED] Pushover user-key field is not configured on this notification.'
                 ));
                 break;
             }
@@ -920,7 +963,7 @@ class Dispatch extends Model
             // If the recipient has no User, log and skip (Pushover requires a User profile)
             if (!$recipient->user) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no associated User; cannot send Pushover message.',
+                    '[SKIPPED] Recipient "{name}" has no Craft user account.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -1024,7 +1067,7 @@ class Dispatch extends Model
             // If the recipient has no topic, log and skip
             if (!$recipient->topic) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no ntfy topic.',
+                    '[SKIPPED] Recipient "{name}" has no ntfy topic.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -1124,7 +1167,7 @@ class Dispatch extends Model
             // If the recipient has no bot token, log and skip
             if (!$recipient->slackBotToken) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no Slack bot token.',
+                    '[SKIPPED] Recipient "{name}" has no Slack bot token.',
                     ['name' => ($recipient->slackChannelLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -1133,13 +1176,13 @@ class Dispatch extends Model
             // If the recipient has no channel ID, log and skip
             if (!$recipient->slackChannelId) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no Slack channel ID.',
+                    '[SKIPPED] Recipient "{name}" has no Slack channel ID.',
                     ['name' => ($recipient->slackChannelLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
                 continue;
             }
 
-            // Set job info (avoid leaking the bot token into the log)
+            // Set job info
             $displayLabel = ($recipient->slackChannelLabel ?? 'a Slack channel');
             $jobInfo = [
                 'messageType' => 'a Slack message',
@@ -1186,7 +1229,7 @@ class Dispatch extends Model
 
             // Log envelope
             $envelopeId = $this->notification->log->envelope($jobInfo, [
-                'label'       => $recipient->slackChannelLabel,
+                'channel'     => $recipient->slackChannelLabel,
                 'channelId'   => $recipient->slackChannelId,
                 'body'        => $body,
                 'iconUrl'     => $iconUrl,
@@ -1247,7 +1290,7 @@ class Dispatch extends Model
             // If the recipient has no webhook URL, log and skip
             if (!$recipient->discordWebhookUrl) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no Discord webhook URL.',
+                    '[SKIPPED] Recipient "{name}" has no Discord webhook URL.',
                     ['name' => ($recipient->discordChannelLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -1296,7 +1339,7 @@ class Dispatch extends Model
 
             // Log envelope
             $envelopeId = $this->notification->log->envelope($jobInfo, [
-                'label'       => $recipient->discordChannelLabel,
+                'channel'     => $recipient->discordChannelLabel,
                 'body'        => $body,
                 'username'    => $username,
                 'avatarUrl'   => $avatarUrl,
@@ -1324,6 +1367,318 @@ class Dispatch extends Model
     }
 
     /**
+     * Compile the message as one or more Facebook Page posts.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileFacebook(): array
+    {
+        // Get Facebook page recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Resolve media once for this dispatch (shared across all recipients)
+        $media = $this->_resolveMedia('facebookMedia');
+        $mediaSummary = $this->_mediaSummary($media);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient is missing credentials, log and skip
+            if (!$recipient->facebookPageAccessToken || !$recipient->facebookPageId) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    '[SKIPPED] Recipient "{name}" has no Facebook credentials.',
+                    ['name' => ($recipient->facebookPageLabel ?? $recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $displayLabel = ($recipient->facebookPageLabel ?? 'a Facebook page');
+            $jobInfo = [
+                'messageType' => 'a Facebook post',
+                'recipient'   => $displayLabel,
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse the body and link
+            try {
+                $body = $this->_parseTwig($config, $this->notification->messageConfig['facebookBody'] ?? '');
+                $link = trim($this->_parseTwig($config, $this->notification->messageConfig['facebookLink'] ?? ''));
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $body = ($this->notification->messageConfig['facebookBody'] ?? '');
+                $link = trim((string) ($this->notification->messageConfig['facebookLink'] ?? ''));
+                $parseError = $e;
+            }
+
+            // Log envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, [
+                'page'   => $displayLabel,
+                'body'   => $body,
+                'link'   => $link,
+                'media'  => $mediaSummary,
+                'isTest' => $this->isTest,
+            ]);
+
+            // Log any dropped media items as children of this envelope
+            $this->_logMediaSkips($envelopeId);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound Facebook post into envelope
+            $outbound[] = new OutboundFacebook([
+                'notificationId'  => $this->notification->id,
+                'envelopeId'      => $envelopeId,
+                'jobInfo'         => $jobInfo,
+                'pageId'          => $recipient->facebookPageId,
+                'pageAccessToken' => $recipient->facebookPageAccessToken,
+                'label'           => $recipient->facebookPageLabel,
+                'body'            => $body,
+                'link'            => $link,
+                'media'           => $media,
+            ]);
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
+    /**
+     * Compile the message as one or more Instagram posts.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileInstagram(): array
+    {
+        // Get Instagram account recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Resolve media once for this dispatch (shared across all recipients)
+        $media = $this->_resolveMedia('instagramMedia', true);
+        $mediaSummary = $this->_mediaSummary($media);
+
+        // Remember the field state so the envelope can explain a missing image
+        $mediaFieldState = $this->_mediaFieldState;
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the IG user ID wasn't cached on save, resolve it now from the Page
+            if (!$recipient->instagramIgUserId && $recipient->instagramPageId && $recipient->instagramPageAccessToken) {
+
+                // Resolve the page ID and token
+                $pageId = (string) App::parseEnv($recipient->instagramPageId);
+                $token = (string) App::parseEnv($recipient->instagramPageAccessToken);
+
+                // If both are present, resolve the linked Instagram account ID
+                if ($pageId && $token) {
+                    $account = MetaGraph::resolveIgUserId($pageId, $token);
+                    if ($account && !empty($account['id'])) {
+                        $recipient->instagramIgUserId = $account['id'];
+                    }
+                }
+
+            }
+
+            // If the recipient is missing credentials, log and skip
+            if (!$recipient->instagramPageAccessToken || !$recipient->instagramIgUserId) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    '[SKIPPED] Recipient "{name}" has no Instagram credentials.',
+                    ['name' => ($recipient->instagramAccountLabel ?? $recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $displayLabel = ($recipient->instagramAccountLabel ?? 'an Instagram account');
+            $jobInfo = [
+                'messageType' => 'an Instagram post',
+                'recipient'   => $displayLabel,
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse the caption
+            try {
+                $caption = $this->_parseTwig($config, $this->notification->messageConfig['instagramCaption'] ?? '');
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $caption = ($this->notification->messageConfig['instagramCaption'] ?? '');
+                $parseError = $e;
+            }
+
+            // Log envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, [
+                'account' => $displayLabel,
+                'caption' => $caption,
+                'media'   => $mediaSummary,
+                'isTest'  => $this->isTest,
+            ]);
+
+            // Log any dropped media items as children of this envelope
+            $this->_logMediaSkips($envelopeId);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound Instagram post into envelope
+            $outbound[] = new OutboundInstagram([
+                'notificationId'  => $this->notification->id,
+                'envelopeId'      => $envelopeId,
+                'jobInfo'         => $jobInfo,
+                'igUserId'        => $recipient->instagramIgUserId,
+                'pageAccessToken' => $recipient->instagramPageAccessToken,
+                'label'           => $recipient->instagramAccountLabel,
+                'caption'         => $caption,
+                'media'           => $media,
+                'mediaFieldState' => $mediaFieldState,
+            ]);
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
+    /**
+     * Compile the message as one or more X (Twitter) posts.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileXTwitter(): array
+    {
+        // Get X (Twitter) account recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Resolve media once for this dispatch (shared across all recipients)
+        $media = $this->_resolveMedia('xTwitterMedia');
+        $mediaSummary = $this->_mediaSummary($media);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient is missing credentials, log and skip
+            if (!$recipient->xTwitterConsumerKey || !$recipient->xTwitterAccessToken) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    '[SKIPPED] Recipient "{name}" has no X (Twitter) credentials.',
+                    ['name' => ($recipient->xTwitterLabel ?? $recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $displayLabel = ($recipient->xTwitterLabel ?? 'an X (Twitter) account');
+            $jobInfo = [
+                'messageType' => 'an X (Twitter) post',
+                'recipient'   => $displayLabel,
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse the body
+            try {
+                $body = $this->_parseTwig($config, $this->notification->messageConfig['xTwitterBody'] ?? '');
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $body = ($this->notification->messageConfig['xTwitterBody'] ?? '');
+                $parseError = $e;
+            }
+
+            // Log envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, [
+                'account' => $displayLabel,
+                'body'    => $body,
+                'media'   => $mediaSummary,
+                'isTest'  => $this->isTest,
+            ]);
+
+            // Log any dropped media items as children of this envelope
+            $this->_logMediaSkips($envelopeId);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound X (Twitter) post into envelope
+            $outbound[] = new OutboundXTwitter([
+                'notificationId'    => $this->notification->id,
+                'envelopeId'        => $envelopeId,
+                'jobInfo'           => $jobInfo,
+                'consumerKey'       => $recipient->xTwitterConsumerKey,
+                'consumerKeySecret' => $recipient->xTwitterConsumerKeySecret,
+                'accessToken'       => $recipient->xTwitterAccessToken,
+                'accessTokenSecret' => $recipient->xTwitterAccessTokenSecret,
+                'label'             => $recipient->xTwitterLabel,
+                'body'              => $body,
+                'media'             => $media,
+            ]);
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
+    /**
      * Compile the message as one or more Bluesky posts.
      *
      * @return EnvelopeInterface[]
@@ -1332,6 +1687,10 @@ class Dispatch extends Model
     {
         // Get Bluesky account recipients
         $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Resolve media once for this dispatch (shared across all recipients)
+        $media = $this->_resolveMedia('blueskyMedia');
+        $mediaSummary = $this->_mediaSummary($media);
 
         // Initialize outbound messages
         $outbound = [];
@@ -1352,7 +1711,7 @@ class Dispatch extends Model
             // If the recipient is missing required Bluesky credentials, log and skip
             if (!$recipient->blueskyHandle || !$recipient->blueskyAppPassword) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no Bluesky credentials.',
+                    '[SKIPPED] Recipient "{name}" has no Bluesky credentials.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -1392,6 +1751,7 @@ class Dispatch extends Model
                 'body'        => $body,
                 'language'    => $language,
                 'linkCard'    => $linkCard,
+                'media'       => $media,
             ];
 
             // Log envelope
@@ -1399,8 +1759,12 @@ class Dispatch extends Model
                 'handle'   => $recipient->blueskyHandle,
                 'body'     => $body,
                 'language' => $language,
+                'media'    => $mediaSummary,
                 'isTest'   => $this->isTest,
             ]);
+
+            // Log any dropped media items as children of this envelope
+            $this->_logMediaSkips($envelopeId);
 
             // If a parsing error occurred, log and skip
             if ($parseError) {
@@ -1431,6 +1795,10 @@ class Dispatch extends Model
         // Get Mastodon account recipients
         $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
 
+        // Resolve media once for this dispatch (shared across all recipients)
+        $media = $this->_resolveMedia('mastodonMedia');
+        $mediaSummary = $this->_mediaSummary($media);
+
         // Initialize outbound messages
         $outbound = [];
 
@@ -1453,7 +1821,7 @@ class Dispatch extends Model
             // If the recipient is missing required credentials, log and skip
             if (!$recipient->mastodonInstanceUrl || !$recipient->mastodonAccessToken) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no Mastodon credentials.',
+                    '[SKIPPED] Recipient "{name}" has no Mastodon credentials.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -1472,8 +1840,10 @@ class Dispatch extends Model
 
             // Attempt to parse the body
             try {
-                // Body is required by Mastodon's statuses API (when no media)
-                $this->_requireFieldNotEmpty('mastodonBody', 'Body');
+                // Body is required by Mastodon's statuses API unless media is attached
+                if (!$media) {
+                    $this->_requireFieldNotEmpty('mastodonBody', 'Body');
+                }
                 $body = $this->_parseTwig($config, $this->notification->messageConfig['mastodonBody'] ?? '');
                 $parseError = null;
             } catch (Exception|Throwable $e) {
@@ -1488,16 +1858,21 @@ class Dispatch extends Model
                 'label'       => $recipient->name,
                 'body'        => $body,
                 'visibility'  => $visibility,
+                'media'       => $media,
             ];
 
             // Log envelope
             $envelopeId = $this->notification->log->envelope($jobInfo, [
                 'instanceUrl' => $recipient->mastodonInstanceUrl,
-                'label'       => $recipient->name,
+                'account'     => $recipient->name,
                 'body'        => $body,
                 'visibility'  => $visibility,
+                'media'       => $mediaSummary,
                 'isTest'      => $this->isTest,
             ]);
+
+            // Log any dropped media items as children of this envelope
+            $this->_logMediaSkips($envelopeId);
 
             // If a parsing error occurred, log and skip
             if ($parseError) {
@@ -1551,7 +1926,7 @@ class Dispatch extends Model
             // If the recipient has no topic, log and skip
             if (!$recipient->topic) {
                 $this->notification->log->warning(Craft::t('notifier',
-                    'Recipient "{name}" has no MQTT topic.',
+                    '[SKIPPED] Recipient "{name}" has no MQTT topic.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
                 continue;
@@ -1610,6 +1985,101 @@ class Dispatch extends Model
     // ========================================================================= //
 
     /**
+     * Run the Dynamic Data Twig snippet authored on the Notification.
+     *
+     * @param Notification $notification
+     * @return bool Whether the snippet was successfully parsed.
+     */
+    public function parseDynamicDataSnippet(Notification $notification): bool
+    {
+        // Start fresh before each parse
+        $this->collectedDynamicData = [];
+        $this->setDataInvoked = false;
+
+        // Get the snippet
+        $snippet = ($notification->eventConfig['dynamicData'] ?? '');
+
+        // Set up the variables available to the snippet
+        $config = [
+            'recipient' => null,
+            'notification' => $notification,
+            'event' => $this->event,
+            'data' => $this->data,
+        ];
+
+        // Remember the previously active dispatch
+        $previouslyActive = NotifierPlugin::$plugin->activeDispatchForData;
+
+        try {
+            // Point the plugin at this dispatch while the snippet runs
+            NotifierPlugin::$plugin->activeDispatchForData = $this;
+            // Run the snippet, ignoring the rendered output
+            $this->_parseTwig($config, $snippet);
+        } catch (Exception|Throwable $e) {
+            // Clear any data left behind by the failed parse
+            $this->collectedDynamicData = [];
+            // Log the parse error and bail
+            $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
+            $notification->log->error($message);
+            return false;
+        } finally {
+            // Restore the previously active dispatch
+            NotifierPlugin::$plugin->activeDispatchForData = $previouslyActive;
+        }
+
+        // Parse succeeded
+        return true;
+    }
+
+    /**
+     * Run the media Twig snippet authored on the Notification's Message tab.
+     *
+     * @param Notification $notification
+     * @param string $mediaKey The messageConfig key holding the channel's media snippet.
+     * @return bool Whether the snippet was successfully parsed.
+     */
+    public function parseMediaSnippet(Notification $notification, string $mediaKey): bool
+    {
+        // Start fresh before each parse
+        $this->collectedMedia = [];
+        $this->setMediaInvoked = false;
+
+        // Get the snippet
+        $snippet = ($notification->messageConfig[$mediaKey] ?? '');
+
+        // Set up the variables available to the snippet
+        $config = [
+            'recipient' => null,
+            'notification' => $notification,
+            'event' => $this->event,
+            'data' => $this->data,
+        ];
+
+        // Remember the previously active dispatch
+        $previouslyActive = NotifierPlugin::$plugin->activeDispatchForMedia;
+
+        try {
+            // Point the plugin at this dispatch while the snippet runs
+            NotifierPlugin::$plugin->activeDispatchForMedia = $this;
+            // Run the snippet, ignoring the rendered output
+            $this->_parseTwig($config, $snippet);
+        } catch (Exception|Throwable $e) {
+            // Clear any media left behind by the failed parse
+            $this->collectedMedia = [];
+            // Log the parse error and bail
+            $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
+            $notification->log->error($message);
+            return false;
+        } finally {
+            // Restore the previously active dispatch
+            NotifierPlugin::$plugin->activeDispatchForMedia = $previouslyActive;
+        }
+
+        // Parse succeeded
+        return true;
+    }
+
+    /**
      * Run the Dynamic Recipients Twig snippet authored on the Notification.
      *
      * @param Notification $notification
@@ -1657,62 +2127,153 @@ class Dispatch extends Model
         return true;
     }
 
+    // ========================================================================= //
+
     /**
-     * Run the Dynamic Data Twig snippet authored on the Notification.
+     * Resolve the notification's media snippet into light descriptors.
      *
-     * @param Notification $notification
-     * @return bool Whether the snippet was successfully parsed.
+     * Runs once per dispatch. Media is per-post, not per-recipient, so the
+     * result is shared across every envelope in the compile.
+     *
+     * @param string $mediaKey The messageConfig key holding the channel's media snippet.
+     * @param bool $requiresMedia Whether the channel cannot post without media (Instagram).
+     * @return array List of ResolvedMedia descriptors.
      */
-    public function parseDynamicDataSnippet(Notification $notification): bool
+    private function _resolveMedia(string $mediaKey, bool $requiresMedia = false): array
     {
-        // Start fresh before each parse
-        $this->collectedDynamicData = [];
-        $this->setDataInvoked = false;
+        // Reset the skip reasons and field notice for this channel
+        $this->_mediaSkips = [];
+        $this->_mediaFieldNotice = null;
 
-        // Get the snippet
-        $snippet = ($notification->eventConfig['dynamicData'] ?? '');
+        // Get the raw field, to tell an empty field from one that forgot setMedia
+        $snippet = trim((string) ($this->notification->messageConfig[$mediaKey] ?? ''));
 
-        // Set up the variables available to the snippet
-        $config = [
-            'recipient' => null,
-            'notification' => $notification,
-            'event' => $this->event,
-            'data' => $this->data,
-        ];
+        // Run the media snippet
+        $parsed = $this->parseMediaSnippet($this->notification, $mediaKey);
 
-        // Remember the previously active dispatch
-        $previouslyActive = NotifierPlugin::$plugin->activeDispatchForData;
-
-        try {
-            // Point the plugin at this dispatch while the snippet runs
-            NotifierPlugin::$plugin->activeDispatchForData = $this;
-            // Run the snippet, ignoring the rendered output
-            $this->_parseTwig($config, $snippet);
-        } catch (Exception|Throwable $e) {
-            // Clear any data left behind by the failed parse
-            $this->collectedDynamicData = [];
-            // Log the parse error and bail
-            $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
-            $notification->log->error($message);
-            return false;
-        } finally {
-            // Restore the previously active dispatch
-            NotifierPlugin::$plugin->activeDispatchForData = $previouslyActive;
+        // Classify the media field state
+        if ($this->setMediaInvoked) {
+            // setMedia ran
+            $this->_mediaFieldState = 'set';
+        } elseif (!$parsed) {
+            // The snippet errored (already logged by parseMediaSnippet)
+            $this->_mediaFieldState = 'error';
+        } elseif ('' === $snippet) {
+            // The field was left blank
+            $this->_mediaFieldState = 'empty';
+        } else {
+            // The field had content but never called setMedia
+            $this->_mediaFieldState = 'unset';
         }
 
-        // If the snippet never called setData, log a warning
-        if (!$this->setDataInvoked) {
-            $notification->log->warning(Craft::t('notifier',
-                'The Dynamic Data snippet did not call the {tag} tag.',
-                ['tag' => '{% setData %}']
-            ));
+        // If an optional-media channel forgot setMedia, warn (the post still sends without media)
+        if (!$requiresMedia && 'unset' === $this->_mediaFieldState) {
+            $this->_mediaFieldNotice = Craft::t('notifier',
+                '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.',
+                ['tag' => '{% setMedia %}']
+            );
         }
 
-        // Parse succeeded
-        return true;
+        // If the snippet never called setMedia, there is no media
+        if (!$this->setMediaInvoked) {
+            return [];
+        }
+
+        // Initialize resolved media
+        $resolved = [];
+
+        // Loop through each collected item
+        foreach ($this->collectedMedia as $item) {
+
+            // Normalize the item into a descriptor
+            $descriptor = Media::resolve($item);
+
+            // If the item could not be resolved, record the skip reason and skip
+            if (!$descriptor) {
+                $this->_mediaSkips[] = Media::unsupportedReason($item);
+                continue;
+            }
+
+            // Add the descriptor
+            $resolved[] = $descriptor;
+
+        }
+
+        // Return all resolved media
+        return $resolved;
     }
 
-    // ========================================================================= //
+    /**
+     * Log any unresolved media items as inline lines under an envelope.
+     *
+     * @param int $envelopeId The envelope these dropped items belong to.
+     * @return void
+     */
+    private function _logMediaSkips(int $envelopeId): void
+    {
+        // Loop through each skip reason
+        foreach ($this->_mediaSkips as $reason) {
+            // Log the dropped item as an inline line under this envelope
+            $this->notification->log->warning(Media::notAttachedLine($reason), $envelopeId);
+        }
+
+        // If an optional-media channel forgot setMedia, warn under this envelope
+        if (null !== $this->_mediaFieldNotice) {
+            $this->notification->log->warning($this->_mediaFieldNotice, $envelopeId);
+        }
+    }
+
+    /**
+     * Log a [NO DATA] notice under each compiled envelope.
+     *
+     * Fires when a Dynamic Data snippet runs without calling setData. The
+     * message still sends with empty data, so this is a warning, not an error.
+     *
+     * @return void
+     */
+    private function _logNoData(): void
+    {
+        // Build the no-data warning line
+        $line = Craft::t('notifier',
+            '[NO DATA] The Dynamic Data snippet did not call the {tag} tag.',
+            ['tag' => '{% setData %}']
+        );
+
+        // Loop through each compiled envelope
+        foreach ($this->envelopes as $envelope) {
+            // If invalid envelope, skip it
+            if (!$envelope) {
+                continue;
+            }
+            // Log the no-data notice under this envelope
+            $this->notification->log->warning($line, $envelope->envelopeId);
+        }
+    }
+
+    /**
+     * Summarize resolved media for the envelope log, without any bytes.
+     *
+     * @param array $media List of ResolvedMedia descriptors.
+     * @return array
+     */
+    private function _mediaSummary(array $media): array
+    {
+        // Summarize each descriptor by its identifying fields
+        $items = [];
+        foreach ($media as $descriptor) {
+            $items[] = [
+                'kind'    => $descriptor->kind,
+                'url'     => $descriptor->url,
+                'assetId' => $descriptor->assetId,
+            ];
+        }
+
+        // Return the count and items
+        return [
+            'count' => count($items),
+            'items' => $items
+        ];
+    }
 
     /**
      * Throw if a required messageConfig field is missing or empty.

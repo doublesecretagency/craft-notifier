@@ -161,12 +161,17 @@ class NotificationLogUtilityTest extends TestCase
         );
     }
 
-    public function testEnvelopeRowsStillAttachChildLogs(): void
+    public function testTopLevelRowsAttachChildLogs(): void
     {
-        // Envelope rows must still gather their own children by envelopeId so
-        // the existing grouped-by-envelope rendering keeps working.
+        // Every top-level row (an envelope, or a standalone primary such as a
+        // media-skip) gathers its own children by envelopeId, so a parent's
+        // sub-rows render grouped beneath it.
         $this->assertMatchesRegularExpression(
-            "/'envelope' === \\\$row->type[\s\S]*?->where\\(\\['envelopeId' => \\\$row->id\\]\\)/",
+            "/->where\\(\\['envelopeId' => \\\$row->id\\]\\)/",
+            $this->utilitySource
+        );
+        $this->assertMatchesRegularExpression(
+            "/'logs'\\s*=>\\s*\\\$children/",
             $this->utilitySource
         );
     }
@@ -182,12 +187,12 @@ class NotificationLogUtilityTest extends TestCase
         );
     }
 
-    public function testStandaloneEntriesRenderAsLeaves(): void
+    public function testStandaloneRowsCanOwnChildren(): void
     {
-        // Notification-level entries (no envelopeId, not envelope type) get
-        // pushed onto the day log as a leaf, no children attached.
-        $this->assertMatchesRegularExpression(
-            "/'envelope' => \\\$row[\s\S]*?'logs'\\s*=>\\s*\\[\\]/",
+        // A standalone primary (e.g. a media-skip) can own children too, so the
+        // grouping no longer forces standalone rows to an empty child list.
+        $this->assertDoesNotMatchRegularExpression(
+            "/'logs'\\s*=>\\s*\\[\\]/",
             $this->utilitySource
         );
     }

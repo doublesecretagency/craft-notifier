@@ -14,6 +14,7 @@ namespace doublesecretagency\notifier\elements;
 use Craft;
 use craft\base\Element;
 use craft\db\Query;
+use craft\db\Table;
 use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\helpers\Db;
@@ -903,8 +904,8 @@ class Notification extends Element
             // Ensure feed notifications are seeded against their current Feed URL
             $this->_ensureFeedSeeding($oldEventType, $oldFeedUrl);
 
-            // Add brand-new notifications to the manual order
-            $this->_ensureStructurePlacement($isNew);
+            // Ensure the notification is placed in the manual order
+            $this->_ensureStructurePlacement();
         }
 
         parent::afterSave($isNew);
@@ -1061,7 +1062,7 @@ class Notification extends Element
         } catch (Throwable $e) {
             // Log the failure but don't block the save
             $this->log->error(Craft::t('notifier',
-                'Initial feed scan failed: {message}',
+                '[FEED ERROR] Initial feed scan failed: {message}',
                 ['message' => $e->getMessage()]
             ));
         }
@@ -1100,19 +1101,13 @@ class Notification extends Element
     }
 
     /**
-     * Add a brand-new notification to the manual-order structure.
+     * Ensure the notification has a place in the manual-order structure.
      *
-     * @param bool $isNew Whether this is a brand-new notification.
      * @return void
      */
-    private function _ensureStructurePlacement(bool $isNew): void
+    private function _ensureStructurePlacement(): void
     {
-        // If not a brand-new notification, bail (existing ones keep their place)
-        if (!$isNew) {
-            return;
-        }
-
-        // If this is a draft or revision, bail (only canonical saves are placed)
+        // If this is a draft or revision, bail (only canonical notifications are placed)
         if ($this->getIsDraft() || $this->getIsRevision()) {
             return;
         }
@@ -1122,6 +1117,11 @@ class Notification extends Element
 
         // If the structure can't be resolved, bail
         if (!$structureId) {
+            return;
+        }
+
+        // If already placed in the structure, bail (keep the existing position)
+        if ($this->_isInStructure($structureId)) {
             return;
         }
 
@@ -1140,6 +1140,24 @@ class Notification extends Element
 
         // Otherwise add after the others (bottom of the list)
         $structures->appendToRoot($structureId, $this, Structures::MODE_INSERT);
+    }
+
+    /**
+     * Whether this notification is already placed in the manual-order structure.
+     *
+     * @param int $structureId The structure that backs the manual order.
+     * @return bool Whether a structure element row exists for this notification.
+     */
+    private function _isInStructure(int $structureId): bool
+    {
+        // Whether a matching structure element row exists
+        return (new Query())
+            ->from([Table::STRUCTUREELEMENTS])
+            ->where([
+                'structureId' => $structureId,
+                'elementId' => $this->id,
+            ])
+            ->exists();
     }
 
 }

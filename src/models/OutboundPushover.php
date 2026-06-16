@@ -77,7 +77,7 @@ class OutboundPushover extends BaseEnvelope
             $url = 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/pushover';
 
             // Log error
-            $notification->log->error(Craft::t('notifier', '[Invalid Pushover credentials.]({url}) Missing app token.', ['url' => $url]), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[BAD CREDENTIALS] Missing app token. [Configure Pushover]({url}).', ['url' => $url]), $this->envelopeId);
 
             // Return failure
             return false;
@@ -85,7 +85,7 @@ class OutboundPushover extends BaseEnvelope
 
         // If recipient has no user key, log error and bail
         if (!$this->userKey) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Pushover message, no user key on recipient.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[NO RECIPIENT] The recipient has no Pushover user key.'), $this->envelopeId);
             return false;
         }
 
@@ -118,7 +118,7 @@ class OutboundPushover extends BaseEnvelope
                 // Extract Pushover's error array if present
                 $errors = (is_array($payload) ? ($payload['errors'] ?? []) : []);
                 $reason = ($errors ? implode(', ', $errors) : "HTTP {$status}");
-                $notification->log->error(Craft::t('notifier', 'Pushover POST failed: {reason}', ['reason' => $reason]), $this->envelopeId);
+                $notification->log->error(Craft::t('notifier', '[SEND FAILED] {reason}', ['reason' => $reason]), $this->envelopeId);
                 return false;
             }
 
@@ -128,7 +128,7 @@ class OutboundPushover extends BaseEnvelope
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
             // Log error message
-            $notification->log->error(Craft::t('notifier', 'Pushover POST failed: {reason}', ['reason' => $message]), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[SEND FAILED] {reason}', ['reason' => $message]), $this->envelopeId);
 
             // Return failure
             return false;

@@ -14,6 +14,14 @@ Announcements are posted in the upper-right corner of the control panel for each
 
 <img class="dropshadow" src="/images/messages/announcement-config.png" alt="" style="width:640px; margin-top:10px">
 
+### Announcement Title
+
+The heading of the announcement.
+
+### Announcement Message
+
+The body of the announcement. Supports Markdown.
+
 <!--@include: @/messages/types/_special-variables.md-->
 
 ## Announcement Recipients

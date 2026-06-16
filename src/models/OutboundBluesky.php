@@ -20,6 +20,7 @@ use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\helpers\BlueskyFacets;
 use doublesecretagency\notifier\helpers\BlueskyLinkCard;
 use doublesecretagency\notifier\helpers\BlueskySession;
+use doublesecretagency\notifier\helpers\Media;
 use doublesecretagency\notifier\helpers\Notifier;
 use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\models\Settings;
@@ -45,7 +46,17 @@ class OutboundBluesky extends BaseEnvelope
     public const HANDLE_RESOLUTION_TTL = 86400;
 
     /**
-     * @var string|null Bluesky handle (e.g. "example.bsky.social").
+     * @var int Maximum number of images per post.
+     */
+    public const MAX_IMAGES = 4;
+
+    /**
+     * @var int Maximum size for an embedded image blob. A fixed ATProto lexicon constant.
+     */
+    public const MAX_IMAGE_BYTES = 1000000;
+
+    /**
+     * @var string|null Bluesky handle (e.g. "example.bsky.social"). May be a $ENV_VAR reference, resolved at send time.
      */
     public ?string $handle = null;
 
@@ -96,12 +107,13 @@ class OutboundBluesky extends BaseEnvelope
         // Resolve PDS URL, falling back to the default Bluesky PDS
         $pdsUrl = App::parseEnv($settings->blueskyPdsUrl) ?: Settings::DEFAULT_PDS_URL;
 
-        // Resolve the app password
+        // Resolve the handle and app password
+        $handle = (string) App::parseEnv($this->handle);
         $appPassword = (string) App::parseEnv($this->appPassword);
 
         // If recipient is missing required fields, log error and bail
-        if (!$this->handle || !$appPassword) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Bluesky post, recipient is missing credentials.'), $this->envelopeId);
+        if (!$handle || !$appPassword) {
+            $notification->log->error(Craft::t('notifier', '[BAD CREDENTIALS] The recipient is missing Bluesky credentials.'), $this->envelopeId);
             return false;
         }
 
@@ -111,13 +123,13 @@ class OutboundBluesky extends BaseEnvelope
             $original = $body;
             $body = BlueskyFacets::truncateToGraphemes($body, static::MAX_GRAPHEMES);
             $notification->log->warning(
-                Craft::t('notifier', 'Body exceeded {max} characters, truncated.', ['max' => $this->getMaxGraphemes()]),
+                Craft::t('notifier', '[TRUNCATED] Body exceeded {max} characters.', ['max' => $this->getMaxGraphemes()]),
                 $this->envelopeId
             );
         }
 
         // Resolve a session (cached or fresh)
-        $session = $this->_resolveSession($pdsUrl, $appPassword, $notification);
+        $session = $this->_resolveSession($pdsUrl, $handle, $appPassword, $notification);
         if (!$session) {
             return false;
         }
@@ -125,8 +137,13 @@ class OutboundBluesky extends BaseEnvelope
         // Build the post record
         $record = $this->_buildPostRecord($body, $pdsUrl);
 
-        // Attach a link-preview card when enabled (best-effort, never fails the post)
-        if ($this->linkCard) {
+        // Attach explicit images when present (one embed type; images win over the link card)
+        if ($this->media) {
+            $this->_attachImages($record, $pdsUrl, $session, $notification);
+        }
+
+        // Attach a link-preview card when enabled and no images were attached (best-effort)
+        if (!isset($record['embed']) && $this->linkCard) {
             $this->_attachLinkCard($record, $body, $pdsUrl, $session, $notification);
         }
 
@@ -136,8 +153,8 @@ class OutboundBluesky extends BaseEnvelope
         // Retry-once on 401 (session may have expired between cache get and publish)
         if (!$success && $this->_lastStatus === 401) {
             // Invalidate cached session and try fresh
-            BlueskySession::invalidate($pdsUrl, $this->handle);
-            $session = $this->_resolveSession($pdsUrl, $appPassword, $notification, force: true);
+            BlueskySession::invalidate($pdsUrl, $handle);
+            $session = $this->_resolveSession($pdsUrl, $handle, $appPassword, $notification, force: true);
             if (!$session) {
                 return false;
             }
@@ -146,7 +163,7 @@ class OutboundBluesky extends BaseEnvelope
 
         // Log success when the publish call returned true
         if ($success) {
-            $displayLabel = ($this->label ?: $this->handle);
+            $displayLabel = ($this->label ?: $handle);
             $notification->log->success(Craft::t('notifier', 'Successfully posted to Bluesky as "{label}".', ['label' => $displayLabel]), $this->envelopeId);
         }
 
@@ -174,16 +191,17 @@ class OutboundBluesky extends BaseEnvelope
      * Resolve a session payload (cached or freshly created).
      *
      * @param string $pdsUrl
+     * @param string $handle Resolved Bluesky handle.
      * @param string $appPassword Resolved app password.
      * @param Notification $notification
      * @param bool $force Skip the cache and force a fresh createSession.
      * @return array|null
      */
-    private function _resolveSession(string $pdsUrl, string $appPassword, Notification $notification, bool $force = false): ?array
+    private function _resolveSession(string $pdsUrl, string $handle, string $appPassword, Notification $notification, bool $force = false): ?array
     {
         // Try the cache first unless caller forced refresh
         if (!$force) {
-            $cached = BlueskySession::get($pdsUrl, $this->handle);
+            $cached = BlueskySession::get($pdsUrl, $handle);
             if ($cached) {
                 return $cached;
             }
@@ -191,16 +209,16 @@ class OutboundBluesky extends BaseEnvelope
 
         // Hit createSession
         $err = null;
-        $session = BlueskySession::createSession($pdsUrl, $this->handle, $appPassword, $err);
+        $session = BlueskySession::createSession($pdsUrl, $handle, $appPassword, $err);
 
         // If createSession failed, log and bail
         if (!$session) {
-            $notification->log->error(Craft::t('notifier', 'Bluesky auth failed for {handle}: {reason}', ['handle' => $this->handle, 'reason' => $err]), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[SEND FAILED] Authentication failed for {handle}: {reason}', ['handle' => $handle, 'reason' => $err]), $this->envelopeId);
             return null;
         }
 
         // Cache for next time
-        BlueskySession::put($pdsUrl, $this->handle, $session);
+        BlueskySession::put($pdsUrl, $handle, $session);
 
         return $session;
     }
@@ -333,9 +351,9 @@ class OutboundBluesky extends BaseEnvelope
 
                 // For 401, log as an auth failure for clarity
                 if (401 === $status) {
-                    $notification->log->error(Craft::t('notifier', 'Bluesky auth failed: {reason}', ['reason' => $reason]), $this->envelopeId);
+                    $notification->log->error(Craft::t('notifier', '[SEND FAILED] Authentication failed: {reason}', ['reason' => $reason]), $this->envelopeId);
                 } else {
-                    $notification->log->error(Craft::t('notifier', 'Bluesky post failed: {reason}', ['reason' => $reason]), $this->envelopeId);
+                    $notification->log->error(Craft::t('notifier', '[SEND FAILED] {reason}', ['reason' => $reason]), $this->envelopeId);
                 }
 
                 return false;
@@ -345,8 +363,81 @@ class OutboundBluesky extends BaseEnvelope
 
         } catch (GuzzleException|Throwable $exception) {
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
-            $notification->log->error(Craft::t('notifier', 'Bluesky post failed: {reason}', ['reason' => $message]), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[SEND FAILED] {reason}', ['reason' => $message]), $this->envelopeId);
             return false;
+        }
+    }
+
+    /**
+     * Upload attached images and attach them to the post record.
+     *
+     * Best-effort: a failed image logs a warning and is skipped. Video items
+     * are not yet supported. Sets an `app.bsky.embed.images` embed when at
+     * least one image uploads successfully.
+     *
+     * @param array $record The post record, modified in place.
+     * @param string $pdsUrl
+     * @param array $session
+     * @param Notification $notification
+     * @return void
+     */
+    private function _attachImages(array &$record, string $pdsUrl, array $session, Notification $notification): void
+    {
+        // Initialize the embed images
+        $images = [];
+
+        // Loop through each media descriptor
+        foreach ($this->media as $descriptor) {
+
+            // If the limit is reached, stop uploading
+            if (count($images) >= static::MAX_IMAGES) {
+                break;
+            }
+
+            // If the item is a video, log that it is not yet supported and skip
+            if ($descriptor->isVideo()) {
+                $this->logUnattached(
+                    $notification,
+                    Craft::t('notifier', 'Videos are not yet supported on {channel}.', ['channel' => 'Bluesky'])
+                );
+                continue;
+            }
+
+            // Read the image bytes
+            $bytes = Media::bytesFor($descriptor, $readError);
+            if (!$bytes) {
+                $this->logUnattached($notification, ($readError ?: 'The image could not be read.'));
+                continue;
+            }
+
+            // Resize the image to fit the blob limit
+            $resized = Media::resizeToLimit($bytes['bytes'], (string) ($bytes['mime'] ?? ''), static::MAX_IMAGE_BYTES);
+            if (!$resized) {
+                $this->logUnattached(
+                    $notification,
+                    Craft::t('notifier', 'The image could not be resized to fit.')
+                );
+                continue;
+            }
+
+            // Upload the blob
+            $blob = $this->_uploadBlob($pdsUrl, $session, $resized['bytes'], $resized['mime'], $uploadError);
+            if (!$blob) {
+                $this->logUnattached($notification, ($uploadError ?: 'The image failed to upload.'));
+                continue;
+            }
+
+            // Add the uploaded image
+            $images[] = ['alt' => '', 'image' => $blob];
+
+        }
+
+        // If any images uploaded, attach them as the post embed
+        if ($images) {
+            $record['embed'] = [
+                '$type'  => 'app.bsky.embed.images',
+                'images' => $images,
+            ];
         }
     }
 
@@ -381,7 +472,7 @@ class OutboundBluesky extends BaseEnvelope
             // If the page could not be read, log and bail without an embed
             if (!$meta) {
                 $notification->log->warning(
-                    Craft::t('notifier', 'Bluesky link preview skipped: {reason}', ['reason' => "could not read {$url}"]),
+                    Craft::t('notifier', '[LINK PREVIEW SKIPPED] {reason}', ['reason' => "could not read {$url}"]),
                     $this->envelopeId
                 );
                 return;
@@ -414,7 +505,7 @@ class OutboundBluesky extends BaseEnvelope
         } catch (Throwable $exception) {
             // Card-building is an enhancement, never a gate - log and move on
             $notification->log->warning(
-                Craft::t('notifier', 'Bluesky link preview skipped: {reason}', ['reason' => $exception->getMessage()]),
+                Craft::t('notifier', '[LINK PREVIEW SKIPPED] {reason}', ['reason' => $exception->getMessage()]),
                 $this->envelopeId
             );
         }
@@ -432,7 +523,7 @@ class OutboundBluesky extends BaseEnvelope
      * @param string $mime The image MIME type.
      * @return array|null
      */
-    private function _uploadBlob(string $pdsUrl, array $session, string $bytes, string $mime): ?array
+    private function _uploadBlob(string $pdsUrl, array $session, string $bytes, string $mime, ?string &$error = null): ?array
     {
         // Normalize endpoint
         $endpoint = rtrim($pdsUrl, '/').'/xrpc/com.atproto.repo.uploadBlob';
@@ -452,7 +543,9 @@ class OutboundBluesky extends BaseEnvelope
             ]);
 
             // Only a 200 carries a usable blob object
-            if (200 !== $response->getStatusCode()) {
+            $status = $response->getStatusCode();
+            if (200 !== $status) {
+                $error = "HTTP {$status} from the blob upload.";
                 return null;
             }
 
@@ -460,9 +553,17 @@ class OutboundBluesky extends BaseEnvelope
             $payload = Json::decodeIfJson((string) $response->getBody());
             $blob = (is_array($payload) ? ($payload['blob'] ?? null) : null);
 
-            return (is_array($blob) ? $blob : null);
+            // If the response carried no blob, bail
+            if (!is_array($blob)) {
+                $error = 'The upload response had no blob.';
+                return null;
+            }
 
-        } catch (GuzzleException|Throwable) {
+            // Return the blob object
+            return $blob;
+
+        } catch (GuzzleException|Throwable $e) {
+            $error = $e->getMessage();
             return null;
         }
     }

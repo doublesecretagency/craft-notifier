@@ -1,0 +1,29 @@
+{% import '_includes/forms' as forms %}
+
+{% set pageOptions = [] %}
+{% for row in (notificationOptions.facebookPages ?? []) %}
+    {% set pageOptions = pageOptions|merge([{ label: row.label, value: row.uid }]) %}
+{% endfor %}
+
+<div class="recipients-type-facebook-pages">
+
+    {% if pageOptions|length %}
+        {{ forms.checkboxSelectField({
+            label: "Select Facebook page(s)"|t('notifier'),
+            instructions: "Which pages should post this message?"|t('notifier'),
+            id: 'recipientsConfig-facebookPageUids',
+            name: 'recipientsConfig[facebookPageUids]',
+            options: pageOptions,
+            values: (notification.recipientsConfig.facebookPageUids ?? []),
+        }) }}
+    {% else %}
+        <p class="instructions warning">
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No Facebook pages configured. Add one in [Settings → Facebook]({url})."|t('notifier', { url: url('settings/plugins/notifier/facebook') })|md }}
+            {% else %}
+                {{ "No Facebook pages configured. Pages can only be added in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+</div>

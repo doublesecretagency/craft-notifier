@@ -1,0 +1,33 @@
+{# Render a key/value details table. Expects a decoded `details` array. #}
+<table>
+    {% for key, value in details %}
+        {# isTest already surfaces as a badge on the envelope row #}
+        {% if key == 'isTest' %}
+            {# skip #}
+        {% elseif key == 'media' %}
+            {# Media arrives as a nested summary; show the count, skip when empty #}
+            {% set count = (value.count ?? 0) %}
+            {% if count %}
+                <tr>
+                    <th>Media:</th>
+                    <td>{{ count }}</td>
+                </tr>
+            {% endif %}
+        {% else %}
+            {% if key == 'adminsOnly' %}
+                {% set value = (value ? 'Yes' : 'No') %}
+            {% endif %}
+            {% if key == 'type' %}
+                {% set value = value|title %}
+            {% endif %}
+            {# Guard any unexpected array value so the log never crashes #}
+            {% if value is iterable %}
+                {% set value = value|json_encode %}
+            {% endif %}
+            <tr>
+                <th>{{ key|kebab|title|replace('-',' ') }}:</th>
+                <td>{{ value }}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</table>

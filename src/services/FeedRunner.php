@@ -277,7 +277,7 @@ class FeedRunner extends Component
         } catch (Throwable $e) {
             // If the fetch fails, log the error and bail
             $notification->log->error(Craft::t('notifier',
-                'Unable to fetch the feed: {message}',
+                '[FEED ERROR] Could not fetch the feed: {message}',
                 ['message' => $e->getMessage()]
             ));
             return null;
@@ -290,7 +290,7 @@ class FeedRunner extends Component
         // If the feed is XML and the required PHP extensions are missing, log the error and bail
         if (Feed::needsXmlExtensions($body, $contentType) && !extension_loaded('simplexml')) {
             $notification->log->error(Craft::t('notifier',
-                'Unable to parse the feed. The PHP `simplexml` and `libxml` extensions are required.'
+                '[FEED ERROR] Could not parse the feed. The PHP `simplexml` and `libxml` extensions are required.'
             ));
             return null;
         }
@@ -300,7 +300,7 @@ class FeedRunner extends Component
             $parsed = Feed::parseAuto($body, $contentType);
         } catch (FeedParseException) {
             // If parsing fails, log the error and bail
-            $notification->log->error(Craft::t('notifier', 'Unable to parse the feed.'));
+            $notification->log->error(Craft::t('notifier', '[FEED ERROR] Could not parse the feed.'));
             return null;
         }
 

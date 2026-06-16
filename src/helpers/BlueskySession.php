@@ -43,7 +43,7 @@ abstract class BlueskySession
      */
     public static function cacheKey(string $pdsUrl, string $handle): string
     {
-        // Normalize the PDS URL (drop trailing slash and lowercase scheme/host)
+        // Normalize the PDS URL (drop trailing slash)
         $normalized = rtrim($pdsUrl, '/');
 
         // Hash to keep the cache key short and predictable
@@ -62,17 +62,17 @@ abstract class BlueskySession
         // Get from cache
         $cached = Craft::$app->getCache()->get(static::cacheKey($pdsUrl, $handle));
 
-        // Cache miss
+        // If not cached, bail
         if (!$cached) {
             return null;
         }
 
-        // Decode if stored as JSON
+        // If stored as a string, decode the JSON
         if (is_string($cached)) {
             $cached = Json::decodeIfJson($cached);
         }
 
-        // Return only when we have the expected keys
+        // If the expected keys are present, return the payload
         if (is_array($cached) && isset($cached['accessJwt'], $cached['did'])) {
             return $cached;
         }
@@ -154,13 +154,13 @@ abstract class BlueskySession
             $status = $response->getStatusCode();
             $body = Json::decodeIfJson((string) $response->getBody());
 
-            // ATProto returns 200 with accessJwt + refreshJwt + did on success
+            // If the response is not a 200 with a valid session, bail
             if (200 !== $status || !is_array($body) || !isset($body['accessJwt'], $body['did'])) {
                 $errorOut = (is_array($body) ? ($body['message'] ?? "HTTP {$status}") : "HTTP {$status}");
                 return null;
             }
 
-            // Derive an expiry timestamp from the access JWT (ATProto JWTs encode exp in the payload)
+            // Get the expiry timestamp from the access JWT (ATProto JWTs encode exp in the payload)
             $expiresAt = static::_decodeJwtExpiry($body['accessJwt']);
 
             // Build the payload (strip any password echo)
@@ -190,6 +190,7 @@ abstract class BlueskySession
     {
         // Split the JWT
         $parts = explode('.', $jwt);
+        // If the JWT is malformed, return the default
         if (count($parts) < 2) {
             return time() + 3000;
         }
@@ -197,12 +198,14 @@ abstract class BlueskySession
         // Base64URL-decode the payload
         $payload = strtr($parts[1], '-_', '+/');
         $payload = base64_decode($payload, true);
+        // If decoding failed, return the default
         if (false === $payload) {
             return time() + 3000;
         }
 
         // Decode JSON
         $claims = Json::decodeIfJson($payload);
+        // If exp is missing, return the default
         if (!is_array($claims) || !isset($claims['exp'])) {
             return time() + 3000;
         }

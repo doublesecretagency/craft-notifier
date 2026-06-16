@@ -1,0 +1,38 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+<div class="message-type-facebook hidden">
+
+    <hr>
+
+    {{ codeEditor.textAreaField({
+        label: "Message Body"|t('notifier'),
+        instructions: "The text of your Facebook post."|t('notifier'),
+        tip: templatingTip,
+        placeholder: commonPlaceholder,
+        rows: 5,
+        id: 'messageConfig-facebookBody',
+        name: 'messageConfig[facebookBody]',
+        value: (notification.messageConfig.facebookBody ?? null),
+        errors: notification.getErrors('messageConfig[facebookBody]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {# Placeholder snippet #}
+    {% set placeholder %}{%- verbatim -%}<pre>
+https://example.com/article
+</pre>{%- endverbatim -%}{% endset %}
+
+    {{ codeEditor.textAreaField({
+        label: "Preview Card URL"|t('notifier'),
+        instructions: "Optionally add a link to generate a preview card."|t('notifier'),
+        tip: templatingTip,
+        placeholder: placeholder,
+        rows: 1,
+        id: 'messageConfig-facebookLink',
+        name: 'messageConfig[facebookLink]',
+        value: (notification.messageConfig.facebookLink ?? null),
+        errors: notification.getErrors('messageConfig[facebookLink]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {% include 'notifier/notifications/_edit/message/_media' with { channel: 'facebook' } %}
+</div>

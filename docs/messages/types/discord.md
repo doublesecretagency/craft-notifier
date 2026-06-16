@@ -22,6 +22,10 @@ Before sending Discord messages, add at least one Discord channel via [Settings 
 Discord caps a message body at 2,000 characters. Anything longer is rejected before sending, and logged with an error message.
 :::
 
+### Discord Message Body
+
+The content of your message. Supports standard Markdown, and optionally HTML (see below).
+
 ### Render Message Body as HTML
 
 By default, the body will be parsed as Markdown. When enabled, many HTML tags will also be parsed and converted to Markdown.

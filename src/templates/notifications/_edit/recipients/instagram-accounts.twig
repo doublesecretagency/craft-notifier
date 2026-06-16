@@ -1,0 +1,29 @@
+{% import '_includes/forms' as forms %}
+
+{% set accountOptions = [] %}
+{% for row in (notificationOptions.instagramAccounts ?? []) %}
+    {% set accountOptions = accountOptions|merge([{ label: row.label, value: row.uid }]) %}
+{% endfor %}
+
+<div class="recipients-type-instagram-accounts">
+
+    {% if accountOptions|length %}
+        {{ forms.checkboxSelectField({
+            label: "Select Instagram account(s)"|t('notifier'),
+            instructions: "Which accounts should post this message?"|t('notifier'),
+            id: 'recipientsConfig-instagramAccountUids',
+            name: 'recipientsConfig[instagramAccountUids]',
+            options: accountOptions,
+            values: (notification.recipientsConfig.instagramAccountUids ?? []),
+        }) }}
+    {% else %}
+        <p class="instructions warning">
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No Instagram accounts configured. Add one in [Settings → Instagram]({url})."|t('notifier', { url: url('settings/plugins/notifier/instagram') })|md }}
+            {% else %}
+                {{ "No Instagram accounts configured. Accounts can only be added in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+</div>

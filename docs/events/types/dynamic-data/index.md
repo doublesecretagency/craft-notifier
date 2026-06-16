@@ -59,11 +59,15 @@ You can call `{% setData %}` as many times as you'd like. Consecutive calls will
 
 ### When `{% setData %}` is never called
 
-If `{% setData %}` isn't called or the snippet fails to parse, the reason will be logged and Notifier will send **nothing**. Check the [Notification Log](/logging) when a scheduled run doesn't send a message.
+If the snippet parses but never calls `{% setData %}`, the `data` variable will be empty in the outgoing message. A `[NO DATA]` warning will be logged in the [Notification Log](/logging).
 
 ### When `{% setData %}` has no (or empty) parameter
 
-To deliberately send a message with an empty dataset, call `{% setData %}` with no value (or an empty value like `{% setData {} %}`).
+To intentionally send an empty dataset without the `[NO DATA]` warning, call `{% setData %}` with no value (or an empty value).
+
+### When the snippet fails to parse
+
+If the snippet fails to parse, the error is logged and Notifier won't send a message. You can check the [Notification Log](/logging) for more information about what went wrong.
 
 ## Twig Variables
 

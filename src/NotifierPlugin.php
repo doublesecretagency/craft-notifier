@@ -145,6 +145,13 @@ class NotifierPlugin extends Plugin
     public ?Dispatch $activeDispatchForData = null;
 
     /**
+     * @var Dispatch|null Transient pointer to the Dispatch currently parsing media.
+     *
+     * Set around the Twig parse so the `{% setMedia %}` tag knows where to deposit media items.
+     */
+    public ?Dispatch $activeDispatchForMedia = null;
+
+    /**
      * @var Dispatch|null Transient pointer to the Dispatch currently parsing Dynamic Recipients.
      *
      * Set around the Twig parse so the `{% setRecipients %}` tag knows where to deposit recipients.
@@ -364,6 +371,9 @@ class NotifierPlugin extends Plugin
                 $event->rules['settings/plugins/notifier/ntfy']     = 'notifier/settings-providers/ntfy';
                 $event->rules['settings/plugins/notifier/slack']    = 'notifier/settings-providers/slack';
                 $event->rules['settings/plugins/notifier/discord']  = 'notifier/settings-providers/discord';
+                $event->rules['settings/plugins/notifier/facebook']  = 'notifier/settings-providers/facebook';
+                $event->rules['settings/plugins/notifier/instagram'] = 'notifier/settings-providers/instagram';
+                $event->rules['settings/plugins/notifier/x-twitter'] = 'notifier/settings-providers/x-twitter';
                 $event->rules['settings/plugins/notifier/bluesky']  = 'notifier/settings-providers/bluesky';
                 $event->rules['settings/plugins/notifier/mastodon'] = 'notifier/settings-providers/mastodon';
                 $event->rules['settings/plugins/notifier/mqtt']     = 'notifier/settings-providers/mqtt';

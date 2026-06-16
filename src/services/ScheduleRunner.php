@@ -192,7 +192,11 @@ class ScheduleRunner extends Component
     {
         // If this is "Pending to Live", use the fixed preset
         if ('pending-to-live' === $notification->event) {
-            return ['field' => 'postDate', 'direction' => 'on', 'offset' => 0];
+            return [
+                'field' => 'postDate',
+                'direction' => 'on',
+                'offset' => 0
+            ];
         }
 
         // Otherwise "When a date is reached" reads its config from the notification

@@ -13,6 +13,8 @@ namespace doublesecretagency\notifier\models;
 
 use craft\base\Model;
 use doublesecretagency\notifier\base\EnvelopeInterface;
+use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\helpers\Media;
 
 /**
  * Base class for outbound message envelopes.
@@ -41,12 +43,32 @@ class BaseEnvelope extends Model implements EnvelopeInterface
     ];
 
     /**
+     * @var array Media attachments for the message. Ignored by envelopes which don't support media.
+     */
+    public array $media = [];
+
+    /**
      * @inheritdoc
      */
     public function send(): bool
     {
         // Nothing was sent
         return false;
+    }
+
+    // ========================================================================= //
+
+    /**
+     * Log a dropped image as a single inline line under this envelope.
+     *
+     * @param Notification $notification
+     * @param string $reason Plain explanation of why the image was dropped.
+     * @return void
+     */
+    protected function logUnattached(Notification $notification, string $reason): void
+    {
+        // Log the dropped image as a single inline line
+        $notification->log->warning(Media::notAttachedLine($reason), $this->envelopeId);
     }
 
 }

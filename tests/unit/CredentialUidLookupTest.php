@@ -56,7 +56,7 @@ class CredentialUidLookupTest extends TestCase
     {
         // _resolveByUid should warn-and-continue when a configured UID is gone
         $this->assertMatchesRegularExpression(
-            "/no longer exists in plugin settings/",
+            "/no longer exists in the plugin settings/",
             $this->recipientsSource
         );
     }

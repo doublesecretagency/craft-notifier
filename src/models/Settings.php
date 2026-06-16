@@ -135,6 +135,27 @@ class Settings extends Model
     // ========================================================================= //
 
     /**
+     * @var array Named list of Facebook pages. Each row: ['uid' => string, 'label' => string, 'pageId' => string, 'pageAccessToken' => string]. The pageAccessToken may be a $ENV_VAR reference, resolved at send time.
+     */
+    public array $facebookPages = [];
+
+    // ========================================================================= //
+
+    /**
+     * @var array Named list of Instagram accounts. Each row: ['uid' => string, 'label' => string, 'pageId' => string, 'pageAccessToken' => string, 'igUserId' => string]. The igUserId is resolved and cached on save/test; the pageAccessToken may be a $ENV_VAR reference, resolved at send time.
+     */
+    public array $instagramAccounts = [];
+
+    // ========================================================================= //
+
+    /**
+     * @var array Named list of X (Twitter) accounts. Each row: ['uid' => string, 'label' => string, 'consumerKey' => string, 'consumerKeySecret' => string, 'accessToken' => string, 'accessTokenSecret' => string]. Any value may be a $ENV_VAR reference, resolved at send time.
+     */
+    public array $xTwitterAccounts = [];
+
+    // ========================================================================= //
+
+    /**
      * @var string|null Bluesky PDS URL (default https://bsky.social).
      */
     public ?string $blueskyPdsUrl = self::DEFAULT_PDS_URL;

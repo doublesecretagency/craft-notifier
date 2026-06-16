@@ -16,6 +16,8 @@ use craft\helpers\App;
 use craft\helpers\StringHelper;
 use craft\web\Controller;
 use doublesecretagency\notifier\helpers\BlueskySession;
+use doublesecretagency\notifier\helpers\MetaGraph;
+use doublesecretagency\notifier\helpers\OAuth1Signer;
 use doublesecretagency\notifier\models\OutboundDiscord;
 use doublesecretagency\notifier\models\OutboundMqtt;
 use doublesecretagency\notifier\models\OutboundSlack;
@@ -124,6 +126,36 @@ class SettingsProvidersController extends Controller
     }
 
     /**
+     * Render the Facebook sub-page.
+     *
+     * @return Response
+     */
+    public function actionFacebook(): Response
+    {
+        return $this->_renderSubPage('facebook', 'Facebook');
+    }
+
+    /**
+     * Render the Instagram sub-page.
+     *
+     * @return Response
+     */
+    public function actionInstagram(): Response
+    {
+        return $this->_renderSubPage('instagram', 'Instagram');
+    }
+
+    /**
+     * Render the X (Twitter) sub-page.
+     *
+     * @return Response
+     */
+    public function actionXTwitter(): Response
+    {
+        return $this->_renderSubPage('x-twitter', 'X (Twitter)');
+    }
+
+    /**
      * Render the Bluesky sub-page.
      *
      * @return Response
@@ -172,7 +204,7 @@ class SettingsProvidersController extends Controller
         $section = $this->request->getRequiredBodyParam('section');
 
         // Only allow known sections
-        $whitelist = ['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'bluesky', 'mastodon', 'mqtt'];
+        $whitelist = ['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'facebook', 'instagram', 'x-twitter', 'bluesky', 'mastodon', 'mqtt'];
         if (!in_array($section, $whitelist, true)) {
             throw new BadRequestHttpException(Craft::t('notifier', 'Invalid settings section: {section}', ['section' => $section]));
         }
@@ -189,6 +221,15 @@ class SettingsProvidersController extends Controller
         }
         if ('discord' === $section && isset($posted['discordChannels'])) {
             $posted['discordChannels'] = $this->_assignUids($posted['discordChannels']);
+        }
+        if ('facebook' === $section && isset($posted['facebookPages'])) {
+            $posted['facebookPages'] = $this->_assignUids($posted['facebookPages']);
+        }
+        if ('instagram' === $section && isset($posted['instagramAccounts'])) {
+            $posted['instagramAccounts'] = $this->_resolveInstagramIgUserIds($this->_assignUids($posted['instagramAccounts']));
+        }
+        if ('x-twitter' === $section && isset($posted['xTwitterAccounts'])) {
+            $posted['xTwitterAccounts'] = $this->_assignUids($posted['xTwitterAccounts']);
         }
         if ('bluesky' === $section && isset($posted['blueskyAccounts'])) {
             $posted['blueskyAccounts'] = $this->_assignUids($posted['blueskyAccounts']);
@@ -463,6 +504,183 @@ class SettingsProvidersController extends Controller
     }
 
     /**
+     * Verify a Facebook Page Access Token by reading the Page.
+     *
+     * @return Response
+     */
+    public function actionTestFacebook(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Get the posted page ID and token
+        $pageId = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('pageId'));
+        $token = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('pageAccessToken'));
+
+        // If the page ID or token is empty, bail with an error
+        if ('' === trim($pageId) || '' === trim($token)) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Page ID and Page Access Token are required.'),
+            ]);
+        }
+
+        try {
+
+            // Read the Page's name to verify the token
+            $client = Craft::createGuzzleClient();
+            $response = $client->get(MetaGraph::endpoint($pageId), [
+                'query'       => ['fields' => 'name', 'access_token' => $token],
+                'http_errors' => false,
+                'timeout'     => 10,
+            ]);
+
+            // Decode the response
+            $status = $response->getStatusCode();
+            $decoded = json_decode((string) $response->getBody(), true);
+
+            // If the Page could not be read, bail with an error
+            if ($status < 200 || $status >= 300 || !is_array($decoded) || !isset($decoded['name'])) {
+                $error = (is_array($decoded) ? ($decoded['error']['message'] ?? "HTTP {$status}") : "HTTP {$status}");
+                return $this->asJson([
+                    'success' => false,
+                    'message' => Craft::t('notifier', 'Facebook rejected the request: {error}', ['error' => $error]),
+                ]);
+            }
+
+            // Get the Page name
+            $name = $decoded['name'];
+
+        } catch (Throwable $e) {
+
+            // Request failed, bail with an error
+            return $this->asJson([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        // Return success
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Successfully connected to "{name}". No posts were made.', ['name' => $name]),
+        ]);
+    }
+
+    /**
+     * Verify an Instagram account by resolving the IG business account linked to the Page.
+     *
+     * @return Response
+     */
+    public function actionTestInstagram(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Get the posted page ID and token
+        $pageId = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('pageId'));
+        $token = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('pageAccessToken'));
+
+        // If the page ID or token is empty, bail with an error
+        if ('' === trim($pageId) || '' === trim($token)) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'Page ID and Page Access Token are required.'),
+            ]);
+        }
+
+        // Resolve the linked Instagram business account
+        $account = MetaGraph::resolveIgUserId($pageId, $token);
+
+        // If no account is linked, bail with an error
+        if (!$account || empty($account['id'])) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'No Instagram Business account is linked to this Page.'),
+            ]);
+        }
+
+        // Get the IG handle (falling back to the account ID)
+        $handle = ($account['username'] ?? $account['id']);
+
+        // Return success
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Successfully connected to @{handle}. No posts were made.', ['handle' => $handle]),
+        ]);
+    }
+
+    /**
+     * Verify X (Twitter) credentials by reading the authenticated account.
+     *
+     * @return Response
+     */
+    public function actionTestXTwitter(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        // Get the posted credentials
+        $consumerKey       = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('consumerKey'));
+        $consumerKeySecret = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('consumerKeySecret'));
+        $accessToken       = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('accessToken'));
+        $accessTokenSecret = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('accessTokenSecret'));
+
+        // If any credential is empty, bail with an error
+        if (!$consumerKey || !$consumerKeySecret || !$accessToken || !$accessTokenSecret) {
+            return $this->asJson([
+                'success' => false,
+                'message' => Craft::t('notifier', 'All four credentials are required.'),
+            ]);
+        }
+
+        try {
+
+            // Build the OAuth 1.0a header for the verify request
+            $url = 'https://api.x.com/2/users/me';
+            $authHeader = OAuth1Signer::authorizationHeader('GET', $url, $consumerKey, $consumerKeySecret, $accessToken, $accessTokenSecret);
+
+            // Read the authenticated account to verify the credentials
+            $client = Craft::createGuzzleClient();
+            $response = $client->get($url, [
+                'headers'     => ['Authorization' => $authHeader],
+                'http_errors' => false,
+                'timeout'     => 10,
+            ]);
+
+            // Decode the response
+            $status = $response->getStatusCode();
+            $decoded = json_decode((string) $response->getBody(), true);
+
+            // If the credentials didn't verify, bail with an error
+            if ($status < 200 || $status >= 300 || !isset($decoded['data']['username'])) {
+                $error = (is_array($decoded) ? ($decoded['detail'] ?? $decoded['title'] ?? "HTTP {$status}") : "HTTP {$status}");
+                return $this->asJson([
+                    'success' => false,
+                    'message' => Craft::t('notifier', 'X (Twitter) rejected the request: {error}', ['error' => $error]),
+                ]);
+            }
+
+            // Get the authenticated username
+            $username = $decoded['data']['username'];
+
+        } catch (Throwable $e) {
+
+            // Request failed, bail with an error
+            return $this->asJson([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        // Return success
+        return $this->asJson([
+            'success' => true,
+            'message' => Craft::t('notifier', 'Successfully authenticated as @{username}. No posts were made.', ['username' => $username]),
+        ]);
+    }
+
+    /**
      * Verify a Bluesky credential by calling createSession.
      *
      * @return Response
@@ -473,7 +691,7 @@ class SettingsProvidersController extends Controller
         $this->requireAcceptsJson();
 
         // Get the posted handle
-        $handle = (string) $this->request->getRequiredBodyParam('handle');
+        $handle = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('handle'));
 
         // Get the posted app password
         $appPassword = (string) App::parseEnv((string) $this->request->getRequiredBodyParam('appPassword'));
@@ -702,6 +920,45 @@ class SettingsProvidersController extends Controller
             'configFile' => $configFile,
             'settings'   => NotifierPlugin::$plugin->getSettings(),
         ]);
+    }
+
+    /**
+     * Resolve and cache each Instagram row's linked IG business account ID.
+     *
+     * Runs on save so dispatch never has to re-resolve the account.
+     *
+     * @param array $rows Instagram account rows (already carrying UIDs).
+     * @return array
+     */
+    private function _resolveInstagramIgUserIds(array $rows): array
+    {
+        // Loop through every row
+        foreach ($rows as $i => $row) {
+
+            // If the row isn't an array, skip it
+            if (!is_array($row)) {
+                continue;
+            }
+
+            // Resolve the page ID and token
+            $pageId = (string) App::parseEnv((string) ($row['pageId'] ?? ''));
+            $token = (string) App::parseEnv((string) ($row['pageAccessToken'] ?? ''));
+
+            // If either is missing, skip resolution for this row
+            if ('' === $pageId || '' === $token) {
+                continue;
+            }
+
+            // Resolve the linked Instagram business account and cache its ID
+            $account = MetaGraph::resolveIgUserId($pageId, $token);
+            if ($account && !empty($account['id'])) {
+                $rows[$i]['igUserId'] = $account['id'];
+            }
+
+        }
+
+        // Return the rows with resolved IG user IDs
+        return $rows;
     }
 
     /**

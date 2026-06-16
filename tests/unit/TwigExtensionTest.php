@@ -3,6 +3,7 @@ namespace doublesecretagency\notifier\tests\unit;
 
 use doublesecretagency\notifier\web\twig\Extension;
 use doublesecretagency\notifier\web\twig\tokenparsers\SetDataTokenParser;
+use doublesecretagency\notifier\web\twig\tokenparsers\SetMediaTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SetRecipientsTokenParser;
 use doublesecretagency\notifier\web\twig\tokenparsers\SkipMessageTokenParser;
 use PHPUnit\Framework\TestCase;
@@ -56,12 +57,13 @@ class TwigExtensionTest extends TestCase
         $extension = new Extension();
         $parsers = $extension->getTokenParsers();
 
-        $this->assertCount(3, $parsers);
+        $this->assertCount(4, $parsers);
 
         $parserClasses = array_map('get_class', $parsers);
         $this->assertContains(SkipMessageTokenParser::class, $parserClasses);
-        $this->assertContains(SetRecipientsTokenParser::class, $parserClasses);
         $this->assertContains(SetDataTokenParser::class, $parserClasses);
+        $this->assertContains(SetMediaTokenParser::class, $parserClasses);
+        $this->assertContains(SetRecipientsTokenParser::class, $parserClasses);
     }
 
     // ========================================================================= //

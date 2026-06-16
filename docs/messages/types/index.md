@@ -46,6 +46,18 @@ Posts a message to one or more Discord channels via [Incoming Webhooks](https://
 
 ## Social Media
 
+### [Facebook](/messages/types/facebook)
+
+Posts to one or more [Facebook](https://facebook.com) pages via the Meta Graph API.
+
+### [Instagram](/messages/types/instagram)
+
+Posts a photo to one or more [Instagram](https://instagram.com) Business accounts via the Meta Graph API.
+
+### [X (Twitter)](/messages/types/x-twitter)
+
+Posts to one or more [X (Twitter)](https://x.com) accounts via the OAuth 1.0a API.
+
 ### [Bluesky](/messages/types/bluesky)
 
 Publishes a post to one or more [Bluesky](https://bsky.app) accounts via the ATProto API.

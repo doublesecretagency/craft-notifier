@@ -76,7 +76,7 @@ class OutboundSms extends BaseEnvelope
 
             // Log error
             $m = implode(' and ', $missing);
-            $notification->log->error(Craft::t('notifier', '[Invalid Twilio credentials.]({url}) Missing {missing}.', ['url' => $url, 'missing' => $m]), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[BAD CREDENTIALS] Missing {missing}. [Configure Twilio]({url}).', ['url' => $url, 'missing' => $m]), $this->envelopeId);
 
             // Return failure
             return false;
@@ -87,7 +87,7 @@ class OutboundSms extends BaseEnvelope
 
         // If no sender exists, log error and return failure
         if (!$from) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send SMS, no Twilio phone number exists.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[BAD CREDENTIALS] No Twilio phone number is configured.'), $this->envelopeId);
             return false;
         }
 
@@ -97,7 +97,7 @@ class OutboundSms extends BaseEnvelope
 
         // If no recipient exists, log error and return failure
         if (!$to) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send SMS, no recipient phone number exists.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[NO RECIPIENT] The recipient has no phone number.'), $this->envelopeId);
             return false;
         }
 
@@ -107,7 +107,7 @@ class OutboundSms extends BaseEnvelope
 
         // If recipient phone number is invalid, log error and return failure
         if (!$to) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send SMS, recipient phone number is invalid.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[INVALID NUMBER] The recipient phone number is invalid.'), $this->envelopeId);
             return false;
         }
 
@@ -132,7 +132,7 @@ class OutboundSms extends BaseEnvelope
             $message = ($exception->getMessage() ?? 'Unknown error: '.Json::encode($exception));
 
             // Log error message
-            $notification->log->error($message, $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[SEND FAILED] {error}', ['error' => $message]), $this->envelopeId);
 
             // Return failure
             return false;

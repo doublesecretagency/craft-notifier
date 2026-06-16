@@ -1,0 +1,56 @@
+{% import '_includes/forms' as forms %}
+
+<h2>{{ "X (Twitter)"|t('notifier') }}</h2>
+<p>{{ "Publish posts to your [X (Twitter)](https://x.com) accounts."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'X (Twitter)', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/x-twitter' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
+<div class="pane notifier-named-list">
+    {{ forms.editableTableField({
+        label: "Accounts"|t('notifier'),
+        instructions: "Click any row's **Test** button to verify that account's credentials. No posts are made."|t('notifier'),
+        id: 'xTwitterAccounts',
+        name: 'settings[xTwitterAccounts]',
+        cols: {
+            label: {
+                heading: "Label"|t('notifier'),
+                type: 'singleline',
+                width: '16%',
+                placeholder: '@company',
+            },
+            consumerKey: {
+                heading: "Consumer Key"|t('notifier'),
+                type: 'singleline',
+                width: '21%',
+                placeholder: '$X_CONSUMER_KEY',
+            },
+            consumerKeySecret: {
+                heading: "Consumer Key Secret"|t('notifier'),
+                type: 'singleline',
+                width: '21%',
+                placeholder: '$X_CONSUMER_KEY_SECRET',
+            },
+            accessToken: {
+                heading: "Access Token"|t('notifier'),
+                type: 'singleline',
+                width: '21%',
+                placeholder: '$X_ACCESS_TOKEN',
+            },
+            accessTokenSecret: {
+                heading: "Access Token Secret"|t('notifier'),
+                type: 'singleline',
+                width: '21%',
+                placeholder: '$X_ACCESS_TOKEN_SECRET',
+            },
+            uid: {
+                heading: '',
+                type: 'hidden',
+            },
+        },
+        rows: settings.xTwitterAccounts ?? [],
+        addRowLabel: "Add an account"|t('notifier'),
+        staticRows: false,
+        allowAdd: true,
+        allowDelete: true,
+        allowReorder: true,
+    }) }}
+</div>

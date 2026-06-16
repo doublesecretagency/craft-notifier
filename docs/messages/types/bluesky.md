@@ -16,7 +16,13 @@ Before posting messages to Bluesky, add at least one account via [Settings → B
 
 <img class="dropshadow" src="/images/messages/bluesky-config.png" alt="" style="width:640px; margin-top:10px">
 
-<!--@include: @/messages/types/_special-variables.md-->
+### Post Body
+
+Plain text only. Max 300 characters. URLs and `@handle.tld` mentions will be automatically linked. Hashtags will not.
+
+### Image Attachment
+
+Optionally attach an image via the [`{% setMedia %}`](/messages/media) tag.
 
 ### Generate Link Preview
 
@@ -24,15 +30,7 @@ This toggle (enabled by default) controls whether Notifier will attempt to gener
 
 Turn the toggle off to post plain links with no card.
 
-## Formatting
-
-### Character limit
-
-Bluesky limits posts to 300 characters. Notifier truncates anything longer.
-
-### Auto-linked URLs and mentions
-
-URLs and `@handle.tld` mentions in the post body link automatically. Hashtags do not.
+<!--@include: @/messages/types/_special-variables.md-->
 
 ## Examples
 

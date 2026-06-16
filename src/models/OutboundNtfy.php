@@ -87,7 +87,7 @@ class OutboundNtfy extends BaseEnvelope
 
         // If recipient has no topic, log error and bail
         if (!$this->topic) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send ntfy message, no topic specified.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[NO RECIPIENT] No ntfy topic was specified.'), $this->envelopeId);
             return false;
         }
 
@@ -146,7 +146,7 @@ class OutboundNtfy extends BaseEnvelope
             // ntfy returns 200 on success
             if ($status < 200 || $status >= 300) {
                 $reason = (string) $response->getBody();
-                $notification->log->error(Craft::t('notifier', 'ntfy POST failed with HTTP {status}: {reason}', ['status' => $status, 'reason' => $reason]), $this->envelopeId);
+                $notification->log->error(Craft::t('notifier', '[SEND FAILED] HTTP {status}: {reason}', ['status' => $status, 'reason' => $reason]), $this->envelopeId);
                 return false;
             }
 
@@ -156,7 +156,7 @@ class OutboundNtfy extends BaseEnvelope
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
             // Log error message
-            $notification->log->error(Craft::t('notifier', 'ntfy POST failed: {reason}', ['reason' => $message]), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[SEND FAILED] {reason}', ['reason' => $message]), $this->envelopeId);
 
             // Return failure
             return false;

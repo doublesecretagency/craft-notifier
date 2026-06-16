@@ -22,6 +22,10 @@ Slack throttles each channel to roughly one message per second, so a burst of no
 
 <img class="dropshadow" src="/images/messages/slack-config.png" alt="" style="width:640px; margin-top:10px">
 
+### Slack Message Body
+
+The content of your message. Supports standard [Slack mrkdwn](#mrkdwn-syntax) syntax, and optionally HTML (see below).
+
 ### Render Message Body as HTML
 
 By default, the body is parsed as [Slack mrkdwn](https://docs.slack.dev/messaging/formatting-message-text/#formatting). When enabled, many HTML tags will also be parsed.

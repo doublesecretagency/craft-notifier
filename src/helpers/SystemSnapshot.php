@@ -82,7 +82,11 @@ abstract class SystemSnapshot
         // Try a fresh network check against Craft's update server
         try {
             $model = Craft::$app->getUpdates()->getUpdates(true);
-            return ['model' => $model, 'refreshedAt' => $compiledAt, 'refreshFailed' => false];
+            return [
+                'model' => $model,
+                'refreshedAt' => $compiledAt,
+                'refreshFailed' => false
+            ];
         } catch (Throwable) {
             // Fall back to cached update data, flagging the refresh as failed
             try {
@@ -90,7 +94,11 @@ abstract class SystemSnapshot
             } catch (Throwable) {
                 $model = null;
             }
-            return ['model' => $model, 'refreshedAt' => $compiledAt, 'refreshFailed' => true];
+            return [
+                'model' => $model,
+                'refreshedAt' => $compiledAt,
+                'refreshFailed' => true
+            ];
         }
     }
 

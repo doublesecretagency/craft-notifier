@@ -17,6 +17,8 @@
         errors: notification.getErrors('messageConfig[blueskyBody]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
+    {% include 'notifier/notifications/_edit/message/_media' with { channel: 'bluesky' } %}
+
     <hr>
 
     {{ forms.lightswitchField({

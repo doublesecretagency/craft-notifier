@@ -24,10 +24,8 @@ class DiscordMarkdown
     /**
      * Convert an HTML string to Discord's markdown dialect.
      *
-     * Discord already renders `**bold**`, `_italic_`, `~~strike~~`, `` `code` ``,
-     * fenced code, `>` quotes, and `#`/`##`/`###` headers, so most converter
-     * output passes through untouched. Only links and a few whitespace quirks
-     * need fixing up afterward.
+     * Discord natively renders bold, italic, strike, inline/fenced code, quotes, and
+     * `#`/`##`/`###` headers, so most output passes through; only links and whitespace need fixup.
      *
      * @param string $html
      * @return string

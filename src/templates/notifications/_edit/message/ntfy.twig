@@ -23,11 +23,16 @@
 
     <hr>
 
+    {# Placeholder snippet #}
+    {% set placeholder %}<pre>
+{{ "Dynamic ntfy Title"|t('notifier') }}
+</pre>{% endset %}
+
     {{ codeEditor.textAreaField({
         label: "ntfy Title"|t('notifier'),
         instructions: "Optionally include a heading above the body."|t('notifier'),
         tip: templatingTip,
-        placeholder: "Dynamic ntfy Title"|t('notifier'),
+        placeholder: placeholder,
         rows: 1,
         id: 'messageConfig-ntfyTitle',
         name: 'messageConfig[ntfyTitle]',
@@ -47,11 +52,16 @@
         errors: notification.getErrors('messageConfig[ntfyBody]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
+    {# Placeholder snippet #}
+    {% set placeholder %}{%- verbatim -%}<pre>
+{{ entry.url }}
+</pre>{%- endverbatim -%}{% endset %}
+
     {{ codeEditor.textAreaField({
         label: "ntfy Link URL"|t('notifier'),
         instructions: "Optionally open a URL when the notification is clicked."|t('notifier'),
         tip: templatingTip,
-        placeholder: '{{ entry.url }}',
+        placeholder: placeholder,
         rows: 1,
         id: 'messageConfig-ntfyClickUrl',
         name: 'messageConfig[ntfyClickUrl]',

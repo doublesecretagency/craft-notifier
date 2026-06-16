@@ -40,11 +40,16 @@
 
     <hr>
 
+    {# Placeholder snippet #}
+    {% set placeholder %}<pre>
+{{ "Dynamic Username"|t('notifier') }}
+</pre>{% endset %}
+
     {{ codeEditor.textAreaField({
         label: "Webhook Username"|t('notifier'),
         instructions: "Optionally override the webhook's display name."|t('notifier'),
         tip: templatingTip,
-        placeholder: "Dynamic Username"|t('notifier'),
+        placeholder: placeholder,
         rows: 1,
         id: 'messageConfig-discordUsername',
         name: 'messageConfig[discordUsername]',
@@ -52,11 +57,16 @@
         errors: notification.getErrors('messageConfig[discordUsername]'),
     }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
 
+    {# Placeholder snippet #}
+    {% set placeholder %}{%- verbatim -%}<pre>
+https://example.com/avatar.png
+</pre>{%- endverbatim -%}{% endset %}
+
     {{ codeEditor.textAreaField({
         label: "Webhook Avatar URL"|t('notifier'),
         instructions: "Optionally override the webhook's avatar with a URL."|t('notifier'),
         tip: templatingTip,
-        placeholder: 'https://example.com/avatar.png',
+        placeholder: placeholder,
         rows: 1,
         id: 'messageConfig-discordAvatar',
         name: 'messageConfig[discordAvatar]',

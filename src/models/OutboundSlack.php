@@ -88,7 +88,7 @@ class OutboundSlack extends BaseEnvelope
 
         // If the bot token is missing, log error and bail
         if (!$botToken) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Slack message, no bot token.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[BAD CREDENTIALS] No Slack bot token is configured.'), $this->envelopeId);
             return false;
         }
 
@@ -97,13 +97,13 @@ class OutboundSlack extends BaseEnvelope
 
         // If the channel ID is missing, log error and bail
         if (!$channelId) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Slack message, no channel ID.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[NO RECIPIENT] No Slack channel ID was specified.'), $this->envelopeId);
             return false;
         }
 
         // If body is empty, log error and bail
         if ('' === trim($this->body)) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Slack message, body is empty.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[EMPTY BODY] The Slack message body is empty.'), $this->envelopeId);
             return false;
         }
 
@@ -163,7 +163,7 @@ class OutboundSlack extends BaseEnvelope
             // If Slack rejected the message, log the error code and bail
             if (!is_array($decoded) || true !== ($decoded['ok'] ?? false)) {
                 $error = (is_array($decoded) ? ($decoded['error'] ?? 'unknown') : "HTTP {$status}");
-                $notification->log->error(Craft::t('notifier', 'Slack rejected the message: {error}', ['error' => $error]), $this->envelopeId);
+                $notification->log->error(Craft::t('notifier', '[REJECTED BY SLACK] {error}', ['error' => $error]), $this->envelopeId);
                 return false;
             }
 
@@ -173,7 +173,7 @@ class OutboundSlack extends BaseEnvelope
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
             // Log the error message
-            $notification->log->error(Craft::t('notifier', 'Slack POST failed: {reason}', ['reason' => $message]), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[SEND FAILED] {reason}', ['reason' => $message]), $this->envelopeId);
 
             // Return failure
             return false;

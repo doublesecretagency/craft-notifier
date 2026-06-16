@@ -66,6 +66,9 @@ class Recipients extends Component
             case 'ntfy-topics':        return ($notification ? $this->_ntfyTopics($notification)        : []);
             case 'slack-channels':     return ($notification ? $this->_slackChannels($notification)     : []);
             case 'discord-channels':   return ($notification ? $this->_discordChannels($notification)  : []);
+            case 'facebook-pages':     return ($notification ? $this->_facebookPages($notification)     : []);
+            case 'instagram-accounts': return ($notification ? $this->_instagramAccounts($notification) : []);
+            case 'x-twitter-accounts': return ($notification ? $this->_xTwitterAccounts($notification)  : []);
             case 'bluesky-accounts':   return ($notification ? $this->_blueskyAccounts($notification)   : []);
             case 'mastodon-accounts':  return ($notification ? $this->_mastodonAccounts($notification) : []);
             case 'mqtt-topics':        return ($notification ? $this->_mqttTopics($notification)        : []);
@@ -216,7 +219,7 @@ class Recipients extends Component
         // If setRecipients was never invoked, log a warning and bail
         if (!$dispatch->setRecipientsInvoked) {
             $notification->log->warning(
-                Craft::t('notifier', 'Dynamic recipients snippet did not call setRecipients.')
+                Craft::t('notifier', '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.')
             );
             return [];
         }
@@ -227,7 +230,7 @@ class Recipients extends Component
         // If setRecipients was called with an empty value, log a warning and bail
         if (!$items) {
             $notification->log->warning(
-                Craft::t('notifier', 'setRecipients was called with an empty value.')
+                Craft::t('notifier', '[NO RECIPIENTS] setRecipients was called with an empty value.')
             );
             return [];
         }
@@ -254,7 +257,7 @@ class Recipients extends Component
             // If item is not a string, log a warning and skip it
             if (!is_string($item)) {
                 $notification->log->warning(Craft::t('notifier',
-                    'Unrecognized recipient of type "{type}".',
+                    '[SKIPPED] Unrecognized recipient of type "{type}".',
                     ['type' => get_debug_type($item)]
                 ));
                 continue;
@@ -278,7 +281,7 @@ class Recipients extends Component
 
             // Otherwise, log a warning and skip
             $notification->log->warning(Craft::t('notifier',
-                'Unrecognized recipient "{value}".',
+                '[SKIPPED] Unrecognized recipient "{value}".',
                 ['value' => $item]
             ));
         }
@@ -353,6 +356,81 @@ class Recipients extends Component
                     'name'                => $row['label'] ?? null,
                     'discordChannelLabel' => $row['label'] ?? null,
                     'discordWebhookUrl'   => $row['webhookUrl'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Get Facebook page recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _facebookPages(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'facebookPageUids',
+            NotifierPlugin::$plugin->getSettings()->facebookPages,
+            'Facebook page',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'                    => $row['label'] ?? null,
+                    'facebookPageLabel'       => $row['label'] ?? null,
+                    'facebookPageId'          => $row['pageId'] ?? null,
+                    'facebookPageAccessToken' => $row['pageAccessToken'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Get Instagram account recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _instagramAccounts(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'instagramAccountUids',
+            NotifierPlugin::$plugin->getSettings()->instagramAccounts,
+            'Instagram account',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'                     => $row['label'] ?? null,
+                    'instagramAccountLabel'    => $row['label'] ?? null,
+                    'instagramPageId'          => $row['pageId'] ?? null,
+                    'instagramIgUserId'        => $row['igUserId'] ?? null,
+                    'instagramPageAccessToken' => $row['pageAccessToken'] ?? null,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Get X (Twitter) account recipients by resolving selected UIDs against the named-list in plugin settings.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _xTwitterAccounts(Notification $notification): array
+    {
+        return $this->_resolveByUid(
+            $notification,
+            'xTwitterAccountUids',
+            NotifierPlugin::$plugin->getSettings()->xTwitterAccounts,
+            'X (Twitter) account',
+            static function (array $row): Recipient {
+                return new Recipient([
+                    'name'                      => $row['label'] ?? null,
+                    'xTwitterLabel'             => $row['label'] ?? null,
+                    'xTwitterConsumerKey'       => $row['consumerKey'] ?? null,
+                    'xTwitterConsumerKeySecret' => $row['consumerKeySecret'] ?? null,
+                    'xTwitterAccessToken'       => $row['accessToken'] ?? null,
+                    'xTwitterAccessTokenSecret' => $row['accessTokenSecret'] ?? null,
                 ]);
             }
         );
@@ -463,7 +541,7 @@ class Recipients extends Component
             // If the UID is no longer in the list (admin removed it), log and skip
             if (!isset($byUid[$uid])) {
                 $notification->log->warning(Craft::t('notifier',
-                    'Configured {kind} no longer exists in plugin settings (uid: {uid}).',
+                    '[SKIPPED] The configured {kind} no longer exists in the plugin settings (uid: {uid}).',
                     ['kind' => $kind, 'uid' => $uid]
                 ));
                 continue;

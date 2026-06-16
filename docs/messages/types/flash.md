@@ -12,6 +12,18 @@ Posts **a flash message** when the notification event is triggered.
 
 <img class="dropshadow" src="/images/messages/flash-config.png" alt="" style="width:640px; margin-top:10px">
 
+### Flash Message Type
+
+The style of flash message to show.
+
+### Flash Message Title
+
+The heading of the flash message.
+
+### Flash Message Details
+
+Optionally include details below the heading. Supports Markdown and HTML.
+
 <!--@include: @/messages/types/_special-variables.md-->
 
 ## Flash Message Recipient

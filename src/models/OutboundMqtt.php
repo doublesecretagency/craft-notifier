@@ -73,19 +73,19 @@ class OutboundMqtt extends BaseEnvelope
 
         // If no broker host is configured, log error and bail
         if (!$host) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send MQTT message, no broker host configured.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[BAD CREDENTIALS] No MQTT broker host is configured.'), $this->envelopeId);
             return false;
         }
 
         // If recipient has no topic, log error and bail
         if (!$this->topic) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send MQTT message, no topic specified.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[NO RECIPIENT] No MQTT topic was specified.'), $this->envelopeId);
             return false;
         }
 
         // If the payload is empty, log error and bail
         if ('' === trim($this->payload)) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send MQTT message, the payload is empty.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[EMPTY BODY] The MQTT payload is empty.'), $this->envelopeId);
             return false;
         }
 
@@ -148,7 +148,7 @@ class OutboundMqtt extends BaseEnvelope
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
             // Log error message
-            $notification->log->error(Craft::t('notifier', 'MQTT publish failed: {reason}', ['reason' => $message]), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[SEND FAILED] {reason}', ['reason' => $message]), $this->envelopeId);
 
             // Return failure
             return false;

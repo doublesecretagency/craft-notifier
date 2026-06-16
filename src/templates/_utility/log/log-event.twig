@@ -1,4 +1,27 @@
+{# Decode this child row's details, if any #}
+{% set logDetails = log.details|json_decode %}
+
 <div class="log-event">
     <div class="timestamp">{{ date("#{log.dateCreated} +00:00")|date(timeFormat) }}</div>
     <div class="message flex-grow log-{{ log.type }}">{{ log.message|md }}</div>
+    {# Only offer Details when this row actually carries details #}
+    {% if logDetails %}
+        <div class="envelope-button">
+            <button onclick="openDetails({{ log.id }})">Details</button>
+        </div>
+    {% endif %}
 </div>
+
+{# The toggled details panel for this child row #}
+{% if logDetails %}
+    <div id="details-{{ log.id }}" style="display:none">
+        <div class="envelope-details">
+
+            <div class="timestamp"></div>
+            <div class="details-container flex-grow">
+                {% include 'notifier/_utility/log/details-table' with { details: logDetails } only %}
+            </div>
+
+        </div>
+    </div>
+{% endif %}

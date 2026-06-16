@@ -1,0 +1,29 @@
+{% import '_includes/forms' as forms %}
+
+{% set accountOptions = [] %}
+{% for row in (notificationOptions.xTwitterAccounts ?? []) %}
+    {% set accountOptions = accountOptions|merge([{ label: row.label, value: row.uid }]) %}
+{% endfor %}
+
+<div class="recipients-type-x-twitter-accounts">
+
+    {% if accountOptions|length %}
+        {{ forms.checkboxSelectField({
+            label: "Select X (Twitter) account(s)"|t('notifier'),
+            instructions: "Which accounts should post this message?"|t('notifier'),
+            id: 'recipientsConfig-xTwitterAccountUids',
+            name: 'recipientsConfig[xTwitterAccountUids]',
+            options: accountOptions,
+            values: (notification.recipientsConfig.xTwitterAccountUids ?? []),
+        }) }}
+    {% else %}
+        <p class="instructions warning">
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No X (Twitter) accounts configured. Add one in [Settings → X (Twitter)]({url})."|t('notifier', { url: url('settings/plugins/notifier/x-twitter') })|md }}
+            {% else %}
+                {{ "No X (Twitter) accounts configured. Accounts can only be added in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+</div>

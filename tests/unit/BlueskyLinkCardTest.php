@@ -196,76 +196,13 @@ class BlueskyLinkCardTest extends TestCase
     }
 
     // ========================================================================= //
-    // resizeToLimit() - thumbnail format and size handling
+    // Thumbnail blob limit
     // ========================================================================= //
 
     public function testMaxThumbBytesMatchesAtprotoLexicon(): void
     {
         // The ATProto `thumb` blob lexicon caps at exactly 1,000,000 bytes
         $this->assertSame(1000000, BlueskyLinkCard::MAX_THUMB_BYTES);
-    }
-
-    public function testResizeToLimitPassesThroughSmallRaster(): void
-    {
-        // A small in-limit PNG comes back untouched, with its MIME normalized
-        $png = $this->makeSolidPng(8, 8);
-
-        $result = BlueskyLinkCard::resizeToLimit($png, 'image/png', BlueskyLinkCard::MAX_THUMB_BYTES);
-
-        $this->assertNotNull($result);
-        $this->assertSame($png, $result['bytes']);
-        $this->assertSame('image/png', $result['mime']);
-    }
-
-    public function testResizeToLimitRejectsSvg(): void
-    {
-        $svg = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10"/></svg>';
-
-        $this->assertNull(BlueskyLinkCard::resizeToLimit($svg, 'image/svg+xml', BlueskyLinkCard::MAX_THUMB_BYTES));
-    }
-
-    public function testResizeToLimitRejectsAnimatedGif(): void
-    {
-        // A still GIF has at most one Graphic Control Extension block; two means animated
-        $animated = 'GIF89a' . str_repeat("\x00\x21\xF9\x04\x00\x00\x00\x00", 2) . 'trailing';
-
-        $this->assertNull(BlueskyLinkCard::resizeToLimit($animated, 'image/gif', BlueskyLinkCard::MAX_THUMB_BYTES));
-    }
-
-    public function testResizeToLimitPassesThroughWhenExactlyAtLimit(): void
-    {
-        // Byte count exactly equal to the limit is still within bounds
-        $png = $this->makeNoisePng(120, 120);
-
-        $result = BlueskyLinkCard::resizeToLimit($png, 'image/png', strlen($png));
-
-        $this->assertNotNull($result);
-        $this->assertSame($png, $result['bytes']);
-    }
-
-    public function testResizeToLimitRecompressesWhenJustOverLimit(): void
-    {
-        // One byte over the limit forces a recompress to JPEG
-        $png = $this->makeNoisePng(300, 300);
-        $maxBytes = strlen($png) - 1;
-
-        $result = BlueskyLinkCard::resizeToLimit($png, 'image/png', $maxBytes);
-
-        $this->assertNotNull($result);
-        $this->assertLessThanOrEqual($maxBytes, strlen($result['bytes']));
-        $this->assertSame('image/jpeg', $result['mime']);
-    }
-
-    public function testResizeToLimitShrinksOversizedRasterUnderMaxThumbBytes(): void
-    {
-        // A noise PNG larger than 1,000,000 bytes must come back under the limit
-        $png = $this->makeNoisePng(700, 700);
-        $this->assertGreaterThan(BlueskyLinkCard::MAX_THUMB_BYTES, strlen($png), 'fixture should exceed the limit');
-
-        $result = BlueskyLinkCard::resizeToLimit($png, 'image/png', BlueskyLinkCard::MAX_THUMB_BYTES);
-
-        $this->assertNotNull($result);
-        $this->assertLessThanOrEqual(BlueskyLinkCard::MAX_THUMB_BYTES, strlen($result['bytes']));
     }
 
     // ========================================================================= //
@@ -298,71 +235,4 @@ class BlueskyLinkCardTest extends TestCase
         );
     }
 
-    // ========================================================================= //
-    // Fixture helpers
-    // ========================================================================= //
-
-    /**
-     * Skip the calling test when the GD extension is unavailable.
-     *
-     * @return void
-     */
-    private function requireGd(): void
-    {
-        if (!function_exists('imagecreatetruecolor')) {
-            $this->markTestSkipped('The GD extension is required to generate image fixtures.');
-        }
-    }
-
-    /**
-     * Generate a small solid-color PNG of the given dimensions.
-     *
-     * @param int $width
-     * @param int $height
-     * @return string PNG bytes.
-     */
-    private function makeSolidPng(int $width, int $height): string
-    {
-        $this->requireGd();
-
-        // Build a solid blue canvas
-        $image = imagecreatetruecolor($width, $height);
-        imagefill($image, 0, 0, imagecolorallocate($image, 30, 90, 200));
-
-        // Capture the PNG output
-        ob_start();
-        imagepng($image);
-        $bytes = (string) ob_get_clean();
-        imagedestroy($image);
-
-        return $bytes;
-    }
-
-    /**
-     * Generate a random-noise PNG, which compresses poorly and so grows large fast.
-     *
-     * @param int $width
-     * @param int $height
-     * @return string PNG bytes.
-     */
-    private function makeNoisePng(int $width, int $height): string
-    {
-        $this->requireGd();
-
-        // Fill every pixel with a random color so the PNG barely compresses
-        $image = imagecreatetruecolor($width, $height);
-        for ($y = 0; $y < $height; $y++) {
-            for ($x = 0; $x < $width; $x++) {
-                imagesetpixel($image, $x, $y, mt_rand(0, 0xFFFFFF));
-            }
-        }
-
-        // Capture the PNG output
-        ob_start();
-        imagepng($image);
-        $bytes = (string) ob_get_clean();
-        imagedestroy($image);
-
-        return $bytes;
-    }
 }

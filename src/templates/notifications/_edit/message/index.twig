@@ -1,7 +1,9 @@
 {% import '_includes/forms' as forms %}
 
-{# Common placeholder for various dynamic text fields #}
-{% set commonPlaceholder = "{% include 'path/to/template' %}" %}
+{# Common placeholder snippet #}
+{% set commonPlaceholder %}{%- verbatim -%}<pre>
+{% include 'path/to/template' %}
+</pre>{%- endverbatim -%}{% endset %}
 
 {{ forms.selectField({
     label: 'Message Type'|t('notifier'),
@@ -22,6 +24,9 @@
 {% include 'notifier/notifications/_edit/message/ntfy' %}
 {% include 'notifier/notifications/_edit/message/slack' %}
 {% include 'notifier/notifications/_edit/message/discord' %}
+{% include 'notifier/notifications/_edit/message/facebook' %}
+{% include 'notifier/notifications/_edit/message/instagram' %}
+{% include 'notifier/notifications/_edit/message/x-twitter' %}
 {% include 'notifier/notifications/_edit/message/bluesky' %}
 {% include 'notifier/notifications/_edit/message/mastodon' %}
 {% include 'notifier/notifications/_edit/message/mqtt' %}

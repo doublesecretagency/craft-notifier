@@ -78,19 +78,19 @@ class OutboundDiscord extends BaseEnvelope
 
         // If the webhook URL is missing, log error and bail
         if (!$webhookUrl) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Discord message, no webhook URL.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[BAD CREDENTIALS] No Discord webhook URL is configured.'), $this->envelopeId);
             return false;
         }
 
         // If body is empty, log error and bail
         if ('' === trim($this->body)) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Discord message, body is empty.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[EMPTY BODY] The Discord message body is empty.'), $this->envelopeId);
             return false;
         }
 
         // If body exceeds Discord's hard limit, log error and bail
         if (mb_strlen($this->body) > 2000) {
-            $notification->log->error(Craft::t('notifier', 'Unable to send Discord message, body exceeds the 2000-character limit.'), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[TOO LONG] The Discord message body exceeds the 2000-character limit.'), $this->envelopeId);
             return false;
         }
 
@@ -138,7 +138,7 @@ class OutboundDiscord extends BaseEnvelope
                 // Get the error message
                 $error = (is_array($decoded) ? ($decoded['message'] ?? "HTTP {$status}") : "HTTP {$status}");
                 // Log the error
-                $notification->log->error(Craft::t('notifier', 'Discord rejected the message: {error}', ['error' => $error]), $this->envelopeId);
+                $notification->log->error(Craft::t('notifier', '[REJECTED BY DISCORD] {error}', ['error' => $error]), $this->envelopeId);
                 // Bail
                 return false;
             }
@@ -149,7 +149,7 @@ class OutboundDiscord extends BaseEnvelope
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
             // Log the error message
-            $notification->log->error(Craft::t('notifier', 'Discord POST failed: {reason}', ['reason' => $message]), $this->envelopeId);
+            $notification->log->error(Craft::t('notifier', '[SEND FAILED] {reason}', ['reason' => $message]), $this->envelopeId);
 
             // Return failure
             return false;

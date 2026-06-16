@@ -33,6 +33,10 @@ Plain text only. Most instances allow up to 500 characters, though the limit is 
 
 URLs will automatically unfurl into preview cards.
 
+### Image Attachment
+
+Optionally attach an image via the [`{% setMedia %}`](/messages/media) tag.
+
 <!--@include: @/messages/types/_special-variables.md-->
 
 ## Examples
