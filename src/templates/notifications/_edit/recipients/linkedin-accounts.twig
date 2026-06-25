@@ -1,0 +1,29 @@
+{% import '_includes/forms' as forms %}
+
+{% set accountOptions = [] %}
+{% for row in (notificationOptions.linkedinAccounts ?? []) %}
+    {% set accountOptions = accountOptions|merge([{ label: row.label, value: row.uid }]) %}
+{% endfor %}
+
+<div class="recipients-type-linkedin-accounts">
+
+    {% if accountOptions|length %}
+        {{ forms.checkboxSelectField({
+            label: "Select LinkedIn account(s)"|t('notifier'),
+            instructions: "Which page or member should post this message?"|t('notifier'),
+            id: 'recipientsConfig-linkedinAccountUids',
+            name: 'recipientsConfig[linkedinAccountUids]',
+            options: accountOptions,
+            values: (notification.recipientsConfig.linkedinAccountUids ?? []),
+        }) }}
+    {% else %}
+        <p class="instructions warning">
+            {% if craft.app.config.general.allowAdminChanges %}
+                {{ "No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url})."|t('notifier', { url: url('settings/plugins/notifier/linkedin') })|md }}
+            {% else %}
+                {{ "No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes."|t('notifier') }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+</div>

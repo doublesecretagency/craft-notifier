@@ -100,7 +100,7 @@ class SettingsProvidersControllerTest extends TestCase
 
     public function testSaveActionWhitelistsSection(): void
     {
-        $this->assertStringContainsString("['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'facebook', 'instagram', 'x-twitter', 'bluesky', 'mastodon', 'mqtt']", $this->controllerSource);
+        $this->assertStringContainsString("['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'facebook', 'instagram', 'x-twitter', 'bluesky', 'mastodon', 'linkedin', 'mqtt']", $this->controllerSource);
     }
 
     public function testSaveActionAssignsUidsToNamedListRows(): void

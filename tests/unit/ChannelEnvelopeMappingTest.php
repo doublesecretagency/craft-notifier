@@ -30,9 +30,9 @@ class ChannelEnvelopeMappingTest extends TestCase
     // Switch coverage
     // ========================================================================= //
 
-    public function testSwitchCoversAllFourteenMessageTypes(): void
+    public function testSwitchCoversAllFifteenMessageTypes(): void
     {
-        // The fourteen message types must each have a dedicated case branch.
+        // The fifteen message types must each have a dedicated case branch.
         $this->assertMatchesRegularExpression("/case\s+'email':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'sms':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'announcement':/", $this->dispatchSource);
@@ -46,13 +46,14 @@ class ChannelEnvelopeMappingTest extends TestCase
         $this->assertMatchesRegularExpression("/case\s+'x-twitter':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'bluesky':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'mastodon':/", $this->dispatchSource);
+        $this->assertMatchesRegularExpression("/case\s+'linkedin':/", $this->dispatchSource);
         $this->assertMatchesRegularExpression("/case\s+'mqtt':/", $this->dispatchSource);
     }
 
-    public function testNoOrphanedChannelsBeyondTheKnownFourteen(): void
+    public function testNoOrphanedChannelsBeyondTheKnownFifteen(): void
     {
         // The switch is on $this->notification->messageType. Any case beyond
-        // the canonical fourteen would indicate a half-implemented channel.
+        // the canonical fifteen would indicate a half-implemented channel.
         // Isolate the configureByMessageType() body so cases from other
         // switches (filterByEventType, etc.) don't leak into the match.
         preg_match(
@@ -70,9 +71,9 @@ class ChannelEnvelopeMappingTest extends TestCase
         sort($cases);
 
         $this->assertSame(
-            ['announcement', 'bluesky', 'discord', 'email', 'facebook', 'flash', 'instagram', 'mastodon', 'mqtt', 'ntfy', 'pushover', 'slack', 'sms', 'x-twitter'],
+            ['announcement', 'bluesky', 'discord', 'email', 'facebook', 'flash', 'instagram', 'linkedin', 'mastodon', 'mqtt', 'ntfy', 'pushover', 'slack', 'sms', 'x-twitter'],
             $cases,
-            'Dispatch::configureByMessageType should switch on exactly the fourteen canonical channels'
+            'Dispatch::configureByMessageType should switch on exactly the fifteen canonical channels'
         );
     }
 
@@ -188,6 +189,14 @@ class ChannelEnvelopeMappingTest extends TestCase
     {
         $this->assertMatchesRegularExpression(
             "/case 'x-twitter':[\s\S]*?\\\$this->_compileXTwitter\(\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testLinkedinCaseDelegatesToLinkedinCompiler(): void
+    {
+        $this->assertMatchesRegularExpression(
+            "/case 'linkedin':[\s\S]*?\\\$this->_compileLinkedin\(\)/",
             $this->dispatchSource
         );
     }
@@ -310,6 +319,14 @@ class ChannelEnvelopeMappingTest extends TestCase
         );
     }
 
+    public function testLinkedinCompilerInstantiatesOutboundLinkedin(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/_compileLinkedin[\s\S]*?new OutboundLinkedin/',
+            $this->dispatchSource
+        );
+    }
+
     // ========================================================================= //
     // Queue policy per channel
     // ========================================================================= //
@@ -328,7 +345,7 @@ class ChannelEnvelopeMappingTest extends TestCase
     public function testNoPerTypeQueueKeysRemainInDispatch(): void
     {
         // None of the old per-channel queue keys should survive the collapse.
-        foreach (['emailQueue', 'smsQueue', 'pushoverQueue', 'ntfyQueue', 'slackQueue', 'blueskyQueue', 'mqttQueue', 'discordQueue', 'mastodonQueue', 'facebookQueue', 'instagramQueue', 'xTwitterQueue'] as $key) {
+        foreach (['emailQueue', 'smsQueue', 'pushoverQueue', 'ntfyQueue', 'slackQueue', 'blueskyQueue', 'mqttQueue', 'discordQueue', 'mastodonQueue', 'facebookQueue', 'instagramQueue', 'xTwitterQueue', 'linkedinQueue'] as $key) {
             $this->assertStringNotContainsString("messageConfig['{$key}']", $this->dispatchSource);
         }
     }

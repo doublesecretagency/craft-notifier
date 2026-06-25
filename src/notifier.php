@@ -41,6 +41,10 @@ return [
     // Bluesky (if posting to Bluesky)
     //'blueskyPdsUrl' => getenv('BLUESKY_PDS_URL'),
 
+    // LinkedIn (if posting to LinkedIn; connections are managed in the control panel)
+    //'linkedinClientId'     => getenv('LINKEDIN_CLIENT_ID'),
+    //'linkedinClientSecret' => getenv('LINKEDIN_CLIENT_SECRET'),
+
     // MQTT (if publishing to an MQTT broker)
     //'mqttHost'              => getenv('MQTT_HOST'),
     //'mqttPort'              => 8883,

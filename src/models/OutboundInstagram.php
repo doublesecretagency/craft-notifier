@@ -118,8 +118,10 @@ class OutboundInstagram extends BaseEnvelope
             return false;
         }
 
-        // Truncate the caption to the character limit
+        // Get the caption
         $caption = $this->caption;
+
+        // If the caption exceeds the character limit, truncate it
         if (mb_strlen($caption) > static::MAX_CAPTION) {
             $caption = mb_substr($caption, 0, static::MAX_CAPTION);
             $notification->log->warning(

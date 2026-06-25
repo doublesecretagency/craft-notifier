@@ -311,6 +311,10 @@ return [
     'Visibility' => 'Visibilità',
     'Who will be able to see this post?' => 'Chi potrà vedere questo post?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => 'Il testo del tuo post LinkedIn.',
+
     // Message tab: MQTT
     'Payload' => 'Contenuto',
     'The JSON or plain text message published to the MQTT topic.' => 'Il messaggio JSON o di testo semplice pubblicato sull\'argomento MQTT.',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Nessun argomento MQTT configurato. Gli argomenti possono essere aggiunti solo in un ambiente che consente le modifiche amministrative.',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Argomento non valido. Non deve essere vuoto né contenere i caratteri jolly `+` o `#`.',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => 'Seleziona l\'account o gli account LinkedIn',
+    'Which page or member should post this message?' => 'Quale pagina o membro deve pubblicare questo messaggio?',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => 'Nessun account LinkedIn connesso. Connettine uno in [Impostazioni → LinkedIn]({url}).',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => 'Nessun account LinkedIn connesso. Gli account possono essere connessi solo in un ambiente che consente le modifiche amministrative.',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Snippet Twig per determinare i destinatari',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Inserisci uno snippet Twig personalizzato per [determinare chi riceverà il messaggio]({url}).',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => 'Notifiche push',
+    'Chat Platforms' => 'Piattaforme di chat',
+    'Social Media' => 'Social media',
+    'Internet of Things' => 'Internet delle cose',
+    'Expand {heading}' => 'Espandi {heading}',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Consulta la [guida alla configurazione di {name}]({url}) per istruzioni complete.',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => "URL dell'istanza",
     'Access Token' => 'Token di accesso',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => 'Pubblica post sul tuo profilo [LinkedIn](https://linkedin.com).',
+    'The Client ID of your LinkedIn app.' => 'L\'ID client della tua app LinkedIn.',
+    'Client Secret' => 'Client secret',
+    'The Primary Client Secret of your LinkedIn app.' => 'Il client secret principale della tua app LinkedIn.',
+    'Enable organization posting' => 'Abilita la pubblicazione per le organizzazioni',
+    'Copy this redirect URL' => 'Copia questo URL di reindirizzamento',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => 'Durante la configurazione dell\'app LinkedIn, <strong>copia questo URL</strong> da usare come "Authorized redirect URL".',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => 'Richiedi anche l\'accesso per pubblicare come le pagine dell\'organizzazione che amministri. Richiede l\'approvazione della Community Management API da parte di LinkedIn.',
+    'Connections' => 'Connessioni',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Ogni connessione diventa disponibile come destinatario nella scheda **Destinatari** quando configuri una notifica.',
+    'Account' => 'Account',
+    'Type' => 'Tipo',
+    'Status' => 'Stato',
+    'Organization' => 'Organizzazione',
+    'Member' => 'Membro',
+    'Reconnect needed' => 'Riconnessione necessaria',
+    'Expires' => 'Scade',
+    'Connected' => 'Connesso',
+    'Disconnect' => 'Disconnetti',
+    'No LinkedIn accounts are connected yet.' => 'Nessun account LinkedIn è ancora connesso.',
+    'Connect to LinkedIn' => 'Connetti a LinkedIn',
+    'Provide valid credentials to connect with LinkedIn.' => 'Fornisci credenziali valide per connetterti a LinkedIn.',
+    'Disconnect this LinkedIn account?' => 'Disconnettere questo account LinkedIn?',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Pubblica messaggi su un broker MQTT, comodo per configurazioni IoT e di domotica.',
     'Host' => 'Host',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => 'Autenticato con successo come @{handle}. Nessuna pubblicazione è stata effettuata.',
     'Broker host is not configured.' => 'L\'host del broker non è configurato.',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => 'Aggiungi le credenziali della tua app LinkedIn prima di connetterti.',
+    'LinkedIn authorization failed: {error}' => 'Autorizzazione LinkedIn non riuscita: {error}',
+    'LinkedIn authorization failed: invalid state.' => 'Autorizzazione LinkedIn non riuscita: stato non valido.',
+    'LinkedIn authorization failed: no code returned.' => 'Autorizzazione LinkedIn non riuscita: nessun codice restituito.',
+    'Connected to LinkedIn.' => 'Connesso a LinkedIn.',
+    'Disconnected from LinkedIn.' => 'Disconnesso da LinkedIn.',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => 'Email inviata con successo!',
     'Successfully sent SMS message!' => 'SMS inviato con successo!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => 'Post Mastodon inviato con successo a "{label}".',
     'Successfully sent MQTT message to topic "{topic}".' => 'Messaggio MQTT inviato correttamente all\'argomento "{topic}".',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => 'Post LinkedIn inviato con successo a "{label}".',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] Il corpo del post LinkedIn è vuoto.',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] Nessuna connessione LinkedIn specificata.',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => 'Le credenziali dell\'app LinkedIn non sono configurate.',
+    'The LinkedIn access token has expired. Please reconnect.' => 'Il token di accesso LinkedIn è scaduto. Riconnettiti.',
+    'The LinkedIn connection no longer exists.' => 'La connessione LinkedIn non esiste più.',
+    'My LinkedIn Profile' => 'Il mio profilo LinkedIn',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] Il destinatario "{name}" non ha alcuna connessione LinkedIn.',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] La connessione LinkedIn configurata non esiste più (uid: {uid}).',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => 'I video non sono ancora supportati su {channel}.',
     'The image could not be resized to fit.' => "Impossibile ridimensionare l'immagine per adattarla.",
+    'The image could not be read.' => "Impossibile leggere l'immagine.",
+    'The image failed to upload.' => "Caricamento dell'immagine non riuscito.",
+    'The upload response had no media ID.' => 'La risposta di caricamento non conteneva alcun ID media.',
+    'The upload response had no blob.' => 'La risposta di caricamento non conteneva alcun blob.',
     '[NOT ATTACHED] Unable to attach image. {reason}' => "[NON ALLEGATO] Impossibile allegare l'immagine. {reason}",
 
     // Recipient warnings

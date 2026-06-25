@@ -311,6 +311,10 @@ return [
     'Visibility' => 'Näkyvyys',
     'Who will be able to see this post?' => 'Kuka voi nähdä tämän julkaisun?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => 'LinkedIn-julkaisusi teksti.',
+
     // Message tab: MQTT
     'Payload' => 'Sisältö',
     'The JSON or plain text message published to the MQTT topic.' => 'JSON- tai pelkkä tekstiviesti, joka julkaistaan MQTT-aiheeseen.',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'MQTT-aiheita ei ole määritetty. Aiheita voi lisätä vain ympäristössä, joka sallii hallinnolliset muutokset.',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Virheellinen aihe. Ei saa olla tyhjä eikä sisältää jokerimerkkejä `+` tai `#`.',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => 'Valitse LinkedIn-tili(t)',
+    'Which page or member should post this message?' => 'Minkä sivun tai jäsenen tulisi julkaista tämä viesti?',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => 'LinkedIn-tilejä ei ole yhdistetty. Yhdistä tili kohdassa [Asetukset → LinkedIn]({url}).',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => 'LinkedIn-tilejä ei ole yhdistetty. Tilejä voi yhdistää vain ympäristössä, joka sallii hallinnolliset muutokset.',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Twig-katkelma vastaanottajien määrittämiseen',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Anna mukautettu Twig-katkelma, joka [määrittää, kuka vastaanottaa viestin]({url}).',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => 'Push-ilmoitukset',
+    'Chat Platforms' => 'Chat-alustat',
+    'Social Media' => 'Sosiaalinen media',
+    'Internet of Things' => 'Esineiden internet',
+    'Expand {heading}' => 'Laajenna {heading}',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Katso täydelliset ohjeet [{name}-määritysoppaasta]({url}).',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => 'Instanssin URL',
     'Access Token' => 'Käyttötunniste',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => 'Julkaise viestejä [LinkedIn](https://linkedin.com)-profiiliisi.',
+    'The Client ID of your LinkedIn app.' => 'LinkedIn-sovelluksesi asiakastunnus (Client ID).',
+    'Client Secret' => 'Asiakassalaisuus',
+    'The Primary Client Secret of your LinkedIn app.' => 'LinkedIn-sovelluksesi ensisijainen asiakassalaisuus.',
+    'Enable organization posting' => 'Ota organisaatiojulkaisu käyttöön',
+    'Copy this redirect URL' => 'Kopioi tämä uudelleenohjaus-URL',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => 'Kun määrität LinkedIn-sovellusta, <strong>kopioi tämä URL</strong> käyttääksesi sitä "Authorized redirect URL" -arvona.',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => 'Pyydä myös oikeus julkaista hallinnoimillasi organisaatiosivuilla. Edellyttää LinkedInin Community Management API -hyväksyntää.',
+    'Connections' => 'Yhteydet',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Jokainen yhteys tulee saataville vastaanottajana **Vastaanottajat**-välilehdellä, kun määrität ilmoituksen.',
+    'Account' => 'Tili',
+    'Type' => 'Tyyppi',
+    'Status' => 'Tila',
+    'Organization' => 'Organisaatio',
+    'Member' => 'Jäsen',
+    'Reconnect needed' => 'Uudelleenyhdistäminen tarvitaan',
+    'Expires' => 'Vanhenee',
+    'Connected' => 'Yhdistetty',
+    'Disconnect' => 'Katkaise yhteys',
+    'No LinkedIn accounts are connected yet.' => 'LinkedIn-tilejä ei ole vielä yhdistetty.',
+    'Connect to LinkedIn' => 'Yhdistä LinkedIniin',
+    'Provide valid credentials to connect with LinkedIn.' => 'Anna kelvolliset tunnistetiedot muodostaaksesi yhteyden LinkedIniin.',
+    'Disconnect this LinkedIn account?' => 'Katkaistaanko tämän LinkedIn-tilin yhteys?',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Julkaise viestejä MQTT-välittäjälle, kätevä IoT- ja kotiautomaatiokokoonpanoihin.',
     'Host' => 'Isäntä',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => 'Todennettu onnistuneesti nimellä @{handle}. Julkaisuja ei tehty.',
     'Broker host is not configured.' => 'Brokerin isäntää ei ole määritetty.',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => 'Lisää LinkedIn-sovelluksesi tunnistetiedot ennen yhdistämistä.',
+    'LinkedIn authorization failed: {error}' => 'LinkedIn-valtuutus epäonnistui: {error}',
+    'LinkedIn authorization failed: invalid state.' => 'LinkedIn-valtuutus epäonnistui: virheellinen tila.',
+    'LinkedIn authorization failed: no code returned.' => 'LinkedIn-valtuutus epäonnistui: koodia ei palautettu.',
+    'Connected to LinkedIn.' => 'Yhdistetty LinkedIniin.',
+    'Disconnected from LinkedIn.' => 'Yhteys LinkedIniin katkaistu.',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => 'Sähköposti lähetetty!',
     'Successfully sent SMS message!' => 'SMS-viesti lähetetty!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => 'Mastodon-julkaisu lähetetty kohteelle "{label}".',
     'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-viesti lähetettiin aiheeseen "{topic}".',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => 'LinkedIn-julkaisu lähetetty kohteelle "{label}".',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] LinkedIn-julkaisun sisältö on tyhjä.',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] LinkedIn-yhteyttä ei määritetty.',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => 'LinkedIn-sovelluksen tunnistetietoja ei ole määritetty.',
+    'The LinkedIn access token has expired. Please reconnect.' => 'LinkedIn-käyttötoken on vanhentunut. Yhdistä uudelleen.',
+    'The LinkedIn connection no longer exists.' => 'LinkedIn-yhteyttä ei ole enää olemassa.',
+    'My LinkedIn Profile' => 'Oma LinkedIn-profiili',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] Vastaanottajalla "{name}" ei ole LinkedIn-yhteyttä.',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] Määritettyä LinkedIn-yhteyttä ei ole enää olemassa (uid: {uid}).',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => 'Videoita ei vielä tueta kanavalla {channel}.',
     'The image could not be resized to fit.' => 'Kuvan kokoa ei voitu muuttaa sopivaksi.',
+    'The image could not be read.' => 'Kuvaa ei voitu lukea.',
+    'The image failed to upload.' => 'Kuvan lataaminen epäonnistui.',
+    'The upload response had no media ID.' => 'Latausvastauksessa ei ollut media-ID:tä.',
+    'The upload response had no blob.' => 'Latausvastauksessa ei ollut blobia.',
     '[NOT ATTACHED] Unable to attach image. {reason}' => '[EI LIITETTY] Kuvaa ei voitu liittää. {reason}',
 
     // Recipient warnings

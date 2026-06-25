@@ -191,7 +191,10 @@ abstract class BlueskyFacets
 
         // If grapheme_substr is available, use it
         if (function_exists('grapheme_substr')) {
+            // Get the clipped text
             $clipped = grapheme_substr($text, 0, $keep);
+
+            // If the clip succeeded, append an ellipsis and return
             if (false !== $clipped) {
                 return $clipped.'…';
             }

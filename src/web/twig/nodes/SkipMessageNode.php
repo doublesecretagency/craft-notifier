@@ -33,7 +33,10 @@ class SkipMessageNode extends Node
 
         // Get specified message
         if ($this->hasNode('message')) {
+            // Get the custom message value
             $customMessage = $this->getNode('message')->getAttribute('value');
+
+            // If a custom message was provided, append it
             if ($customMessage) {
                 $message = "{$message} {$customMessage}";
             }

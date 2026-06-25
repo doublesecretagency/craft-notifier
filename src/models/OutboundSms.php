@@ -60,10 +60,11 @@ class OutboundSms extends BaseEnvelope
         // Initialize the list of missing credentials
         $missing = [];
 
-        // Check each value exists
+        // If the Account SID is missing, record it
         if (!App::parseEnv($settings->twilioAccountSid)) {
             $missing[] = "Twilio Account SID";
         }
+        // If the Auth Token is missing, record it
         if (!App::parseEnv($settings->twilioAuthToken)) {
             $missing[] = "Twilio Auth Token";
         }

@@ -311,6 +311,10 @@ return [
     'Visibility' => '公開範囲',
     'Who will be able to see this post?' => 'この投稿を誰が閲覧できますか?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => 'LinkedIn 投稿の本文です。',
+
     // Message tab: MQTT
     'Payload' => 'ペイロード',
     'The JSON or plain text message published to the MQTT topic.' => 'MQTT トピックに公開される JSON またはプレーンテキストのメッセージ。',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'MQTT トピックが設定されていません。トピックは、管理者による変更が許可された環境でのみ追加できます。',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '有効なトピックではありません。空にしたり、ワイルドカード `+` や `#` を含めたりすることはできません。',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => 'LinkedIn アカウントを選択',
+    'Which page or member should post this message?' => 'どのページまたはメンバーがこのメッセージを投稿しますか？',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => 'LinkedIn アカウントが接続されていません。[設定 → LinkedIn]({url}) で接続してください。',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => 'LinkedIn アカウントが接続されていません。アカウントは、管理者による変更が許可された環境でのみ接続できます。',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => '受信者を決定する Twig スニペット',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => '[メッセージの受信者を決定する]({url})ためのカスタムTwigスニペットを入力してください。',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => 'プッシュ通知',
+    'Chat Platforms' => 'チャットプラットフォーム',
+    'Social Media' => 'ソーシャルメディア',
+    'Internet of Things' => 'モノのインターネット',
+    'Expand {heading}' => '{heading}を展開',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => '詳しい手順については、[{name} セットアップガイド]({url}) を参照してください。',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => 'インスタンス URL',
     'Access Token' => 'アクセストークン',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => '[LinkedIn](https://linkedin.com) のプロフィールに投稿します。',
+    'The Client ID of your LinkedIn app.' => 'LinkedIn アプリのクライアント ID です。',
+    'Client Secret' => 'クライアントシークレット',
+    'The Primary Client Secret of your LinkedIn app.' => 'LinkedIn アプリのプライマリクライアントシークレットです。',
+    'Enable organization posting' => '組織としての投稿を有効にする',
+    'Copy this redirect URL' => 'このリダイレクト URL をコピー',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => 'LinkedIn アプリを設定する際は、<strong>この URL をコピー</strong>して "Authorized redirect URL" として使用してください。',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => 'あなたが管理する組織ページとして投稿するためのアクセスも要求します。LinkedIn による Community Management API の承認が必要です。',
+    'Connections' => '接続',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '通知を設定すると、各接続が **受信者** タブで受信者として利用できるようになります。',
+    'Account' => 'アカウント',
+    'Type' => '種類',
+    'Status' => 'ステータス',
+    'Organization' => '組織',
+    'Member' => 'メンバー',
+    'Reconnect needed' => '再接続が必要',
+    'Expires' => '有効期限',
+    'Connected' => '接続済み',
+    'Disconnect' => '切断',
+    'No LinkedIn accounts are connected yet.' => 'まだ LinkedIn アカウントが接続されていません。',
+    'Connect to LinkedIn' => 'LinkedIn に接続',
+    'Provide valid credentials to connect with LinkedIn.' => 'LinkedIn に接続するには、有効な認証情報を入力してください。',
+    'Disconnect this LinkedIn account?' => 'この LinkedIn アカウントを切断しますか？',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'MQTT ブローカーにメッセージを公開します。IoT やホームオートメーションの構成に便利です。',
     'Host' => 'ホスト',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => '@{handle} として認証に成功しました。投稿は行われていません。',
     'Broker host is not configured.' => 'ブローカーのホストが設定されていません。',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => '接続する前に LinkedIn アプリの認証情報を追加してください。',
+    'LinkedIn authorization failed: {error}' => 'LinkedIn の認証に失敗しました: {error}',
+    'LinkedIn authorization failed: invalid state.' => 'LinkedIn の認証に失敗しました: 無効な state です。',
+    'LinkedIn authorization failed: no code returned.' => 'LinkedIn の認証に失敗しました: コードが返されませんでした。',
+    'Connected to LinkedIn.' => 'LinkedIn に接続しました。',
+    'Disconnected from LinkedIn.' => 'LinkedIn から切断しました。',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => 'メールを正常に送信しました!',
     'Successfully sent SMS message!' => 'SMS を正常に送信しました!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => '"{label}" に Mastodon の投稿を正常に送信しました。',
     'Successfully sent MQTT message to topic "{topic}".' => 'トピック「{topic}」に MQTT メッセージを送信しました。',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => '"{label}" に LinkedIn の投稿を正常に送信しました。',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] LinkedIn 投稿の本文が空です。',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] LinkedIn の接続が指定されていません。',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => 'LinkedIn アプリの認証情報が設定されていません。',
+    'The LinkedIn access token has expired. Please reconnect.' => 'LinkedIn のアクセストークンが期限切れです。再接続してください。',
+    'The LinkedIn connection no longer exists.' => 'その LinkedIn 接続は存在しません。',
+    'My LinkedIn Profile' => '自分の LinkedIn プロフィール',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] 受信者 "{name}" には LinkedIn の接続がありません。',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] 設定された LinkedIn 接続は存在しません (uid: {uid})。',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => '動画は {channel} ではまだサポートされていません。',
     'The image could not be resized to fit.' => '画像をサイズ調整できませんでした。',
+    'The image could not be read.' => '画像を読み込めませんでした。',
+    'The image failed to upload.' => '画像のアップロードに失敗しました。',
+    'The upload response had no media ID.' => 'アップロード応答にメディアIDがありませんでした。',
+    'The upload response had no blob.' => 'アップロード応答にblobがありませんでした。',
     '[NOT ATTACHED] Unable to attach image. {reason}' => '[未添付] 画像を添付できませんでした。{reason}',
 
     // Recipient warnings

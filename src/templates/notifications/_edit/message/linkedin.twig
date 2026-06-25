@@ -1,0 +1,37 @@
+{% import '_includes/forms' as forms %}
+{% import 'codeeditor/codeEditor' as codeEditor %}
+
+<div class="message-type-linkedin hidden">
+
+    <hr>
+
+    {{ codeEditor.textAreaField({
+        label: "Post Body"|t('notifier'),
+        instructions: "The text of your LinkedIn post."|t('notifier'),
+        tip: templatingTip,
+        placeholder: commonPlaceholder,
+        rows: 5,
+        id: 'messageConfig-linkedinBody',
+        name: 'messageConfig[linkedinBody]',
+        value: (notification.messageConfig.linkedinBody ?? null),
+        errors: notification.getErrors('messageConfig[linkedinBody]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+    {# Placeholder snippet #}
+    {% set placeholder %}{%- verbatim -%}<pre>
+https://example.com/article
+</pre>{%- endverbatim -%}{% endset %}
+
+    {{ codeEditor.textAreaField({
+        label: "Preview Card URL"|t('notifier'),
+        instructions: "Optionally add a link to generate a preview card."|t('notifier'),
+        tip: templatingTip,
+        placeholder: placeholder,
+        rows: 1,
+        id: 'messageConfig-linkedinLink',
+        name: 'messageConfig[linkedinLink]',
+        value: (notification.messageConfig.linkedinLink ?? null),
+        errors: notification.getErrors('messageConfig[linkedinLink]'),
+    }, 'CodeEditor', {fixedOverflowWidgets: true}, {wrapperClass: 'monaco-editor-background-frame'}) }}
+
+</div>

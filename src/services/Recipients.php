@@ -71,6 +71,7 @@ class Recipients extends Component
             case 'x-twitter-accounts': return ($notification ? $this->_xTwitterAccounts($notification)  : []);
             case 'bluesky-accounts':   return ($notification ? $this->_blueskyAccounts($notification)   : []);
             case 'mastodon-accounts':  return ($notification ? $this->_mastodonAccounts($notification) : []);
+            case 'linkedin-accounts':  return ($notification ? $this->_linkedinAccounts($notification) : []);
             case 'mqtt-topics':        return ($notification ? $this->_mqttTopics($notification)        : []);
         }
 
@@ -480,6 +481,62 @@ class Recipients extends Component
                 ]);
             }
         );
+    }
+
+    /**
+     * Get LinkedIn account recipients by resolving selected UIDs against the connections table.
+     *
+     * Unlike the other social channels, LinkedIn connections live in a database
+     * table (not plugin settings), so this resolves UIDs through the service.
+     *
+     * @param Notification $notification
+     * @return Recipient[]
+     */
+    private function _linkedinAccounts(Notification $notification): array
+    {
+        // Pull the UIDs the notification has selected
+        $uids = ($notification->recipientsConfig['linkedinAccountUids'] ?? null);
+
+        // If no UIDs, return empty array
+        if (!$uids) {
+            return [];
+        }
+
+        // Normalize to array
+        if (!is_array($uids)) {
+            $uids = [$uids];
+        }
+
+        // Initialize the recipients
+        $recipients = [];
+
+        // Loop through each requested UID
+        foreach ($uids as $uid) {
+
+            // Get the connection from the service
+            $connection = NotifierPlugin::getInstance()->linkedinConnections->getConnection($uid);
+
+            // If the connection no longer exists (admin disconnected it), log and skip
+            if (!$connection) {
+                $notification->log->warning(Craft::t('notifier',
+                    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).',
+                    ['uid' => $uid]
+                ));
+                continue;
+            }
+
+            // Build a Recipient carrying the connection UID and author URN
+            $recipients[] = new Recipient([
+                'name'              => ($connection['label'] ?? null),
+                'linkedinUid'       => ($connection['uid'] ?? null),
+                'linkedinAuthorUrn' => ($connection['authorUrn'] ?? null),
+                'linkedinLabel'     => ($connection['label'] ?? null),
+            ]);
+
+        }
+
+        // Return the recipients
+        return $recipients;
     }
 
     /**

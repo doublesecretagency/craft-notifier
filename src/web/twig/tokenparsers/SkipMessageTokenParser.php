@@ -35,6 +35,7 @@ class SkipMessageTokenParser extends AbstractTokenParser
 
         $nodes = [];
 
+        // If a string argument follows, parse it as the custom message
         if ($stream->test(Token::STRING_TYPE)) {
             $nodes['message'] = $parser->getExpressionParser()->parseExpression();
         }

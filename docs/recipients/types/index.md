@@ -74,6 +74,10 @@ Posts the Bluesky message from **one or more accounts**.
 
 Publishes the Mastodon post from **one or more accounts**.
 
+### [Selected LinkedIn account(s)](/recipients/types/linkedin-accounts)
+
+Publishes the LinkedIn post from **one or more accounts**.
+
 ## Internet of Things
 
 ### [Selected MQTT topic(s)](/recipients/types/mqtt-topics)

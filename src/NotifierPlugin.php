@@ -86,6 +86,7 @@ use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\DynamicDataRunner;
 use doublesecretagency\notifier\services\Events;
+use doublesecretagency\notifier\services\LinkedinConnections;
 use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
 use doublesecretagency\notifier\services\FeedRunner;
@@ -108,6 +109,7 @@ use yii\base\Event;
  * @property FeedRunner $feedRunner
  * @property SystemSnapshotRunner $systemSnapshotRunner
  * @property DynamicDataRunner $dynamicDataRunner
+ * @property LinkedinConnections $linkedinConnections
  */
 class NotifierPlugin extends Plugin
 {
@@ -175,6 +177,7 @@ class NotifierPlugin extends Plugin
             'feedRunner' => FeedRunner::class,
             'systemSnapshotRunner' => SystemSnapshotRunner::class,
             'dynamicDataRunner' => DynamicDataRunner::class,
+            'linkedinConnections' => LinkedinConnections::class,
         ]);
 
         // Redirect after plugin is installed
@@ -376,6 +379,7 @@ class NotifierPlugin extends Plugin
                 $event->rules['settings/plugins/notifier/x-twitter'] = 'notifier/settings-providers/x-twitter';
                 $event->rules['settings/plugins/notifier/bluesky']  = 'notifier/settings-providers/bluesky';
                 $event->rules['settings/plugins/notifier/mastodon'] = 'notifier/settings-providers/mastodon';
+                $event->rules['settings/plugins/notifier/linkedin'] = 'notifier/settings-providers/linkedin';
                 $event->rules['settings/plugins/notifier/mqtt']     = 'notifier/settings-providers/mqtt';
             }
         );
@@ -470,6 +474,7 @@ class NotifierPlugin extends Plugin
                         break;
 
                     case 'recipientsType':
+                        // If a flash message, force the current-user recipient label
                         if ('flash' === $notification->messageType) {
                             // For flash messages
                             $event->html = Options::RECIPIENTS_TYPE['current-user'];
@@ -499,17 +504,20 @@ class NotifierPlugin extends Plugin
             User::class  => 'users',
         ];
 
-        // Append third-party element types only when their plugin is installed
+        // If Craft Commerce is installed, map its order element
         if (class_exists(Order::class)) {
             $elementTypes[Order::class] = 'craft-commerce-orders';
         }
+        // If Craft Commerce is installed, map its product element
         if (class_exists(CommerceProduct::class)) {
             $elementTypes[CommerceProduct::class] = 'craft-commerce-products';
         }
+        // If Digital Products is installed, map its product and license elements
         if (class_exists(DigitalProduct::class)) {
             $elementTypes[DigitalProduct::class] = 'digital-products-products';
             $elementTypes[License::class] = 'digital-products-licenses';
         }
+        // If Solspace Calendar is installed, map its event element
         if (class_exists(CalendarEvent::class)) {
             $elementTypes[CalendarEvent::class] = 'solspace-calendar-events';
         }
@@ -685,10 +693,14 @@ JS, [
                 // Loop through the rules array and rewrite each entry's `class` when it's
                 // a Craft per-field rule we have a Notifier subclass for
                 foreach ($event->{$rulesProp} as $i => $rule) {
+                    // Get the rule's class
                     $class = (is_array($rule) ? ($rule['class'] ?? null) : $rule);
+
+                    // If there's no swap for this class, skip it
                     if (!$class || !isset($swaps[$class])) {
                         continue;
                     }
+                    // If the rule is an array, swap its class key; otherwise swap the string
                     if (is_array($rule)) {
                         $event->{$rulesProp}[$i]['class'] = $swaps[$class];
                     } else {

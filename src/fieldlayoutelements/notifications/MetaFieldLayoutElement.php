@@ -43,6 +43,7 @@ class MetaFieldLayoutElement extends BaseNativeField
      */
     public function formHtml(?ElementInterface $element = null, bool $static = false): ?string
     {
+        // If there's no element, render nothing
         if (!$element) {
             return '';
         }

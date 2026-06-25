@@ -151,16 +151,19 @@ class Dispatch extends Model
         // Filter further by event type
         switch ($this->notification->eventType) {
             case 'entries':
+                // If the entry filters don't pass, bail
                 if (!$this->_filterEntries()) {
                     return false;
                 }
                 break;
             case 'assets':
+                // If the asset filters don't pass, bail
                 if (!$this->_filterAssets()) {
                     return false;
                 }
                 break;
             case 'users':
+                // If the user filters don't pass, bail
                 if (!$this->_filterUsers()) {
                     return false;
                 }
@@ -169,21 +172,25 @@ class Dispatch extends Model
                 // No event-type-specific filters; condition gate runs below
                 break;
             case 'craft-commerce-products':
+                // If the product filters don't pass, bail
                 if (!$this->_filterCommerceProducts()) {
                     return false;
                 }
                 break;
             case 'digital-products-products':
+                // If the digital product filters don't pass, bail
                 if (!$this->_filterDigitalProducts()) {
                     return false;
                 }
                 break;
             case 'digital-products-licenses':
+                // If the license filters don't pass, bail
                 if (!$this->_filterDigitalProductLicenses()) {
                     return false;
                 }
                 break;
             case 'solspace-calendar-events':
+                // If the calendar event filters don't pass, bail
                 if (!$this->_filterCalendarEvents()) {
                     return false;
                 }
@@ -559,6 +566,9 @@ class Dispatch extends Model
                 break;
             case 'mastodon':
                 $this->envelopes = $this->_compileMastodon();
+                break;
+            case 'linkedin':
+                $this->envelopes = $this->_compileLinkedin();
                 break;
             case 'mqtt':
                 $this->envelopes = $this->_compileMqtt();
@@ -1507,7 +1517,10 @@ class Dispatch extends Model
 
                 // If both are present, resolve the linked Instagram account ID
                 if ($pageId && $token) {
+                    // Get the linked Instagram account
                     $account = MetaGraph::resolveIgUserId($pageId, $token);
+
+                    // If an account with an ID was found, cache it on the recipient
                     if ($account && !empty($account['id'])) {
                         $recipient->instagramIgUserId = $account['id'];
                     }
@@ -1886,6 +1899,96 @@ class Dispatch extends Model
                 'envelopeId'     => $envelopeId,
                 'jobInfo'        => $jobInfo,
             ], $details));
+
+        }
+
+        // Return all outbound messages
+        return $outbound;
+    }
+
+    /**
+     * Compile the message as one or more LinkedIn posts.
+     *
+     * @return EnvelopeInterface[]
+     */
+    private function _compileLinkedin(): array
+    {
+        // Get LinkedIn connection recipients
+        $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
+
+        // Initialize outbound messages
+        $outbound = [];
+
+        // Set base configuration
+        $baseConfig = [
+            'notification' => $this->notification,
+            'event'        => $this->event,
+            'data'         => $this->data,
+        ];
+
+        // Get generic recipient name
+        $genericRecipient = $this->notification->getTaskRecipient();
+
+        // Loop through all recipients
+        foreach ($recipients as $recipient) {
+
+            // If the recipient is missing connection details, log and skip
+            if (!$recipient->linkedinUid || !$recipient->linkedinAuthorUrn) {
+                $this->notification->log->warning(Craft::t('notifier',
+                    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.',
+                    ['name' => ($recipient->linkedinLabel ?? $recipient->name ?? $genericRecipient)]
+                ));
+                continue;
+            }
+
+            // Set job info
+            $displayLabel = ($recipient->linkedinLabel ?? 'a LinkedIn account');
+            $jobInfo = [
+                'messageType' => 'a LinkedIn post',
+                'recipient'   => $displayLabel,
+            ];
+
+            // Compress variables for Twig
+            $config = array_merge($baseConfig, [
+                'recipient' => $recipient,
+            ]);
+
+            // Attempt to parse the body and link
+            try {
+                $body = $this->_parseTwig($config, $this->notification->messageConfig['linkedinBody'] ?? '');
+                $link = trim($this->_parseTwig($config, $this->notification->messageConfig['linkedinLink'] ?? ''));
+                $parseError = null;
+            } catch (Exception|Throwable $e) {
+                $body = ($this->notification->messageConfig['linkedinBody'] ?? '');
+                $link = trim((string) ($this->notification->messageConfig['linkedinLink'] ?? ''));
+                $parseError = $e;
+            }
+
+            // Log envelope
+            $envelopeId = $this->notification->log->envelope($jobInfo, [
+                'account' => $displayLabel,
+                'body'    => $body,
+                'link'    => $link,
+                'isTest'  => $this->isTest,
+            ]);
+
+            // If a parsing error occurred, log and skip
+            if ($parseError) {
+                $this->_logError($parseError, $envelopeId);
+                continue;
+            }
+
+            // Put outbound LinkedIn post into envelope
+            $outbound[] = new OutboundLinkedin([
+                'notificationId' => $this->notification->id,
+                'envelopeId'     => $envelopeId,
+                'jobInfo'        => $jobInfo,
+                'connectionUid'  => $recipient->linkedinUid,
+                'authorUrn'      => $recipient->linkedinAuthorUrn,
+                'label'          => $recipient->linkedinLabel,
+                'body'           => $body,
+                'link'           => $link,
+            ]);
 
         }
 

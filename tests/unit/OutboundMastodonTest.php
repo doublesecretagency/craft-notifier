@@ -141,4 +141,28 @@ class OutboundMastodonTest extends TestCase
         // Defense-in-depth: the access token is a secret and must never appear in a log message.
         $this->assertStringNotContainsString('$this->accessToken}', $this->mastodonSource);
     }
+
+    // ========================================================================= //
+    // Image upload (media)
+    // ========================================================================= //
+
+    public function testUploadsMediaToTheV2MediaEndpoint(): void
+    {
+        // Images are uploaded to Mastodon's v2 media endpoint.
+        $this->assertStringContainsString('/api/v2/media', $this->mastodonSource);
+    }
+
+    public function testAttachesUploadedMediaIdsToTheStatus(): void
+    {
+        // Successfully uploaded media IDs are attached to the status payload.
+        $this->assertStringContainsString("\$payload['media_ids'] = \$mediaIds", $this->mastodonSource);
+    }
+
+    public function testA403MediaUploadHintsAtTheWriteMediaScope(): void
+    {
+        // A 403 means the token can post statuses but cannot upload media, so the
+        // error points the user at the missing write:media scope (the common cause).
+        $this->assertStringContainsString('403 === $status', $this->mastodonSource);
+        $this->assertStringContainsString('write:media', $this->mastodonSource);
+    }
 }

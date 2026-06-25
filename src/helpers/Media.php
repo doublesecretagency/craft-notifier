@@ -181,15 +181,19 @@ abstract class Media
                 'timeout'         => static::FETCH_TIMEOUT,
             ]);
 
-            // On a non-2xx response, bail
+            // Get the response status code
             $status = $response->getStatusCode();
+
+            // If the response is non-2xx, bail
             if ($status < 200 || $status >= 300) {
                 $error = "HTTP {$status} fetching the media URL.";
                 return null;
             }
 
-            // On an empty body, bail
+            // Get the response body
             $bytes = (string) $response->getBody();
+
+            // If the body is empty, bail
             if ('' === $bytes) {
                 $error = 'The fetched media was empty.';
                 return null;
@@ -246,6 +250,8 @@ abstract class Media
 
         // Decode the raster into a GD image
         $image = @imagecreatefromstring($bytes);
+
+        // If the raster couldn't be decoded, bail
         if (!($image instanceof GdImage)) {
             return null;
         }
@@ -279,10 +285,16 @@ abstract class Media
             // Scale down by 15% and reset quality for the next pass
             $width = (int) round($width * 0.85);
             $height = (int) round($height * 0.85);
+
+            // If the image has scaled down to nothing, give up
             if ($width < 1 || $height < 1) {
                 break;
             }
+
+            // Scale the image down
             $scaled = imagescale($image, $width, $height);
+
+            // If the scale failed, give up
             if (!($scaled instanceof GdImage)) {
                 break;
             }
@@ -433,6 +445,8 @@ abstract class Media
             'image/gif'   => 'gif',
             'image/webp'  => 'webp',
         ];
+
+        // If the MIME maps to a known extension, return it
         if (isset($byMime[$mime])) {
             return $byMime[$mime];
         }
@@ -506,6 +520,8 @@ abstract class Media
         $width = imagesx($image);
         $height = imagesy($image);
         $canvas = imagecreatetruecolor($width, $height);
+
+        // If the canvas couldn't be created, bail
         if (!($canvas instanceof GdImage)) {
             return null;
         }

@@ -114,6 +114,7 @@ class OutboundPushover extends BaseEnvelope
             // Pushover returns {"status": 1} on success
             $pushoverStatus = (is_array($payload) ? ($payload['status'] ?? null) : null);
 
+            // If the HTTP or Pushover status indicates failure, handle the error
             if (200 !== $status || 1 !== $pushoverStatus) {
                 // Extract Pushover's error array if present
                 $errors = (is_array($payload) ? ($payload['errors'] ?? []) : []);

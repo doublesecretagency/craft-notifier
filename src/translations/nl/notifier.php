@@ -311,6 +311,10 @@ return [
     'Visibility' => 'Zichtbaarheid',
     'Who will be able to see this post?' => 'Wie zal dit bericht kunnen zien?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => 'De tekst van je LinkedIn-bericht.',
+
     // Message tab: MQTT
     'Payload' => 'Inhoud',
     'The JSON or plain text message published to the MQTT topic.' => 'Het JSON- of platte-tekstbericht dat naar het MQTT-onderwerp wordt gepubliceerd.',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Geen MQTT-onderwerpen geconfigureerd. Onderwerpen kunnen alleen worden toegevoegd in een omgeving die administratieve wijzigingen toestaat.',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Geen geldig onderwerp. Mag niet leeg zijn of de jokertekens `+` of `#` bevatten.',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => 'Selecteer LinkedIn-account(s)',
+    'Which page or member should post this message?' => 'Welke pagina of welk lid moet dit bericht plaatsen?',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => 'Geen LinkedIn-accounts verbonden. Verbind er een in [Instellingen → LinkedIn]({url}).',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => 'Geen LinkedIn-accounts verbonden. Accounts kunnen alleen worden verbonden in een omgeving die administratieve wijzigingen toestaat.',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Twig-fragment om ontvangers te bepalen',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Voer een aangepast Twig-snippet in om [te bepalen wie het bericht ontvangt]({url}).',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => 'Pushmeldingen',
+    'Chat Platforms' => 'Chatplatforms',
+    'Social Media' => 'Sociale media',
+    'Internet of Things' => 'Internet of Things',
+    'Expand {heading}' => '{heading} uitvouwen',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Raadpleeg de [{name}-installatiegids]({url}) voor volledige instructies.',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => 'Instance-URL',
     'Access Token' => 'Toegangstoken',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => 'Publiceer berichten naar je [LinkedIn](https://linkedin.com)-profiel.',
+    'The Client ID of your LinkedIn app.' => 'De Client-ID van je LinkedIn-app.',
+    'Client Secret' => 'Client-secret',
+    'The Primary Client Secret of your LinkedIn app.' => 'Het primaire Client-secret van je LinkedIn-app.',
+    'Enable organization posting' => 'Plaatsen als organisatie inschakelen',
+    'Copy this redirect URL' => 'Kopieer deze redirect-URL',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => 'Wanneer je de LinkedIn-app configureert, <strong>kopieer deze URL</strong> om te gebruiken als een "Authorized redirect URL".',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => 'Vraag ook toegang aan om te plaatsen als de organisatiepagina\'s die je beheert. Vereist goedkeuring van de Community Management API door LinkedIn.',
+    'Connections' => 'Verbindingen',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Elke verbinding wordt beschikbaar als ontvanger op het tabblad **Ontvangers** wanneer je een melding instelt.',
+    'Account' => 'Account',
+    'Type' => 'Type',
+    'Status' => 'Status',
+    'Organization' => 'Organisatie',
+    'Member' => 'Lid',
+    'Reconnect needed' => 'Opnieuw verbinden vereist',
+    'Expires' => 'Verloopt',
+    'Connected' => 'Verbonden',
+    'Disconnect' => 'Verbinding verbreken',
+    'No LinkedIn accounts are connected yet.' => 'Er zijn nog geen LinkedIn-accounts verbonden.',
+    'Connect to LinkedIn' => 'Verbinden met LinkedIn',
+    'Provide valid credentials to connect with LinkedIn.' => 'Geef geldige inloggegevens op om verbinding te maken met LinkedIn.',
+    'Disconnect this LinkedIn account?' => 'Verbinding met dit LinkedIn-account verbreken?',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Publiceer berichten naar een MQTT-broker, handig voor IoT- en domotica-opstellingen.',
     'Host' => 'Host',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => 'Succesvol geverifieerd als @{handle}. Er zijn geen berichten geplaatst.',
     'Broker host is not configured.' => 'Broker-host is niet geconfigureerd.',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => 'Voeg je LinkedIn-app-inloggegevens toe voordat je verbinding maakt.',
+    'LinkedIn authorization failed: {error}' => 'LinkedIn-autorisatie mislukt: {error}',
+    'LinkedIn authorization failed: invalid state.' => 'LinkedIn-autorisatie mislukt: ongeldige status.',
+    'LinkedIn authorization failed: no code returned.' => 'LinkedIn-autorisatie mislukt: geen code geretourneerd.',
+    'Connected to LinkedIn.' => 'Verbonden met LinkedIn.',
+    'Disconnected from LinkedIn.' => 'Verbinding met LinkedIn verbroken.',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => 'E-mailbericht succesvol verzonden!',
     'Successfully sent SMS message!' => 'SMS-bericht succesvol verzonden!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => 'Mastodon-bericht succesvol verzonden naar "{label}".',
     'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-bericht verzonden naar onderwerp "{topic}".',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => 'LinkedIn-bericht succesvol verzonden naar "{label}".',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] De tekst van het LinkedIn-bericht is leeg.',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] Er is geen LinkedIn-verbinding opgegeven.',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => 'LinkedIn-app-inloggegevens zijn niet geconfigureerd.',
+    'The LinkedIn access token has expired. Please reconnect.' => 'Het LinkedIn-toegangstoken is verlopen. Maak opnieuw verbinding.',
+    'The LinkedIn connection no longer exists.' => 'De LinkedIn-verbinding bestaat niet meer.',
+    'My LinkedIn Profile' => 'Mijn LinkedIn-profiel',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] Ontvanger "{name}" heeft geen LinkedIn-verbinding.',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] De geconfigureerde LinkedIn-verbinding bestaat niet meer (uid: {uid}).',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => "Video's worden nog niet ondersteund op {channel}.",
     'The image could not be resized to fit.' => 'De afbeelding kon niet passend worden geschaald.',
+    'The image could not be read.' => 'De afbeelding kon niet worden gelezen.',
+    'The image failed to upload.' => 'Het uploaden van de afbeelding is mislukt.',
+    'The upload response had no media ID.' => 'Het uploadantwoord bevatte geen media-ID.',
+    'The upload response had no blob.' => 'Het uploadantwoord bevatte geen blob.',
     '[NOT ATTACHED] Unable to attach image. {reason}' => '[NIET BIJGEVOEGD] Kan de afbeelding niet bijvoegen. {reason}',
 
     // Recipient warnings

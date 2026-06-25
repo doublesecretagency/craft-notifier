@@ -210,7 +210,7 @@ class OutboundMastodon extends BaseEnvelope
 
             // If the bytes could not be read, log the reason and skip
             if (!$bytes) {
-                $this->logUnattached($notification, ($readError ?: 'The image could not be read.'));
+                $this->logUnattached($notification, ($readError ?: Craft::t('notifier', 'The image could not be read.')));
                 continue;
             }
 
@@ -219,7 +219,7 @@ class OutboundMastodon extends BaseEnvelope
 
             // If the upload failed, log the reason and skip
             if (!$mediaId) {
-                $this->logUnattached($notification, ($uploadError ?: 'The image failed to upload.'));
+                $this->logUnattached($notification, ($uploadError ?: Craft::t('notifier', 'The image failed to upload.')));
                 continue;
             }
 
@@ -267,10 +267,15 @@ class OutboundMastodon extends BaseEnvelope
                 'timeout'     => 30,
             ]);
 
-            // A 200 (ready) or 202 (processing) both carry a usable media ID
+            // Get the response status code
             $status = $response->getStatusCode();
+
+            // If the response is non-2xx, bail (a 200 or 202 both carry a usable media ID)
             if ($status < 200 || $status >= 300) {
-                $error = "HTTP {$status} from the media upload.";
+                // A 403 means the token can post statuses but lacks the media scope
+                $error = (403 === $status)
+                    ? 'HTTP 403 from the media upload. The access token is likely missing the "write:media" scope.'
+                    : "HTTP {$status} from the media upload.";
                 return null;
             }
 
@@ -280,7 +285,7 @@ class OutboundMastodon extends BaseEnvelope
 
             // If the response carried no media ID, bail
             if (!$mediaId) {
-                $error = 'The upload response had no media ID.';
+                $error = Craft::t('notifier', 'The upload response had no media ID.');
                 return null;
             }
 

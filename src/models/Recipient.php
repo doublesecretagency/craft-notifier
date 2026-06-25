@@ -163,6 +163,21 @@ class Recipient extends Model
     public ?string $mastodonAccessToken = null;
 
     /**
+     * @var string|null UID of the selected LinkedIn connection.
+     */
+    public ?string $linkedinUid = null;
+
+    /**
+     * @var string|null Author URN of the selected LinkedIn connection.
+     */
+    public ?string $linkedinAuthorUrn = null;
+
+    /**
+     * @var string|null Friendly name for the LinkedIn connection.
+     */
+    public ?string $linkedinLabel = null;
+
+    /**
      * Populate missing data from the attached User or raw contact info.
      *
      * @return void

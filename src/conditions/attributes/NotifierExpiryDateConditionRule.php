@@ -44,6 +44,7 @@ class NotifierExpiryDateConditionRule extends ExpiryDateConditionRule
      */
     public function matchElement(ElementInterface $element): bool
     {
+        // If this isn't the "has changed" range type, defer to the parent
         if ($this->rangeType !== self::RANGE_TYPE_HAS_CHANGED) {
             return parent::matchElement($element);
         }

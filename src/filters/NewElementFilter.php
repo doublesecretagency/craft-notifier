@@ -54,6 +54,7 @@ class NewElementFilter extends BaseElementFilter
      */
     public static function check(Event $event, bool $value): bool
     {
+        // If the event carries an element, compare its new-ness to the expected value
         if (
             $event instanceof ModelEvent ||
             $event instanceof ElementEvent

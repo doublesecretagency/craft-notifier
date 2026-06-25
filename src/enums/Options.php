@@ -332,6 +332,7 @@ abstract class Options
         'x-twitter'    => 'X (Twitter)',
         'bluesky'      => 'Bluesky',
         'mastodon'     => 'Mastodon',
+        'linkedin'     => 'LinkedIn',
         'mqtt'         => 'MQTT',
     ];
 
@@ -356,6 +357,7 @@ abstract class Options
         'x-twitter'    => 'X (Twitter)',
         'bluesky'      => 'Bluesky',
         'mastodon'     => 'Mastodon',
+        'linkedin'     => 'LinkedIn',
         ['optgroup' => 'Internet of Things'],
         'mqtt'         => 'MQTT',
     ];
@@ -377,6 +379,7 @@ abstract class Options
         'x-twitter'    => 'x-twitter',
         'bluesky'      => 'bluesky',
         'mastodon'     => 'mastodon',
+        'linkedin'     => 'linkedin',
         'mqtt'         => 'tower-broadcast',
     ];
 
@@ -407,6 +410,7 @@ abstract class Options
         'x-twitter-accounts' => 'Selected X (Twitter) account(s)',
         'bluesky-accounts'   => 'Selected Bluesky account(s)',
         'mastodon-accounts'  => 'Selected Mastodon account(s)',
+        'linkedin-accounts'  => 'Selected LinkedIn account(s)',
         'mqtt-topics'        => 'Selected MQTT topic(s)',
     ];
 
@@ -429,6 +433,7 @@ abstract class Options
         'x-twitter'    => ['x-twitter-accounts'],
         'bluesky'      => ['bluesky-accounts'],
         'mastodon'     => ['mastodon-accounts'],
+        'linkedin'     => ['linkedin-accounts'],
         'mqtt'         => ['mqtt-topics'],
     ];
 

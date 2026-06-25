@@ -245,6 +245,30 @@ class SettingsModelTest extends TestCase
     }
 
     // ========================================================================= //
+    // LinkedIn properties
+    // ========================================================================= //
+
+    public function testLinkedinClientIdDefaultsToNull(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertNull($defaults['linkedinClientId']);
+    }
+
+    public function testLinkedinClientSecretDefaultsToNull(): void
+    {
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertNull($defaults['linkedinClientSecret']);
+    }
+
+    public function testLinkedinEnableOrganizationsDefaultsToFalse(): void
+    {
+        // Organization posting is opt-in; it needs LinkedIn's gated Community
+        // Management API approval, so it stays off until the admin turns it on.
+        $defaults = $this->reflection->getDefaultProperties();
+        $this->assertFalse($defaults['linkedinEnableOrganizations']);
+    }
+
+    // ========================================================================= //
     // Encryption surface removed
     // ========================================================================= //
 

@@ -311,6 +311,10 @@ return [
     'Visibility' => '공개 범위',
     'Who will be able to see this post?' => '누가 이 게시물을 볼 수 있나요?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => 'LinkedIn 게시물의 텍스트입니다.',
+
     // Message tab: MQTT
     'Payload' => '페이로드',
     'The JSON or plain text message published to the MQTT topic.' => 'MQTT 토픽에 게시되는 JSON 또는 일반 텍스트 메시지.',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => '구성된 MQTT 토픽이 없습니다. 토픽은 관리 변경이 허용된 환경에서만 추가할 수 있습니다.',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '유효한 토픽이 아닙니다. 비어 있거나 와일드카드 `+` 또는 `#`를 포함할 수 없습니다.',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => 'LinkedIn 계정 선택',
+    'Which page or member should post this message?' => '어떤 페이지 또는 회원이 이 메시지를 게시해야 합니까?',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => '연결된 LinkedIn 계정이 없습니다. [설정 → LinkedIn]({url})에서 연결하세요.',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => '연결된 LinkedIn 계정이 없습니다. 계정은 관리 변경이 허용된 환경에서만 연결할 수 있습니다.',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => '수신자를 결정하는 Twig 스니펫',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => '[메시지를 받을 대상을 결정할]({url}) 사용자 지정 Twig 스니펫을 입력하세요.',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => '푸시 알림',
+    'Chat Platforms' => '채팅 플랫폼',
+    'Social Media' => '소셜 미디어',
+    'Internet of Things' => '사물 인터넷',
+    'Expand {heading}' => '{heading} 펼치기',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => '전체 지침은 [{name} 설정 가이드]({url})를 참조하십시오.',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => '인스턴스 URL',
     'Access Token' => '액세스 토큰',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => '[LinkedIn](https://linkedin.com) 프로필에 게시물을 게시합니다.',
+    'The Client ID of your LinkedIn app.' => 'LinkedIn 앱의 클라이언트 ID입니다.',
+    'Client Secret' => '클라이언트 시크릿',
+    'The Primary Client Secret of your LinkedIn app.' => 'LinkedIn 앱의 기본 클라이언트 시크릿입니다.',
+    'Enable organization posting' => '조직 게시 사용',
+    'Copy this redirect URL' => '이 리디렉션 URL 복사',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => 'LinkedIn 앱을 구성할 때 <strong>이 URL을 복사</strong>하여 "Authorized redirect URL"로 사용하세요.',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => '관리하는 조직 페이지로 게시할 수 있는 접근 권한도 요청합니다. LinkedIn의 Community Management API 승인이 필요합니다.',
+    'Connections' => '연결',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '알림을 설정하면 각 연결이 **수신자** 탭에서 수신자로 사용할 수 있게 됩니다.',
+    'Account' => '계정',
+    'Type' => '유형',
+    'Status' => '상태',
+    'Organization' => '조직',
+    'Member' => '회원',
+    'Reconnect needed' => '재연결 필요',
+    'Expires' => '만료',
+    'Connected' => '연결됨',
+    'Disconnect' => '연결 해제',
+    'No LinkedIn accounts are connected yet.' => '아직 연결된 LinkedIn 계정이 없습니다.',
+    'Connect to LinkedIn' => 'LinkedIn에 연결',
+    'Provide valid credentials to connect with LinkedIn.' => 'LinkedIn에 연결하려면 유효한 자격 증명을 입력하세요.',
+    'Disconnect this LinkedIn account?' => '이 LinkedIn 계정의 연결을 해제하시겠습니까?',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'MQTT 브로커에 메시지를 게시합니다. IoT 및 홈 오토메이션 구성에 유용합니다.',
     'Host' => '호스트',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => '@{handle}(으)로 인증에 성공했습니다. 게시물은 작성되지 않았습니다.',
     'Broker host is not configured.' => '브로커 호스트가 구성되지 않았습니다.',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => '연결하기 전에 LinkedIn 앱 자격 증명을 추가하세요.',
+    'LinkedIn authorization failed: {error}' => 'LinkedIn 인증 실패: {error}',
+    'LinkedIn authorization failed: invalid state.' => 'LinkedIn 인증 실패: 잘못된 상태입니다.',
+    'LinkedIn authorization failed: no code returned.' => 'LinkedIn 인증 실패: 코드가 반환되지 않았습니다.',
+    'Connected to LinkedIn.' => 'LinkedIn에 연결되었습니다.',
+    'Disconnected from LinkedIn.' => 'LinkedIn 연결이 해제되었습니다.',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => '이메일을 성공적으로 보냈습니다!',
     'Successfully sent SMS message!' => 'SMS 메시지를 성공적으로 보냈습니다!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => '"{label}"에 Mastodon 게시물을 성공적으로 보냈습니다.',
     'Successfully sent MQTT message to topic "{topic}".' => '토픽 "{topic}"에 MQTT 메시지를 보냈습니다.',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => '"{label}"에 LinkedIn 게시물을 성공적으로 보냈습니다.',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] LinkedIn 게시물 본문이 비어 있습니다.',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] LinkedIn 연결이 지정되지 않았습니다.',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => 'LinkedIn 앱 자격 증명이 구성되지 않았습니다.',
+    'The LinkedIn access token has expired. Please reconnect.' => 'LinkedIn 액세스 토큰이 만료되었습니다. 다시 연결하세요.',
+    'The LinkedIn connection no longer exists.' => '해당 LinkedIn 연결이 더 이상 존재하지 않습니다.',
+    'My LinkedIn Profile' => '내 LinkedIn 프로필',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] 수신자 "{name}"에게 LinkedIn 연결이 없습니다.',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] 구성된 LinkedIn 연결이 더 이상 존재하지 않습니다 (uid: {uid}).',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => '{channel}에서는 동영상이 아직 지원되지 않습니다.',
     'The image could not be resized to fit.' => '이미지 크기를 맞게 조정할 수 없습니다.',
+    'The image could not be read.' => '이미지를 읽을 수 없습니다.',
+    'The image failed to upload.' => '이미지 업로드에 실패했습니다.',
+    'The upload response had no media ID.' => '업로드 응답에 미디어 ID가 없습니다.',
+    'The upload response had no blob.' => '업로드 응답에 blob이 없습니다.',
     '[NOT ATTACHED] Unable to attach image. {reason}' => '[첨부되지 않음] 이미지를 첨부할 수 없습니다. {reason}',
 
     // Recipient warnings

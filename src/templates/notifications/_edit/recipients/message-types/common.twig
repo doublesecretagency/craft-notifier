@@ -82,6 +82,12 @@
     {% include 'notifier/notifications/_edit/recipients/mastodon-accounts' %}
 </div>
 
+{# LinkedIn: locked to linkedin-accounts #}
+<div class="message-type-linkedin hidden">
+    <input type="hidden" name="recipientsType" value="linkedin-accounts" disabled>
+    {% include 'notifier/notifications/_edit/recipients/linkedin-accounts' %}
+</div>
+
 {# MQTT: locked to mqtt-topics #}
 <div class="message-type-mqtt hidden">
     <input type="hidden" name="recipientsType" value="mqtt-topics" disabled>

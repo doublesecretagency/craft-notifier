@@ -66,6 +66,10 @@ Publishes a post to one or more [Bluesky](https://bsky.app) accounts via the ATP
 
 Publishes a post to one or more [Mastodon](https://joinmastodon.org) accounts.
 
+### [LinkedIn](/messages/types/linkedin)
+
+Publishes a post to one or more [LinkedIn](https://linkedin.com) member profiles.
+
 ## Internet of Things
 
 ### [MQTT](/messages/types/mqtt)

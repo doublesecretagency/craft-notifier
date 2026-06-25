@@ -10,10 +10,12 @@ If using [Mastodon](https://joinmastodon.org) to publish posts, you'll first nee
 
 1. Log into the account on its Mastodon instance.
 2. Open **Preferences → Development → New application**.
-3. Give the application a name, and grant it the `write:statuses` scope.
+3. Give the application a name, and grant it the following scopes:
+    - `write:statuses` _(for posting)_
+    - `write:media` _(to attach images)_
 4. Save, then open the application and copy **Your access token**.
 
-<img class="dropshadow" src="/images/getting-started/integrations/mastodon-application.png" alt="Screenshot of the Mastodon application" style="width:848px; margin-top:10px">
+<img class="dropshadow" src="/images/getting-started/integrations/mastodon-scopes.png" alt="Screenshot of the Mastodon app scopes, with the two required scopes checked and highlighted" style="width:643px; margin-top:10px">
 
 :::warning Protect the Access Token
 Anyone who knows the access token can post as the account. Treat it like an API key. Keep it in a `.env` variable so the secret never ends up in your project config.

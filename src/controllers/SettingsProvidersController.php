@@ -176,6 +176,28 @@ class SettingsProvidersController extends Controller
     }
 
     /**
+     * Render the LinkedIn sub-page.
+     *
+     * @return Response
+     */
+    public function actionLinkedin(): Response
+    {
+        // Get the plugin settings
+        $settings = NotifierPlugin::$plugin->getSettings();
+
+        // Get the configured credentials (resolving any env references)
+        $clientId = App::parseEnv($settings->linkedinClientId);
+        $clientSecret = App::parseEnv($settings->linkedinClientSecret);
+
+        // Pass the connections, the OAuth redirect URL, and whether credentials are ready to connect
+        return $this->_renderSubPage('linkedin', 'LinkedIn', [
+            'connections' => NotifierPlugin::$plugin->linkedinConnections->getConnections(),
+            'redirectUri' => NotifierPlugin::$plugin->linkedinConnections->redirectUri(),
+            'canConnect' => ($clientId && $clientSecret),
+        ]);
+    }
+
+    /**
      * Render the MQTT sub-page.
      *
      * @return Response
@@ -204,7 +226,9 @@ class SettingsProvidersController extends Controller
         $section = $this->request->getRequiredBodyParam('section');
 
         // Only allow known sections
-        $whitelist = ['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'facebook', 'instagram', 'x-twitter', 'bluesky', 'mastodon', 'mqtt'];
+        $whitelist = ['general', 'twilio', 'pushover', 'ntfy', 'slack', 'discord', 'facebook', 'instagram', 'x-twitter', 'bluesky', 'mastodon', 'linkedin', 'mqtt'];
+
+        // If the section isn't recognized, bail
         if (!in_array($section, $whitelist, true)) {
             throw new BadRequestHttpException(Craft::t('notifier', 'Invalid settings section: {section}', ['section' => $section]));
         }
@@ -212,31 +236,39 @@ class SettingsProvidersController extends Controller
         // Get the submitted settings for the section
         $posted = $this->request->getBodyParam('settings', []);
 
-        // For sections with named lists, ensure each row has a stable UID
+        // If saving the ntfy section, assign UIDs to its topics
         if ('ntfy' === $section && isset($posted['ntfyTopics'])) {
             $posted['ntfyTopics'] = $this->_assignUids($posted['ntfyTopics']);
         }
+        // If saving the Slack section, assign UIDs to its channels
         if ('slack' === $section && isset($posted['slackChannels'])) {
             $posted['slackChannels'] = $this->_assignUids($posted['slackChannels']);
         }
+        // If saving the Discord section, assign UIDs to its channels
         if ('discord' === $section && isset($posted['discordChannels'])) {
             $posted['discordChannels'] = $this->_assignUids($posted['discordChannels']);
         }
+        // If saving the Facebook section, assign UIDs to its pages
         if ('facebook' === $section && isset($posted['facebookPages'])) {
             $posted['facebookPages'] = $this->_assignUids($posted['facebookPages']);
         }
+        // If saving the Instagram section, assign UIDs and resolve IG account IDs
         if ('instagram' === $section && isset($posted['instagramAccounts'])) {
             $posted['instagramAccounts'] = $this->_resolveInstagramIgUserIds($this->_assignUids($posted['instagramAccounts']));
         }
+        // If saving the X (Twitter) section, assign UIDs to its accounts
         if ('x-twitter' === $section && isset($posted['xTwitterAccounts'])) {
             $posted['xTwitterAccounts'] = $this->_assignUids($posted['xTwitterAccounts']);
         }
+        // If saving the Bluesky section, assign UIDs to its accounts
         if ('bluesky' === $section && isset($posted['blueskyAccounts'])) {
             $posted['blueskyAccounts'] = $this->_assignUids($posted['blueskyAccounts']);
         }
+        // If saving the Mastodon section, assign UIDs to its accounts
         if ('mastodon' === $section && isset($posted['mastodonAccounts'])) {
             $posted['mastodonAccounts'] = $this->_assignUids($posted['mastodonAccounts']);
         }
+        // If saving the MQTT section, assign UIDs to its topics
         if ('mqtt' === $section && isset($posted['mqttTopics'])) {
             $posted['mqttTopics'] = $this->_assignUids($posted['mqttTopics']);
         }
@@ -307,7 +339,10 @@ class SettingsProvidersController extends Controller
 
         // Build headers
         $headers = ['Title' => 'Notifier test'];
+        // Get the optional access token
         $token = App::parseEnv($settings->ntfyAccessToken);
+
+        // If an access token is set, add it as a bearer header
         if ($token) {
             $headers['Authorization'] = "Bearer {$token}";
         }
@@ -869,10 +904,11 @@ class SettingsProvidersController extends Controller
                 $connectionSettings->setTlsCertificateAuthorityFile($caFile);
             }
 
-            // If using Mutual TLS, configure the client certificate and key
+            // If using Mutual TLS with a client certificate file, configure it
             if ($useTls && ($clientCert = App::parseEnv($settings->mqttTlsClientCertFile))) {
                 $connectionSettings->setTlsClientCertificateFile($clientCert);
             }
+            // If using Mutual TLS with a client key file, configure it
             if ($useTls && ($clientKey = App::parseEnv($settings->mqttTlsClientKeyFile))) {
                 $connectionSettings->setTlsClientCertificateKeyFile($clientKey);
             }
@@ -909,17 +945,17 @@ class SettingsProvidersController extends Controller
      * @param string $title
      * @return Response
      */
-    private function _renderSubPage(string $section, string $title): Response
+    private function _renderSubPage(string $section, string $title, array $extraVars = []): Response
     {
         // Get the file-based config for override-warning display
         $configFile = Craft::$app->getConfig()->getConfigFromFile('notifier');
 
-        return $this->renderTemplate('notifier/_settings/_layout', [
+        return $this->renderTemplate('notifier/_settings/_layout', array_merge([
             'section'    => $section,
             'title'      => $title,
             'configFile' => $configFile,
             'settings'   => NotifierPlugin::$plugin->getSettings(),
-        ]);
+        ], $extraVars));
     }
 
     /**
@@ -949,8 +985,10 @@ class SettingsProvidersController extends Controller
                 continue;
             }
 
-            // Resolve the linked Instagram business account and cache its ID
+            // Get the linked Instagram business account
             $account = MetaGraph::resolveIgUserId($pageId, $token);
+
+            // If an account with an ID was found, cache it
             if ($account && !empty($account['id'])) {
                 $rows[$i]['igUserId'] = $account['id'];
             }

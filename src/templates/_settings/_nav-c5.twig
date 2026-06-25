@@ -1,0 +1,46 @@
+{# Settings sidebar for Craft 5: collapsible groups, matching the stock Craft 5 element-index sources sidebar #}
+{# Groups collapse via the native craft-disclosure component, which persists state to localStorage and defaults open #}
+<nav aria-label="{{ label }}">
+    <ul class="sources-list">
+        {% for key, item in items %}
+            {% if item.heading is defined %}
+                {% set listId = "notifier-nav-#{key}" %}
+                {# Group heading with a disclosure toggle, controlling the nested list #}
+                <li class="heading">
+                    <div class="source-item source-item--heading">
+                        <span class="type-heading-small">{{ item.heading }}</span>
+                        {% embed '_includes/disclosure-toggle' with {
+                            persist: true,
+                            storageKey: "notifier-settings:#{key}",
+                            controls: listId,
+                            attributes: {class: 'source-item__toggle'},
+                        } %}
+                            {% block content %}
+                                <span class="cp-icon puny">{{ iconSvg('angle-down') }}</span>
+                                <span class="visually-hidden">{{ 'Expand {heading}'|t('notifier', {heading: item.heading}) }}</span>
+                            {% endblock %}
+                        {% endembed %}
+                    </div>
+                    <ul id="{{ listId }}" class="sources-list">
+                        {% for subKey, subItem in item.nested %}
+                            <li>{{ tag('a', {
+                                href: subItem.url,
+                                class: (subKey == selectedItem) ? ['sel'] : [],
+                                aria: {current: (subKey == selectedItem) ? 'page' : false},
+                                html: tag('span', {class: 'label', text: subItem.label}),
+                            }) }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% else %}
+                {# Standalone link with no heading #}
+                <li>{{ tag('a', {
+                    href: item.url,
+                    class: (key == selectedItem) ? ['sel'] : [],
+                    aria: {current: (key == selectedItem) ? 'page' : false},
+                    html: tag('span', {class: 'label', text: item.label}),
+                }) }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>

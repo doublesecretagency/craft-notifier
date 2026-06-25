@@ -54,6 +54,10 @@ Required for publishing [Bluesky](/messages/types/bluesky) posts.
 
 Required for publishing [Mastodon](/messages/types/mastodon) posts.
 
+### [LinkedIn](/getting-started/integrations/linkedin)
+
+Required for publishing [LinkedIn](/messages/types/linkedin) posts.
+
 ## Internet of Things
 
 ### [MQTT](/getting-started/integrations/mqtt)

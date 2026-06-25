@@ -53,6 +53,7 @@ trait HasChangedAttributeOperator
      */
     protected function operatorLabel(string $operator): string
     {
+        // If this is the "has changed" operator, use its label
         if ($operator === self::OPERATOR_HAS_CHANGED) {
             return Craft::t('notifier', 'has changed');
         }
@@ -64,6 +65,7 @@ trait HasChangedAttributeOperator
      */
     protected function inputHtml(): string
     {
+        // If this is the "has changed" operator, it needs no input field
         if ($this->operator === self::OPERATOR_HAS_CHANGED) {
             return '';
         }
@@ -75,6 +77,7 @@ trait HasChangedAttributeOperator
      */
     public function modifyQuery(QueryInterface $query): void
     {
+        // If this is the "has changed" operator, skip the query modification
         if ($this->operator === self::OPERATOR_HAS_CHANGED) {
             return;
         }
@@ -86,6 +89,7 @@ trait HasChangedAttributeOperator
      */
     public function matchElement(ElementInterface $element): bool
     {
+        // If this isn't the "has changed" operator, defer to the parent
         if ($this->operator !== self::OPERATOR_HAS_CHANGED) {
             return parent::matchElement($element);
         }

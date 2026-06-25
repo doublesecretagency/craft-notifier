@@ -1,0 +1,161 @@
+{% import '_includes/forms' as forms %}
+{% set autosuggest = 'notifier/_form/autosuggest' %}
+
+<h2>{{ "LinkedIn"|t('notifier') }}</h2>
+<p>{{ "Publish posts to your [LinkedIn](https://linkedin.com) profile."|t('notifier')|md }}</p>
+<p>{{ "Consult the [{name} setup guide]({url}) for complete instructions."|t('notifier', { name: 'LinkedIn', url: 'https://plugins.doublesecretagency.com/notifier/getting-started/integrations/linkedin' })|md }}</p>
+<p>{{ "Sensitive values can be stored in your `.env` file and referenced here."|t('notifier')|md }}</p>
+
+<div class="pane tip">
+    <div class="field">
+        <div class="heading">
+            <label>{{ "Copy this redirect URL"|t('notifier') }}</label>
+        </div>
+        <div class="instructions">
+            <p>{{ 'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".'|t('notifier')|raw }}</p>
+        </div>
+        <div class="input">
+            {{ forms.text({
+                id: 'callback-url',
+                value: redirectUri,
+                disabled: true,
+            }) }}
+        </div>
+    </div>
+</div>
+
+<div class="pane">
+    {% include autosuggest with {
+        config: {
+            label: "Client ID"|t('notifier'),
+            instructions: "The Client ID of your LinkedIn app."|t('notifier'),
+            name: 'linkedinClientId',
+            placeholder: '$LINKEDIN_CLIENT_ID',
+        }
+    } %}
+    {% include autosuggest with {
+        config: {
+            label: "Client Secret"|t('notifier'),
+            instructions: "The Primary Client Secret of your LinkedIn app."|t('notifier'),
+            name: 'linkedinClientSecret',
+            placeholder: '$LINKEDIN_CLIENT_SECRET',
+        }
+    } %}
+    {# Organization posting deferred; this toggle is gated off so it can't request an unauthorized scope and break the connect (scaffolding + strings kept, remove the wrapper to restore when company posting ships) #}
+    {% if false %}
+    {{ forms.lightswitchField({
+        label: "Enable organization posting"|t('notifier'),
+        instructions: "Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn."|t('notifier'),
+        id: 'linkedinEnableOrganizations',
+        name: 'settings[linkedinEnableOrganizations]',
+        on: (settings.linkedinEnableOrganizations ?? false),
+    }) }}
+    {% endif %}
+</div>
+
+<h2>{{ "Connections"|t('notifier') }}</h2>
+<p>{{ "Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification."|t('notifier')|md }}</p>
+
+<div class="pane">
+    {% if connections|length %}
+        <table class="data fullwidth">
+            <thead>
+                <tr>
+                    <th>{{ "Account"|t('notifier') }}</th>
+{#                    <th>{{ "Type"|t('notifier') }}</th>#}
+                    <th>{{ "Status"|t('notifier') }}</th>
+                    <th>{{ "Expires"|t('notifier') }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for connection in connections %}
+                    <tr>
+                        <td>{{ connection.label }}</td>
+{#                        <td>#}
+{#                            {% if 'organization' == connection.authorType %}#}
+{#                                {{ "Organization"|t('notifier') }}#}
+{#                            {% else %}#}
+{#                                {{ "Member"|t('notifier') }}#}
+{#                            {% endif %}#}
+{#                        </td>#}
+                        <td style="font-weight:bold">
+                            {% if connection.expired %}
+                                <span class="error">{{ "Reconnect needed"|t('notifier') }}</span>
+                            {% else %}
+                                <span class="success">{{ "Connected"|t('notifier') }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if connection.expiresAt %}
+                                {{ connection.expiresAt|date('short') }}
+                            {% endif %}
+                        </td>
+                        <td class="thin">
+                            <button type="button" class="btn small notifier-linkedin-disconnect" data-uid="{{ connection.uid }}">{{ "Disconnect"|t('notifier') }}</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="light">{{ "No LinkedIn accounts are connected yet."|t('notifier') }}</p>
+    {% endif %}
+
+    <div style="margin-top: 14px;">
+        {# Show the connect button only once credentials are set #}
+        {% if canConnect ?? false %}
+            <a href="{{ actionUrl('notifier/linkedin/connect') }}" class="btn submit">{{ "Connect to LinkedIn"|t('notifier') }}</a>
+        {% else %}
+            <p class="light">{{ "Provide valid credentials to connect with LinkedIn."|t('notifier') }}</p>
+        {% endif %}
+    </div>
+</div>
+
+{% js %}
+(function () {
+
+    // Get the disconnect action URL and redirect target
+    const disconnectUrl = '{{ actionUrl('notifier/linkedin/disconnect') }}';
+    const redirect = '{{ ('settings/plugins/notifier/linkedin')|hash }}';
+
+    // Loop through every disconnect button
+    document.querySelectorAll('.notifier-linkedin-disconnect').forEach(function (button) {
+
+        // On click, submit a throwaway POST form to disconnect
+        button.addEventListener('click', function () {
+
+            // Confirm before disconnecting
+            if (!confirm('{{ "Disconnect this LinkedIn account?"|t('notifier')|e('js') }}')) {
+                return;
+            }
+
+            // Build a throwaway form
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = disconnectUrl;
+
+            // Collect the field values
+            const fields = {
+                [Craft.csrfTokenName]: Craft.csrfTokenValue,
+                uid: button.getAttribute('data-uid'),
+                redirect: redirect,
+            };
+
+            // Append each field as a hidden input
+            Object.keys(fields).forEach(function (name) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = fields[name];
+                form.appendChild(input);
+            });
+
+            // Submit the form
+            document.body.appendChild(form);
+            form.submit();
+        });
+    });
+
+})();
+{% endjs %}

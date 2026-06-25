@@ -117,8 +117,10 @@ class OutboundBluesky extends BaseEnvelope
             return false;
         }
 
-        // Pre-flight grapheme guard
+        // Get the body
         $body = $this->body;
+
+        // If the body exceeds the grapheme limit, truncate it
         if (BlueskyFacets::graphemeCount($body) > static::MAX_GRAPHEMES) {
             $original = $body;
             $body = BlueskyFacets::truncateToGraphemes($body, static::MAX_GRAPHEMES);
@@ -128,8 +130,10 @@ class OutboundBluesky extends BaseEnvelope
             );
         }
 
-        // Resolve a session (cached or fresh)
+        // Get a session (cached or fresh)
         $session = $this->_resolveSession($pdsUrl, $handle, $appPassword, $notification);
+
+        // If the session couldn't be resolved, bail
         if (!$session) {
             return false;
         }
@@ -152,9 +156,13 @@ class OutboundBluesky extends BaseEnvelope
 
         // Retry-once on 401 (session may have expired between cache get and publish)
         if (!$success && $this->_lastStatus === 401) {
-            // Invalidate cached session and try fresh
+            // Invalidate the cached session
             BlueskySession::invalidate($pdsUrl, $handle);
+
+            // Get a fresh session
             $session = $this->_resolveSession($pdsUrl, $handle, $appPassword, $notification, force: true);
+
+            // If the fresh session couldn't be resolved, bail
             if (!$session) {
                 return false;
             }
@@ -201,7 +209,10 @@ class OutboundBluesky extends BaseEnvelope
     {
         // Try the cache first unless caller forced refresh
         if (!$force) {
+            // Get the cached session
             $cached = BlueskySession::get($pdsUrl, $handle);
+
+            // If a cached session exists, return it
             if ($cached) {
                 return $cached;
             }
@@ -248,6 +259,7 @@ class OutboundBluesky extends BaseEnvelope
             return $this->_resolveHandleToDid($handle, $pdsUrl);
         });
 
+        // If any facets were built, attach them
         if ($facets) {
             $record['facets'] = $facets;
         }
@@ -267,8 +279,10 @@ class OutboundBluesky extends BaseEnvelope
         // Build cache key
         $cacheKey = 'notifier.bluesky.handleDid.'.sha1($handle);
 
-        // Check cache
+        // Get the cached DID
         $cached = Craft::$app->getCache()->get($cacheKey);
+
+        // If a cached DID exists, return it
         if ($cached) {
             return (string) $cached;
         }
@@ -283,6 +297,7 @@ class OutboundBluesky extends BaseEnvelope
                 'timeout'     => 10,
             ]);
 
+            // If the handle lookup failed, bail
             if (200 !== $response->getStatusCode()) {
                 return null;
             }
@@ -290,6 +305,7 @@ class OutboundBluesky extends BaseEnvelope
             $payload = Json::decodeIfJson((string) $response->getBody());
             $did = (is_array($payload) ? ($payload['did'] ?? null) : null);
 
+            // If no DID was returned, bail
             if (!$did) {
                 return null;
             }
@@ -403,15 +419,19 @@ class OutboundBluesky extends BaseEnvelope
                 continue;
             }
 
-            // Read the image bytes
+            // Get the image bytes
             $bytes = Media::bytesFor($descriptor, $readError);
+
+            // If the bytes couldn't be read, log and skip
             if (!$bytes) {
-                $this->logUnattached($notification, ($readError ?: 'The image could not be read.'));
+                $this->logUnattached($notification, ($readError ?: Craft::t('notifier', 'The image could not be read.')));
                 continue;
             }
 
             // Resize the image to fit the blob limit
             $resized = Media::resizeToLimit($bytes['bytes'], (string) ($bytes['mime'] ?? ''), static::MAX_IMAGE_BYTES);
+
+            // If the image couldn't be resized, log and skip
             if (!$resized) {
                 $this->logUnattached(
                     $notification,
@@ -422,8 +442,10 @@ class OutboundBluesky extends BaseEnvelope
 
             // Upload the blob
             $blob = $this->_uploadBlob($pdsUrl, $session, $resized['bytes'], $resized['mime'], $uploadError);
+
+            // If the upload failed, log and skip
             if (!$blob) {
-                $this->logUnattached($notification, ($uploadError ?: 'The image failed to upload.'));
+                $this->logUnattached($notification, ($uploadError ?: Craft::t('notifier', 'The image failed to upload.')));
                 continue;
             }
 
@@ -460,8 +482,10 @@ class OutboundBluesky extends BaseEnvelope
     {
         try {
 
-            // Find the first URL in the body, if any
+            // Get the first URL in the body, if any
             $url = BlueskyLinkCard::firstUrl($body);
+
+            // If there is no URL, bail without an embed
             if (!$url) {
                 return;
             }
@@ -487,9 +511,15 @@ class OutboundBluesky extends BaseEnvelope
 
             // Attach a thumbnail blob when the page exposes a usable image
             if ($meta['imageUrl']) {
+                // Get the thumbnail
                 $thumb = BlueskyLinkCard::fetchThumbnail($meta['imageUrl']);
+
+                // If a thumbnail was fetched, upload it as a blob
                 if ($thumb) {
+                    // Upload the thumbnail blob
                     $blob = $this->_uploadBlob($pdsUrl, $session, $thumb['bytes'], $thumb['mime']);
+
+                    // If the blob uploaded, attach it as the card thumbnail
                     if ($blob) {
                         $external['thumb'] = $blob;
                     }
@@ -542,8 +572,10 @@ class OutboundBluesky extends BaseEnvelope
                 'timeout'     => 15,
             ]);
 
-            // Only a 200 carries a usable blob object
+            // Get the response status code
             $status = $response->getStatusCode();
+
+            // If the response isn't a 200, no usable blob was returned, so bail
             if (200 !== $status) {
                 $error = "HTTP {$status} from the blob upload.";
                 return null;
@@ -555,7 +587,7 @@ class OutboundBluesky extends BaseEnvelope
 
             // If the response carried no blob, bail
             if (!is_array($blob)) {
-                $error = 'The upload response had no blob.';
+                $error = Craft::t('notifier', 'The upload response had no blob.');
                 return null;
             }
 

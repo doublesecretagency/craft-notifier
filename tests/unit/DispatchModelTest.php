@@ -112,7 +112,7 @@ class DispatchModelTest extends TestCase
         // passed into the envelope constructor (envelopes are delivery-only).
         // Pin the log-side merge that every compile branch performs.
         $this->assertSame(
-            14,
+            15,
             preg_match_all(
                 "/'isTest'\s*=>\s*\\\$this->isTest/",
                 $this->dispatchSource

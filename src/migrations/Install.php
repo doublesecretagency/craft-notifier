@@ -49,6 +49,11 @@ class Install extends Migration
     const TRACK_FEEDS = '{{%notifier_trackfeeds}}';
 
     /**
+     * @var string The LinkedIn connections table name.
+     */
+    const LINKEDIN_CONNECTIONS = '{{%notifier_linkedinconnections}}';
+
+    /**
      * @inheritdoc
      */
     public function safeUp(): void
@@ -66,6 +71,7 @@ class Install extends Migration
         $this->dropTableIfExists(self::TRACK_DATES);
         $this->dropTableIfExists(self::TRACK_REPORTS);
         $this->dropTableIfExists(self::TRACK_FEEDS);
+        $this->dropTableIfExists(self::LINKEDIN_CONNECTIONS);
         $this->dropTableIfExists(self::LOG);
         $this->dropTableIfExists(self::NOTIFICATIONS);
     }
@@ -142,6 +148,24 @@ class Install extends Migration
                 'itemId'         => $this->string(255)->notNull(),
             ]);
             $this->createIndex(null, self::TRACK_FEEDS, ['notificationId', 'itemId'], true);
+        }
+
+        // If table does not already exist, create it
+        if (!$this->db->tableExists(self::LINKEDIN_CONNECTIONS)) {
+            $this->createTable(self::LINKEDIN_CONNECTIONS, [
+                'id'               => $this->primaryKey(),
+                'uid'              => $this->uid(),
+                'label'            => $this->string(),
+                'authorType'       => $this->string()->notNull(),
+                'authorUrn'        => $this->string()->notNull(),
+                'accessToken'      => $this->text()->notNull(),
+                'accessExpiresAt'  => $this->dateTime()->null(),
+                'refreshToken'     => $this->text()->null(),
+                'refreshExpiresAt' => $this->dateTime()->null(),
+                'dateCreated'      => $this->dateTime()->notNull(),
+                'dateUpdated'      => $this->dateTime()->notNull(),
+            ]);
+            $this->createIndex(null, self::LINKEDIN_CONNECTIONS, ['uid'], true);
         }
     }
 

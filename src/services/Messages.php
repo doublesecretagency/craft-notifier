@@ -341,15 +341,17 @@ class Messages extends Component
             'users'   => User::class,
         ];
 
-        // Append third-party element types only when their plugin is installed
+        // If Craft Commerce is installed, map its order and product types
         if (class_exists(Order::class)) {
             $map['craft-commerce-orders']   = Order::class;
             $map['craft-commerce-products'] = CommerceProduct::class;
         }
+        // If Digital Products is installed, map its product and license types
         if (class_exists(DigitalProduct::class)) {
             $map['digital-products-products'] = DigitalProduct::class;
             $map['digital-products-licenses'] = License::class;
         }
+        // If Solspace Calendar is installed, map its event type
         if (class_exists(CalendarEvent::class)) {
             $map['solspace-calendar-events'] = CalendarEvent::class;
         }

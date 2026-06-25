@@ -311,6 +311,10 @@ return [
     'Visibility' => 'Synlighet',
     'Who will be able to see this post?' => 'Vem kommer att kunna se det här inlägget?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => 'Texten i ditt LinkedIn-inlägg.',
+
     // Message tab: MQTT
     'Payload' => 'Innehåll',
     'The JSON or plain text message published to the MQTT topic.' => 'JSON- eller klartextmeddelandet som publiceras till MQTT-ämnet.',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Inga MQTT-ämnen konfigurerade. Ämnen kan endast läggas till i en miljö som tillåter administrativa ändringar.',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Inte ett giltigt ämne. Får inte vara tomt eller innehålla jokertecknen `+` eller `#`.',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => 'Välj LinkedIn-konto(n)',
+    'Which page or member should post this message?' => 'Vilken sida eller medlem ska publicera detta meddelande?',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => 'Inga LinkedIn-konton anslutna. Anslut ett i [Inställningar → LinkedIn]({url}).',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => 'Inga LinkedIn-konton anslutna. Konton kan endast anslutas i en miljö som tillåter administrativa ändringar.',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Twig-utdrag för att bestämma mottagare',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Ange ett anpassat Twig-snippet för att [bestämma vem som ska få meddelandet]({url}).',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => 'Push-aviseringar',
+    'Chat Platforms' => 'Chattplattformar',
+    'Social Media' => 'Sociala medier',
+    'Internet of Things' => 'Sakernas internet',
+    'Expand {heading}' => 'Expandera {heading}',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Se [{name}-installationsguiden]({url}) för fullständiga instruktioner.',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => 'Instans-URL',
     'Access Token' => 'Åtkomsttoken',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => 'Publicera inlägg till din [LinkedIn](https://linkedin.com)-profil.',
+    'The Client ID of your LinkedIn app.' => 'Klient-ID:t för din LinkedIn-app.',
+    'Client Secret' => 'Klienthemlighet',
+    'The Primary Client Secret of your LinkedIn app.' => 'Den primära klienthemligheten för din LinkedIn-app.',
+    'Enable organization posting' => 'Aktivera publicering för organisationer',
+    'Copy this redirect URL' => 'Kopiera denna omdirigerings-URL',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => 'När du konfigurerar LinkedIn-appen, <strong>kopiera denna URL</strong> för att använda den som en "Authorized redirect URL".',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => 'Begär även åtkomst för att publicera som de organisationssidor du administrerar. Kräver godkännande av Community Management API från LinkedIn.',
+    'Connections' => 'Anslutningar',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Varje anslutning blir tillgänglig som mottagare på fliken **Mottagare** när du konfigurerar en avisering.',
+    'Account' => 'Konto',
+    'Type' => 'Typ',
+    'Status' => 'Status',
+    'Organization' => 'Organisation',
+    'Member' => 'Medlem',
+    'Reconnect needed' => 'Återanslutning krävs',
+    'Expires' => 'Upphör',
+    'Connected' => 'Ansluten',
+    'Disconnect' => 'Koppla från',
+    'No LinkedIn accounts are connected yet.' => 'Inga LinkedIn-konton är anslutna ännu.',
+    'Connect to LinkedIn' => 'Anslut till LinkedIn',
+    'Provide valid credentials to connect with LinkedIn.' => 'Ange giltiga autentiseringsuppgifter för att ansluta till LinkedIn.',
+    'Disconnect this LinkedIn account?' => 'Koppla från detta LinkedIn-konto?',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Publicera meddelanden till en MQTT-broker, praktiskt för IoT- och hemautomationsuppsättningar.',
     'Host' => 'Värd',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => 'Autentiserad som @{handle}. Inga inlägg gjordes.',
     'Broker host is not configured.' => 'Broker-värden är inte konfigurerad.',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => 'Lägg till dina LinkedIn-app-uppgifter innan du ansluter.',
+    'LinkedIn authorization failed: {error}' => 'LinkedIn-auktorisering misslyckades: {error}',
+    'LinkedIn authorization failed: invalid state.' => 'LinkedIn-auktorisering misslyckades: ogiltigt tillstånd.',
+    'LinkedIn authorization failed: no code returned.' => 'LinkedIn-auktorisering misslyckades: ingen kod returnerades.',
+    'Connected to LinkedIn.' => 'Ansluten till LinkedIn.',
+    'Disconnected from LinkedIn.' => 'Frånkopplad från LinkedIn.',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => 'E-postmeddelande skickat!',
     'Successfully sent SMS message!' => 'SMS-meddelande skickat!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => 'Mastodon-inlägg skickat till "{label}".',
     'Successfully sent MQTT message to topic "{topic}".' => 'MQTT-meddelande skickat till ämnet "{topic}".',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => 'LinkedIn-inlägg skickat till "{label}".',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] LinkedIn-inläggets text är tom.',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] Ingen LinkedIn-anslutning angavs.',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => 'LinkedIn-app-uppgifter är inte konfigurerade.',
+    'The LinkedIn access token has expired. Please reconnect.' => 'LinkedIn-åtkomsttoken har upphört att gälla. Anslut igen.',
+    'The LinkedIn connection no longer exists.' => 'LinkedIn-anslutningen finns inte längre.',
+    'My LinkedIn Profile' => 'Min LinkedIn-profil',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] Mottagaren "{name}" har ingen LinkedIn-anslutning.',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] Den konfigurerade LinkedIn-anslutningen finns inte längre (uid: {uid}).',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => 'Videor stöds ännu inte på {channel}.',
     'The image could not be resized to fit.' => 'Bilden kunde inte storleksändras för att passa.',
+    'The image could not be read.' => 'Bilden kunde inte läsas.',
+    'The image failed to upload.' => 'Det gick inte att ladda upp bilden.',
+    'The upload response had no media ID.' => 'Uppladdningssvaret innehöll inget medie-ID.',
+    'The upload response had no blob.' => 'Uppladdningssvaret innehöll ingen blob.',
     '[NOT ATTACHED] Unable to attach image. {reason}' => '[INTE BIFOGAD] Det gick inte att bifoga bilden. {reason}',
 
     // Recipient warnings

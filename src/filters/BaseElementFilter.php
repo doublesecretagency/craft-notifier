@@ -101,10 +101,12 @@ abstract class BaseElementFilter extends Component implements ExclusiveFilterInt
      */
     public static function check(Event $event, bool $value): bool
     {
+        // If the event sender is an element, check it directly
         if ($event->sender instanceof ElementInterface) {
             return static::checkElement($event->sender, $value);
         }
 
+        // If the event is an element event, check its element
         if ($event instanceof ElementEvent) {
             return static::checkElement($event->element, $value);
         }

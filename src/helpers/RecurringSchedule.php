@@ -101,6 +101,8 @@ abstract class RecurringSchedule
 
         // Get the frequency, falling back to the default when unrecognized
         $frequency = (string) ($config['frequency'] ?? $defaults['frequency']);
+
+        // If the frequency isn't recognized, use the default
         if (!isset(static::FREQUENCIES[$frequency])) {
             $frequency = $defaults['frequency'];
         }
@@ -124,8 +126,10 @@ abstract class RecurringSchedule
         $pinMonth = (int) ($config['pinMonth'] ?? $defaults['pinMonth']);
         $pinMonth = max(1, min(12, $pinMonth));
 
-        // Validate the time, falling back to the default when malformed
+        // Get the time, falling back to the default when malformed
         $time = (string) ($config['time'] ?? $defaults['time']);
+
+        // If the time isn't a valid HH:MM, use the default
         if (!preg_match('/^\d{1,2}:\d{2}$/', trim($time))) {
             $time = $defaults['time'];
         }

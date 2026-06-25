@@ -97,8 +97,10 @@ class OutboundNtfy extends BaseEnvelope
         // Build headers
         $headers = ['Content-Type' => 'text/plain; charset=utf-8'];
 
-        // Add optional access token
+        // Get the optional access token
         $accessToken = App::parseEnv($settings->ntfyAccessToken);
+
+        // If an access token is set, add it as a bearer header
         if ($accessToken) {
             $headers['Authorization'] = "Bearer {$accessToken}";
         }

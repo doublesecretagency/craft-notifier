@@ -311,6 +311,10 @@ return [
     'Visibility' => 'Видимость',
     'Who will be able to see this post?' => 'Кто сможет увидеть этот пост?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => 'Текст вашего поста в LinkedIn.',
+
     // Message tab: MQTT
     'Payload' => 'Содержимое',
     'The JSON or plain text message published to the MQTT topic.' => 'Сообщение в формате JSON или в виде обычного текста, публикуемое в теме MQTT.',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Темы MQTT не настроены. Темы можно добавлять только в среде, где разрешены административные изменения.',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Недопустимая тема. Не должна быть пустой и не должна содержать подстановочные знаки `+` или `#`.',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => 'Выберите аккаунт(ы) LinkedIn',
+    'Which page or member should post this message?' => 'Какая страница или участник должны опубликовать это сообщение?',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => 'Аккаунты LinkedIn не подключены. Подключите в [Настройки → LinkedIn]({url}).',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => 'Аккаунты LinkedIn не подключены. Аккаунты можно подключать только в среде, где разрешены административные изменения.',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Фрагмент Twig для определения получателей',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Введите пользовательский фрагмент Twig, чтобы [определить, кто получит сообщение]({url}).',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => 'Push-уведомления',
+    'Chat Platforms' => 'Чат-платформы',
+    'Social Media' => 'Социальные сети',
+    'Internet of Things' => 'Интернет вещей',
+    'Expand {heading}' => 'Развернуть {heading}',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Полные инструкции см. в [руководстве по настройке {name}]({url}).',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => 'URL инстанции',
     'Access Token' => 'Токен доступа',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => 'Публикуйте посты в своём профиле [LinkedIn](https://linkedin.com).',
+    'The Client ID of your LinkedIn app.' => 'Идентификатор клиента вашего приложения LinkedIn.',
+    'Client Secret' => 'Секрет клиента',
+    'The Primary Client Secret of your LinkedIn app.' => 'Основной секрет клиента вашего приложения LinkedIn.',
+    'Enable organization posting' => 'Включить публикацию от имени организации',
+    'Copy this redirect URL' => 'Скопируйте этот URL перенаправления',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => 'При настройке приложения LinkedIn <strong>скопируйте этот URL</strong>, чтобы использовать его как "Authorized redirect URL".',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => 'Также запросите доступ для публикации от имени администрируемых вами страниц организаций. Требуется одобрение Community Management API от LinkedIn.',
+    'Connections' => 'Подключения',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Каждое подключение становится доступным как получатель на вкладке **Получатели** при настройке уведомления.',
+    'Account' => 'Аккаунт',
+    'Type' => 'Тип',
+    'Status' => 'Статус',
+    'Organization' => 'Организация',
+    'Member' => 'Участник',
+    'Reconnect needed' => 'Требуется переподключение',
+    'Expires' => 'Истекает',
+    'Connected' => 'Подключено',
+    'Disconnect' => 'Отключить',
+    'No LinkedIn accounts are connected yet.' => 'Аккаунты LinkedIn ещё не подключены.',
+    'Connect to LinkedIn' => 'Подключиться к LinkedIn',
+    'Provide valid credentials to connect with LinkedIn.' => 'Укажите действительные учётные данные для подключения к LinkedIn.',
+    'Disconnect this LinkedIn account?' => 'Отключить этот аккаунт LinkedIn?',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Публикуйте сообщения в брокер MQTT, удобно для конфигураций IoT и домашней автоматизации.',
     'Host' => 'Хост',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => 'Аутентификация выполнена успешно как @{handle}. Посты не публиковались.',
     'Broker host is not configured.' => 'Хост брокера не настроен.',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => 'Добавьте учётные данные приложения LinkedIn перед подключением.',
+    'LinkedIn authorization failed: {error}' => 'Не удалось авторизоваться в LinkedIn: {error}',
+    'LinkedIn authorization failed: invalid state.' => 'Не удалось авторизоваться в LinkedIn: неверный state.',
+    'LinkedIn authorization failed: no code returned.' => 'Не удалось авторизоваться в LinkedIn: код не возвращён.',
+    'Connected to LinkedIn.' => 'Подключено к LinkedIn.',
+    'Disconnected from LinkedIn.' => 'Отключено от LinkedIn.',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => 'Письмо успешно отправлено!',
     'Successfully sent SMS message!' => 'SMS-сообщение успешно отправлено!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => 'Пост Mastodon успешно отправлен в "{label}".',
     'Successfully sent MQTT message to topic "{topic}".' => 'Сообщение MQTT отправлено в тему "{topic}".',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => 'Пост LinkedIn успешно отправлен в "{label}".',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] Текст поста LinkedIn пуст.',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] Подключение LinkedIn не указано.',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => 'Учётные данные приложения LinkedIn не настроены.',
+    'The LinkedIn access token has expired. Please reconnect.' => 'Срок действия токена доступа LinkedIn истёк. Подключитесь заново.',
+    'The LinkedIn connection no longer exists.' => 'Подключение LinkedIn больше не существует.',
+    'My LinkedIn Profile' => 'Мой профиль LinkedIn',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] У получателя "{name}" нет подключения LinkedIn.',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] Настроенное подключение LinkedIn больше не существует (uid: {uid}).',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => 'Видео пока не поддерживается в {channel}.',
     'The image could not be resized to fit.' => 'Не удалось изменить размер изображения до подходящего.',
+    'The image could not be read.' => 'Не удалось прочитать изображение.',
+    'The image failed to upload.' => 'Не удалось загрузить изображение.',
+    'The upload response had no media ID.' => 'В ответе на загрузку отсутствовал ID медиа.',
+    'The upload response had no blob.' => 'В ответе на загрузку отсутствовал blob.',
     '[NOT ATTACHED] Unable to attach image. {reason}' => '[НЕ ПРИКРЕПЛЕНО] Не удалось прикрепить изображение. {reason}',
 
     // Recipient warnings

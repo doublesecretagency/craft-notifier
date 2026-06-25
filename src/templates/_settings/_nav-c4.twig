@@ -1,0 +1,31 @@
+{# Settings sidebar for Craft 4: plain headings, matching the stock Craft 4 element-index sources sidebar #}
+<nav aria-label="{{ label }}">
+    <ul>
+        {% for key, item in items %}
+            {% if item.heading is defined %}
+                {# Group heading with its nested items #}
+                <li class="heading">
+                    <span>{{ item.heading }}</span>
+                    <ul>
+                        {% for subKey, subItem in item.nested %}
+                            <li>{{ tag('a', {
+                                href: subItem.url,
+                                class: (subKey == selectedItem) ? ['sel'] : [],
+                                aria: {current: (subKey == selectedItem) ? 'page' : false},
+                                html: tag('span', {class: 'label', text: subItem.label}),
+                            }) }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% else %}
+                {# Standalone link with no heading #}
+                <li>{{ tag('a', {
+                    href: item.url,
+                    class: (key == selectedItem) ? ['sel'] : [],
+                    aria: {current: (key == selectedItem) ? 'page' : false},
+                    html: tag('span', {class: 'label', text: item.label}),
+                }) }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>

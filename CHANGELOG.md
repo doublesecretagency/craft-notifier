@@ -13,12 +13,14 @@
 - Added support for posting [Instagram](https://plugins.doublesecretagency.com/notifier/messages/types/instagram) photos.
 - Added support for posting [X (Twitter)](https://plugins.doublesecretagency.com/notifier/messages/types/x-twitter) updates.
 - Added support for publishing [Mastodon](https://plugins.doublesecretagency.com/notifier/messages/types/mastodon) posts.
+- Added support for posting [LinkedIn](https://plugins.doublesecretagency.com/notifier/messages/types/linkedin) updates.
 - Added support for sending [MQTT](https://plugins.doublesecretagency.com/notifier/messages/types/mqtt) notifications.
 - Added the [Discord channels](https://plugins.doublesecretagency.com/notifier/recipients/types/discord-channels) recipient type for posting to one or more Discord channels.
 - Added the [Facebook pages](https://plugins.doublesecretagency.com/notifier/recipients/types/facebook-pages) recipient type for posting to one or more Facebook pages.
 - Added the [Instagram accounts](https://plugins.doublesecretagency.com/notifier/recipients/types/instagram-accounts) recipient type for posting from one or more Instagram accounts.
 - Added the [X (Twitter) accounts](https://plugins.doublesecretagency.com/notifier/recipients/types/x-twitter-accounts) recipient type for posting from one or more X (Twitter) accounts.
 - Added the [Mastodon accounts](https://plugins.doublesecretagency.com/notifier/recipients/types/mastodon-accounts) recipient type for posting from one or more Mastodon accounts.
+- Added the [LinkedIn accounts](https://plugins.doublesecretagency.com/notifier/recipients/types/linkedin-accounts) recipient type for posting from one or more LinkedIn accounts.
 - Added the [MQTT topics](https://plugins.doublesecretagency.com/notifier/recipients/types/mqtt-topics) recipient type for posting to one or more MQTT topics.
 
 ### Changed

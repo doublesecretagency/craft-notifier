@@ -102,6 +102,7 @@ class RecipientsServiceTest extends TestCase
             ['_mqttTopics'],
             ['_discordChannels'],
             ['_mastodonAccounts'],
+            ['_linkedinAccounts'],
         ];
     }
 
@@ -141,6 +142,7 @@ class RecipientsServiceTest extends TestCase
         $this->assertMatchesRegularExpression("/case\s+'mqtt-topics'/", $this->recipientsSource);
         $this->assertMatchesRegularExpression("/case\s+'discord-channels'/", $this->recipientsSource);
         $this->assertMatchesRegularExpression("/case\s+'mastodon-accounts'/", $this->recipientsSource);
+        $this->assertMatchesRegularExpression("/case\s+'linkedin-accounts'/", $this->recipientsSource);
     }
 
     public function testEachCaseDelegatesToItsStrategy(): void

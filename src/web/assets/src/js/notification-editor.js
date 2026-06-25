@@ -36,6 +36,7 @@
         '.message-type-x-twitter',
         '.message-type-bluesky',
         '.message-type-mastodon',
+        '.message-type-linkedin',
         '.message-type-mqtt',
         '.recipients-type-dynamic-recipients'
     ];

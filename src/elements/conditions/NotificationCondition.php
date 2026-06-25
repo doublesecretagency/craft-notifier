@@ -59,8 +59,10 @@ class NotificationCondition extends ElementCondition
      */
     private function _buildRules(): array
     {
-        // Pull the parent's default rules from the version-appropriate hook
+        // Initialize the parent's default rules
         $base = [];
+
+        // If the parent exposes the rules hook, pull from it
         if (method_exists(parent::class, 'selectableConditionRules')) {
             $base = parent::selectableConditionRules();
         } elseif (method_exists(parent::class, 'conditionRuleTypes')) {

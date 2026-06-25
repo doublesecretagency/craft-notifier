@@ -311,6 +311,10 @@ return [
     'Visibility' => '可見性',
     'Who will be able to see this post?' => '誰可以看到此貼文?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => '你的 LinkedIn 貼文的文字。',
+
     // Message tab: MQTT
     'Payload' => '負載',
     'The JSON or plain text message published to the MQTT topic.' => '發布到 MQTT 主題的 JSON 或純文字訊息。',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => '未設定 MQTT 主題。主題只能在允許管理變更的環境中新增。',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => '不是有效的主題。不能為空,也不能包含萬用字元 `+` 或 `#`。',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => '選擇 LinkedIn 帳戶',
+    'Which page or member should post this message?' => '哪個頁面或成員應發布此訊息？',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => '未連接 LinkedIn 帳戶。請在[設定 → LinkedIn]({url})中連接一個。',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => '未連接 LinkedIn 帳戶。帳戶只能在允許管理變更的環境中連接。',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => '用於決定收件者的 Twig 程式碼片段',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => '輸入自訂 Twig 程式碼片段以[決定誰將接收訊息]({url})。',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => '推播通知',
+    'Chat Platforms' => '聊天平台',
+    'Social Media' => '社群媒體',
+    'Internet of Things' => '物聯網',
+    'Expand {heading}' => '展開{heading}',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => '請參閱 [{name} 設定指南]({url}) 以取得完整說明。',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => '實例 URL',
     'Access Token' => '存取權杖',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => '向你的 [LinkedIn](https://linkedin.com) 個人檔案發布貼文。',
+    'The Client ID of your LinkedIn app.' => '你的 LinkedIn 應用程式的用戶端 ID。',
+    'Client Secret' => '用戶端密鑰',
+    'The Primary Client Secret of your LinkedIn app.' => '你的 LinkedIn 應用程式的主要用戶端密鑰。',
+    'Enable organization posting' => '啟用組織發布',
+    'Copy this redirect URL' => '複製此重新導向 URL',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => '設定 LinkedIn 應用程式時，<strong>複製此 URL</strong> 以用作 "Authorized redirect URL"。',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => '同時請求以你管理的組織頁面身分發文的權限。需要 LinkedIn 核准 Community Management API。',
+    'Connections' => '連線',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => '設定通知時，每個連線都會作為收件者顯示在 **收件者** 索引標籤中。',
+    'Account' => '帳戶',
+    'Type' => '類型',
+    'Status' => '狀態',
+    'Organization' => '組織',
+    'Member' => '成員',
+    'Reconnect needed' => '需要重新連接',
+    'Expires' => '到期',
+    'Connected' => '已連接',
+    'Disconnect' => '中斷連接',
+    'No LinkedIn accounts are connected yet.' => '尚未連接任何 LinkedIn 帳戶。',
+    'Connect to LinkedIn' => '連接到 LinkedIn',
+    'Provide valid credentials to connect with LinkedIn.' => '請提供有效的憑證以連接到 LinkedIn。',
+    'Disconnect this LinkedIn account?' => '要中斷此 LinkedIn 帳戶的連接嗎？',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => '向 MQTT 代理發布訊息，適用於物聯網和家庭自動化設定。',
     'Host' => '主機',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => '已成功以 @{handle} 身分進行驗證。未發布任何貼文。',
     'Broker host is not configured.' => '未設定代理主機。',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => '連接前請先新增你的 LinkedIn 應用程式憑證。',
+    'LinkedIn authorization failed: {error}' => 'LinkedIn 授權失敗：{error}',
+    'LinkedIn authorization failed: invalid state.' => 'LinkedIn 授權失敗：狀態無效。',
+    'LinkedIn authorization failed: no code returned.' => 'LinkedIn 授權失敗：未返回授權碼。',
+    'Connected to LinkedIn.' => '已連接到 LinkedIn。',
+    'Disconnected from LinkedIn.' => '已中斷與 LinkedIn 的連接。',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => '郵件傳送成功!',
     'Successfully sent SMS message!' => '簡訊傳送成功!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => '已成功傳送 Mastodon 貼文到「{label}」。',
     'Successfully sent MQTT message to topic "{topic}".' => '已成功向主題「{topic}」傳送 MQTT 訊息。',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => '已成功傳送 LinkedIn 貼文到「{label}」。',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] LinkedIn 貼文內文為空。',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] 未指定 LinkedIn 連線。',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => '未設定 LinkedIn 應用程式憑證。',
+    'The LinkedIn access token has expired. Please reconnect.' => 'LinkedIn 存取權杖已過期。請重新連接。',
+    'The LinkedIn connection no longer exists.' => '該 LinkedIn 連線已不存在。',
+    'My LinkedIn Profile' => '我的 LinkedIn 個人檔案',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] 收件者「{name}」沒有 LinkedIn 連線。',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] 設定的 LinkedIn 連線已不存在 (uid: {uid})。',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => '{channel} 尚不支援影片。',
     'The image could not be resized to fit.' => '無法將圖片調整為合適的大小。',
+    'The image could not be read.' => '無法讀取圖片。',
+    'The image failed to upload.' => '圖片上傳失敗。',
+    'The upload response had no media ID.' => '上傳回應中沒有媒體 ID。',
+    'The upload response had no blob.' => '上傳回應中沒有 blob。',
     '[NOT ATTACHED] Unable to attach image. {reason}' => '[未附加] 無法附加圖片。{reason}',
 
     // Recipient warnings

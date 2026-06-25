@@ -107,8 +107,10 @@ class OutboundXTwitter extends BaseEnvelope
             return false;
         }
 
-        // Truncate the body to the character limit
+        // Get the body
         $body = $this->body;
+
+        // If the body exceeds the character limit, truncate it
         if (mb_strlen($body) > static::MAX_LENGTH) {
             $body = mb_substr($body, 0, static::MAX_LENGTH);
             $notification->log->warning(
@@ -131,6 +133,8 @@ class OutboundXTwitter extends BaseEnvelope
 
         // Build the post payload
         $payload = ['text' => $body];
+
+        // If media was uploaded, attach it
         if ($mediaIds) {
             $payload['media'] = ['media_ids' => $mediaIds];
         }
@@ -295,8 +299,10 @@ class OutboundXTwitter extends BaseEnvelope
                 'timeout'     => 30,
             ]);
 
-            // On a non-2xx response, bail
+            // Get the response status code
             $status = $response->getStatusCode();
+
+            // If the response is non-2xx, bail
             if ($status < 200 || $status >= 300) {
                 $error = "HTTP {$status} from the media upload.";
                 return null;

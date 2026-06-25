@@ -120,10 +120,11 @@ class OutboundMqtt extends BaseEnvelope
                 $connectionSettings->setTlsCertificateAuthorityFile($caFile);
             }
 
-            // If using Mutual TLS, configure the client certificate and key
+            // If using Mutual TLS with a client certificate file, configure it
             if ($useTls && ($clientCert = App::parseEnv($settings->mqttTlsClientCertFile))) {
                 $connectionSettings->setTlsClientCertificateFile($clientCert);
             }
+            // If using Mutual TLS with a client key file, configure it
             if ($useTls && ($clientKey = App::parseEnv($settings->mqttTlsClientKeyFile))) {
                 $connectionSettings->setTlsClientCertificateKeyFile($clientKey);
             }

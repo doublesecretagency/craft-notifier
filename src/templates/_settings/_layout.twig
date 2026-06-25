@@ -10,30 +10,50 @@
 ] %}
 
 {% set navItems = {
-    general:  { label: 'General'|t('notifier'),  url: url('settings/plugins/notifier/general')  },
-    twilio:   { label: 'Twilio'|t('notifier'),   url: url('settings/plugins/notifier/twilio')   },
-    pushover: { label: 'Pushover'|t('notifier'), url: url('settings/plugins/notifier/pushover') },
-    ntfy:     { label: 'ntfy'|t('notifier'),     url: url('settings/plugins/notifier/ntfy')     },
-    slack:    { label: 'Slack'|t('notifier'),    url: url('settings/plugins/notifier/slack')    },
-    discord:  { label: 'Discord'|t('notifier'),  url: url('settings/plugins/notifier/discord')  },
-    facebook:    { label: 'Facebook'|t('notifier'),    url: url('settings/plugins/notifier/facebook')  },
-    instagram:   { label: 'Instagram'|t('notifier'),   url: url('settings/plugins/notifier/instagram') },
-    'x-twitter': { label: 'X (Twitter)'|t('notifier'), url: url('settings/plugins/notifier/x-twitter') },
-    bluesky:  { label: 'Bluesky'|t('notifier'),  url: url('settings/plugins/notifier/bluesky')  },
-    mastodon: { label: 'Mastodon'|t('notifier'), url: url('settings/plugins/notifier/mastodon') },
-    mqtt:     { label: 'MQTT'|t('notifier'),     url: url('settings/plugins/notifier/mqtt')     },
+    general: { label: 'General'|t('notifier'), url: url('settings/plugins/notifier/general') },
+    push: { heading: 'Push Notifications'|t('notifier'), nested: {
+        twilio:   { label: 'Twilio'|t('notifier'),   url: url('settings/plugins/notifier/twilio')   },
+        pushover: { label: 'Pushover'|t('notifier'), url: url('settings/plugins/notifier/pushover') },
+        ntfy:     { label: 'ntfy'|t('notifier'),     url: url('settings/plugins/notifier/ntfy')     },
+    } },
+    chat: { heading: 'Chat Platforms'|t('notifier'), nested: {
+        slack:   { label: 'Slack'|t('notifier'),   url: url('settings/plugins/notifier/slack')   },
+        discord: { label: 'Discord'|t('notifier'), url: url('settings/plugins/notifier/discord') },
+    } },
+    social: { heading: 'Social Media'|t('notifier'), nested: {
+        facebook:    { label: 'Facebook'|t('notifier'),    url: url('settings/plugins/notifier/facebook')  },
+        instagram:   { label: 'Instagram'|t('notifier'),   url: url('settings/plugins/notifier/instagram') },
+        'x-twitter': { label: 'X (Twitter)'|t('notifier'), url: url('settings/plugins/notifier/x-twitter') },
+        bluesky:     { label: 'Bluesky'|t('notifier'),     url: url('settings/plugins/notifier/bluesky')   },
+        mastodon:    { label: 'Mastodon'|t('notifier'),    url: url('settings/plugins/notifier/mastodon')  },
+        linkedin:    { label: 'LinkedIn'|t('notifier'),    url: url('settings/plugins/notifier/linkedin')  },
+    } },
+    iot: { heading: 'Internet of Things'|t('notifier'), nested: {
+        mqtt: { label: 'MQTT'|t('notifier'), url: url('settings/plugins/notifier/mqtt') },
+    } },
 } %}
 
 {% set selectedNavItem = section %}
-{% set docTitle = navItems[selectedNavItem].label ~ ' - ' ~ title %}
+
+{# Resolve the selected label, searching one level into the grouped items #}
+{% set selectedLabel = navItems[selectedNavItem].label ?? null %}
+{% for group in navItems %}
+    {% if group.nested[selectedNavItem] is defined %}
+        {% set selectedLabel = group.nested[selectedNavItem].label %}
+    {% endif %}
+{% endfor %}
+
+{% set docTitle = (selectedLabel ?? title) ~ ' - ' ~ title %}
 
 {% set fullPageForm = true %}
 
 {% block sidebar %}
-    {% include '_includes/nav' with {
-        label: title,
+    {# Craft 5 supports collapsible groups (craft-disclosure); Craft 4 does not, so load a separate nav per major #}
+    {% set navTemplate = (craft.app.version starts with '5.') ? 'notifier/_settings/_nav-c5' : 'notifier/_settings/_nav-c4' %}
+    {% include navTemplate with {
         items: navItems,
         selectedItem: selectedNavItem,
+        label: title,
     } only %}
 {% endblock %}
 

@@ -175,6 +175,23 @@ class Settings extends Model
     // ========================================================================= //
 
     /**
+     * @var string|null LinkedIn app client ID. May be a $ENV_VAR reference.
+     */
+    public ?string $linkedinClientId = null;
+
+    /**
+     * @var string|null LinkedIn app client secret. May be a $ENV_VAR reference.
+     */
+    public ?string $linkedinClientSecret = null;
+
+    /**
+     * @var bool Whether to also request the organization-posting scope when connecting.
+     */
+    public bool $linkedinEnableOrganizations = false;
+
+    // ========================================================================= //
+
+    /**
      * @var string|null MQTT broker hostname. May be a $ENV_VAR reference.
      */
     public ?string $mqttHost = null;

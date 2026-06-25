@@ -311,6 +311,10 @@ return [
     'Visibility' => 'Widoczność',
     'Who will be able to see this post?' => 'Kto będzie mógł zobaczyć ten post?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => 'Treść Twojego posta LinkedIn.',
+
     // Message tab: MQTT
     'Payload' => 'Zawartość',
     'The JSON or plain text message published to the MQTT topic.' => 'Wiadomość JSON lub zwykły tekst publikowana w temacie MQTT.',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Nie skonfigurowano tematów MQTT. Tematy można dodawać tylko w środowisku, które zezwala na zmiany administracyjne.',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Nieprawidłowy temat. Nie może być pusty ani zawierać symboli wieloznacznych `+` lub `#`.',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => 'Wybierz konto(-a) LinkedIn',
+    'Which page or member should post this message?' => 'Która strona lub członek ma opublikować tę wiadomość?',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => 'Brak połączonych kont LinkedIn. Połącz jedno w [Ustawienia → LinkedIn]({url}).',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => 'Brak połączonych kont LinkedIn. Konta można łączyć tylko w środowisku, które zezwala na zmiany administracyjne.',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Fragment Twig do określenia odbiorców',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Wprowadź własny fragment Twig, aby [określić, kto otrzyma wiadomość]({url}).',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => 'Powiadomienia push',
+    'Chat Platforms' => 'Platformy czatu',
+    'Social Media' => 'Media społecznościowe',
+    'Internet of Things' => 'Internet rzeczy',
+    'Expand {heading}' => 'Rozwiń {heading}',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Zajrzyj do [przewodnika konfiguracji {name}]({url}), aby uzyskać pełne instrukcje.',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => 'URL instancji',
     'Access Token' => 'Token dostępu',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => 'Publikuj posty na swoim profilu [LinkedIn](https://linkedin.com).',
+    'The Client ID of your LinkedIn app.' => 'Identyfikator klienta Twojej aplikacji LinkedIn.',
+    'Client Secret' => 'Sekret klienta',
+    'The Primary Client Secret of your LinkedIn app.' => 'Główny sekret klienta Twojej aplikacji LinkedIn.',
+    'Enable organization posting' => 'Włącz publikowanie jako organizacja',
+    'Copy this redirect URL' => 'Skopiuj ten URL przekierowania',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => 'Podczas konfigurowania aplikacji LinkedIn <strong>skopiuj ten URL</strong>, aby użyć go jako "Authorized redirect URL".',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => 'Poproś również o dostęp do publikowania jako strony organizacji, którymi zarządzasz. Wymaga zatwierdzenia Community Management API przez LinkedIn.',
+    'Connections' => 'Połączenia',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Każde połączenie staje się dostępne jako odbiorca na karcie **Odbiorcy** podczas konfigurowania powiadomienia.',
+    'Account' => 'Konto',
+    'Type' => 'Typ',
+    'Status' => 'Status',
+    'Organization' => 'Organizacja',
+    'Member' => 'Członek',
+    'Reconnect needed' => 'Wymagane ponowne połączenie',
+    'Expires' => 'Wygasa',
+    'Connected' => 'Połączono',
+    'Disconnect' => 'Rozłącz',
+    'No LinkedIn accounts are connected yet.' => 'Nie połączono jeszcze żadnych kont LinkedIn.',
+    'Connect to LinkedIn' => 'Połącz z LinkedIn',
+    'Provide valid credentials to connect with LinkedIn.' => 'Podaj prawidłowe dane uwierzytelniające, aby połączyć się z LinkedIn.',
+    'Disconnect this LinkedIn account?' => 'Rozłączyć to konto LinkedIn?',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Publikuj wiadomości do brokera MQTT, przydatne w konfiguracjach IoT i automatyki domowej.',
     'Host' => 'Host',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => 'Pomyślnie uwierzytelniono jako @{handle}. Nie opublikowano żadnych postów.',
     'Broker host is not configured.' => 'Host brokera nie jest skonfigurowany.',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => 'Dodaj poświadczenia aplikacji LinkedIn przed połączeniem.',
+    'LinkedIn authorization failed: {error}' => 'Autoryzacja LinkedIn nie powiodła się: {error}',
+    'LinkedIn authorization failed: invalid state.' => 'Autoryzacja LinkedIn nie powiodła się: nieprawidłowy stan.',
+    'LinkedIn authorization failed: no code returned.' => 'Autoryzacja LinkedIn nie powiodła się: nie zwrócono kodu.',
+    'Connected to LinkedIn.' => 'Połączono z LinkedIn.',
+    'Disconnected from LinkedIn.' => 'Rozłączono z LinkedIn.',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => 'Pomyślnie wysłano wiadomość e-mail!',
     'Successfully sent SMS message!' => 'Pomyślnie wysłano wiadomość SMS!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => 'Pomyślnie wysłano post Mastodon do "{label}".',
     'Successfully sent MQTT message to topic "{topic}".' => 'Wysłano wiadomość MQTT do tematu "{topic}".',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => 'Pomyślnie wysłano post LinkedIn do "{label}".',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] Treść posta LinkedIn jest pusta.',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] Nie określono połączenia LinkedIn.',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => 'Poświadczenia aplikacji LinkedIn nie są skonfigurowane.',
+    'The LinkedIn access token has expired. Please reconnect.' => 'Token dostępu LinkedIn wygasł. Połącz ponownie.',
+    'The LinkedIn connection no longer exists.' => 'Połączenie LinkedIn już nie istnieje.',
+    'My LinkedIn Profile' => 'Mój profil LinkedIn',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] Odbiorca "{name}" nie ma połączenia LinkedIn.',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] Skonfigurowane połączenie LinkedIn już nie istnieje (uid: {uid}).',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => 'Wideo nie jest jeszcze obsługiwane na {channel}.',
     'The image could not be resized to fit.' => 'Nie udało się zmienić rozmiaru obrazu, aby pasował.',
+    'The image could not be read.' => 'Nie można odczytać obrazu.',
+    'The image failed to upload.' => 'Nie udało się przesłać obrazu.',
+    'The upload response had no media ID.' => 'Odpowiedź przesyłania nie zawierała ID multimediów.',
+    'The upload response had no blob.' => 'Odpowiedź przesyłania nie zawierała bloba.',
     '[NOT ATTACHED] Unable to attach image. {reason}' => '[NIE DOŁĄCZONO] Nie można dołączyć obrazu. {reason}',
 
     // Recipient warnings

@@ -606,8 +606,10 @@ class Notification extends Element
         // Re-bind class to defend against stale persisted configs
         $config['class'] = $class;
 
-        // Seed elementType so per-field rules (Lightswitch, Categories, etc.) register
+        // Get the element class so per-field rules (Lightswitch, Categories, etc.) register
         $elementClass = NotifierPlugin::$plugin->events->getElementClassForEventType($forEventType);
+
+        // If an element class was resolved, seed it
         if ($elementClass) {
             $config['elementType'] = $elementClass;
         }
@@ -625,7 +627,10 @@ class Notification extends Element
 
         // Scope to selected entry types when present (Craft 5 only; Craft 4 falls back to all layouts)
         if (Compat::isCraft5()) {
+            // Get the condition field layouts
             $layouts = $this->_resolveConditionFieldLayouts($forEventType);
+
+            // If any layouts resolved, apply them
             if ($layouts) {
                 $condition->setFieldLayouts($layouts);
             }
@@ -665,7 +670,10 @@ class Notification extends Element
         // Collect each selected entry type's field layout
         $layouts = [];
         foreach ($entryTypeIds as $typeId) {
+            // Get the entry type
             $entryType = $entriesService->getEntryTypeById((int) $typeId);
+
+            // If the entry type exists, collect its field layout
             if ($entryType) {
                 $layouts[] = $entryType->getFieldLayout();
             }

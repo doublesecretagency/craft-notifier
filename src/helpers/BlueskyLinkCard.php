@@ -113,14 +113,18 @@ abstract class BlueskyLinkCard
                 'timeout'         => static::FETCH_TIMEOUT,
             ]);
 
-            // On a non-2xx response, bail
+            // Get the response status code
             $status = $response->getStatusCode();
+
+            // If the response is non-2xx, bail
             if ($status < 200 || $status >= 300) {
                 return null;
             }
 
-            // On a non-HTML body, bail
+            // Get the response content type
             $contentType = strtolower($response->getHeaderLine('Content-Type'));
+
+            // If the body isn't HTML, bail
             if (!str_contains($contentType, 'text/html') && !str_contains($contentType, 'application/xhtml')) {
                 return null;
             }
@@ -256,8 +260,10 @@ abstract class BlueskyLinkCard
             return $url;
         }
 
-        // If there's no base host, return the URL as-is
+        // Get the base host
         $host = parse_url($base, PHP_URL_HOST);
+
+        // If there's no base host, return the URL as-is
         if (!$host) {
             return $url;
         }

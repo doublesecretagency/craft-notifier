@@ -396,6 +396,7 @@ class OptionsTest extends TestCase
         $this->assertArrayHasKey('mqtt', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('discord', Options::MESSAGE_TYPE);
         $this->assertArrayHasKey('mastodon', Options::MESSAGE_TYPE);
+        $this->assertArrayHasKey('linkedin', Options::MESSAGE_TYPE);
     }
 
     public function testMessageTypeIconCoversEveryMessageType(): void
@@ -423,6 +424,7 @@ class OptionsTest extends TestCase
         $this->assertArrayHasKey('mqtt-topics', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('discord-channels', Options::RECIPIENTS_TYPE);
         $this->assertArrayHasKey('mastodon-accounts', Options::RECIPIENTS_TYPE);
+        $this->assertArrayHasKey('linkedin-accounts', Options::RECIPIENTS_TYPE);
     }
 
     public function testAllowedRecipientTypesMapIsExhaustive(): void
@@ -487,6 +489,12 @@ class OptionsTest extends TestCase
         // Both resolve to Font Awesome brand icons, matching the slack/bluesky precedent.
         $this->assertSame('discord', Options::MESSAGE_TYPE_ICON['discord']);
         $this->assertSame('mastodon', Options::MESSAGE_TYPE_ICON['mastodon']);
+    }
+
+    public function testLinkedinUsesBrandIcon(): void
+    {
+        // LinkedIn resolves to the Font Awesome brand icon, matching the slack/bluesky precedent.
+        $this->assertSame('linkedin', Options::MESSAGE_TYPE_ICON['linkedin']);
     }
 
     public function testMastodonVisibilityMapHasFourLevels(): void

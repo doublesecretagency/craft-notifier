@@ -42,6 +42,7 @@ trait HasChangedOperator
      */
     protected function operatorLabel(string $operator): string
     {
+        // If this is the "has changed" operator, use its label
         if ($operator === self::OPERATOR_HAS_CHANGED) {
             return Craft::t('notifier', 'has changed');
         }
@@ -77,6 +78,7 @@ trait HasChangedOperator
      */
     public function matchElement(ElementInterface $element): bool
     {
+        // If this isn't the "has changed" operator, defer to the parent
         if ($this->operator !== self::OPERATOR_HAS_CHANGED) {
             return parent::matchElement($element);
         }
@@ -95,8 +97,10 @@ trait HasChangedOperator
             }
         }
 
-        // Once Craft has called `markAsClean()`, diff against captured original
+        // Get the captured original (set once Craft has called `markAsClean()`)
         $original = Originals::get($element);
+
+        // If there's no captured original, nothing changed
         if (!$original) {
             return false;
         }
@@ -105,6 +109,8 @@ trait HasChangedOperator
             // Serialize first; raw object values can have cyclic refs that crash `!=`
             $current = $field->serializeValue($element->getFieldValue($field->handle), $element);
             $previous = $field->serializeValue($original->getFieldValue($field->handle), $original);
+
+            // If the serialized values differ, the field changed
             if ($current != $previous) {
                 return true;
             }

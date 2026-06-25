@@ -311,6 +311,10 @@ return [
     'Visibility' => 'Görünürlük',
     'Who will be able to see this post?' => 'Bu gönderiyi kimler görebilir?',
 
+    // Message tab: LinkedIn
+    'LinkedIn' => 'LinkedIn',
+    'The text of your LinkedIn post.' => 'LinkedIn gönderinizin metni.',
+
     // Message tab: MQTT
     'Payload' => 'Yük',
     'The JSON or plain text message published to the MQTT topic.' => 'MQTT konusunda yayınlanan JSON veya düz metin mesajı.',
@@ -362,6 +366,12 @@ return [
     'No MQTT topics configured. Topics can only be added in an environment that allows administrative changes.' => 'Yapılandırılmış MQTT konusu yok. Konular yalnızca yönetimsel değişikliklere izin veren bir ortamda eklenebilir.',
     'Not a valid topic. Must not be empty or contain the `+` or `#` wildcards.' => 'Geçerli bir konu değil. Boş olamaz veya `+` ya da `#` joker karakterlerini içeremez.',
 
+    // Recipients tab: LinkedIn picker
+    'Select LinkedIn account(s)' => 'LinkedIn hesaplarını seçin',
+    'Which page or member should post this message?' => 'Bu mesajı hangi sayfa veya üye yayınlamalı?',
+    'No LinkedIn accounts connected. Connect one in [Settings → LinkedIn]({url}).' => 'Bağlı LinkedIn hesabı yok. [Ayarlar → LinkedIn]({url}) bölümünden bir tane bağlayın.',
+    'No LinkedIn accounts connected. Accounts can only be connected in an environment that allows administrative changes.' => 'Bağlı LinkedIn hesabı yok. Hesaplar yalnızca yönetimsel değişikliklere izin veren bir ortamda bağlanabilir.',
+
     // Recipients tab: dynamic recipients snippet
     'Twig Snippet to Determine Recipients' => 'Alıcıları belirleyen Twig parçacığı',
     'Enter a custom Twig snippet to [determine who will receive the message]({url}).' => 'Mesajı [kimin alacağını belirlemek]({url}) için özel bir Twig parçacığı girin.',
@@ -382,6 +392,13 @@ return [
     'Bluesky' => 'Bluesky',
     'Mastodon' => 'Mastodon',
     'MQTT' => 'MQTT',
+
+    // Settings: nav group headings
+    'Push Notifications' => 'Anlık bildirimler',
+    'Chat Platforms' => 'Sohbet platformları',
+    'Social Media' => 'Sosyal medya',
+    'Internet of Things' => 'Nesnelerin interneti',
+    'Expand {heading}' => '{heading} bölümünü genişlet',
 
     // Settings: shared intro lines
     'Consult the [{name} setup guide]({url}) for complete instructions.' => 'Eksiksiz talimatlar için [{name} kurulum kılavuzuna]({url}) bakın.',
@@ -493,6 +510,31 @@ return [
     'Instance URL' => 'Instance URL',
     'Access Token' => 'Erişim Belirteci',
 
+    // Settings: LinkedIn
+    'Publish posts to your [LinkedIn](https://linkedin.com) profile.' => '[LinkedIn](https://linkedin.com) profilinize gönderi yayınlayın.',
+    'The Client ID of your LinkedIn app.' => 'LinkedIn uygulamanızın İstemci Kimliği.',
+    'Client Secret' => 'İstemci Gizli Anahtarı',
+    'The Primary Client Secret of your LinkedIn app.' => 'LinkedIn uygulamanızın Birincil İstemci Gizli Anahtarı.',
+    'Enable organization posting' => 'Kuruluş gönderimini etkinleştir',
+    'Copy this redirect URL' => 'Bu yönlendirme URL\'sini kopyalayın',
+    'When configuring the LinkedIn app, <strong>copy this URL</strong> to use as an "Authorized redirect URL".' => 'LinkedIn uygulamasını yapılandırırken <strong>bu URL\'yi kopyalayın</strong> ve "Authorized redirect URL" olarak kullanın.',
+    'Also request access to post as organization pages you administer. Requires Community Management API approval from LinkedIn.' => 'Yönettiğiniz kuruluş sayfaları olarak gönderi yapmak için de erişim isteyin. LinkedIn\'den Community Management API onayı gerektirir.',
+    'Connections' => 'Bağlantılar',
+    'Each connection becomes available as a recipient on the **Recipients** tab when you set up a notification.' => 'Bir bildirim ayarladığınızda her bağlantı **Alıcılar** sekmesinde alıcı olarak kullanılabilir hale gelir.',
+    'Account' => 'Hesap',
+    'Type' => 'Tür',
+    'Status' => 'Durum',
+    'Organization' => 'Kuruluş',
+    'Member' => 'Üye',
+    'Reconnect needed' => 'Yeniden bağlanma gerekli',
+    'Expires' => 'Sona eriyor',
+    'Connected' => 'Bağlandı',
+    'Disconnect' => 'Bağlantıyı kes',
+    'No LinkedIn accounts are connected yet.' => 'Henüz bağlı LinkedIn hesabı yok.',
+    'Connect to LinkedIn' => 'LinkedIn\'e bağlan',
+    'Provide valid credentials to connect with LinkedIn.' => 'LinkedIn\'e bağlanmak için geçerli kimlik bilgileri girin.',
+    'Disconnect this LinkedIn account?' => 'Bu LinkedIn hesabının bağlantısı kesilsin mi?',
+
     // Settings: MQTT
     'Publish messages to an MQTT broker, handy for IoT and home-automation setups.' => 'Bir MQTT aracısına (broker) mesaj yayınlayın; IoT ve ev otomasyonu kurulumları için kullanışlıdır.',
     'Host' => 'Ana bilgisayar',
@@ -574,6 +616,14 @@ return [
     'Successfully authenticated as @{handle}. No posts were made.' => '@{handle} olarak kimlik doğrulaması başarılı. Hiçbir gönderi yapılmadı.',
     'Broker host is not configured.' => 'Broker ana bilgisayarı yapılandırılmadı.',
 
+    // Runtime: LinkedIn connect flow
+    'Add your LinkedIn app credentials before connecting.' => 'Bağlanmadan önce LinkedIn uygulama kimlik bilgilerinizi ekleyin.',
+    'LinkedIn authorization failed: {error}' => 'LinkedIn yetkilendirmesi başarısız oldu: {error}',
+    'LinkedIn authorization failed: invalid state.' => 'LinkedIn yetkilendirmesi başarısız oldu: geçersiz durum.',
+    'LinkedIn authorization failed: no code returned.' => 'LinkedIn yetkilendirmesi başarısız oldu: kod döndürülmedi.',
+    'Connected to LinkedIn.' => 'LinkedIn\'e bağlanıldı.',
+    'Disconnected from LinkedIn.' => 'LinkedIn bağlantısı kesildi.',
+
     // Outbound: per-channel send results
     'Successfully sent email message!' => 'E-posta başarıyla gönderildi!',
     'Successfully sent SMS message!' => 'SMS başarıyla gönderildi!',
@@ -592,9 +642,26 @@ return [
     'Successfully sent Mastodon post to "{label}".' => '"{label}" hedefine Mastodon gönderisi başarıyla gönderildi.',
     'Successfully sent MQTT message to topic "{topic}".' => 'MQTT mesajı "{topic}" konusuna gönderildi.',
 
+    // Outbound: LinkedIn send results & skips
+    'Successfully sent LinkedIn post to "{label}".' => '"{label}" hedefine LinkedIn gönderisi başarıyla gönderildi.',
+    '[EMPTY BODY] The LinkedIn post body is empty.' => '[EMPTY BODY] LinkedIn gönderi gövdesi boş.',
+    '[NO RECIPIENT] No LinkedIn connection was specified.' => '[NO RECIPIENT] Hiçbir LinkedIn bağlantısı belirtilmedi.',
+    '[RECONNECT REQUIRED] {reason}' => '[RECONNECT REQUIRED] {reason}',
+    '[REJECTED BY LINKEDIN] {error}' => '[REJECTED BY LINKEDIN] {error}',
+    'LinkedIn app credentials are not configured.' => 'LinkedIn uygulama kimlik bilgileri yapılandırılmamış.',
+    'The LinkedIn access token has expired. Please reconnect.' => 'LinkedIn erişim belirteci sona erdi. Lütfen yeniden bağlanın.',
+    'The LinkedIn connection no longer exists.' => 'LinkedIn bağlantısı artık mevcut değil.',
+    'My LinkedIn Profile' => 'LinkedIn Profilim',
+    '[SKIPPED] Recipient "{name}" has no LinkedIn connection.' => '[SKIPPED] Alıcı "{name}" hiçbir LinkedIn bağlantısına sahip değil.',
+    '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).' => '[SKIPPED] Yapılandırılmış LinkedIn bağlantısı artık mevcut değil (uid: {uid}).',
+
     // Media attachments
     'Videos are not yet supported on {channel}.' => '{channel} üzerinde videolar henüz desteklenmiyor.',
     'The image could not be resized to fit.' => 'Görüntü, sığacak şekilde yeniden boyutlandırılamadı.',
+    'The image could not be read.' => 'Görsel okunamadı.',
+    'The image failed to upload.' => 'Görsel yüklenemedi.',
+    'The upload response had no media ID.' => "Yükleme yanıtında medya ID'si yoktu.",
+    'The upload response had no blob.' => 'Yükleme yanıtında blob yoktu.',
     '[NOT ATTACHED] Unable to attach image. {reason}' => '[EKLENMEDİ] Görüntü eklenemedi. {reason}',
 
     // Recipient warnings

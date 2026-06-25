@@ -58,7 +58,10 @@ class NotificationsController extends Controller
             throw new ForbiddenHttpException(Craft::t('notifier', 'User not authorized to save this notification.'));
         }
 
+        // Set the essentials scenario for the draft save
         $notification->setScenario(Element::SCENARIO_ESSENTIALS);
+
+        // If the draft couldn't be saved, return the failure
         if (!Craft::$app->getDrafts()->saveElementAsDraft($notification, Craft::$app->getUser()->getId(), null, null, false)) {
             return $this->asModelFailure($notification, Craft::t('app', 'Couldn’t create {type}.', [
                 'type' => Notification::lowerDisplayName(),
@@ -73,6 +76,7 @@ class NotificationsController extends Controller
             'cpEditUrl' => $this->request->getIsCpRequest() ? $editUrl : null,
         ]));
 
+        // If the request doesn't accept JSON, redirect to the edit screen
         if (!$this->request->getAcceptsJson()) {
             $response->redirect(UrlHelper::urlWithParams($editUrl, [
                 'fresh' => 1,

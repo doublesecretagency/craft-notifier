@@ -92,19 +92,23 @@ class Events extends Component
         $this->_registerAssetEvents();
         $this->_registerUserEvents();
 
+        // If Craft Commerce is installed, register its order events
         if (class_exists(Order::class)) {
             $this->_registerCommerceOrderEvents();
         }
 
+        // If Craft Commerce is installed, register its product events
         if (class_exists(CommerceProduct::class)) {
             $this->_registerCommerceProductEvents();
         }
 
+        // If Digital Products is installed, register its product and license events
         if (class_exists(DigitalProduct::class)) {
             $this->_registerDigitalProductEvents();
             $this->_registerDigitalProductLicenseEvents();
         }
 
+        // If Solspace Calendar is installed, register its calendar events
         if (class_exists(CalendarEvent::class)) {
             $this->_registerCalendarEventEvents();
         }

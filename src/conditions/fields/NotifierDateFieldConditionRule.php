@@ -44,6 +44,7 @@ class NotifierDateFieldConditionRule extends DateFieldConditionRule
      */
     public function matchElement(ElementInterface $element): bool
     {
+        // If this isn't the "has changed" range type, defer to the parent
         if ($this->rangeType !== self::RANGE_TYPE_HAS_CHANGED) {
             return parent::matchElement($element);
         }
@@ -62,8 +63,10 @@ class NotifierDateFieldConditionRule extends DateFieldConditionRule
             }
         }
 
-        // Once Craft has called `markAsClean()`, diff against captured original
+        // Get the captured original (set once Craft has called `markAsClean()`)
         $original = Originals::get($element);
+
+        // If there's no captured original, nothing changed
         if (!$original) {
             return false;
         }
@@ -72,6 +75,8 @@ class NotifierDateFieldConditionRule extends DateFieldConditionRule
             // Serialize first; raw object values can have cyclic refs that crash `!=`
             $current = $field->serializeValue($element->getFieldValue($field->handle), $element);
             $previous = $field->serializeValue($original->getFieldValue($field->handle), $original);
+
+            // If the serialized values differ, the field changed
             if ($current != $previous) {
                 return true;
             }

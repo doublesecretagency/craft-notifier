@@ -64,6 +64,7 @@ export default defineConfig({
               {text: 'X (Twitter)', link: '/getting-started/integrations/x-twitter'},
               {text: 'Bluesky',  link: '/getting-started/integrations/bluesky'},
               {text: 'Mastodon', link: '/getting-started/integrations/mastodon'},
+              {text: 'LinkedIn', link: '/getting-started/integrations/linkedin'},
             ]},
             {text: 'Internet of Things', items: [
               {text: 'MQTT', link: '/getting-started/integrations/mqtt'},
@@ -132,6 +133,7 @@ export default defineConfig({
               {text: 'X (Twitter)', link: '/messages/types/x-twitter'},
               {text: 'Bluesky',  link: '/messages/types/bluesky'},
               {text: 'Mastodon', link: '/messages/types/mastodon'},
+              {text: 'LinkedIn', link: '/messages/types/linkedin'},
             ]},
             {text: 'Internet of Things', items: [
               {text: 'MQTT', link: '/messages/types/mqtt'},
@@ -176,6 +178,7 @@ export default defineConfig({
               {text: 'X (Twitter) Accounts', link: '/recipients/types/x-twitter-accounts'},
               {text: 'Bluesky Accounts',  link: '/recipients/types/bluesky-accounts'},
               {text: 'Mastodon Accounts', link: '/recipients/types/mastodon-accounts'},
+              {text: 'LinkedIn Accounts', link: '/recipients/types/linkedin-accounts'},
             ]},
             {text: 'Internet of Things', items: [
               {text: 'MQTT Topics', link: '/recipients/types/mqtt-topics'},
@@ -285,6 +288,7 @@ export default defineConfig({
                     {text: 'X (Twitter)', link: '/getting-started/integrations/x-twitter'},
                     {text: 'Bluesky',  link: '/getting-started/integrations/bluesky'},
                     {text: 'Mastodon', link: '/getting-started/integrations/mastodon'},
+                    {text: 'LinkedIn', link: '/getting-started/integrations/linkedin'},
                   ]
                 },
                 {text: 'Internet of Things', collapsed: true,
@@ -423,6 +427,7 @@ export default defineConfig({
                     {text: 'X (Twitter)',        link: '/messages/types/x-twitter'},
                     {text: 'Bluesky',            link: '/messages/types/bluesky'},
                     {text: 'Mastodon',           link: '/messages/types/mastodon'},
+                    {text: 'LinkedIn',           link: '/messages/types/linkedin'},
                   ]
                 },
                 {text: 'Internet of Things', collapsed: true,
@@ -492,6 +497,7 @@ export default defineConfig({
                     {text: 'X (Twitter) Accounts', link: '/recipients/types/x-twitter-accounts'},
                     {text: 'Bluesky Accounts',  link: '/recipients/types/bluesky-accounts'},
                     {text: 'Mastodon Accounts', link: '/recipients/types/mastodon-accounts'},
+                    {text: 'LinkedIn Accounts', link: '/recipients/types/linkedin-accounts'},
                   ]
                 },
                 {text: 'Internet of Things', collapsed: true,

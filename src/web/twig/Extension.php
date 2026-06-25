@@ -128,6 +128,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 'blueskyAccounts'        => ($settings->blueskyAccounts ?? []),
                 'mastodonAccounts'       => ($settings->mastodonAccounts ?? []),
                 'mastodonVisibility'     => Options::MASTODON_VISIBILITY,
+                'linkedinAccounts'       => NotifierPlugin::$plugin->linkedinConnections->listForOptions(),
                 'mqttQos'                => Options::MQTT_QOS,
                 'mqttTopics'             => ($settings->mqttTopics ?? []),
             ],
