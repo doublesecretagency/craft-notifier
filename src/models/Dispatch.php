@@ -659,7 +659,8 @@ class Dispatch extends Model
             $outbound[] = new OutboundEmail(array_merge([
                 'notificationId' => $this->notification->id,
                 'envelopeId' => $envelopeId,
-                'jobInfo' => $jobInfo
+                'jobInfo' => $jobInfo,
+                'recipientName' => ($recipient->name ?? $genericRecipient),
             ], $details));
 
         }
@@ -764,7 +765,8 @@ class Dispatch extends Model
             $outbound[] = new OutboundAnnouncement(array_merge([
                 'notificationId' => $this->notification->id,
                 'envelopeId' => $envelopeId,
-                'jobInfo' => $jobInfo
+                'jobInfo' => $jobInfo,
+                'recipientName' => ($recipient->name ?? $genericRecipient),
             ], $details));
 
         }
@@ -835,7 +837,8 @@ class Dispatch extends Model
         // Put outbound flash message into envelope
         return new OutboundFlash(array_merge([
             'notificationId' => $this->notification->id,
-            'envelopeId' => $envelopeId
+            'envelopeId' => $envelopeId,
+            'recipientName' => ($currentUser->name ?? 'the current user'),
         ], $details));
     }
 
@@ -919,7 +922,8 @@ class Dispatch extends Model
             $outbound[] = new OutboundSms(array_merge([
                 'notificationId' => $this->notification->id,
                 'envelopeId' => $envelopeId,
-                'jobInfo' => $jobInfo
+                'jobInfo' => $jobInfo,
+                'recipientName' => ($recipient->name ?? $genericRecipient),
             ], $details));
 
         }
@@ -1035,6 +1039,7 @@ class Dispatch extends Model
                 'notificationId' => $this->notification->id,
                 'envelopeId'     => $envelopeId,
                 'jobInfo'        => $jobInfo,
+                'recipientName'  => ($recipient->name ?? $recipient->user->username ?? $genericRecipient),
             ], $details));
 
         }

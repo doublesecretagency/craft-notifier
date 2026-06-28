@@ -26,6 +26,11 @@ class OutboundFlash extends BaseEnvelope
 {
 
     /**
+     * @var string|null Display name of the recipient, for the success log.
+     */
+    public ?string $recipientName = null;
+
+    /**
      * @var string Flash type ('success', 'notice', or 'error').
      */
     public string $type = 'notice';
@@ -80,7 +85,7 @@ class OutboundFlash extends BaseEnvelope
         }
 
         // Log success message
-        $notification->log->success(Craft::t('notifier', 'Successfully sent flash message!'), $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully sent a flash message to {name}.', ['name' => $this->recipientName]), $this->envelopeId);
 
         // Return successfully
         return true;

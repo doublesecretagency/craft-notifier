@@ -191,7 +191,7 @@ class OutboundXTwitter extends BaseEnvelope
         }
 
         // Log success
-        $notification->log->success(Craft::t('notifier', 'Successfully sent X (Twitter) post as "{label}".', ['label' => $displayLabel]), $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully posted to X (Twitter) as "{label}" account.', ['label' => $displayLabel]), $this->envelopeId);
 
         // Return success
         return true;

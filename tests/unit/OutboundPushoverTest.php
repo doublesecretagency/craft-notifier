@@ -38,6 +38,7 @@ class OutboundPushoverTest extends TestCase
         $env = new OutboundPushover();
 
         $this->assertNull($env->userKey);
+        $this->assertNull($env->recipientName);
         $this->assertSame('', $env->title);
         $this->assertSame('', $env->body);
     }
@@ -108,5 +109,13 @@ class OutboundPushoverTest extends TestCase
         // Pushover returns an `errors` array on failure; the log reason is joined from it
         $this->assertStringContainsString("\$payload['errors']", $this->pushoverSource);
         $this->assertStringContainsString("implode(', ', \$errors)", $this->pushoverSource);
+    }
+
+    public function testSuccessMessageNamesRecipient(): void
+    {
+        // The success log names the recipient via the {name} placeholder,
+        // populated from the recipientName property the compiler sets.
+        $this->assertStringContainsString('Successfully sent a Pushover notification to {name}.', $this->pushoverSource);
+        $this->assertStringContainsString("'name' => \$this->recipientName", $this->pushoverSource);
     }
 }

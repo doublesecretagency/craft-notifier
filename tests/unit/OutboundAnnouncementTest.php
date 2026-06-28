@@ -53,6 +53,7 @@ class OutboundAnnouncementTest extends TestCase
         $this->assertSame('', $announcement->message);
         // userId defaults to null until the dispatch sets it from the resolved Recipient.
         $this->assertNull($announcement->userId);
+        $this->assertNull($announcement->recipientName);
     }
 
     // ========================================================================= //
@@ -127,5 +128,13 @@ class OutboundAnnouncementTest extends TestCase
         // logs an error and bails rather than inserting a malformed row.
         $this->assertStringContainsString('!$this->userId', $this->announcementSource);
         $this->assertStringContainsString('log->error', $this->announcementSource);
+    }
+
+    public function testSuccessMessageNamesRecipient(): void
+    {
+        // The success log names the recipient via the {name} placeholder,
+        // populated from the recipientName property the compiler sets.
+        $this->assertStringContainsString('Successfully posted an announcement for {name}.', $this->announcementSource);
+        $this->assertStringContainsString("'name' => \$this->recipientName", $this->announcementSource);
     }
 }

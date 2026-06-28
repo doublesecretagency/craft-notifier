@@ -34,6 +34,11 @@ class OutboundSms extends BaseEnvelope
     public ?string $phoneNumber = null;
 
     /**
+     * @var string|null Display name of the recipient, for the success log.
+     */
+    public ?string $recipientName = null;
+
+    /**
      * @var string Rendered message body.
      */
     public string $message = '';
@@ -140,7 +145,7 @@ class OutboundSms extends BaseEnvelope
         }
 
         // Log success message
-        $notification->log->success(Craft::t('notifier', 'Successfully sent SMS message!'), $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully sent an SMS message to {name}.', ['name' => $this->recipientName]), $this->envelopeId);
 
         // Return success
         return true;

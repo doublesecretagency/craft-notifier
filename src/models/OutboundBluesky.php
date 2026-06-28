@@ -172,7 +172,7 @@ class OutboundBluesky extends BaseEnvelope
         // Log success when the publish call returned true
         if ($success) {
             $displayLabel = ($this->label ?: $handle);
-            $notification->log->success(Craft::t('notifier', 'Successfully posted to Bluesky as "{label}".', ['label' => $displayLabel]), $this->envelopeId);
+            $notification->log->success(Craft::t('notifier', 'Successfully posted to Bluesky as "{label}" account.', ['label' => $displayLabel]), $this->envelopeId);
         }
 
         return $success;

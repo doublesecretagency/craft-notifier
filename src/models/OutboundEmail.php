@@ -31,6 +31,11 @@ class OutboundEmail extends BaseEnvelope
     public ?string $to = null;
 
     /**
+     * @var string|null Display name of the recipient, for the success log.
+     */
+    public ?string $recipientName = null;
+
+    /**
      * @var string Email subject line.
      */
     public string $subject = '';
@@ -86,7 +91,7 @@ class OutboundEmail extends BaseEnvelope
         }
 
         // Log success message
-        $notification->log->success(Craft::t('notifier', 'Successfully sent email message!'), $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully sent an email to {name}.', ['name' => $this->recipientName]), $this->envelopeId);
 
         // Return whether message was sent successfully
         return $success;

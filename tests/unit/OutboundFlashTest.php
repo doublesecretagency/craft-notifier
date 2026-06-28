@@ -53,6 +53,7 @@ class OutboundFlashTest extends TestCase
         $this->assertSame('notice', $flash->type);
         $this->assertSame('', $flash->title);
         $this->assertSame('', $flash->message);
+        $this->assertNull($flash->recipientName);
     }
 
     // ========================================================================= //
@@ -122,5 +123,13 @@ class OutboundFlashTest extends TestCase
         // Flash details are run through Markdown so message authors can
         // include basic formatting without HTML.
         $this->assertStringContainsString('Markdown::process', $this->flashSource);
+    }
+
+    public function testSuccessMessageNamesRecipient(): void
+    {
+        // Flash targets the current user, so the success log names them via
+        // the {name} placeholder, populated from the recipientName property.
+        $this->assertStringContainsString('Successfully sent a flash message to {name}.', $this->flashSource);
+        $this->assertStringContainsString("'name' => \$this->recipientName", $this->flashSource);
     }
 }

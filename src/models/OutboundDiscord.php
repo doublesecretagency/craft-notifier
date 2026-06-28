@@ -156,7 +156,7 @@ class OutboundDiscord extends BaseEnvelope
         }
 
         // Log success
-        $notification->log->success(Craft::t('notifier', 'Successfully sent Discord message to "{label}".', ['label' => $displayLabel]), $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully posted to Discord in channel "{label}".', ['label' => $displayLabel]), $this->envelopeId);
 
         // Return success
         return true;

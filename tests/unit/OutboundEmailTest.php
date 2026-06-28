@@ -47,6 +47,8 @@ class OutboundEmailTest extends TestCase
 
         // Recipient address defaults to null
         $this->assertNull($email->to);
+        // Recipient display name defaults to null
+        $this->assertNull($email->recipientName);
         // Subject and body default to empty strings
         $this->assertSame('', $email->subject);
         $this->assertSame('', $email->body);
@@ -133,5 +135,16 @@ class OutboundEmailTest extends TestCase
             '/if\s*\(\s*!\$this->body\s*\)/',
             $source
         );
+    }
+
+    public function testSuccessMessageNamesRecipient(): void
+    {
+        // The success log names the recipient via the {name} placeholder,
+        // populated from the recipientName property the compiler sets.
+        $path = dirname(__DIR__, 2) . '/src/models/OutboundEmail.php';
+        $source = file_get_contents($path);
+
+        $this->assertStringContainsString('Successfully sent an email to {name}.', $source);
+        $this->assertStringContainsString("'name' => \$this->recipientName", $source);
     }
 }

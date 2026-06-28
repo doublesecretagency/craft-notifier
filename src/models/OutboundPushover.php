@@ -39,6 +39,11 @@ class OutboundPushover extends BaseEnvelope
     public ?string $userKey = null;
 
     /**
+     * @var string|null Display name of the recipient, for the success log.
+     */
+    public ?string $recipientName = null;
+
+    /**
      * @var string Rendered Twig title.
      */
     public string $title = '';
@@ -136,7 +141,7 @@ class OutboundPushover extends BaseEnvelope
         }
 
         // Log success
-        $notification->log->success(Craft::t('notifier', 'Successfully sent Pushover message!'), $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully sent a Pushover notification to {name}.', ['name' => $this->recipientName]), $this->envelopeId);
 
         // Return success
         return true;

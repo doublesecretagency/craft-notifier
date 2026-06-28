@@ -159,7 +159,7 @@ class OutboundMastodon extends BaseEnvelope
         }
 
         // Log success
-        $notification->log->success(Craft::t('notifier', 'Successfully sent Mastodon post to "{label}".', ['label' => $displayLabel]), $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully posted to Mastodon as "{label}" account.', ['label' => $displayLabel]), $this->envelopeId);
 
         // Return success
         return true;

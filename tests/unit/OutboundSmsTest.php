@@ -51,6 +51,7 @@ class OutboundSmsTest extends TestCase
         $sms = new OutboundSms();
 
         $this->assertNull($sms->phoneNumber);
+        $this->assertNull($sms->recipientName);
         $this->assertSame('', $sms->message);
     }
 
@@ -131,6 +132,14 @@ class OutboundSmsTest extends TestCase
             '/if\s*\(\s*!\$from\s*\)/',
             $this->smsSource
         );
+    }
+
+    public function testSuccessMessageNamesRecipient(): void
+    {
+        // The success log names the recipient via the {name} placeholder,
+        // populated from the recipientName property the compiler sets.
+        $this->assertStringContainsString('Successfully sent an SMS message to {name}.', $this->smsSource);
+        $this->assertStringContainsString("'name' => \$this->recipientName", $this->smsSource);
     }
 
     // ========================================================================= //

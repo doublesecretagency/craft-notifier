@@ -32,6 +32,11 @@ class OutboundAnnouncement extends BaseEnvelope
     public ?int $userId = null;
 
     /**
+     * @var string|null Display name of the recipient, for the success log.
+     */
+    public ?string $recipientName = null;
+
+    /**
      * @var int|null ID of the Notifier plugin row, resolved once at compile time and carried per envelope so each queue job avoids re-querying.
      */
     public ?int $pluginId = null;
@@ -80,7 +85,7 @@ class OutboundAnnouncement extends BaseEnvelope
             ->execute();
 
         // Log success message
-        $notification->log->success(Craft::t('notifier', 'Successfully posted announcement!'), $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully posted an announcement for {name}.', ['name' => $this->recipientName]), $this->envelopeId);
 
         // Return successfully
         return true;

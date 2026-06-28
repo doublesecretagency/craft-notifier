@@ -158,7 +158,7 @@ class OutboundInstagram extends BaseEnvelope
         }
 
         // Log success
-        $notification->log->success(Craft::t('notifier', 'Successfully posted to "{label}" Instagram account.', ['label' => $displayLabel]), $this->envelopeId);
+        $notification->log->success(Craft::t('notifier', 'Successfully posted to Instagram as "{label}" account.', ['label' => $displayLabel]), $this->envelopeId);
 
         // Return success
         return true;
