@@ -414,8 +414,7 @@ class MessagesServiceTest extends TestCase
         // the case label and the eventConfig key → query method mapping.
         return [
             // event type, eventConfig key, query method
-            ['entries',                   'sections',            'sectionId'],
-            ['entries',                   'entryTypes',          'typeId'],
+            ['entries',                   'sectionEntryTypes',   'andWhere'],
             ['entries',                   'sites',               'siteId'],
             ['assets',                    'volumes',             'volumeId'],
             ['users',                     'userGroups',          'groupId'],

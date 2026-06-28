@@ -382,14 +382,34 @@ class Messages extends Component
         // Apply per-event-type restrictions
         switch ($notification->eventType) {
             case 'entries':
-                // Restrict to configured sections
-                if (!empty($eventConfig['sections'])) {
-                    $query->sectionId($eventConfig['sections']);
+                // Get the selected section + entry type pairs
+                $sectionEntryTypes = ($eventConfig['sectionEntryTypes'] ?? []);
+
+                // If any pairs are configured, restrict to them
+                if (!empty($sectionEntryTypes)) {
+
+                    // Group the selected entry types by section
+                    $typesBySection = [];
+                    foreach ($sectionEntryTypes as $pair) {
+                        [$sectionId, $typeId] = array_pad(explode('-', (string) $pair, 2), 2, null);
+                        if (null !== $sectionId && null !== $typeId) {
+                            $typesBySection[(int) $sectionId][] = (int) $typeId;
+                        }
+                    }
+
+                    // Build an OR of (section AND its selected entry types), so an entry
+                    // must match BOTH a selected section and one of its selected entry types
+                    $orConditions = ['or'];
+                    foreach ($typesBySection as $sectionId => $typeIds) {
+                        $orConditions[] = [
+                            'and',
+                            ['entries.sectionId' => $sectionId],
+                            ['entries.typeId' => $typeIds],
+                        ];
+                    }
+                    $query->andWhere($orConditions);
                 }
-                // Restrict to configured entry types
-                if (!empty($eventConfig['entryTypes'])) {
-                    $query->typeId($eventConfig['entryTypes']);
-                }
+
                 // Restrict to configured sites
                 if (!empty($eventConfig['sites'])) {
                     $query->siteId($eventConfig['sites']);

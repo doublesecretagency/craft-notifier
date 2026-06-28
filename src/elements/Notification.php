@@ -654,12 +654,21 @@ class Notification extends Element
             return [];
         }
 
-        // Get configured entry types
-        $entryTypeIds = ($this->eventConfig['entryTypes'] ?? []);
+        // Get the selected section + entry type pairs
+        $sectionEntryTypes = ($this->eventConfig['sectionEntryTypes'] ?? []);
 
         // If no entry types are scoped, fall back to Craft's default
-        if (!$entryTypeIds) {
+        if (!$sectionEntryTypes) {
             return [];
+        }
+
+        // Collect the distinct entry type IDs from the pairs
+        $entryTypeIds = [];
+        foreach ($sectionEntryTypes as $pair) {
+            $typeId = (explode('-', (string) $pair, 2)[1] ?? null);
+            if (null !== $typeId) {
+                $entryTypeIds[(int) $typeId] = (int) $typeId;
+            }
         }
 
         // Load the entries service (Craft 5: getEntries(), Craft 4: getSections())

@@ -18,9 +18,9 @@ window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-entry-types');
 
         <ul>
 
-            {# Get selected Entry Types #}
-            {% set sections   = (notification.eventConfig.sections   ?? []) %}
-            {% set entryTypes = (notification.eventConfig.entryTypes ?? []) %}
+            {# Get selected sections and section/entry-type pairs #}
+            {% set sections          = (notification.eventConfig.sections          ?? []) %}
+            {% set sectionEntryTypes = (notification.eventConfig.sectionEntryTypes ?? []) %}
 
             {# Loop over available sections #}
             {% for sectionId,section in availableSectionAndEntryTypes() %}
@@ -40,18 +40,20 @@ window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-entry-types');
                     <ul id="section-{{ sectionId }}-nested">
                         {# Loop over available entry types #}
                         {% for typeId,type in section.entryTypes %}
+                            {# Pair a section with one of its entry types (unique per row, even when the same entry type is shared across sections) #}
+                            {% set pair = sectionId ~ '-' ~ typeId %}
                             <li>
                                 <input type="checkbox"
                                     data-group="section-{{ sectionId }}"
                                     class="checkbox checkbox-child"
-                                    id="type-{{ typeId }}"
-                                    name="eventConfig[entryTypes][]"
-                                    value="{{ typeId }}"
-                                    {{ typeId in entryTypes ? 'checked=""'|raw }}
+                                    id="type-{{ pair }}"
+                                    name="eventConfig[sectionEntryTypes][]"
+                                    value="{{ pair }}"
+                                    {{ pair in sectionEntryTypes ? 'checked=""'|raw }}
                                     {{ not sectionChecked ? 'disabled' }}
                                     onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-entry-types')"
                                 >
-                                <label for="type-{{ typeId }}">
+                                <label for="type-{{ pair }}">
                                     {{ type }}
                                 </label>
                             </li>

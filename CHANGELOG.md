@@ -29,6 +29,7 @@
 
 ### Fixed
 - Fixed broken slideout bug.
+- Fixed bug occurring when multiple Sections use the same Entry Type.
 
 ## 3.0.2 - 2026-05-28
 

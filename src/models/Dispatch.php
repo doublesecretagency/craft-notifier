@@ -240,9 +240,8 @@ class Dispatch extends Model
         $element = $this->event->sender;
 
         // Get event config details
-        $sections   = ($this->notification->eventConfig['sections']   ?? []);
-        $entryTypes = ($this->notification->eventConfig['entryTypes'] ?? []);
-        $filters    = ($this->notification->eventConfig['filters']    ?? []);
+        $sectionEntryTypes = ($this->notification->eventConfig['sectionEntryTypes'] ?? []);
+        $filters           = ($this->notification->eventConfig['filters']           ?? []);
 
         // If triggered by an AFTER_SAVE event
         if ('after-save' === $this->notification->event) {
@@ -257,13 +256,9 @@ class Dispatch extends Model
 
         }
 
-        // If not in a valid Section, return false
-        if (!in_array($element->sectionId, $sections, false)) {
-            return false;
-        }
-
-        // If not a valid Entry Type, return false
-        if (!in_array($element->typeId, $entryTypes, false)) {
+        // If the entry's section and entry type pair is not selected, return false
+        // (an entry must match BOTH a selected section and entry type to be valid)
+        if (!in_array("{$element->sectionId}-{$element->typeId}", $sectionEntryTypes, false)) {
             return false;
         }
 
