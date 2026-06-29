@@ -27,4 +27,8 @@ Once you've got the basics set up, you can start building notifications.
 - [Messages](/messages/) are the types of notifications you can send.
 - [Recipients](/recipients/) are the people who will receive each notification.
 
-**Enjoy!** If you have any questions or feedback, feel free to create an issue on [GitHub](https://github.com/doublesecretagency/craft-notifier/issues). 🙏
+## Notifications
+
+For more info, see [Notification Elements...](/elements)
+
+<img class="dropshadow" src="/images/elements/notification-elements.png" alt="The Notifications index, showing several hypothetical example Notifications" style="width:901px; margin-top:30px">
