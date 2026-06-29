@@ -17,6 +17,7 @@ use craft\db\Query;
 use craft\db\Table;
 use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\helpers\NotificationStructure;
+use Throwable;
 
 /**
  * Backfills existing notifications into the manual-order Structure.
@@ -31,43 +32,51 @@ class m260615_120000_notification_structure extends Migration
      */
     public function safeUp(): bool
     {
-        // Ensure the manual-order structure exists
-        $structureId = NotificationStructure::getStructureId();
+        // Wrap the backfill so it can never fail the migration and trigger Craft's data-wiping restore
+        try {
 
-        // If the structure can't be resolved, bail
-        if (!$structureId) {
-            return true;
-        }
+            // Ensure the manual-order structure exists
+            $structureId = NotificationStructure::getStructureId();
 
-        // Get the structures service
-        $structures = Craft::$app->getStructures();
-
-        // Get the element IDs already placed in the structure
-        $placed = (new Query())
-            ->select(['elementId'])
-            ->from([Table::STRUCTUREELEMENTS])
-            ->where(['structureId' => $structureId])
-            ->column($this->db);
-
-        // Flip to a lookup of element IDs already placed
-        $placed = array_flip(array_map('intval', $placed));
-
-        // Get every canonical notification in creation order (oldest first)
-        $notifications = Notification::find()
-            ->status(null)
-            ->orderBy(['id' => SORT_ASC])
-            ->all();
-
-        // Loop through each notification
-        foreach ($notifications as $notification) {
-
-            // If it's already placed in the structure, skip
-            if (isset($placed[(int) $notification->id])) {
-                continue;
+            // If the structure can't be resolved, bail
+            if (!$structureId) {
+                return true;
             }
 
-            // Append it, preserving the existing creation order top-to-bottom
-            $structures->appendToRoot($structureId, $notification);
+            // Get the structures service
+            $structures = Craft::$app->getStructures();
+
+            // Get the element IDs already placed in the structure
+            $placed = (new Query())
+                ->select(['elementId'])
+                ->from([Table::STRUCTUREELEMENTS])
+                ->where(['structureId' => $structureId])
+                ->column($this->db);
+
+            // Flip to a lookup of element IDs already placed
+            $placed = array_flip(array_map('intval', $placed));
+
+            // Get every canonical notification in creation order (oldest first)
+            $notifications = Notification::find()
+                ->status(null)
+                ->orderBy(['id' => SORT_ASC])
+                ->all();
+
+            // Loop through each notification
+            foreach ($notifications as $notification) {
+
+                // If it's already placed in the structure, skip
+                if (isset($placed[(int) $notification->id])) {
+                    continue;
+                }
+
+                // Append it, preserving the existing creation order top-to-bottom
+                $structures->appendToRoot($structureId, $notification);
+            }
+
+        } catch (Throwable $e) {
+            // If the backfill fails, log it instead of failing the migration
+            Craft::warning("Notifier structure backfill skipped: {$e->getMessage()}", __METHOD__);
         }
 
         return true;

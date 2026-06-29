@@ -65,6 +65,12 @@ abstract class NotificationStructure
             }
         }
 
+        // Don't generate a UID that can't be persisted (it would throw, or leak a structure per request)
+        // If no UID is configured on a read-only environment, bail
+        if (!$uid && Craft::$app->getProjectConfig()->readOnly) {
+            return null;
+        }
+
         // Reuse the configured UID, or generate a new one
         $structureUid = ($uid ?: StringHelper::UUID());
 
@@ -96,6 +102,9 @@ abstract class NotificationStructure
     /**
      * Save the structure UID to the plugin settings.
      *
+     * Skipped when the project config is read-only. Writing project config from a
+     * migration on a locked environment throws, which triggers Craft's restore.
+     *
      * @param Settings $settings The current plugin settings.
      * @param string $uid The structure UID to store.
      * @return void
@@ -104,6 +113,11 @@ abstract class NotificationStructure
     {
         // If the UID is already stored, bail
         if ($settings->structureUid === $uid) {
+            return;
+        }
+
+        // If the project config is read-only, bail without writing
+        if (Craft::$app->getProjectConfig()->readOnly) {
             return;
         }
 
