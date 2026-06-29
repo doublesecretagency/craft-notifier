@@ -47,4 +47,4 @@ Everything on the **Message** and **Recipients** tabs is otherwise exercised end
 
 Open [**Utilities > Notification Log**](/logging) to see the result of each test send. Test messages carry a small **TEST** badge:
 
-<img class="dropshadow" src="/images/logs/log-test-badge.png" alt="" style="width:804px; margin-top:10px">
+<img src="/images/logs/log-test-badge.png" alt="" style="width:766px; margin-top:10px">

@@ -8,6 +8,8 @@ Notifier sends a notification whenever something happens in Craft. Pick an [even
 
 When the event fires, Notifier checks any conditions you've set, builds the message from your template, and sends it through the channels you configured. Recipients can be Craft users, dynamically chosen people, or anyone you specify, so the right people hear about the right things at the right time.
 
+<img class="dropshadow" src="/images/getting-started/instructions.png" alt="The notification editor's Event, Message, and Recipients tabs annotated: which event triggers it, what message is sent, and who receives it" style="width:416px; margin-top:30px; margin-bottom:40px">
+
 ## Where to begin
 
 If you're just getting started, the first steps will be:
@@ -24,7 +26,5 @@ Once you've got the basics set up, you can start building notifications.
 - [Events](/events/) are the triggers which cause notifications to send.
 - [Messages](/messages/) are the types of notifications you can send.
 - [Recipients](/recipients/) are the people who will receive each notification.
-
-<img class="dropshadow" src="/images/getting-started/instructions.png" alt="The notification editor's Event, Message, and Recipients tabs annotated: which event triggers it, what message is sent, and who receives it" style="width:416px; margin-top:30px; margin-bottom:40px">
 
 **Enjoy!** If you have any questions or feedback, feel free to create an issue on [GitHub](https://github.com/doublesecretagency/craft-notifier/issues). 🙏
