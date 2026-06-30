@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.1.0 - 2026-06-30
 
 ### Added
 - Added the ability to send a [System Snapshot](https://plugins.doublesecretagency.com/notifier/events/types/system-snapshot/).
