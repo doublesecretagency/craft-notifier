@@ -23,12 +23,14 @@ use craft\digitalproducts\elements\Product as DigitalProduct;
 use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
+use craft\events\DefineHtmlEvent;
 use craft\events\DefineMenuItemsEvent;
 use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use craft\services\Plugins;
@@ -200,9 +202,13 @@ class NotifierPlugin extends Plugin
             $this->_registerUtilities();
             $this->_registerTableAttributes();
             $this->_registerElementActions();
-            // The disclosure action menu only exists in Craft 5
+            // If running Craft 5
             if (Compat::isCraft5()) {
+                // Craft 5: Add buttons to the disclosure action menu
                 $this->_registerActionMenuItems();
+            } else {
+                // Craft 4: Add buttons to the element edit screen
+                $this->_registerAdditionalButtons();
             }
         }
 
@@ -630,6 +636,91 @@ class NotifierPlugin extends Plugin
 })();
 JS, [
                         $view->namespaceInputId($itemId),
+                        (int) $notification->id,
+                        (int) $elementId,
+                        $confirm,
+                        $error,
+                    ]);
+                }
+            }
+        );
+    }
+
+    /**
+     * Register a "Send Notification" button on every supported element's edit screen.
+     *
+     * Craft 4 fallback for the disclosure action menu, which only exists in Craft 5.
+     *
+     * @return void
+     */
+    private function _registerAdditionalButtons(): void
+    {
+        Event::on(
+            Element::class,
+            Element::EVENT_DEFINE_ADDITIONAL_BUTTONS,
+            static function (DefineHtmlEvent $event) {
+                // Get the current user
+                $user = Craft::$app->getUser()->getIdentity();
+                // If the user can't send manual notifications, bail
+                if (!$user || !$user->can('notifier-sendManualNotifications')) {
+                    return;
+                }
+                // Get the element whose edit screen is being built
+                $element = $event->sender;
+                // If the element isn't a saved element, bail
+                if (!($element instanceof ElementInterface) || !$element->id) {
+                    return;
+                }
+                // Get all manually triggered notifications which apply to this element
+                $notifications = NotifierPlugin::$plugin->messages->getManualNotifications($element);
+                // If none apply, append nothing
+                if (!$notifications) {
+                    return;
+                }
+                // Always fire against the canonical element, never a provisional draft
+                $elementId = $element->getCanonicalId();
+                // Confirmation shown before any notification is dispatched
+                $confirm = Craft::t('notifier', 'Are you sure you want to send this notification?');
+                // Generic error shown if the request fails outright
+                $error = Craft::t('app', 'A server error occurred.');
+                // Get the view service
+                $view = Craft::$app->getView();
+                // Append one button per applicable notification (the header HTML is not namespaced)
+                foreach ($notifications as $notification) {
+                    // Unique DOM id for this button
+                    $buttonId = sprintf('notifier-send-%s', mt_rand());
+                    // Label distinguishes multiple manual triggers on the same element
+                    $label = $notification->getManualTriggerLabel();
+                    // Render the button into the edit screen header
+                    $event->html .= Html::tag('button', Html::encode($label), [
+                        'id' => $buttonId,
+                        'type' => 'button',
+                        'class' => 'btn',
+                    ]);
+                    // Wire the button to POST the manual-send action on click
+                    $view->registerJsWithVars(static fn($id, $notificationId, $eId, $confirmMsg, $errorMsg) => <<<JS
+(() => {
+    const btn = $('#' + $id);
+    btn.on('click', () => {
+        if (!window.confirm($confirmMsg)) {
+            return;
+        }
+        Craft.sendActionRequest('POST', 'notifier/notifications/send-manual', {
+            data: {notificationId: $notificationId, elementId: $eId},
+        }).then((response) => {
+            const data = (response.data || {});
+            if (data.success) {
+                Craft.cp.displayNotice(data.message);
+            } else {
+                Craft.cp.displayError(data.message);
+            }
+        }).catch(() => {
+            Craft.cp.displayError($errorMsg);
+        });
+    });
+})();
+JS, [
+                        $buttonId,
                         (int) $notification->id,
                         (int) $elementId,
                         $confirm,

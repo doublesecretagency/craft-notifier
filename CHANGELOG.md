@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- Added manual trigger buttons for Craft 4.
+
 ### Fixed
 - Fixed bug where scheduled event types couldn't filter by section or field conditions.
 

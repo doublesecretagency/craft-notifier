@@ -504,4 +504,33 @@ class NotifierPluginRegistrationTest extends TestCase
         $this->assertStringContainsString('getMessageTypeIcon()', $this->pluginSource);
     }
 
+    public function testHasPrivateRegisterAdditionalButtonsMethod(): void
+    {
+        // The Craft 4 edit-screen button registrar must exist and be private.
+        $this->assertTrue($this->reflection->hasMethod('_registerAdditionalButtons'));
+        $this->assertTrue($this->reflection->getMethod('_registerAdditionalButtons')->isPrivate());
+    }
+
+    public function testAdditionalButtonsRegistrationIsCraft4Only(): void
+    {
+        // Craft 4 has no disclosure action menu but does fire
+        // EVENT_DEFINE_ADDITIONAL_BUTTONS, so the button fallback registers in
+        // the else branch of the Compat::isCraft5() guard.
+        $this->assertMatchesRegularExpression(
+            '/Compat::isCraft5\(\)[\s\S]*?else[\s\S]*?_registerAdditionalButtons/',
+            $this->pluginSource
+        );
+        $this->assertStringContainsString('EVENT_DEFINE_ADDITIONAL_BUTTONS', $this->pluginSource);
+    }
+
+    public function testAdditionalButtonsReuseManualSendPlumbing(): void
+    {
+        // The Craft 4 button reuses the same manual-send plumbing as the Craft 5
+        // menu item: the applicable-notifications lookup and the send-manual action.
+        $this->assertMatchesRegularExpression(
+            '/private function _registerAdditionalButtons\(\)[\s\S]*?getManualNotifications[\s\S]*?notifier\/notifications\/send-manual/',
+            $this->pluginSource
+        );
+    }
+
 }

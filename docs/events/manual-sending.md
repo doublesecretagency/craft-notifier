@@ -14,7 +14,7 @@ This is useful whenever a message shouldn't be tied to a save, a delete, or any 
 
 Manual sending is available for every event type. On the **Event** tab of a notification, choose an event type (Entries, Assets, Users, etc), then select **"When manually triggered"** from the event dropdown.
 
-Once you do, a **Trigger Label** field will appear. Use this label to differentiate manual triggers from each other when you have more than one trigger on the same element type. The label appears on both the element index page, and an individual element's edit screen (Craft 5 only).
+Once you do, a **Trigger Label** field will appear. Use this label to differentiate manual triggers from each other when you have more than one trigger on the same element type. The label appears on both the element index page, and an individual element's edit screen.
 
 For example, you might have two manual notifications for entries: one to "Flag for review" and another to "Submit for approval". The labels help you tell them apart when sending.
 
@@ -24,13 +24,13 @@ Once a manually sent notification is set up, there are three ways to send it:
 
 ### Via an element's edit screen
 
-Open any element the notification applies to. In the action menu (the **⋮** button near the top of the screen), you will find a link to "Send Notification" (or whatever you set the **Trigger Label** to).
+If you did not specify a custom **Trigger Label**, the link or button will read "Send Notification".
+
+Open any element the notification applies to, and look near the top of the screen.
+- **Craft 5:** Look in the action menu (the **⋮** button).
+- **Craft 4:** No action menu exists, so it appears as a separate button.
 
 Since the message goes out to real recipients, you'll then be prompted with a confirmation message before sending.
-
-:::warning Craft 5 Only
-The edit-screen action menu is exclusively a Craft 5 feature. On Craft 4, use the element index or the console command instead.
-:::
 
 ### Via the element index
 
