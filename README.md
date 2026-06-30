@@ -20,38 +20,51 @@ It can best be explained with the following formula:
 When an [EVENT] occurs, send a [MESSAGE] to designated [RECIPIENTS].
 ```
 
-There are endless reasons why you may need a combination of these event/message/recipient types, for example...
+Notifier currently supports [11 event types](https://plugins.doublesecretagency.com/notifier/events/types/) and [15 message types](https://plugins.doublesecretagency.com/notifier/messages/types/). Combine them however you'd like, for example...
 
-- Email a welcome message when a User registers
-- Text the warehouse when an order is paid
-- Send a Slack message when an RSS feed updates
-- Post to Bluesky when a new entry goes live
+<img width="901" src="https://plugins.doublesecretagency.com/notifier/images/elements/notification-elements.png?v=1" alt="Screenshot of a notification list in the control panel">
 
-... and so much more. For more details, see the [complete documentation](https://plugins.doublesecretagency.com/notifier/).
+To see what else Notifier can do, check out the [complete documentation ➡️](https://plugins.doublesecretagency.com/notifier/)
+
+---
 
 ## How It Works
 
+<img width="416" src="https://plugins.doublesecretagency.com/notifier/images/getting-started/instructions.png?v=1" alt="Screenshot of Notification tabs">
+
 ### Event Types
 
-Trigger notifications from a variety of [events](https://plugins.doublesecretagency.com/notifier/events/types/), including Entries, Assets, Users, Craft Commerce, Digital Products, Solspace Calendar, or even watching RSS/JSON feeds.
+Trigger notifications from a variety of [events](https://plugins.doublesecretagency.com/notifier/events/types/) across native Craft elements, third-party plugins, and other data sources.
 
-<img width="416" src="https://plugins.doublesecretagency.com/notifier/images/events/event-types.png?v=1" alt="Screenshot of event type options">
+<img width="416" src="https://plugins.doublesecretagency.com/notifier/images/events/event-types.png?v=2" alt="Screenshot of event type options">
 
 ### Message Types
 
-Regardless of the trigger, you can send a [message](https://plugins.doublesecretagency.com/notifier/messages/types/) via email, SMS, Slack, ntfy, Pushover, Bluesky, a control-panel Announcement, or Flash message.
+Send to a broad selection of [message](https://plugins.doublesecretagency.com/notifier/messages/types/) types, regardless of how the message was triggered.
 
-<img width="416" src="https://plugins.doublesecretagency.com/notifier/images/messages/message-types.png?v=1" alt="Screenshot of message type options">
+<img width="416" src="https://plugins.doublesecretagency.com/notifier/images/messages/message-types.png?v=2" alt="Screenshot of message type options">
 
 ### Recipient Types
 
-Messages can be sent to many [recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/), including [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) for cases where the recipient is determined at runtime.
+Target different [recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/) based on the selected message type. Specify one or more Craft users when relevant.
 
 <img width="416" src="https://plugins.doublesecretagency.com/notifier/images/recipients/recipient-types.png?v=1" alt="Screenshot of recipient type options">
 
-## Write Messages in Twig
+---
 
-All messages can be composed using [normal Twig](https://plugins.doublesecretagency.com/notifier/messages/templating), including a set of [special variables](https://plugins.doublesecretagency.com/notifier/messages/variables) available at runtime. Each message renders through a configurable [Twig sandbox](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox).
+## Highly Flexible Notifications System
+
+In addition to the core `EVENT / MESSAGE / RECIPIENTS` architecture, Notifier is an extremely flexible tool for delivering the right message, to the right person, at the right moment. You can monitor individual fields, write custom messages in Twig, dynamically determine the target of a message, and see a complete log record of what's been sent out.
+
+### Field-Level Conditions
+
+Detect changes to specified fields, and only send a notification when those fields have changed (or match a specific value).
+
+<img width="600" src="https://plugins.doublesecretagency.com/notifier/images/events/field-conditions-has-changed.png?v=1" alt="Screenshot of the condition builder with the has-changed operator">
+
+### Write Messages in Twig
+
+Compose every message with [normal Twig](https://plugins.doublesecretagency.com/notifier/messages/templating), including a set of [special variables](https://plugins.doublesecretagency.com/notifier/messages/variables) available at runtime. Each message renders through a configurable [Twig sandbox](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox).
 
 **Personalize the message**
 
@@ -65,25 +78,19 @@ Hi {{ recipient.firstName }}, the entry "{{ entry.title }}" was just updated.
 The title changed from "{{ original.title }}" to "{{ entry.title }}".
 ```
 
-## Dynamic Recipients
+### Dynamic Recipients
 
-When you need to determine the recipient at runtime, use [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) and pass the target into the `{% setRecipients %}` tag:
+When the recipient depends on the triggering event, [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) allows you to pass the target into the <code>{%&nbsp;setRecipients&nbsp;%}</code> tag. For example, to message the author of a published entry:
 
 ```twig
 {% setRecipients entry.author %}
 ```
 
-## Field-Level Conditions
+### Notification Log
 
-Detect changes to specified fields, and only send a notification when those fields have changed (or match a specific value).
+Every outgoing message is [logged](https://plugins.doublesecretagency.com/notifier/logging), giving you a clear view of how each one was handled. Keep the log size in check with the `logRetentionDays` and `logRetentionRecords` settings.
 
-<img width="600" src="https://plugins.doublesecretagency.com/notifier/images/events/field-conditions-has-changed.png?v=1" alt="Screenshot of the condition builder with the has-changed operator">
-
-## Notification Log
-
-Every outgoing message is [logged](https://plugins.doublesecretagency.com/notifier/logging), giving you a detailed view of how each message was handled. Restrict log growth with the `logRetentionDays` and `logRetentionRecords` settings.
-
-<img width="1184" src="https://plugins.doublesecretagency.com/notifier/images/logs/notification-log.png?v=1" alt="Screenshot of Notification Log">
+<img width="1000" src="https://plugins.doublesecretagency.com/notifier/images/logs/notification-log.png?v=2" alt="Screenshot of Notification Log">
 
 ---
 
