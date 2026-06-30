@@ -163,9 +163,50 @@ class ConditionTemplateGuardsTest extends TestCase
         $source = self::read('craft-commerce-orders.twig');
         $this->assertStringContainsString("targetPrefix: '.craft-commerce-orders-event-'", $source);
         $this->assertMatchesRegularExpression(
-            '/<div class="craft-commerce-orders-event-manually-triggered craft-commerce-orders-event-after-complete-order craft-commerce-orders-event-after-order-paid hidden">/',
+            '/<div class="craft-commerce-orders-event-manually-triggered craft-commerce-orders-event-date-reached craft-commerce-orders-event-after-complete-order craft-commerce-orders-event-after-order-paid hidden">/',
             $source
         );
+    }
+
+    // ========================================================================= //
+    // Time-based events expose the condition builder (date-reached / pending-to-live)
+    // ========================================================================= //
+
+    /**
+     * @return array<string, array{0: string, 1: string}>
+     */
+    public static function dateReachedConditionProvider(): array
+    {
+        // [condition template, the date-reached toggle class it must carry]
+        return [
+            'entries'                   => ['entries/condition.twig', 'entries-event-date-reached'],
+            'assets'                    => ['assets/condition.twig', 'assets-event-date-reached'],
+            'users'                     => ['users/condition.twig', 'users-event-date-reached'],
+            'commerce orders'           => ['craft-commerce-orders.twig', 'craft-commerce-orders-event-date-reached'],
+            'commerce products'         => ['craft-commerce-products/condition.twig', 'craft-commerce-products-event-date-reached'],
+            'digital products products' => ['digital-products-products/condition.twig', 'digital-products-products-event-date-reached'],
+            'digital products licenses' => ['digital-products-licenses/condition.twig', 'digital-products-licenses-event-date-reached'],
+            'solspace calendar'         => ['solspace-calendar-events/condition.twig', 'solspace-calendar-events-event-date-reached'],
+        ];
+    }
+
+    /**
+     * @dataProvider dateReachedConditionProvider
+     */
+    public function testConditionVisibleForDateReachedEvent(string $partial, string $toggleClass): void
+    {
+        // The "When a scheduled date is reached" event must expose the condition
+        // builder, so authors can scope which dated elements actually send.
+        $source = self::read($partial);
+        $this->assertStringContainsString($toggleClass, $source);
+    }
+
+    public function testConditionVisibleForPendingToLiveEvent(): void
+    {
+        // "When an entry changes from Pending to Live" (entries only) must also
+        // expose the condition builder.
+        $source = self::read('entries/condition.twig');
+        $this->assertStringContainsString('entries-event-pending-to-live', $source);
     }
 
     // ========================================================================= //

@@ -388,4 +388,46 @@ class EventFilterTemplatesTest extends TestCase
         );
         $this->assertStringContainsString("{$eventType}-event-manually-triggered", $source);
     }
+
+    // ========================================================================= //
+    // Time-based events expose the element-type filter (Sections & Entry Types, etc.)
+    // ========================================================================= //
+
+    /**
+     * @return array<string, array{0: string, 1: string}>
+     */
+    public static function dateReachedTypeFilterProvider(): array
+    {
+        // [type-filter template, the date-reached toggle class it must carry]
+        return [
+            'entries (sections & entry types)' => ['entries/entry-types.twig', 'entries-event-date-reached'],
+            'assets (volumes)'                 => ['assets/volumes.twig', 'assets-event-date-reached'],
+            'users (groups)'                   => ['users/groups.twig', 'users-event-date-reached'],
+            'commerce products'                => ['craft-commerce-products/productTypes.twig', 'craft-commerce-products-event-date-reached'],
+            'digital products'                 => ['digital-products-products/digitalProductTypes.twig', 'digital-products-products-event-date-reached'],
+            'digital product licenses'         => ['digital-products-licenses/digitalProductTypes.twig', 'digital-products-licenses-event-date-reached'],
+            'solspace calendars'               => ['solspace-calendar-events/calendars.twig', 'solspace-calendar-events-event-date-reached'],
+        ];
+    }
+
+    /**
+     * @dataProvider dateReachedTypeFilterProvider
+     */
+    public function testTypeFilterVisibleForDateReachedEvent(string $template, string $toggleClass): void
+    {
+        // The "When a scheduled date is reached" event must expose the element-type
+        // filter, so a scheduled notification can be scoped the same way a normal
+        // event is. Without the toggle class the filter stays hidden and the
+        // runtime type gate (empty config = no match) drops every dispatch.
+        $source = self::read($template);
+        $this->assertStringContainsString($toggleClass, $source);
+    }
+
+    public function testEntryTypesFilterVisibleForPendingToLiveEvent(): void
+    {
+        // "When an entry changes from Pending to Live" (entries only) must also
+        // expose the Sections & Entry Types filter.
+        $source = self::read('entries/entry-types.twig');
+        $this->assertStringContainsString('entries-event-pending-to-live', $source);
+    }
 }

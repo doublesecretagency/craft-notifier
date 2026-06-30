@@ -133,11 +133,6 @@ class Dispatch extends Model
      */
     public function filterByEventType(): bool
     {
-        // If this is a scheduled event, bail successfully
-        if (in_array($this->notification->event, ['date-reached', 'pending-to-live'], true)) {
-            return true;
-        }
-
         // If this is a feed event, bail successfully
         if ('feed' === $this->notification->eventType) {
             return true;
@@ -260,6 +255,12 @@ class Dispatch extends Model
         // (an entry must match BOTH a selected section and entry type to be valid)
         if (!in_array("{$element->sectionId}-{$element->typeId}", $sectionEntryTypes, false)) {
             return false;
+        }
+
+        // If not a save event, the save-context filters don't apply
+        if (!in_array($this->notification->event, ['after-save', 'after-propagate'], true)) {
+            // Drop any stale filter config so it can't gate a poll-driven or lifecycle dispatch
+            $filters = [];
         }
 
         // Loop through all filters

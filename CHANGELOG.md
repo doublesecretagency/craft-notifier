@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed bug where scheduled event types couldn't filter by section or field conditions.
+
 ## 3.1.0 - 2026-06-30
 
 ### Added
