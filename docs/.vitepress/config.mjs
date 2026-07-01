@@ -1,4 +1,57 @@
 import { defineConfig } from 'vitepress';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+import { existsSync, statSync } from 'node:fs';
+
+// Docs source root (one level up from .vitepress/)
+const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const base = '/notifier/';
+
+// Dev-only plugin mirroring the production nginx canonicalization.
+// A no-trailing-slash directory URL gets a real 301 to its trailing-slash form.
+// Flat clean-URL pages (logging -> logging.md) are served as-is, never redirected.
+const trailingSlashRedirect = {
+  name: 'notifier-docs-trailing-slash',
+  apply: 'serve',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      const [path, query = ''] = (req.url || '/').split('?');
+
+      // If it has an extension or already ends in a slash, hand off
+      if (path.endsWith('/') || /\.[^/]+$/.test(path)) {
+        return next();
+      }
+
+      // If it's outside the docs base, hand off
+      if (!path.startsWith(base)) {
+        return next();
+      }
+
+      // Get the path relative to the docs root
+      const rel = path.slice(base.length);
+      if (!rel) {
+        return next();
+      }
+
+      // If a flat page exists, serve it (no redirect)
+      if (existsSync(resolve(docsRoot, `${rel}.md`))) {
+        return next();
+      }
+
+      // If a real directory page exists, 301 to the trailing-slash form
+      const dir = resolve(docsRoot, rel);
+      if (existsSync(dir) && statSync(dir).isDirectory() && existsSync(resolve(dir, 'index.md'))) {
+        res.statusCode = 301;
+        res.setHeader('Location', `${path}/${query ? `?${query}` : ''}`);
+        res.end();
+        return;
+      }
+
+      // Otherwise hand off (VitePress renders its 404)
+      return next();
+    });
+  },
+};
 
 const metaUrl = 'https://plugins.doublesecretagency.com/notifier/';
 const metaTitle = 'Notifier plugin for Craft CMS';
@@ -27,6 +80,10 @@ export default defineConfig({
   base: '/notifier/',
   cleanUrls: true,
   srcExclude: ['**/_*.md', '_*.md'],
+
+  vite: {
+    plugins: [trailingSlashRedirect],
+  },
 
   themeConfig: {
 
