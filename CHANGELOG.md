@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.1.1 - 2026-07-01
 
 ### Added
 - Added manual trigger buttons for Craft 4.
