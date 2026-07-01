@@ -12,8 +12,12 @@
 namespace doublesecretagency\notifier\helpers;
 
 use Craft;
+use craft\db\Query;
+use craft\db\Table;
 use craft\helpers\StringHelper;
 use craft\models\Structure;
+use craft\services\Structures;
+use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\NotifierPlugin;
 use Throwable;
@@ -95,6 +99,65 @@ abstract class NotificationStructure
 
         // Cache and return the new structure ID
         return static::$_structureId = $structure->id;
+    }
+
+    /**
+     * Place any canonical notifications not yet in the manual-order structure.
+     *
+     * Safe to run on every index render, so it repairs anything the
+     * one-shot migration missed or any later drift.
+     *
+     * @param int $structureId The structure that backs the manual order.
+     * @return void
+     */
+    public static function backfillUnplaced(int $structureId): void
+    {
+        // Get the mutex service
+        $mutex = Craft::$app->getMutex();
+
+        // Lock name for this structure's backfill
+        $lockName = "notifier-structure-backfill-{$structureId}";
+
+        // If another process is already backfilling, bail
+        if (!$mutex->acquire($lockName)) {
+            return;
+        }
+
+        try {
+
+            // Get the structures service
+            $structures = Craft::$app->getStructures();
+
+            // Get the element IDs already placed in the structure
+            $placedIds = (new Query())
+                ->select(['elementId'])
+                ->from([Table::STRUCTUREELEMENTS])
+                ->where(['structureId' => $structureId])
+                ->column();
+
+            // Get every canonical notification, oldest first
+            $query = Notification::find()
+                ->status(null)
+                ->orderBy(['elements.id' => SORT_ASC]);
+
+            // If any are already placed, exclude them
+            if ($placedIds) {
+                $query->andWhere(['not', ['elements.id' => array_map('intval', $placedIds)]]);
+            }
+
+            // Loop through each unplaced notification
+            foreach ($query->all() as $notification) {
+                // Append it, preserving creation order top-to-bottom
+                $structures->appendToRoot($structureId, $notification, Structures::MODE_INSERT);
+            }
+
+        } catch (Throwable $e) {
+            // Never let a placement failure break the caller (index render or migration)
+            Craft::warning("Notifier structure backfill skipped: {$e->getMessage()}", __METHOD__);
+        } finally {
+            // Always release the lock
+            $mutex->release($lockName);
+        }
     }
 
     // ========================================================================= //

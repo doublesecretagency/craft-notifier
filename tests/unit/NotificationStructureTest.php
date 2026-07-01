@@ -20,6 +20,7 @@ class NotificationStructureTest extends TestCase
     private string $elementSource;
     private string $migrationSource;
     private string $pluginSource;
+    private string $helperSource;
 
     protected function setUp(): void
     {
@@ -28,14 +29,17 @@ class NotificationStructureTest extends TestCase
         $elementPath = $root . '/src/elements/Notification.php';
         $migrationPath = $root . '/src/migrations/m260615_120000_notification_structure.php';
         $pluginPath = $root . '/src/NotifierPlugin.php';
+        $helperPath = $root . '/src/helpers/NotificationStructure.php';
 
         $this->assertTrue(file_exists($elementPath), "Notification element should exist at: $elementPath");
         $this->assertTrue(file_exists($migrationPath), "Backfill migration should exist at: $migrationPath");
         $this->assertTrue(file_exists($pluginPath), "Plugin class should exist at: $pluginPath");
+        $this->assertTrue(file_exists($helperPath), "Structure helper should exist at: $helperPath");
 
         $this->elementSource = file_get_contents($elementPath);
         $this->migrationSource = file_get_contents($migrationPath);
         $this->pluginSource = file_get_contents($pluginPath);
+        $this->helperSource = file_get_contents($helperPath);
     }
 
     // ========================================================================= //
@@ -159,26 +163,65 @@ class NotificationStructureTest extends TestCase
     }
 
     // ========================================================================= //
-    // Backfill migration
+    // Self-healing backfill (helper)
     // ========================================================================= //
+
+    public function testHelperExposesBackfillUnplaced(): void
+    {
+        // The shared, idempotent backfill lives on the structure helper.
+        $reflection = new ReflectionClass(NotificationStructure::class);
+        $this->assertTrue($reflection->hasMethod('backfillUnplaced'));
+        $this->assertTrue($reflection->getMethod('backfillUnplaced')->isStatic());
+    }
 
     public function testBackfillAppendsInCreationOrder(): void
     {
         // Existing notifications are appended oldest-first so today's order is preserved.
         $this->assertMatchesRegularExpression(
-            "/orderBy\(\['id' => SORT_ASC\]\)/",
-            $this->migrationSource
+            "/orderBy\(\['elements\.id' => SORT_ASC\]\)/",
+            $this->helperSource
         );
-        $this->assertStringContainsString('appendToRoot', $this->migrationSource);
+        $this->assertStringContainsString('appendToRoot', $this->helperSource);
+    }
+
+    public function testBackfillUsesInsertModeLikeSaveTimePlacement(): void
+    {
+        // Uses Structures::MODE_INSERT, matching the save-time _ensureStructurePlacement().
+        $this->assertStringContainsString('Structures::MODE_INSERT', $this->helperSource);
     }
 
     public function testBackfillSkipsAlreadyPlaced(): void
     {
-        // Re-running must not double-place an element already in the structure.
+        // Re-running must not double-place; the query excludes elements already in the structure.
         $this->assertMatchesRegularExpression(
-            '/isset\(\$placed\[[\s\S]*?continue/',
-            $this->migrationSource
+            "/STRUCTUREELEMENTS[\s\S]*?\['not', \['elements\.id' => array_map/",
+            $this->helperSource
         );
+    }
+
+    public function testBackfillSerializedByMutex(): void
+    {
+        // Concurrent index loads must not both backfill; a mutex serializes the work.
+        $this->assertMatchesRegularExpression(
+            '/getMutex\(\)[\s\S]*?->acquire\(/',
+            $this->helperSource
+        );
+    }
+
+    public function testIndexSelfHealsByBackfilling(): void
+    {
+        // defineSources() places any unplaced notifications on index render, so an
+        // upgraded site repairs itself even if the one-shot migration couldn't run.
+        $this->assertMatchesRegularExpression(
+            '/defineSources[\s\S]*?NotificationStructure::backfillUnplaced\(/',
+            $this->elementSource
+        );
+    }
+
+    public function testMigrationDelegatesToHelperBackfill(): void
+    {
+        // The one-shot upgrade migration delegates to the shared backfill helper.
+        $this->assertStringContainsString('NotificationStructure::backfillUnplaced(', $this->migrationSource);
     }
 
     // ========================================================================= //

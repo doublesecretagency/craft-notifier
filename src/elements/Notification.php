@@ -204,6 +204,9 @@ class Notification extends Element
             ];
         }
 
+        // Place any notifications not yet in the structure
+        NotificationStructure::backfillUnplaced($structureId);
+
         // Single structured source: a flat, drag-to-reorder list
         return [
             [

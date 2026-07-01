@@ -7,6 +7,7 @@
 
 ### Fixed
 - Fixed bug where scheduled event types couldn't filter by section or field conditions.
+- Fixed bug where some notifications couldn't be manually reordered after upgrading.
 
 ## 3.1.0 - 2026-06-30
 
