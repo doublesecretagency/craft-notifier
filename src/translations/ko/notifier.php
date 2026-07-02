@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '{recipient} 에게 {messageType} 을(를) 보내는 중입니다.',
+    'Sending "{title}".' => '"{title}" 보내는 중입니다.',
+    '[invalid recipient]' => '[잘못된 수신자]',
+    'Scanning feed {url}.' => '피드 {url} 을(를) 스캔하는 중입니다.',
     'Adding message to queue.' => '메시지를 대기열에 추가하는 중입니다.',
     'Sending message immediately (bypassing queue).' => '메시지를 즉시 보냅니다 (대기열 우회).',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[이미지 없음] 이미지 첨부 필드가 비어 있습니다.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[이미지 없음] {tag} 태그가 호출되었지만 잘못된 이미지를 반환했습니다.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[이미지 없음] Instagram 게시물을 보낼 수 없습니다. 이미지에 공개 URL이 필요합니다.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[캘린더 없음] 캘린더가 선택되지 않아 이 알림은 트리거되지 않습니다.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[디지털 제품 유형 없음] 디지털 제품 유형이 선택되지 않아 이 알림은 트리거되지 않습니다.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[항목 유형 없음] 섹션 또는 항목 유형이 선택되지 않아 이 알림은 트리거되지 않습니다.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[제품 유형 없음] 제품 유형이 선택되지 않아 이 알림은 트리거되지 않습니다.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[사용자 그룹 없음] 사용자 그룹이 선택되지 않아 이 알림은 트리거되지 않습니다.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[볼륨 없음] 볼륨이 선택되지 않아 이 알림은 트리거되지 않습니다.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[미디어 없음] 이미지 첨부 필드에서 {tag} 태그가 호출되지 않아 이미지가 첨부되지 않았습니다.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[수신자 없음] 동적 수신자 스니펫이 setRecipients를 호출하지 않았습니다.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[수신자 없음] setRecipients가 빈 값으로 호출되었습니다.',

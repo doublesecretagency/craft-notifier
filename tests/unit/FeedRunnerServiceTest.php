@@ -147,4 +147,23 @@ class FeedRunnerServiceTest extends TestCase
             $this->source
         );
     }
+
+    // ========================================================================= //
+    // Feed failure logging
+    // ========================================================================= //
+
+    public function testFeedFailuresNestUnderScanParent(): void
+    {
+        // Every fetch/parse failure seeds a scan parent, so the feed error
+        // never floats as an independent top-level row again.
+        $this->assertStringContainsString('->feedScan($feedUrl)', $this->source);
+    }
+
+    public function testFeedFailuresLogAsWarningsNotErrors(): void
+    {
+        // Feed failures are transient (timeouts, upstream 5xx), so they log
+        // as warnings nested under the scan parent, never as bare errors.
+        $this->assertStringNotContainsString('log->error(', $this->source);
+        $this->assertMatchesRegularExpression('/log->warning\([\s\S]*?\$envelopeId\)/', $this->source);
+    }
 }

@@ -66,6 +66,52 @@ class NotificationLog extends Model
         return $this->_log('envelope', $message, null, $details);
     }
 
+    /**
+     * Log a feed scan as a parent envelope.
+     *
+     * @param string $feedUrl
+     * @return int|null
+     */
+    public function feedScan(string $feedUrl): ?int
+    {
+        // If logging disabled, bail
+        if (!NotifierPlugin::$plugin->getSettings()->loggingEnabled) {
+            return null;
+        }
+
+        // Prune expired log entries before adding a new envelope
+        $this->_prune();
+
+        // Set the feed scan message
+        $message = Craft::t('notifier', 'Scanning feed {url}.', ['url' => $feedUrl]);
+
+        // Log envelope and return ID
+        return $this->_log('envelope', $message, null, []);
+    }
+
+    /**
+     * Log a dispatch as a run-level parent envelope.
+     *
+     * @param string $title
+     * @return int|null
+     */
+    public function dispatchEnvelope(string $title): ?int
+    {
+        // If logging disabled, bail
+        if (!NotifierPlugin::$plugin->getSettings()->loggingEnabled) {
+            return null;
+        }
+
+        // Prune expired log entries before adding a new envelope
+        $this->_prune();
+
+        // Set the dispatch message
+        $message = Craft::t('notifier', 'Sending "{title}".', ['title' => $title]);
+
+        // Log envelope and return ID
+        return $this->_log('envelope', $message, null, []);
+    }
+
     // ========================================================================= //
 
     /**

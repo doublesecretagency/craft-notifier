@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '{recipient} に {messageType} を送信中。',
+    'Sending "{title}".' => '「{title}」を送信中。',
+    '[invalid recipient]' => '[無効な受信者]',
+    'Scanning feed {url}.' => 'フィード {url} をスキャン中。',
     'Adding message to queue.' => 'メッセージをキューに追加中。',
     'Sending message immediately (bypassing queue).' => 'メッセージを即時送信中(キューをバイパス)。',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[画像なし] 画像の添付フィールドが空でした。',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[画像なし] {tag} タグが呼び出されましたが、無効な画像が返されました。',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[画像なし] Instagram の投稿を送信できません。画像には公開 URL が必要です。',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[カレンダーなし] カレンダーが選択されていないため、この通知はトリガーされません。',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[デジタル製品タイプなし] デジタル製品タイプが選択されていないため、この通知はトリガーされません。',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[エントリタイプなし] セクションまたはエントリタイプが選択されていないため、この通知はトリガーされません。',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[製品タイプなし] 製品タイプが選択されていないため、この通知はトリガーされません。',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[ユーザーグループなし] ユーザーグループが選択されていないため、この通知はトリガーされません。',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[ボリュームなし] ボリュームが選択されていないため、この通知はトリガーされません。',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[メディアなし] 画像の添付フィールドで {tag} タグが一度も呼び出されなかったため、画像が添付されませんでした。',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[宛先なし] 動的受信者のスニペットが setRecipients を呼び出しませんでした。',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[宛先なし] setRecipients が空の値で呼び出されました。',

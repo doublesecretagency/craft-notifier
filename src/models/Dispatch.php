@@ -124,6 +124,11 @@ class Dispatch extends Model
      */
     private ?SandboxView $_sandboxView = null;
 
+    /**
+     * @var int|null Memoized run-level parent envelope for dispatch-wide failures.
+     */
+    private ?int $_runEnvelopeId = null;
+
     // ========================================================================= //
 
     /**
@@ -238,6 +243,15 @@ class Dispatch extends Model
         $sectionEntryTypes = ($this->notification->eventConfig['sectionEntryTypes'] ?? []);
         $filters           = ($this->notification->eventConfig['filters']           ?? []);
 
+        // If no sections or entry types are selected, warn and bail
+        if (empty($sectionEntryTypes)) {
+            // Warn under the run-level parent so the misconfiguration is visible in the log
+            $this->notification->log->warning(Craft::t('notifier',
+                '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.'
+            ), $this->runEnvelope());
+            return false;
+        }
+
         // If triggered by an AFTER_SAVE event
         if ('after-save' === $this->notification->event) {
 
@@ -307,6 +321,15 @@ class Dispatch extends Model
         // Get configured Volumes
         $volumes = ($this->notification->eventConfig['volumes'] ?? []);
 
+        // If no volumes are selected, warn and bail
+        if (empty($volumes)) {
+            // Warn under the run-level parent so the misconfiguration is visible in the log
+            $this->notification->log->warning(Craft::t('notifier',
+                '[NO VOLUME] No volumes are selected, this notification will never be triggered.'
+            ), $this->runEnvelope());
+            return false;
+        }
+
         // If not in a valid Volume, return false
         if (!in_array($element->volumeId, $volumes, false)) {
             return false;
@@ -329,8 +352,12 @@ class Dispatch extends Model
         // Get configured User Groups (the value `0` means "Ungrouped Users")
         $userGroups = array_map('intval', ($this->notification->eventConfig['userGroups'] ?? []));
 
-        // If no User Groups are selected, return false
+        // If no user groups are selected, warn and bail
         if (empty($userGroups)) {
+            // Warn under the run-level parent so the misconfiguration is visible in the log
+            $this->notification->log->warning(Craft::t('notifier',
+                '[NO USER GROUP] No user groups are selected, this notification will never be triggered.'
+            ), $this->runEnvelope());
             return false;
         }
 
@@ -375,8 +402,12 @@ class Dispatch extends Model
         // Get configured Product Types
         $productTypes = array_map('intval', ($this->notification->eventConfig['productTypes'] ?? []));
 
-        // If no Product Types are selected, return false
+        // If no product types are selected, warn and bail
         if (empty($productTypes)) {
+            // Warn under the run-level parent so the misconfiguration is visible in the log
+            $this->notification->log->warning(Craft::t('notifier',
+                '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.'
+            ), $this->runEnvelope());
             return false;
         }
 
@@ -407,8 +438,12 @@ class Dispatch extends Model
         // Get configured Digital Product Types
         $productTypes = array_map('intval', ($this->notification->eventConfig['digitalProductTypes'] ?? []));
 
-        // If no Digital Product Types are selected, return false
+        // If no digital product types are selected, warn and bail
         if (empty($productTypes)) {
+            // Warn under the run-level parent so the misconfiguration is visible in the log
+            $this->notification->log->warning(Craft::t('notifier',
+                '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.'
+            ), $this->runEnvelope());
             return false;
         }
 
@@ -440,8 +475,12 @@ class Dispatch extends Model
         // Get configured Digital Product Types (shared filter with digital-products-products)
         $productTypes = array_map('intval', ($this->notification->eventConfig['digitalProductTypes'] ?? []));
 
-        // If no Digital Product Types are selected, return false
+        // If no digital product types are selected, warn and bail
         if (empty($productTypes)) {
+            // Warn under the run-level parent so the misconfiguration is visible in the log
+            $this->notification->log->warning(Craft::t('notifier',
+                '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.'
+            ), $this->runEnvelope());
             return false;
         }
 
@@ -475,8 +514,12 @@ class Dispatch extends Model
         // Get configured Calendars
         $calendars = array_map('intval', ($this->notification->eventConfig['calendars'] ?? []));
 
-        // If no Calendars are selected, return false
+        // If no calendars are selected, warn and bail
         if (empty($calendars)) {
+            // Warn under the run-level parent so the misconfiguration is visible in the log
+            $this->notification->log->warning(Craft::t('notifier',
+                '[NO CALENDAR] No calendars are selected, this notification will never be triggered.'
+            ), $this->runEnvelope());
             return false;
         }
 
@@ -607,7 +650,7 @@ class Dispatch extends Model
 
             // If the recipient has no email address, log and skip
             if (!$recipient->emailAddress) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('an email', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no email address.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
@@ -703,7 +746,7 @@ class Dispatch extends Model
 
             // If the recipient has no associated User, log and skip
             if (!$recipient->user) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('an announcement', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Craft user account.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
@@ -712,7 +755,7 @@ class Dispatch extends Model
 
             // If the User cannot access the control panel, log and skip
             if (!$recipient->user->can('accessCp')) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('an announcement', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" cannot access the control panel.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
@@ -871,7 +914,7 @@ class Dispatch extends Model
 
             // If the recipient has no phone number, log and skip
             if (!$recipient->phoneNumber) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('an SMS message', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no phone number.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
@@ -966,13 +1009,13 @@ class Dispatch extends Model
             if (!$keyFieldHandle) {
                 $this->notification->log->warning(Craft::t('notifier',
                     '[SKIPPED] Pushover user-key field is not configured on this notification.'
-                ));
+                ), $this->runEnvelope());
                 break;
             }
 
             // If the recipient has no User, log and skip (Pushover requires a User profile)
             if (!$recipient->user) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('a Pushover message', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Craft user account.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
@@ -984,7 +1027,7 @@ class Dispatch extends Model
 
             // If user has no key, log [SKIPPED] and continue
             if (!$userKey) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('a Pushover message', ($recipient->name ?? $recipient->user->username ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] User "{name}" has no Pushover key.',
                     ['name' => ($recipient->name ?? $recipient->user->username ?? $genericRecipient)]
                 ));
@@ -1077,7 +1120,7 @@ class Dispatch extends Model
 
             // If the recipient has no topic, log and skip
             if (!$recipient->topic) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('an ntfy message', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no ntfy topic.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
@@ -1177,7 +1220,7 @@ class Dispatch extends Model
 
             // If the recipient has no bot token, log and skip
             if (!$recipient->slackBotToken) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('a Slack message', ($recipient->slackChannelLabel ?? $recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Slack bot token.',
                     ['name' => ($recipient->slackChannelLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
@@ -1186,7 +1229,7 @@ class Dispatch extends Model
 
             // If the recipient has no channel ID, log and skip
             if (!$recipient->slackChannelId) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('a Slack message', ($recipient->slackChannelLabel ?? $recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Slack channel ID.',
                     ['name' => ($recipient->slackChannelLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
@@ -1300,7 +1343,7 @@ class Dispatch extends Model
 
             // If the recipient has no webhook URL, log and skip
             if (!$recipient->discordWebhookUrl) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('a Discord message', ($recipient->discordChannelLabel ?? $recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Discord webhook URL.',
                     ['name' => ($recipient->discordChannelLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
@@ -1409,7 +1452,7 @@ class Dispatch extends Model
 
             // If the recipient is missing credentials, log and skip
             if (!$recipient->facebookPageAccessToken || !$recipient->facebookPageId) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('a Facebook post', ($recipient->facebookPageLabel ?? $recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Facebook credentials.',
                     ['name' => ($recipient->facebookPageLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
@@ -1531,7 +1574,7 @@ class Dispatch extends Model
 
             // If the recipient is missing credentials, log and skip
             if (!$recipient->instagramPageAccessToken || !$recipient->instagramIgUserId) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('an Instagram post', ($recipient->instagramAccountLabel ?? $recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Instagram credentials.',
                     ['name' => ($recipient->instagramAccountLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
@@ -1627,7 +1670,7 @@ class Dispatch extends Model
 
             // If the recipient is missing credentials, log and skip
             if (!$recipient->xTwitterConsumerKey || !$recipient->xTwitterAccessToken) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('an X (Twitter) post', ($recipient->xTwitterLabel ?? $recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no X (Twitter) credentials.',
                     ['name' => ($recipient->xTwitterLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
@@ -1724,7 +1767,7 @@ class Dispatch extends Model
 
             // If the recipient is missing required Bluesky credentials, log and skip
             if (!$recipient->blueskyHandle || !$recipient->blueskyAppPassword) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('a Bluesky post', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Bluesky credentials.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
@@ -1834,7 +1877,7 @@ class Dispatch extends Model
 
             // If the recipient is missing required credentials, log and skip
             if (!$recipient->mastodonInstanceUrl || !$recipient->mastodonAccessToken) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('a Mastodon post', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Mastodon credentials.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
@@ -1935,7 +1978,7 @@ class Dispatch extends Model
 
             // If the recipient is missing connection details, log and skip
             if (!$recipient->linkedinUid || !$recipient->linkedinAuthorUrn) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('a LinkedIn post', ($recipient->linkedinLabel ?? $recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no LinkedIn connection.',
                     ['name' => ($recipient->linkedinLabel ?? $recipient->name ?? $genericRecipient)]
                 ));
@@ -2029,7 +2072,7 @@ class Dispatch extends Model
 
             // If the recipient has no topic, log and skip
             if (!$recipient->topic) {
-                $this->notification->log->warning(Craft::t('notifier',
+                $this->_skipRecipient('an MQTT message', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no MQTT topic.',
                     ['name' => ($recipient->name ?? $genericRecipient)]
                 ));
@@ -2124,7 +2167,7 @@ class Dispatch extends Model
             $this->collectedDynamicData = [];
             // Log the parse error and bail
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
-            $notification->log->error($message);
+            $notification->log->error($message, $this->runEnvelope());
             return false;
         } finally {
             // Restore the previously active dispatch
@@ -2172,7 +2215,7 @@ class Dispatch extends Model
             $this->collectedMedia = [];
             // Log the parse error and bail
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
-            $notification->log->error($message);
+            $notification->log->error($message, $this->runEnvelope());
             return false;
         } finally {
             // Restore the previously active dispatch
@@ -2220,7 +2263,7 @@ class Dispatch extends Model
             $this->collectedDynamicRecipients = [];
             // Log the parse error and bail
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
-            $notification->log->error($message);
+            $notification->log->error($message, $this->runEnvelope());
             return false;
         } finally {
             // Restore the previously active dispatch
@@ -2445,6 +2488,42 @@ class Dispatch extends Model
 
         // Return parsed text
         return $this->_renderObjectTemplate($text, $vars['object'], $vars);
+    }
+
+    /**
+     * Mint a per-recipient envelope for a skipped recipient, then nest the skip under it.
+     *
+     * @param string $messageType
+     * @param string $recipient
+     * @param string $message
+     * @return void
+     */
+    private function _skipRecipient(string $messageType, string $recipient, string $message): void
+    {
+        // Mint this recipient's envelope so the skip nests under it
+        $envelopeId = $this->notification->log->envelope(
+            ['messageType' => $messageType, 'recipient' => $recipient],
+            []
+        );
+
+        // Log the skip under the recipient's envelope
+        $this->notification->log->warning($message, $envelopeId);
+    }
+
+    /**
+     * Get the run-level parent envelope for dispatch-wide failures, minting it once on first use.
+     *
+     * @return int|null
+     */
+    public function runEnvelope(): ?int
+    {
+        // If already minted, return the cached ID
+        if (null !== $this->_runEnvelopeId) {
+            return $this->_runEnvelopeId;
+        }
+
+        // Mint the run-level parent and cache its ID
+        return $this->_runEnvelopeId = $this->notification->log->dispatchEnvelope((string) $this->notification->title);
     }
 
     /**

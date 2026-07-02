@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Wysyłanie {messageType} do {recipient}.',
+    'Sending "{title}".' => 'Wysyłanie "{title}".',
+    '[invalid recipient]' => '[nieprawidłowy odbiorca]',
+    'Scanning feed {url}.' => 'Skanowanie kanału {url}.',
     'Adding message to queue.' => 'Dodawanie wiadomości do kolejki.',
     'Sending message immediately (bypassing queue).' => 'Wysyłanie wiadomości natychmiast (z pominięciem kolejki).',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[BRAK OBRAZU] Pole Załącznik obrazu było puste.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[BRAK OBRAZU] Tag {tag} został wywołany, ale zwrócił nieprawidłowy obraz.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[BRAK OBRAZU] Nie można wysłać posta na Instagramie; obraz wymaga publicznego adresu URL.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[BRAK KALENDARZA] Nie wybrano żadnych kalendarzy, to powiadomienie nigdy nie zostanie wyzwolone.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[BRAK TYPU PRODUKTU CYFROWEGO] Nie wybrano żadnych typów produktów cyfrowych, to powiadomienie nigdy nie zostanie wyzwolone.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[BRAK TYPU WPISU] Nie wybrano żadnych sekcji ani typów wpisów, to powiadomienie nigdy nie zostanie wyzwolone.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[BRAK TYPU PRODUKTU] Nie wybrano żadnych typów produktów, to powiadomienie nigdy nie zostanie wyzwolone.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[BRAK GRUPY UŻYTKOWNIKÓW] Nie wybrano żadnych grup użytkowników, to powiadomienie nigdy nie zostanie wyzwolone.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[BRAK WOLUMINU] Nie wybrano żadnych woluminów, to powiadomienie nigdy nie zostanie wyzwolone.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[BRAK MEDIÓW] Nie załączono żadnego obrazu, ponieważ tag {tag} nigdy nie został wywołany w polu Załącznik obrazu.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[BRAK ODBIORCÓW] Fragment dynamicznych odbiorców nie wywołał setRecipients.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[BRAK ODBIORCÓW] Wywołano setRecipients z pustą wartością.',

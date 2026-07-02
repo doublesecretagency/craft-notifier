@@ -51,9 +51,10 @@ class FeedRunnerFirstScanSeedingTest extends TestCase
     public function testParseFailureLogsAndBailsWithoutClaimingMarker(): void
     {
         // The catch block for FeedParseException lives inside _fetchAndParse,
-        // and must log via the notification log and return null.
+        // and must log the failure as a warning nested under a feed scan
+        // parent, then return null.
         $this->assertMatchesRegularExpression(
-            "/catch\s*\(\s*FeedParseException[\s\S]*?log->error\([\s\S]*?return null;[\s\S]*?\}/",
+            "/catch\s*\(\s*FeedParseException[\s\S]*?log->feedScan\([\s\S]*?log->warning\([\s\S]*?return null;[\s\S]*?\}/",
             $this->source
         );
 

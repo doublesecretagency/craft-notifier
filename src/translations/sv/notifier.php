@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Skickar {messageType} till {recipient}.',
+    'Sending "{title}".' => 'Skickar "{title}".',
+    '[invalid recipient]' => '[ogiltig mottagare]',
+    'Scanning feed {url}.' => 'Skannar flödet {url}.',
     'Adding message to queue.' => 'Lägger till meddelandet i kön.',
     'Sending message immediately (bypassing queue).' => 'Skickar meddelandet direkt (köen kringgås).',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[BILD SAKNAS] Fältet Bildbilaga var tomt.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[BILD SAKNAS] {tag}-taggen anropades men returnerade en ogiltig bild.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[BILD SAKNAS] Det går inte att skicka Instagram-inlägget; bilden behöver en offentlig URL.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[INGEN KALENDER] Inga kalendrar är valda, den här aviseringen utlöses aldrig.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[INGEN DIGITAL PRODUKTTYP] Inga digitala produkttyper är valda, den här aviseringen utlöses aldrig.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[INGEN POSTTYP] Inga sektioner eller posttyper är valda, den här aviseringen utlöses aldrig.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[INGEN PRODUKTTYP] Inga produkttyper är valda, den här aviseringen utlöses aldrig.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[INGEN ANVÄNDARGRUPP] Inga användargrupper är valda, den här aviseringen utlöses aldrig.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[INGEN VOLYM] Inga volymer är valda, den här aviseringen utlöses aldrig.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[INGA MEDIER] Ingen bild bifogades eftersom {tag}-taggen aldrig anropades i fältet Bildbilaga.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[INGA MOTTAGARE] Kodavsnittet för dynamiska mottagare anropade inte setRecipients.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[INGA MOTTAGARE] setRecipients anropades med ett tomt värde.',

@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Envoi de {messageType} à {recipient}.',
+    'Sending "{title}".' => 'Envoi de "{title}".',
+    '[invalid recipient]' => '[destinataire invalide]',
+    'Scanning feed {url}.' => 'Analyse du flux {url}.',
     'Adding message to queue.' => "Ajout du message à la file d'attente.",
     'Sending message immediately (bypassing queue).' => "Envoi du message immédiatement (la file d'attente est contournée).",
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[IMAGE MANQUANTE] Le champ Pièce jointe image était vide.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[IMAGE MANQUANTE] La balise {tag} a été invoquée, mais a renvoyé une image non valide.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[IMAGE MANQUANTE] Impossible d’envoyer la publication Instagram ; l’image nécessite une URL publique.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => "[AUCUN CALENDRIER] Aucun calendrier n'est sélectionné, cette notification ne sera jamais déclenchée.",
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => "[AUCUN TYPE DE PRODUIT NUMÉRIQUE] Aucun type de produit numérique n'est sélectionné, cette notification ne sera jamais déclenchée.",
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => "[AUCUN TYPE D'ENTRÉE] Aucune section ni aucun type d'entrée n'est sélectionné, cette notification ne sera jamais déclenchée.",
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => "[AUCUN TYPE DE PRODUIT] Aucun type de produit n'est sélectionné, cette notification ne sera jamais déclenchée.",
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => "[AUCUN GROUPE D'UTILISATEURS] Aucun groupe d'utilisateurs n'est sélectionné, cette notification ne sera jamais déclenchée.",
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => "[AUCUN VOLUME] Aucun volume n'est sélectionné, cette notification ne sera jamais déclenchée.",
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[AUCUN MÉDIA] Aucune image n’a été jointe, car la balise {tag} n’a jamais été invoquée dans le champ Pièce jointe image.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[AUCUN DESTINATAIRE] L’extrait de destinataires dynamiques n’a pas appelé setRecipients.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[AUCUN DESTINATAIRE] setRecipients a été appelé avec une valeur vide.',

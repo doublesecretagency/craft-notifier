@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '{recipient} alıcısına {messageType} gönderiliyor.',
+    'Sending "{title}".' => '"{title}" gönderiliyor.',
+    '[invalid recipient]' => '[geçersiz alıcı]',
+    'Scanning feed {url}.' => '{url} beslemesi taranıyor.',
     'Adding message to queue.' => 'Mesaj kuyruğa ekleniyor.',
     'Sending message immediately (bypassing queue).' => 'Mesaj hemen gönderiliyor (kuyruk atlanıyor).',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[GÖRSEL EKSİK] Görsel eki alanı boştu.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[GÖRSEL EKSİK] {tag} etiketi çağrıldı ancak geçersiz bir görsel döndürdü.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[GÖRSEL EKSİK] Instagram gönderisi gönderilemiyor; görselin herkese açık bir URL’ye ihtiyacı var.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[TAKVİM YOK] Hiçbir takvim seçilmedi, bu bildirim asla tetiklenmez.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[DİJİTAL ÜRÜN TÜRÜ YOK] Hiçbir dijital ürün türü seçilmedi, bu bildirim asla tetiklenmez.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[GİRİŞ TÜRÜ YOK] Hiçbir bölüm veya giriş türü seçilmedi, bu bildirim asla tetiklenmez.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[ÜRÜN TÜRÜ YOK] Hiçbir ürün türü seçilmedi, bu bildirim asla tetiklenmez.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[KULLANICI GRUBU YOK] Hiçbir kullanıcı grubu seçilmedi, bu bildirim asla tetiklenmez.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[BİRİM YOK] Hiçbir birim seçilmedi, bu bildirim asla tetiklenmez.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[MEDYA YOK] Görsel eki alanında {tag} etiketi hiç çağrılmadığı için hiçbir görsel eklenmedi.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[ALICI YOK] Dinamik alıcılar snippet’i setRecipients’i çağırmadı.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[ALICI YOK] setRecipients boş bir değerle çağrıldı.',

@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '{messageType} verzenden naar {recipient}.',
+    'Sending "{title}".' => '"{title}" verzenden.',
+    '[invalid recipient]' => '[ongeldige ontvanger]',
+    'Scanning feed {url}.' => 'Feed {url} scannen.',
     'Adding message to queue.' => 'Bericht aan wachtrij toevoegen.',
     'Sending message immediately (bypassing queue).' => 'Bericht direct verzenden (wachtrij overslaan).',
 
@@ -730,6 +733,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[ONTBREKENDE AFBEELDING] Het veld Afbeeldingsbijlage was leeg.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[ONTBREKENDE AFBEELDING] De {tag}-tag is aangeroepen, maar gaf een ongeldige afbeelding terug.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[ONTBREKENDE AFBEELDING] Kan Instagram-bericht niet verzenden; de afbeelding heeft een openbare URL nodig.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[GEEN KALENDER] Er zijn geen kalenders geselecteerd, deze melding wordt nooit geactiveerd.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[GEEN DIGITAAL PRODUCTTYPE] Er zijn geen digitale producttypen geselecteerd, deze melding wordt nooit geactiveerd.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[GEEN ITEMTYPE] Er zijn geen secties of itemtypen geselecteerd, deze melding wordt nooit geactiveerd.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[GEEN PRODUCTTYPE] Er zijn geen producttypen geselecteerd, deze melding wordt nooit geactiveerd.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[GEEN GEBRUIKERSGROEP] Er zijn geen gebruikersgroepen geselecteerd, deze melding wordt nooit geactiveerd.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[GEEN VOLUME] Er zijn geen volumes geselecteerd, deze melding wordt nooit geactiveerd.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[GEEN MEDIA] Er is geen afbeelding bijgevoegd omdat de {tag}-tag nooit is aangeroepen in het veld Afbeeldingsbijlage.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[GEEN ONTVANGERS] Het fragment voor dynamische ontvangers heeft setRecipients niet aangeroepen.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[GEEN ONTVANGERS] setRecipients is aangeroepen met een lege waarde.',

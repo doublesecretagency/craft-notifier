@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Improved notification log.
+
 ## 3.1.1 - 2026-07-01
 
 ### Added

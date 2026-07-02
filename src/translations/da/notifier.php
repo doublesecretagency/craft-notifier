@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Sender {messageType} til {recipient}.',
+    'Sending "{title}".' => 'Sender "{title}".',
+    '[invalid recipient]' => '[ugyldig modtager]',
+    'Scanning feed {url}.' => 'Scanner feedet {url}.',
     'Adding message to queue.' => 'Tilføjer besked til køen.',
     'Sending message immediately (bypassing queue).' => 'Sender beskeden med det samme (springer køen over).',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[MANGLENDE BILLEDE] Feltet Billedvedhæftning var tomt.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[MANGLENDE BILLEDE] {tag}-tagget blev kaldt, men returnerede et ugyldigt billede.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[MANGLENDE BILLEDE] Kan ikke sende Instagram-indlæg; billedet kræver en offentlig URL.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[INGEN KALENDER] Der er ikke valgt nogen kalendere, denne notifikation udløses aldrig.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[INGEN DIGITAL PRODUKTTYPE] Der er ikke valgt nogen digitale produkttyper, denne notifikation udløses aldrig.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[INGEN INDTASTNINGSTYPE] Der er ikke valgt nogen sektioner eller indtastningstyper, denne notifikation udløses aldrig.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[INGEN PRODUKTTYPE] Der er ikke valgt nogen produkttyper, denne notifikation udløses aldrig.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[INGEN BRUGERGRUPPE] Der er ikke valgt nogen brugergrupper, denne notifikation udløses aldrig.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[INGEN DISKENHED] Der er ikke valgt nogen diskenheder, denne notifikation udløses aldrig.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[INGEN MEDIER] Der blev ikke vedhæftet noget billede, fordi {tag}-tagget aldrig blev kaldt i feltet Billedvedhæftning.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[INGEN MODTAGERE] Snippet til dynamiske modtagere kaldte ikke setRecipients.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[INGEN MODTAGERE] setRecipients blev kaldt med en tom værdi.',

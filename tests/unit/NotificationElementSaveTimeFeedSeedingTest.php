@@ -139,14 +139,18 @@ class NotificationElementSaveTimeFeedSeedingTest extends TestCase
     public function testEnsureFeedSeedingWrapsInTryCatchSoSaveCannotFail(): void
     {
         // The seed/wipe calls must be inside a try/catch (Throwable) block
-        // whose body logs the failure but does not rethrow.
+        // whose body logs the failure but does not rethrow. The failure is
+        // logged as a warning nested under a feed scan parent, never as an
+        // independent top-level error row.
         $matched = preg_match(
             "/_ensureFeedSeeding[\s\S]*?try\s*\{[\s\S]*?\}\s*catch\s*\(\s*Throwable\s+\\\$e\s*\)\s*\{([\s\S]*?)\}/",
             $this->source,
             $matches
         );
         $this->assertSame(1, $matched, 'Expected to find the try/catch wrapping the seed/wipe calls.');
-        $this->assertStringContainsString('log->error', $matches[1]);
+        $this->assertStringContainsString('log->feedScan', $matches[1]);
+        $this->assertStringContainsString('log->warning', $matches[1]);
+        $this->assertStringNotContainsString('log->error', $matches[1]);
         $this->assertStringNotContainsString('throw', $matches[1]);
     }
 

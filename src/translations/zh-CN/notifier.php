@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '正在向 {recipient} 发送 {messageType}。',
+    'Sending "{title}".' => '正在发送“{title}”。',
+    '[invalid recipient]' => '[无效收件人]',
+    'Scanning feed {url}.' => '正在扫描 Feed {url}。',
     'Adding message to queue.' => '正在将消息添加到队列。',
     'Sending message immediately (bypassing queue).' => '立即发送消息(绕过队列)。',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[缺少图片] 图片附件字段为空。',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[缺少图片] 已调用 {tag} 标签，但返回了无效的图片。',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[缺少图片] 无法发送 Instagram 帖子，图片需要公开的 URL。',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[无日历] 未选择任何日历，此通知将永远不会触发。',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[无数字产品类型] 未选择任何数字产品类型，此通知将永远不会触发。',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[无条目类型] 未选择任何板块或条目类型，此通知将永远不会触发。',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[无产品类型] 未选择任何产品类型，此通知将永远不会触发。',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[无用户组] 未选择任何用户组，此通知将永远不会触发。',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[无卷] 未选择任何卷，此通知将永远不会触发。',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[无媒体] 未附加任何图片，因为从未在图片附件字段中调用 {tag} 标签。',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[无收件人] 动态收件人代码段未调用 setRecipients。',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[无收件人] setRecipients 以空值被调用。',

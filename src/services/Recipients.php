@@ -220,7 +220,8 @@ class Recipients extends Component
         // If setRecipients was never invoked, log a warning and bail
         if (!$dispatch->setRecipientsInvoked) {
             $notification->log->warning(
-                Craft::t('notifier', '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.')
+                Craft::t('notifier', '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.'),
+                $dispatch->runEnvelope()
             );
             return [];
         }
@@ -231,7 +232,8 @@ class Recipients extends Component
         // If setRecipients was called with an empty value, log a warning and bail
         if (!$items) {
             $notification->log->warning(
-                Craft::t('notifier', '[NO RECIPIENTS] setRecipients was called with an empty value.')
+                Craft::t('notifier', '[NO RECIPIENTS] setRecipients was called with an empty value.'),
+                $dispatch->runEnvelope()
             );
             return [];
         }
@@ -257,10 +259,16 @@ class Recipients extends Component
 
             // If item is not a string, log a warning and skip it
             if (!is_string($item)) {
+                // Mint an envelope for the invalid recipient so the skip nests under it
+                $envelopeId = $notification->log->envelope(
+                    ['messageType' => $this->_messageTypeLabel($notification), 'recipient' => Craft::t('notifier', '[invalid recipient]')],
+                    []
+                );
+                // Log the skip under the envelope
                 $notification->log->warning(Craft::t('notifier',
                     '[SKIPPED] Unrecognized recipient of type "{type}".',
                     ['type' => get_debug_type($item)]
-                ));
+                ), $envelopeId);
                 continue;
             }
 
@@ -280,11 +288,15 @@ class Recipients extends Component
                 continue;
             }
 
-            // Otherwise, log a warning and skip
+            // Otherwise, mint an envelope for the invalid recipient and log the skip under it
+            $envelopeId = $notification->log->envelope(
+                ['messageType' => $this->_messageTypeLabel($notification), 'recipient' => Craft::t('notifier', '[invalid recipient]')],
+                []
+            );
             $notification->log->warning(Craft::t('notifier',
                 '[SKIPPED] Unrecognized recipient "{value}".',
                 ['value' => $item]
-            ));
+            ), $envelopeId);
         }
 
         // Return the resolved recipients
@@ -518,10 +530,16 @@ class Recipients extends Component
 
             // If the connection no longer exists (admin disconnected it), log and skip
             if (!$connection) {
+                // Mint an envelope for the gone destination (named by uid) so the skip nests under it
+                $envelopeId = $notification->log->envelope(
+                    ['messageType' => $this->_messageTypeLabel($notification), 'recipient' => $uid],
+                    []
+                );
+                // Log the skip under the envelope
                 $notification->log->warning(Craft::t('notifier',
                     '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).',
                     ['uid' => $uid]
-                ));
+                ), $envelopeId);
                 continue;
             }
 
@@ -597,10 +615,16 @@ class Recipients extends Component
 
             // If the UID is no longer in the list (admin removed it), log and skip
             if (!isset($byUid[$uid])) {
+                // Mint an envelope for the gone destination (named by uid) so the skip nests under it
+                $envelopeId = $notification->log->envelope(
+                    ['messageType' => $this->_messageTypeLabel($notification), 'recipient' => $uid],
+                    []
+                );
+                // Log the skip under the envelope
                 $notification->log->warning(Craft::t('notifier',
                     '[SKIPPED] The configured {kind} no longer exists in the plugin settings (uid: {uid}).',
                     ['kind' => $kind, 'uid' => $uid]
-                ));
+                ), $envelopeId);
                 continue;
             }
 
@@ -636,6 +660,37 @@ class Recipients extends Component
 
         // Return Users as Recipients
         return $users;
+    }
+
+    /**
+     * Get the outbound-envelope phrase for a notification's message type.
+     *
+     * @param Notification $notification
+     * @return string
+     */
+    private function _messageTypeLabel(Notification $notification): string
+    {
+        // Map each message type to its outbound-envelope phrase
+        $labels = [
+            'email'        => 'an email',
+            'announcement' => 'an announcement',
+            'flash'        => 'a flash message',
+            'sms'          => 'an SMS message',
+            'pushover'     => 'a Pushover message',
+            'ntfy'         => 'an ntfy message',
+            'slack'        => 'a Slack message',
+            'discord'      => 'a Discord message',
+            'facebook'     => 'a Facebook post',
+            'instagram'    => 'an Instagram post',
+            'x-twitter'    => 'an X (Twitter) post',
+            'bluesky'      => 'a Bluesky post',
+            'mastodon'     => 'a Mastodon post',
+            'linkedin'     => 'a LinkedIn post',
+            'mqtt'         => 'an MQTT message',
+        ];
+
+        // Return the matching phrase, or a generic fallback
+        return ($labels[$notification->messageType] ?? 'a message');
     }
 
 }

@@ -129,6 +129,86 @@ class NotificationLogModelTest extends TestCase
     }
 
     // ========================================================================= //
+    // Feed scan parent helper
+    // ========================================================================= //
+
+    public function testFeedScanMethodExists(): void
+    {
+        // feedScan() seeds the parent envelope that a failed feed scan's
+        // warning nests under, so it must be public.
+        $this->assertTrue($this->reflection->hasMethod('feedScan'));
+        $this->assertTrue($this->reflection->getMethod('feedScan')->isPublic());
+    }
+
+    public function testFeedScanTakesFeedUrlAndReturnsNullableInt(): void
+    {
+        // feedScan(string $feedUrl): ?int - the returned id becomes the
+        // envelopeId the fetch/parse warning is attached to.
+        $method = $this->reflection->getMethod('feedScan');
+        $params = $method->getParameters();
+
+        $this->assertCount(1, $params);
+        $this->assertSame('feedUrl', $params[0]->getName());
+        $this->assertSame('string', (string) $params[0]->getType());
+
+        $returnType = $method->getReturnType();
+        $this->assertNotNull($returnType);
+        $this->assertSame('int', $returnType->getName());
+        $this->assertTrue($returnType->allowsNull());
+    }
+
+    public function testFeedScanCreatesEnvelopeParent(): void
+    {
+        // The scan message names the feed being scanned, and the row is
+        // written as an 'envelope' parent so warnings can nest beneath it.
+        $this->assertStringContainsString('Scanning feed {url}.', $this->logSource);
+        $this->assertMatchesRegularExpression(
+            "/feedScan[\s\S]*?_log\('envelope'/",
+            $this->logSource
+        );
+    }
+
+    // ========================================================================= //
+    // Dispatch (run-level) parent helper
+    // ========================================================================= //
+
+    public function testDispatchEnvelopeMethodExists(): void
+    {
+        // dispatchEnvelope() seeds the run-level parent that a dispatch-wide
+        // failure (Twig error, no recipients) nests under, so it must be public.
+        $this->assertTrue($this->reflection->hasMethod('dispatchEnvelope'));
+        $this->assertTrue($this->reflection->getMethod('dispatchEnvelope')->isPublic());
+    }
+
+    public function testDispatchEnvelopeTakesTitleAndReturnsNullableInt(): void
+    {
+        // dispatchEnvelope(string $title): ?int - the returned id becomes the
+        // envelopeId the dispatch-wide failure warning/error is attached to.
+        $method = $this->reflection->getMethod('dispatchEnvelope');
+        $params = $method->getParameters();
+
+        $this->assertCount(1, $params);
+        $this->assertSame('title', $params[0]->getName());
+        $this->assertSame('string', (string) $params[0]->getType());
+
+        $returnType = $method->getReturnType();
+        $this->assertNotNull($returnType);
+        $this->assertSame('int', $returnType->getName());
+        $this->assertTrue($returnType->allowsNull());
+    }
+
+    public function testDispatchEnvelopeCreatesEnvelopeParent(): void
+    {
+        // The message names the notification being sent, and the row is written
+        // as an 'envelope' parent so dispatch-wide failures can nest beneath it.
+        $this->assertStringContainsString('Sending "{title}".', $this->logSource);
+        $this->assertMatchesRegularExpression(
+            "/dispatchEnvelope[\s\S]*?_log\('envelope'/",
+            $this->logSource
+        );
+    }
+
+    // ========================================================================= //
     // Private writer
     // ========================================================================= //
 

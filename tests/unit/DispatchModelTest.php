@@ -774,4 +774,58 @@ class DispatchModelTest extends TestCase
             $this->dispatchSource
         );
     }
+
+    // ========================================================================= //
+    // Log nesting: per-recipient skips + run-level parent
+    // ========================================================================= //
+
+    public function testHasSkipRecipientHelper(): void
+    {
+        // Per-recipient skips mint that recipient's envelope, then nest the skip
+        // warning under it, so no skip floats as an independent top-level row.
+        $this->assertTrue($this->reflection->hasMethod('_skipRecipient'));
+        $this->assertMatchesRegularExpression(
+            "/_skipRecipient\([\s\S]*?log->envelope\([\s\S]*?log->warning\(\\\$message, \\\$envelopeId\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testEveryPerRecipientGuardUsesSkipRecipient(): void
+    {
+        // All 17 per-recipient "[SKIPPED]" guards across the compile methods
+        // route through _skipRecipient (never a bare log->warning).
+        $this->assertSame(17, substr_count($this->dispatchSource, '$this->_skipRecipient('));
+    }
+
+    public function testHasRunEnvelopeHelper(): void
+    {
+        // Dispatch-wide failures nest under a lazily-minted run-level parent,
+        // exposed publicly so the recipient resolver can reuse the same one.
+        $this->assertTrue($this->reflection->hasMethod('runEnvelope'));
+        $this->assertTrue($this->reflection->getMethod('runEnvelope')->isPublic());
+        $this->assertMatchesRegularExpression(
+            "/runEnvelope\(\)[\s\S]*?dispatchEnvelope\(/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testTwigErrorsNestUnderRunEnvelope(): void
+    {
+        // Each snippet parse error (Dynamic Data / Media / Recipients) bails
+        // the whole dispatch, so its error nests under the run-level parent.
+        $this->assertSame(
+            3,
+            substr_count($this->dispatchSource, 'log->error($message, $this->runEnvelope())')
+        );
+    }
+
+    public function testPushoverConfigBreakNestsUnderRunEnvelope(): void
+    {
+        // The notification-level Pushover config error (a break, not a skip of
+        // one recipient) nests under the run-level parent.
+        $this->assertMatchesRegularExpression(
+            "/not configured on this notification\.'\s*\n\s*\), \\\$this->runEnvelope\(\)\)/",
+            $this->dispatchSource
+        );
+    }
 }

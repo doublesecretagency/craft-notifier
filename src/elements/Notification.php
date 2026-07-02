@@ -1080,11 +1080,13 @@ class Notification extends Element
             // Attempt the initial seed (idempotent; no-ops if already seeded)
             NotifierPlugin::getInstance()->feedRunner->seedNotification($this);
         } catch (Throwable $e) {
-            // Log the failure but don't block the save
-            $this->log->error(Craft::t('notifier',
+            // Get a feed scan parent for this failure
+            $envelopeId = $this->log->feedScan($newFeedUrl);
+            // Log the failure as a warning, but don't block the save
+            $this->log->warning(Craft::t('notifier',
                 '[FEED ERROR] Initial feed scan failed: {message}',
                 ['message' => $e->getMessage()]
-            ));
+            ), $envelopeId);
         }
     }
 

@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Lähetetään {messageType} kohteelle {recipient}.',
+    'Sending "{title}".' => 'Lähetetään "{title}".',
+    '[invalid recipient]' => '[virheellinen vastaanottaja]',
+    'Scanning feed {url}.' => 'Skannataan syötettä {url}.',
     'Adding message to queue.' => 'Lisätään viesti jonoon.',
     'Sending message immediately (bypassing queue).' => 'Lähetetään viesti välittömästi (jono ohitetaan).',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[KUVA PUUTTUU] Kuvaliite-kenttä oli tyhjä.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[KUVA PUUTTUU] {tag}-tagia kutsuttiin, mutta se palautti virheellisen kuvan.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[KUVA PUUTTUU] Instagram-julkaisua ei voi lähettää; kuva tarvitsee julkisen URL-osoitteen.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[EI KALENTEREITA] Kalentereita ei ole valittu, tämä ilmoitus ei laukea koskaan.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[EI DIGITAALISIA TUOTETYYPPEJÄ] Digitaalisia tuotetyyppejä ei ole valittu, tämä ilmoitus ei laukea koskaan.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[EI MERKINTÄTYYPPEJÄ] Osioita tai merkintätyyppejä ei ole valittu, tämä ilmoitus ei laukea koskaan.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[EI TUOTETYYPPEJÄ] Tuotetyyppejä ei ole valittu, tämä ilmoitus ei laukea koskaan.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[EI KÄYTTÄJÄRYHMIÄ] Käyttäjäryhmiä ei ole valittu, tämä ilmoitus ei laukea koskaan.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[EI TALTIOITA] Taltioita ei ole valittu, tämä ilmoitus ei laukea koskaan.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[EI MEDIAA] Kuvaa ei liitetty, koska {tag}-tagia ei koskaan kutsuttu Kuvaliite-kentässä.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[EI VASTAANOTTAJIA] Dynaamisten vastaanottajien snippet ei kutsunut setRecipients-funktiota.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[EI VASTAANOTTAJIA] setRecipients-funktiota kutsuttiin tyhjällä arvolla.',

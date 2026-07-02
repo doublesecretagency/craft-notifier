@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => '正在向 {recipient} 傳送 {messageType}。',
+    'Sending "{title}".' => '正在傳送「{title}」。',
+    '[invalid recipient]' => '[無效收件人]',
+    'Scanning feed {url}.' => '正在掃描 Feed {url}。',
     'Adding message to queue.' => '正在將訊息加入佇列。',
     'Sending message immediately (bypassing queue).' => '立即傳送訊息(略過佇列)。',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[缺少圖片] 圖片附件欄位為空。',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[缺少圖片] 已呼叫 {tag} 標籤，但傳回了無效的圖片。',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[缺少圖片] 無法傳送 Instagram 貼文，圖片需要公開的 URL。',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[無行事曆] 未選擇任何行事曆，此通知將永遠不會觸發。',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[無數位產品類型] 未選擇任何數位產品類型，此通知將永遠不會觸發。',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[無項目類型] 未選擇任何區塊或項目類型，此通知將永遠不會觸發。',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[無產品類型] 未選擇任何產品類型，此通知將永遠不會觸發。',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[無使用者群組] 未選擇任何使用者群組，此通知將永遠不會觸發。',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[無磁碟區] 未選擇任何磁碟區，此通知將永遠不會觸發。',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[無媒體] 未附加任何圖片，因為從未在圖片附件欄位中呼叫 {tag} 標籤。',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[無收件人] 動態收件人程式碼片段未呼叫 setRecipients。',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[無收件人] setRecipients 以空值被呼叫。',

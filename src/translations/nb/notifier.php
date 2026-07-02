@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Sender {messageType} til {recipient}.',
+    'Sending "{title}".' => 'Sender "{title}".',
+    '[invalid recipient]' => '[ugyldig mottaker]',
+    'Scanning feed {url}.' => 'Skanner feedet {url}.',
     'Adding message to queue.' => 'Legger meldingen i køen.',
     'Sending message immediately (bypassing queue).' => 'Sender meldingen umiddelbart (hopper over køen).',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[MANGLENDE BILDE] Feltet Bildevedlegg var tomt.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[MANGLENDE BILDE] {tag}-taggen ble kalt, men returnerte et ugyldig bilde.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[MANGLENDE BILDE] Kan ikke sende Instagram-innlegg; bildet trenger en offentlig URL.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[INGEN KALENDER] Ingen kalendere er valgt, dette varselet utløses aldri.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[INGEN DIGITAL PRODUKTTYPE] Ingen digitale produkttyper er valgt, dette varselet utløses aldri.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[INGEN OPPFØRINGSTYPE] Ingen seksjoner eller oppføringstyper er valgt, dette varselet utløses aldri.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[INGEN PRODUKTTYPE] Ingen produkttyper er valgt, dette varselet utløses aldri.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[INGEN BRUKERGRUPPE] Ingen brukergrupper er valgt, dette varselet utløses aldri.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[INGEN VOLUM] Ingen volumer er valgt, dette varselet utløses aldri.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[INGEN MEDIER] Det ble ikke lagt ved noe bilde fordi {tag}-taggen aldri ble kalt i feltet Bildevedlegg.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[INGEN MOTTAKERE] Kodebiten for dynamiske mottakere kalte ikke setRecipients.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[INGEN MOTTAKERE] setRecipients ble kalt med en tom verdi.',

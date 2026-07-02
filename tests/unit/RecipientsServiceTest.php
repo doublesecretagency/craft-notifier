@@ -212,4 +212,44 @@ class RecipientsServiceTest extends TestCase
             $this->recipientsSource
         );
     }
+
+    // ========================================================================= //
+    // Resolution-time skips nest under a parent
+    // ========================================================================= //
+
+    public function testNoRecipientsNestUnderRunEnvelope(): void
+    {
+        // Both "[NO RECIPIENTS]" warnings send nothing, so they nest under the
+        // dispatch's run-level parent envelope.
+        $this->assertSame(2, substr_count($this->recipientsSource, '$dispatch->runEnvelope()'));
+    }
+
+    public function testInvalidRecipientMintsOwnEnvelope(): void
+    {
+        // Garbage-input skips get their own single-recipient envelope, named
+        // with a generic placeholder since the reason is in the nested line.
+        $this->assertStringContainsString('[invalid recipient]', $this->recipientsSource);
+        $this->assertMatchesRegularExpression(
+            "/log->envelope\([\s\S]*?_messageTypeLabel\(\\\$notification\)[\s\S]*?'\[invalid recipient\]'/",
+            $this->recipientsSource
+        );
+    }
+
+    public function testGoneDestinationMintsEnvelopeNamedByUid(): void
+    {
+        // Deleted connection/channel skips mint their own envelope, named by
+        // the uid (the only identifier left once the destination is gone).
+        $this->assertMatchesRegularExpression(
+            "/log->envelope\(\s*\n\s*\['messageType' => \\\$this->_messageTypeLabel\(\\\$notification\), 'recipient' => \\\$uid\]/",
+            $this->recipientsSource
+        );
+    }
+
+    public function testHasMessageTypeLabelHelper(): void
+    {
+        // The resolution-time envelopes reuse the same per-channel phrasing as
+        // the outbound envelopes, derived from the notification's message type.
+        $this->assertTrue($this->reflection->hasMethod('_messageTypeLabel'));
+        $this->assertStringContainsString("'linkedin'     => 'a LinkedIn post'", $this->recipientsSource);
+    }
 }

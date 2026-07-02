@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Отправка {messageType} для {recipient}.',
+    'Sending "{title}".' => 'Отправка "{title}".',
+    '[invalid recipient]' => '[неверный получатель]',
+    'Scanning feed {url}.' => 'Сканирование ленты {url}.',
     'Adding message to queue.' => 'Сообщение добавляется в очередь.',
     'Sending message immediately (bypassing queue).' => 'Отправка сообщения немедленно (минуя очередь).',
 
@@ -730,6 +733,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[НЕТ ИЗОБРАЖЕНИЯ] Поле Вложение изображения было пустым.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[НЕТ ИЗОБРАЖЕНИЯ] Тег {tag} был вызван, но вернул недопустимое изображение.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[НЕТ ИЗОБРАЖЕНИЯ] Не удалось отправить публикацию в Instagram: изображению нужен публичный URL.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[НЕТ КАЛЕНДАРЯ] Не выбрано ни одного календаря, это уведомление никогда не сработает.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[НЕТ ТИПА ЦИФРОВОГО ПРОДУКТА] Не выбрано ни одного типа цифрового продукта, это уведомление никогда не сработает.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[НЕТ ТИПА ЗАПИСИ] Не выбрано ни одного раздела или типа записи, это уведомление никогда не сработает.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[НЕТ ТИПА ПРОДУКТА] Не выбрано ни одного типа продукта, это уведомление никогда не сработает.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[НЕТ ГРУППЫ ПОЛЬЗОВАТЕЛЕЙ] Не выбрано ни одной группы пользователей, это уведомление никогда не сработает.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[НЕТ ТОМА] Не выбрано ни одного тома, это уведомление никогда не сработает.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[НЕТ МЕДИА] Изображение не было прикреплено, так как тег {tag} ни разу не был вызван в поле Вложение изображения.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[НЕТ ПОЛУЧАТЕЛЕЙ] Сниппет динамических получателей не вызвал setRecipients.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[НЕТ ПОЛУЧАТЕЛЕЙ] setRecipients был вызван с пустым значением.',

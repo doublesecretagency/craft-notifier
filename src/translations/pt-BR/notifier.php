@@ -582,6 +582,9 @@ return [
 
     // Runtime: dispatch log feedback
     'Sending {messageType} to {recipient}.' => 'Enviando {messageType} para {recipient}.',
+    'Sending "{title}".' => 'Enviando "{title}".',
+    '[invalid recipient]' => '[destinatário inválido]',
+    'Scanning feed {url}.' => 'Varredura do feed {url}.',
     'Adding message to queue.' => 'Adicionando mensagem à fila.',
     'Sending message immediately (bypassing queue).' => 'Enviando a mensagem imediatamente (ignorando a fila).',
 
@@ -729,6 +732,12 @@ return [
     '[MISSING IMAGE] Image Attachment field was empty.' => '[IMAGEM AUSENTE] O campo Anexo de imagem estava vazio.',
     '[MISSING IMAGE] The {tag} tag was called, but returned an invalid image.' => '[IMAGEM AUSENTE] A tag {tag} foi invocada, mas retornou uma imagem inválida.',
     '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.' => '[IMAGEM AUSENTE] Não é possível enviar a publicação do Instagram; a imagem precisa de um URL público.',
+    '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[SEM CALENDÁRIO] Nenhum calendário foi selecionado, esta notificação nunca será acionada.',
+    '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[SEM TIPO DE PRODUTO DIGITAL] Nenhum tipo de produto digital foi selecionado, esta notificação nunca será acionada.',
+    '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[SEM TIPO DE ENTRADA] Nenhuma seção ou tipo de entrada foi selecionado, esta notificação nunca será acionada.',
+    '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[SEM TIPO DE PRODUTO] Nenhum tipo de produto foi selecionado, esta notificação nunca será acionada.',
+    '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[SEM GRUPO DE USUÁRIOS] Nenhum grupo de usuários foi selecionado, esta notificação nunca será acionada.',
+    '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[SEM VOLUME] Nenhum volume foi selecionado, esta notificação nunca será acionada.',
     '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.' => '[SEM MÍDIA] Nenhuma imagem foi anexada porque a tag {tag} nunca foi invocada no campo Anexo de imagem.',
     '[NO RECIPIENTS] The Dynamic Recipients snippet did not call setRecipients.' => '[SEM DESTINATÁRIOS] O snippet de destinatários dinâmicos não chamou setRecipients.',
     '[NO RECIPIENTS] setRecipients was called with an empty value.' => '[SEM DESTINATÁRIOS] setRecipients foi chamado com um valor vazio.',
