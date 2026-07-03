@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.1.2 - 2026-07-02
 
 ### Changed
 - Improved notification log.
