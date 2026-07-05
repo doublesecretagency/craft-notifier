@@ -42,9 +42,14 @@ class FeedRunner extends Component
     private const SEED_MARKER = '___seeded___';
 
     /**
-     * @var int HTTP timeout in seconds for feed fetches.
+     * @var int Default HTTP timeout in seconds for feed fetches.
      */
-    private const FETCH_TIMEOUT = 10;
+    public const FETCH_TIMEOUT = 10;
+
+    /**
+     * @var int Maximum HTTP timeout in seconds a notification may request.
+     */
+    public const MAX_FETCH_TIMEOUT = 60;
 
     /**
      * Run every feed-driven notification and send messages based on any new items.
@@ -244,6 +249,29 @@ class FeedRunner extends Component
     }
 
     /**
+     * Resolve the fetch timeout for a notification, clamped to a safe range.
+     *
+     * A blank or invalid value falls back to the default, and a valid value is
+     * limited to a safe range so a slow feed cannot hang a queue worker.
+     *
+     * @param array $eventConfig
+     * @return int Timeout in seconds.
+     */
+    private static function _resolveTimeout(array $eventConfig): int
+    {
+        // Get the requested timeout
+        $timeout = (int) ($eventConfig['feedTimeout'] ?? 0);
+
+        // If no valid timeout was requested, use the default
+        if ($timeout < 1) {
+            return self::FETCH_TIMEOUT;
+        }
+
+        // Limit the timeout to the maximum
+        return min($timeout, self::MAX_FETCH_TIMEOUT);
+    }
+
+    /**
      * Fetch and parse a feed for a notification, logging any failures.
      *
      * @param Notification $notification
@@ -259,9 +287,12 @@ class FeedRunner extends Component
             return null;
         }
 
+        // Get the fetch timeout for this notification
+        $timeout = static::_resolveTimeout($notification->eventConfig);
+
         // Configure the HTTP client with our preferred Accept and User-Agent headers
         $client = Craft::createGuzzleClient([
-            'timeout' => self::FETCH_TIMEOUT,
+            'timeout' => $timeout,
             'headers' => [
                 'Accept' => 'application/feed+json, application/json, application/atom+xml, application/rss+xml, application/xml, text/xml, */*',
                 'User-Agent' => sprintf(

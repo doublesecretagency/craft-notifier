@@ -66,6 +66,9 @@ return [
     // Event tab: Feed
     'Feed URL' => 'フィード URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '監視する RSS、Atom、または JSON フィードの URL。',
+    'Feed Timeout' => 'フィードのタイムアウト',
+    'How long to wait when the feed is loading slowly. Default {default} seconds, max {max}.' => 'フィードの読み込みが遅いときに待機する時間。デフォルト {default} 秒、最大 {max}。',
+    'seconds' => '秒',
 
     // Event tab: field conditions
     'Field Conditions' => 'フィールド条件',

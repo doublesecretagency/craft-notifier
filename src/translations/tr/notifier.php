@@ -66,6 +66,9 @@ return [
     // Event tab: Feed
     'Feed URL' => "Besleme URL'si",
     'The URL of the RSS, Atom, or JSON feed to watch.' => "İzlenecek RSS, Atom veya JSON beslemesinin URL'si.",
+    'Feed Timeout' => 'Besleme zaman aşımı',
+    'How long to wait when the feed is loading slowly. Default {default} seconds, max {max}.' => 'Besleme yavaş yüklenirken ne kadar bekleneceği. Varsayılan {default} saniye, en fazla {max}.',
+    'seconds' => 'saniye',
 
     // Event tab: field conditions
     'Field Conditions' => 'Alan koşulları',

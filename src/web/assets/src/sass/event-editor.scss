@@ -78,6 +78,11 @@
     color: var(--text-color);
 }
 
+/* Feed Timeout: pin the number input to a fixed width */
+.event-type-feed input[type="number"] {
+    width: 70px;
+}
+
 /* Each .event-type-* wrapper is a flex item of .flex-fields, so a child's
    bottom margin cannot collapse out of it. When the only visible direct
    child is the Event dropdown (no event chosen yet, or no follow-up fields

@@ -66,6 +66,9 @@ return [
     // Event tab: Feed
     'Feed URL' => 'Feed URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '要監控的 RSS、Atom 或 JSON Feed 的 URL。',
+    'Feed Timeout' => 'Feed 逾時',
+    'How long to wait when the feed is loading slowly. Default {default} seconds, max {max}.' => 'Feed 載入緩慢時等待的時長。預設 {default} 秒，最大 {max}。',
+    'seconds' => '秒',
 
     // Event tab: field conditions
     'Field Conditions' => '欄位條件',

@@ -14,6 +14,12 @@ The format will be automatically detected when the feed is parsed. Notifier will
 
 <!--@include: @/events/types/_run-the-schedule.md-->
 
+## Feed Timeout
+
+If watching a slow feed, you can raise the **Feed Timeout** value (defaults to 10 seconds).
+
+Maximum timeout value cannot exceed 60 seconds.
+
 ## Identifying unique items
 
 Each feed item is tracked by its canonical identifier:

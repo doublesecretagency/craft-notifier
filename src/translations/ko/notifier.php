@@ -66,6 +66,9 @@ return [
     // Event tab: Feed
     'Feed URL' => '피드 URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '모니터링할 RSS, Atom 또는 JSON 피드의 URL입니다.',
+    'Feed Timeout' => '피드 제한 시간',
+    'How long to wait when the feed is loading slowly. Default {default} seconds, max {max}.' => '피드가 느리게 로드될 때 기다릴 시간입니다. 기본값 {default}초, 최대 {max}.',
+    'seconds' => '초',
 
     // Event tab: field conditions
     'Field Conditions' => '필드 조건',

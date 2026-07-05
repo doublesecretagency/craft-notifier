@@ -66,6 +66,9 @@ return [
     // Event tab: Feed
     'Feed URL' => 'Syötteen URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'Seurattavan RSS-, Atom- tai JSON-syötteen URL.',
+    'Feed Timeout' => 'Syötteen aikakatkaisu',
+    'How long to wait when the feed is loading slowly. Default {default} seconds, max {max}.' => 'Kuinka kauan odotetaan, kun syöte latautuu hitaasti. Oletus {default} sekuntia, enintään {max}.',
+    'seconds' => 'sekuntia',
 
     // Event tab: field conditions
     'Field Conditions' => 'Kenttäehdot',

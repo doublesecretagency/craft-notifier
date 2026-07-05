@@ -66,6 +66,9 @@ return [
     // Event tab: Feed
     'Feed URL' => 'URL do feed',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'A URL do feed RSS, Atom ou JSON a ser monitorado.',
+    'Feed Timeout' => 'Tempo limite do feed',
+    'How long to wait when the feed is loading slowly. Default {default} seconds, max {max}.' => 'Quanto tempo aguardar quando o feed carrega lentamente. Padrão {default} segundos, máx. {max}.',
+    'seconds' => 'segundos',
 
     // Event tab: field conditions
     'Field Conditions' => 'Condições de campo',

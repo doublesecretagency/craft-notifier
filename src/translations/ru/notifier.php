@@ -66,6 +66,9 @@ return [
     // Event tab: Feed
     'Feed URL' => 'URL канала',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'URL отслеживаемого RSS-, Atom- или JSON-канала.',
+    'Feed Timeout' => 'Тайм-аут канала',
+    'How long to wait when the feed is loading slowly. Default {default} seconds, max {max}.' => 'Сколько ждать, когда канал загружается медленно. По умолчанию {default} секунд, макс. {max}.',
+    'seconds' => 'секунды',
 
     // Event tab: field conditions
     'Field Conditions' => 'Условия поля',

@@ -1,5 +1,9 @@
 {% import '_includes/forms' as forms %}
 
+{# Default and maximum timeout, sourced from FeedRunner so the numbers live in one place #}
+{% set defaultTimeout = constant('doublesecretagency\\notifier\\services\\FeedRunner::FETCH_TIMEOUT') %}
+{% set maxTimeout = constant('doublesecretagency\\notifier\\services\\FeedRunner::MAX_FETCH_TIMEOUT') %}
+
 <div class="event-type-feed hidden">
     {{ forms.textField({
         label: 'Feed URL'|t('notifier'),
@@ -8,6 +12,18 @@
         name: 'eventConfig[feedUrl]',
         value: notification.eventConfig.feedUrl ?? '',
         placeholder: 'https://example.com/feed.xml',
+    }) }}
+    {{ forms.textField({
+        label: 'Feed Timeout'|t('notifier'),
+        instructions: 'How long to wait when the feed is loading slowly. Default {default} seconds, max {max}.'|t('notifier', {'default': defaultTimeout, 'max': maxTimeout}),
+        type: 'number',
+        min: 1,
+        max: maxTimeout,
+        id: 'eventConfig-feedTimeout',
+        name: 'eventConfig[feedTimeout]',
+        value: notification.eventConfig.feedTimeout ?? '',
+        placeholder: defaultTimeout,
+        unit: 'seconds'|t('notifier'),
     }) }}
     {# Hard-coded event since "Feed" only has one trigger (included last for CSS reasons) #}
     <input type="hidden" name="event[feed]" value="new-item">
