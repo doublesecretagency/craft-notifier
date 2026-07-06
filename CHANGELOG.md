@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.1.3 - 2026-07-06
 
 ### Added
 - Added a [Feed Timeout](https://plugins.doublesecretagency.com/notifier/events/types/feed/#feed-timeout) setting for RSS/JSON Feed events.
