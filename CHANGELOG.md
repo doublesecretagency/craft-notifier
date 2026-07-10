@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.1.4 - 2026-07-10
 
 ### Fixed
 - Fixed a bug with Craft 4 support (must also support PHP 8.0.2).
