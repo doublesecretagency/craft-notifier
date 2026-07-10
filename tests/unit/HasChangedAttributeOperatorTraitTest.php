@@ -33,18 +33,20 @@ class HasChangedAttributeOperatorTraitTest extends TestCase
         $this->assertTrue($this->reflection->isTrait());
     }
 
-    public function testDeclaresOperatorHasChangedConstant(): void
+    public function testDeclaresNoTraitConstant(): void
     {
-        $constants = $this->reflection->getReflectionConstants();
-        $found = null;
-        foreach ($constants as $const) {
-            if ($const->getName() === 'OPERATOR_HAS_CHANGED') {
-                $found = $const;
-                break;
-            }
-        }
-        $this->assertNotNull($found, 'OPERATOR_HAS_CHANGED constant should be declared on the trait');
-        $this->assertSame('has_changed', $found->getValue());
+        // Trait constants fatal at compile time on PHP < 8.2 ("Traits cannot
+        // have constants"), and Craft 4 floors PHP at 8.0.2. The operator value
+        // lives on the shared HasChangedOperatorInterface instead (interface
+        // constants are legal on every PHP version). Regression pin for that fix.
+        $this->assertEmpty(
+            $this->reflection->getReflectionConstants(),
+            'HasChangedAttributeOperator must not declare any constant (fatals on PHP < 8.2)'
+        );
+        $this->assertStringContainsString(
+            'HasChangedOperatorInterface::OPERATOR_HAS_CHANGED',
+            $this->traitSource
+        );
     }
 
     public function testDeclaresAbstractComparisonValueMethod(): void
@@ -63,7 +65,7 @@ class HasChangedAttributeOperatorTraitTest extends TestCase
     public function testOverridesOperatorsMethod(): void
     {
         $this->assertMatchesRegularExpression(
-            '/protected function operators\(\): array[\s\S]*?array_merge\(parent::operators\(\),\s*\[self::OPERATOR_HAS_CHANGED\]\)/',
+            '/protected function operators\(\): array[\s\S]*?array_merge\(parent::operators\(\),\s*\[HasChangedOperatorInterface::OPERATOR_HAS_CHANGED\]\)/',
             $this->traitSource
         );
     }
@@ -79,7 +81,7 @@ class HasChangedAttributeOperatorTraitTest extends TestCase
     public function testOverridesInputHtmlMethod(): void
     {
         $this->assertMatchesRegularExpression(
-            '/protected function inputHtml\(\): string[\s\S]*?\$this->operator === self::OPERATOR_HAS_CHANGED[\s\S]*?return \'\'/',
+            '/protected function inputHtml\(\): string[\s\S]*?\$this->operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED[\s\S]*?return \'\'/',
             $this->traitSource
         );
     }
@@ -87,7 +89,7 @@ class HasChangedAttributeOperatorTraitTest extends TestCase
     public function testOverridesModifyQueryMethod(): void
     {
         $this->assertMatchesRegularExpression(
-            '/public function modifyQuery\(QueryInterface \$query\): void[\s\S]*?\$this->operator === self::OPERATOR_HAS_CHANGED[\s\S]*?return;/',
+            '/public function modifyQuery\(QueryInterface \$query\): void[\s\S]*?\$this->operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED[\s\S]*?return;/',
             $this->traitSource
         );
     }

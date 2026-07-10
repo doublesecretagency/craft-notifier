@@ -25,16 +25,11 @@ trait HasChangedOperator
 {
 
     /**
-     * @var string Operator value injected into the rule's operator dropdown.
-     */
-    public const OPERATOR_HAS_CHANGED = 'has_changed';
-
-    /**
      * @inheritdoc
      */
     protected function operators(): array
     {
-        return array_merge(parent::operators(), [self::OPERATOR_HAS_CHANGED]);
+        return array_merge(parent::operators(), [HasChangedOperatorInterface::OPERATOR_HAS_CHANGED]);
     }
 
     /**
@@ -43,7 +38,7 @@ trait HasChangedOperator
     protected function operatorLabel(string $operator): string
     {
         // If this is the "has changed" operator, use its label
-        if ($operator === self::OPERATOR_HAS_CHANGED) {
+        if ($operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED) {
             return Craft::t('notifier', 'has changed');
         }
         return parent::operatorLabel($operator);
@@ -55,7 +50,7 @@ trait HasChangedOperator
     protected function inputHtml(): string
     {
         // Valueless operator; same precedent as OPERATOR_EMPTY / OPERATOR_NOT_EMPTY
-        if ($this->operator === self::OPERATOR_HAS_CHANGED) {
+        if ($this->operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED) {
             return '';
         }
         return parent::inputHtml();
@@ -67,7 +62,7 @@ trait HasChangedOperator
     public function modifyQuery(QueryInterface $query): void
     {
         // No query-phase equivalent for dirty state; rule evaluates only in matchElement()
-        if ($this->operator === self::OPERATOR_HAS_CHANGED) {
+        if ($this->operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED) {
             return;
         }
         parent::modifyQuery($query);
@@ -79,7 +74,7 @@ trait HasChangedOperator
     public function matchElement(ElementInterface $element): bool
     {
         // If this isn't the "has changed" operator, defer to the parent
-        if ($this->operator !== self::OPERATOR_HAS_CHANGED) {
+        if ($this->operator !== HasChangedOperatorInterface::OPERATOR_HAS_CHANGED) {
             return parent::matchElement($element);
         }
 

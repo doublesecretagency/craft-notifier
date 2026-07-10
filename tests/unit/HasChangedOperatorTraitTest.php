@@ -41,25 +41,27 @@ class HasChangedOperatorTraitTest extends TestCase
         $this->assertTrue($this->reflection->isTrait());
     }
 
-    public function testDeclaresOperatorHasChangedConstant(): void
+    public function testDeclaresNoTraitConstant(): void
     {
-        // The constant value lands in the operator dropdown / select option
-        // and survives Craft's selectize roundtrip; downstream code (matchElement,
-        // inputHtml) relies on the literal string `has_changed` to detect the
-        // operator branch.
-        //
-        // Trait constants can't be accessed via Trait::CONSTANT syntax in PHP,
-        // so reflect on the trait to inspect the constant.
-        $constants = $this->reflection->getReflectionConstants();
-        $found = null;
-        foreach ($constants as $const) {
-            if ($const->getName() === 'OPERATOR_HAS_CHANGED') {
-                $found = $const;
-                break;
-            }
-        }
-        $this->assertNotNull($found, 'OPERATOR_HAS_CHANGED constant should be declared on the trait');
-        $this->assertSame('has_changed', $found->getValue());
+        // Trait constants fatal at compile time on PHP < 8.2 ("Traits cannot
+        // have constants"), and Craft 4 floors PHP at 8.0.2. So the operator
+        // value must NOT live on the trait; it lives on the shared
+        // HasChangedOperatorInterface (interface constants are legal on every
+        // PHP version). This test is the regression pin for that fix; if a
+        // future edit reintroduces a `const` on the trait, it breaks here
+        // before it can fatal on a real Craft 4 install.
+        $this->assertEmpty(
+            $this->reflection->getReflectionConstants(),
+            'HasChangedOperator must not declare any constant (fatals on PHP < 8.2)'
+        );
+
+        // The trait references the interface constant rather than declaring
+        // its own; downstream code (matchElement, inputHtml) relies on the
+        // literal string `has_changed` to detect the operator branch.
+        $this->assertStringContainsString(
+            'HasChangedOperatorInterface::OPERATOR_HAS_CHANGED',
+            $this->traitSource
+        );
     }
 
     // ========================================================================= //
@@ -73,7 +75,7 @@ class HasChangedOperatorTraitTest extends TestCase
         // replacing it (otherwise contains/equals/etc. disappear).
         $this->assertTrue($this->reflection->hasMethod('operators'));
         $this->assertMatchesRegularExpression(
-            '/protected function operators\(\): array[\s\S]*?array_merge\(parent::operators\(\),\s*\[self::OPERATOR_HAS_CHANGED\]\)/',
+            '/protected function operators\(\): array[\s\S]*?array_merge\(parent::operators\(\),\s*\[HasChangedOperatorInterface::OPERATOR_HAS_CHANGED\]\)/',
             $this->traitSource
         );
     }
@@ -99,7 +101,7 @@ class HasChangedOperatorTraitTest extends TestCase
         // the operator dropdown.
         $this->assertTrue($this->reflection->hasMethod('inputHtml'));
         $this->assertMatchesRegularExpression(
-            '/protected function inputHtml\(\): string[\s\S]*?\$this->operator === self::OPERATOR_HAS_CHANGED[\s\S]*?return \'\'/',
+            '/protected function inputHtml\(\): string[\s\S]*?\$this->operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED[\s\S]*?return \'\'/',
             $this->traitSource
         );
     }
@@ -113,7 +115,7 @@ class HasChangedOperatorTraitTest extends TestCase
         // mistranslated one).
         $this->assertTrue($this->reflection->hasMethod('modifyQuery'));
         $this->assertMatchesRegularExpression(
-            '/public function modifyQuery\(QueryInterface \$query\): void[\s\S]*?\$this->operator === self::OPERATOR_HAS_CHANGED[\s\S]*?return;/',
+            '/public function modifyQuery\(QueryInterface \$query\): void[\s\S]*?\$this->operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED[\s\S]*?return;/',
             $this->traitSource
         );
     }

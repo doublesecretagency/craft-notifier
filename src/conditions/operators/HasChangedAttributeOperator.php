@@ -25,11 +25,6 @@ trait HasChangedAttributeOperator
 {
 
     /**
-     * @var string Operator value injected into the rule's operator dropdown.
-     */
-    public const OPERATOR_HAS_CHANGED = 'has_changed';
-
-    /**
      * Return the value used for the has_changed diff.
      *
      * Must be scalar, array, or DateTime, anything that compares safely with `!=`
@@ -45,7 +40,7 @@ trait HasChangedAttributeOperator
      */
     protected function operators(): array
     {
-        return array_merge(parent::operators(), [self::OPERATOR_HAS_CHANGED]);
+        return array_merge(parent::operators(), [HasChangedOperatorInterface::OPERATOR_HAS_CHANGED]);
     }
 
     /**
@@ -54,7 +49,7 @@ trait HasChangedAttributeOperator
     protected function operatorLabel(string $operator): string
     {
         // If this is the "has changed" operator, use its label
-        if ($operator === self::OPERATOR_HAS_CHANGED) {
+        if ($operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED) {
             return Craft::t('notifier', 'has changed');
         }
         return parent::operatorLabel($operator);
@@ -66,7 +61,7 @@ trait HasChangedAttributeOperator
     protected function inputHtml(): string
     {
         // If this is the "has changed" operator, it needs no input field
-        if ($this->operator === self::OPERATOR_HAS_CHANGED) {
+        if ($this->operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED) {
             return '';
         }
         return parent::inputHtml();
@@ -78,7 +73,7 @@ trait HasChangedAttributeOperator
     public function modifyQuery(QueryInterface $query): void
     {
         // If this is the "has changed" operator, skip the query modification
-        if ($this->operator === self::OPERATOR_HAS_CHANGED) {
+        if ($this->operator === HasChangedOperatorInterface::OPERATOR_HAS_CHANGED) {
             return;
         }
         parent::modifyQuery($query);
@@ -90,7 +85,7 @@ trait HasChangedAttributeOperator
     public function matchElement(ElementInterface $element): bool
     {
         // If this isn't the "has changed" operator, defer to the parent
-        if ($this->operator !== self::OPERATOR_HAS_CHANGED) {
+        if ($this->operator !== HasChangedOperatorInterface::OPERATOR_HAS_CHANGED) {
             return parent::matchElement($element);
         }
 
