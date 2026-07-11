@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Brugerhændelse',
     'Ungrouped Users' => 'Brugere uden gruppe',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Indsendelsesresultat',
+    'Trigger based on the success or failure of a submission.' => 'Udløs baseret på om en indsendelse lykkes eller mislykkes.',
+    'Successful submissions only' => 'Kun vellykkede indsendelser',
+    'Failed submissions only' => 'Kun mislykkede indsendelser',
+    'All submissions' => 'Alle indsendelser',
+
     // Event tab: Feed
     'Feed URL' => 'Feed-URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => "URL'en til RSS-, Atom- eller JSON-feedet, der skal overvåges.",
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[INGEN KALENDER] Der er ikke valgt nogen kalendere, denne notifikation udløses aldrig.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[INGEN DIGITAL PRODUKTTYPE] Der er ikke valgt nogen digitale produkttyper, denne notifikation udløses aldrig.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[INGEN INDTASTNINGSTYPE] Der er ikke valgt nogen sektioner eller indtastningstyper, denne notifikation udløses aldrig.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[INGEN FORMULAR] Der er ikke valgt nogen formularer, denne notifikation udløses aldrig.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[INGEN PRODUKTTYPE] Der er ikke valgt nogen produkttyper, denne notifikation udløses aldrig.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[INGEN BRUGERGRUPPE] Der er ikke valgt nogen brugergrupper, denne notifikation udløses aldrig.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[INGEN DISKENHED] Der er ikke valgt nogen diskenheder, denne notifikation udløses aldrig.',

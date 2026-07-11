@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Evento de usuarios',
     'Ungrouped Users' => 'Usuarios sin grupo',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Resultado del envío',
+    'Trigger based on the success or failure of a submission.' => 'Activar según el éxito o el fallo de un envío.',
+    'Successful submissions only' => 'Solo envíos correctos',
+    'Failed submissions only' => 'Solo envíos fallidos',
+    'All submissions' => 'Todos los envíos',
+
     // Event tab: Feed
     'Feed URL' => 'URL del feed',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'La URL del feed RSS, Atom o JSON a monitorizar.',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[SIN CALENDARIO] No se ha seleccionado ningún calendario, esta notificación nunca se activará.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[SIN TIPO DE PRODUCTO DIGITAL] No se ha seleccionado ningún tipo de producto digital, esta notificación nunca se activará.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[SIN TIPO DE ENTRADA] No se ha seleccionado ninguna sección ni tipo de entrada, esta notificación nunca se activará.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[SIN FORMULARIO] No se ha seleccionado ningún formulario, esta notificación nunca se activará.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[SIN TIPO DE PRODUCTO] No se ha seleccionado ningún tipo de producto, esta notificación nunca se activará.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[SIN GRUPO DE USUARIOS] No se ha seleccionado ningún grupo de usuarios, esta notificación nunca se activará.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[SIN VOLUMEN] No se ha seleccionado ningún volumen, esta notificación nunca se activará.',

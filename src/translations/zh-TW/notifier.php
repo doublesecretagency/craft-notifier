@@ -63,6 +63,13 @@ return [
     'Users Event' => '使用者事件',
     'Ungrouped Users' => '未分組使用者',
 
+    // Event tab: Formie
+    'Submission Outcome' => '提交結果',
+    'Trigger based on the success or failure of a submission.' => '根據提交的成功或失敗進行觸發。',
+    'Successful submissions only' => '僅成功的提交',
+    'Failed submissions only' => '僅失敗的提交',
+    'All submissions' => '所有提交',
+
     // Event tab: Feed
     'Feed URL' => 'Feed URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '要監控的 RSS、Atom 或 JSON Feed 的 URL。',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[無行事曆] 未選擇任何行事曆，此通知將永遠不會觸發。',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[無數位產品類型] 未選擇任何數位產品類型，此通知將永遠不會觸發。',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[無項目類型] 未選擇任何區塊或項目類型，此通知將永遠不會觸發。',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[無表單] 未選擇任何表單，此通知將永遠不會觸發。',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[無產品類型] 未選擇任何產品類型，此通知將永遠不會觸發。',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[無使用者群組] 未選擇任何使用者群組，此通知將永遠不會觸發。',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[無磁碟區] 未選擇任何磁碟區，此通知將永遠不會觸發。',

@@ -63,6 +63,13 @@ return [
     'Users Event' => '用户事件',
     'Ungrouped Users' => '未分组用户',
 
+    // Event tab: Formie
+    'Submission Outcome' => '提交结果',
+    'Trigger based on the success or failure of a submission.' => '根据提交的成功或失败进行触发。',
+    'Successful submissions only' => '仅成功的提交',
+    'Failed submissions only' => '仅失败的提交',
+    'All submissions' => '所有提交',
+
     // Event tab: Feed
     'Feed URL' => 'Feed URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '要监控的 RSS、Atom 或 JSON Feed 的 URL。',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[无日历] 未选择任何日历，此通知将永远不会触发。',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[无数字产品类型] 未选择任何数字产品类型，此通知将永远不会触发。',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[无条目类型] 未选择任何板块或条目类型，此通知将永远不会触发。',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[无表单] 未选择任何表单，此通知将永远不会触发。',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[无产品类型] 未选择任何产品类型，此通知将永远不会触发。',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[无用户组] 未选择任何用户组，此通知将永远不会触发。',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[无卷] 未选择任何卷，此通知将永远不会触发。',

@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Evento de usuários',
     'Ungrouped Users' => 'Usuários sem grupo',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Resultado do envio',
+    'Trigger based on the success or failure of a submission.' => 'Acionar com base no sucesso ou na falha de um envio.',
+    'Successful submissions only' => 'Apenas envios bem-sucedidos',
+    'Failed submissions only' => 'Apenas envios com falha',
+    'All submissions' => 'Todos os envios',
+
     // Event tab: Feed
     'Feed URL' => 'URL do feed',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'A URL do feed RSS, Atom ou JSON a ser monitorado.',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[SEM CALENDÁRIO] Nenhum calendário foi selecionado, esta notificação nunca será acionada.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[SEM TIPO DE PRODUTO DIGITAL] Nenhum tipo de produto digital foi selecionado, esta notificação nunca será acionada.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[SEM TIPO DE ENTRADA] Nenhuma seção ou tipo de entrada foi selecionado, esta notificação nunca será acionada.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[SEM FORMULÁRIO] Nenhum formulário foi selecionado, esta notificação nunca será acionada.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[SEM TIPO DE PRODUTO] Nenhum tipo de produto foi selecionado, esta notificação nunca será acionada.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[SEM GRUPO DE USUÁRIOS] Nenhum grupo de usuários foi selecionado, esta notificação nunca será acionada.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[SEM VOLUME] Nenhum volume foi selecionado, esta notificação nunca será acionada.',

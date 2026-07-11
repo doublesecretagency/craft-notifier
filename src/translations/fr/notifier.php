@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Événement utilisateur',
     'Ungrouped Users' => 'Utilisateurs sans groupe',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Résultat de la soumission',
+    'Trigger based on the success or failure of a submission.' => "Déclencher selon la réussite ou l'échec d'une soumission.",
+    'Successful submissions only' => 'Uniquement les soumissions réussies',
+    'Failed submissions only' => 'Uniquement les soumissions échouées',
+    'All submissions' => 'Toutes les soumissions',
+
     // Event tab: Feed
     'Feed URL' => 'URL du flux',
     'The URL of the RSS, Atom, or JSON feed to watch.' => "L'URL du flux RSS, Atom ou JSON à surveiller.",
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => "[AUCUN CALENDRIER] Aucun calendrier n'est sélectionné, cette notification ne sera jamais déclenchée.",
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => "[AUCUN TYPE DE PRODUIT NUMÉRIQUE] Aucun type de produit numérique n'est sélectionné, cette notification ne sera jamais déclenchée.",
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => "[AUCUN TYPE D'ENTRÉE] Aucune section ni aucun type d'entrée n'est sélectionné, cette notification ne sera jamais déclenchée.",
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => "[AUCUN FORMULAIRE] Aucun formulaire n'est sélectionné, cette notification ne sera jamais déclenchée.",
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => "[AUCUN TYPE DE PRODUIT] Aucun type de produit n'est sélectionné, cette notification ne sera jamais déclenchée.",
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => "[AUCUN GROUPE D'UTILISATEURS] Aucun groupe d'utilisateurs n'est sélectionné, cette notification ne sera jamais déclenchée.",
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => "[AUCUN VOLUME] Aucun volume n'est sélectionné, cette notification ne sera jamais déclenchée.",

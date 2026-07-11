@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Evento de utilizadores',
     'Ungrouped Users' => 'Utilizadores sem grupo',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Resultado do envio',
+    'Trigger based on the success or failure of a submission.' => 'Acionar consoante o sucesso ou a falha de um envio.',
+    'Successful submissions only' => 'Apenas envios bem-sucedidos',
+    'Failed submissions only' => 'Apenas envios falhados',
+    'All submissions' => 'Todos os envios',
+
     // Event tab: Feed
     'Feed URL' => 'URL do feed',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'O URL do feed RSS, Atom ou JSON a monitorizar.',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[SEM CALENDÁRIO] Não foram selecionados calendários, esta notificação nunca será acionada.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[SEM TIPO DE PRODUTO DIGITAL] Não foram selecionados tipos de produto digital, esta notificação nunca será acionada.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[SEM TIPO DE ENTRADA] Não foram selecionadas secções nem tipos de entrada, esta notificação nunca será acionada.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[SEM FORMULÁRIO] Não foram selecionados formulários, esta notificação nunca será acionada.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[SEM TIPO DE PRODUTO] Não foram selecionados tipos de produto, esta notificação nunca será acionada.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[SEM GRUPO DE UTILIZADORES] Não foram selecionados grupos de utilizadores, esta notificação nunca será acionada.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[SEM VOLUME] Não foram selecionados volumes, esta notificação nunca será acionada.',

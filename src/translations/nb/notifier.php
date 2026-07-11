@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Brukerhendelse',
     'Ungrouped Users' => 'Brukere uten gruppe',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Innsendingsresultat',
+    'Trigger based on the success or failure of a submission.' => 'Utløs basert på om en innsending lykkes eller mislykkes.',
+    'Successful submissions only' => 'Bare vellykkede innsendinger',
+    'Failed submissions only' => 'Bare mislykkede innsendinger',
+    'All submissions' => 'Alle innsendinger',
+
     // Event tab: Feed
     'Feed URL' => 'Feed-URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'URL-en til RSS-, Atom- eller JSON-feeden som skal overvåkes.',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[INGEN KALENDER] Ingen kalendere er valgt, dette varselet utløses aldri.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[INGEN DIGITAL PRODUKTTYPE] Ingen digitale produkttyper er valgt, dette varselet utløses aldri.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[INGEN OPPFØRINGSTYPE] Ingen seksjoner eller oppføringstyper er valgt, dette varselet utløses aldri.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[INGEN SKJEMA] Ingen skjemaer er valgt, dette varselet utløses aldri.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[INGEN PRODUKTTYPE] Ingen produkttyper er valgt, dette varselet utløses aldri.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[INGEN BRUKERGRUPPE] Ingen brukergrupper er valgt, dette varselet utløses aldri.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[INGEN VOLUM] Ingen volumer er valgt, dette varselet utløses aldri.',

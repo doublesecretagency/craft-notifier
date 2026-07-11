@@ -219,6 +219,7 @@ class EventFilterTemplatesTest extends TestCase
             ['digital-products-products/digitalProductTypes.twig',   'availableDigitalProductTypes'],
             ['digital-products-licenses/digitalProductTypes.twig',    'availableDigitalProductTypes'],
             ['solspace-calendar-events/calendars.twig',                       'availableCalendars'],
+            ['formie-submissions/forms.twig',                                 'availableForms'],
         ];
     }
 
@@ -238,11 +239,17 @@ class EventFilterTemplatesTest extends TestCase
      */
     public function testTier2FilterPartialGuardsOnNonEmptyHelper(string $partial, string $helper): void
     {
-        // The partial wraps its rendering in a check on the helper's length
-        // so installs without the source plugin (or without configured items)
-        // collapse the filter section gracefully.
+        // The partial guards its rendering on the helper being non-empty, so installs
+        // without the source plugin (or without configured items) collapse the filter
+        // section gracefully. Two equivalent spellings are allowed: a direct
+        // `availableX()|length` check, or a call-once variable then `{% if var %}`.
         $source = self::read($partial);
-        $this->assertStringContainsString("{$helper}()|length", $source);
+        $direct = str_contains($source, "{$helper}()|length");
+        $viaVar = (bool) preg_match(
+            '/\{%\s*set\s+(\w+)\s*=\s*' . preg_quote($helper, '/') . '\(\)\s*%\}[\s\S]*?\{%\s*if\s+\1\s*%\}/',
+            $source
+        );
+        $this->assertTrue($direct || $viaVar, "{$partial} must guard rendering on {$helper}() being non-empty");
     }
 
     public function testTier2IndexesIncludeFilterAndCondition(): void
@@ -276,6 +283,30 @@ class EventFilterTemplatesTest extends TestCase
         $this->assertStringContainsString(
             "{% include 'notifier/notifications/_edit/event/solspace-calendar-events/calendars' %}",
             $calendar
+        );
+    }
+
+    public function testFormieIndexIncludesFormsOutcomeConditionAndHiddenEvent(): void
+    {
+        // Formie is a single-event type (like feed), so instead of an event
+        // dropdown it hard-codes the event value. Its index must include the
+        // forms picker, the condition slot, the outcome select, and the hidden
+        // event input.
+        $formie = self::read('formie-submissions/index.twig');
+        $this->assertStringContainsString(
+            "{% include 'notifier/notifications/_edit/event/formie-submissions/forms' %}",
+            $formie
+        );
+        $this->assertStringContainsString(
+            "{% include 'notifier/notifications/_edit/event/formie-submissions/condition' %}",
+            $formie
+        );
+        // The outcome select drives the success / failure / all gate
+        $this->assertStringContainsString("name: 'eventConfig[submissionOutcome]'", $formie);
+        // Single event, so the value is hard-coded rather than posted from a dropdown
+        $this->assertStringContainsString(
+            'name="event[formie-submissions]" value="after-submission"',
+            $formie
         );
     }
 

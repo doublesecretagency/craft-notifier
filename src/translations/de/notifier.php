@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Benutzerereignis',
     'Ungrouped Users' => 'Benutzer ohne Gruppe',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Einsendungsergebnis',
+    'Trigger based on the success or failure of a submission.' => 'Je nach Erfolg oder Fehlschlag einer Einsendung auslösen.',
+    'Successful submissions only' => 'Nur erfolgreiche Einsendungen',
+    'Failed submissions only' => 'Nur fehlgeschlagene Einsendungen',
+    'All submissions' => 'Alle Einsendungen',
+
     // Event tab: Feed
     'Feed URL' => 'Feed-URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'Die URL des zu überwachenden RSS-, Atom- oder JSON-Feeds.',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[KEINE KALENDER] Es sind keine Kalender ausgewählt, diese Benachrichtigung wird nie ausgelöst.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[KEINE DIGITALEN PRODUKTTYPEN] Es sind keine digitalen Produkttypen ausgewählt, diese Benachrichtigung wird nie ausgelöst.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[KEINE EINTRAGSTYPEN] Es sind keine Abschnitte oder Eintragstypen ausgewählt, diese Benachrichtigung wird nie ausgelöst.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[KEINE FORMULARE] Es sind keine Formulare ausgewählt, diese Benachrichtigung wird nie ausgelöst.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[KEINE PRODUKTTYPEN] Es sind keine Produkttypen ausgewählt, diese Benachrichtigung wird nie ausgelöst.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[KEINE BENUTZERGRUPPEN] Es sind keine Benutzergruppen ausgewählt, diese Benachrichtigung wird nie ausgelöst.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[KEINE VOLUMES] Es sind keine Volumes ausgewählt, diese Benachrichtigung wird nie ausgelöst.',

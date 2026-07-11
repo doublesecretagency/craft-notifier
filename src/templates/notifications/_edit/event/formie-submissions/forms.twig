@@ -1,0 +1,47 @@
+{% set formieForms = availableForms() %}
+
+{% if formieForms %}
+
+    {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NestedCheckboxesAsset') %}
+
+    {% js on ready %}
+    window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-forms');
+    {% endjs %}
+
+    <div class="nested-checkboxes nested-checkboxes-forms">
+
+        <h3>Forms</h3>
+        {% if not (readOnly ?? false) %}
+            <div class="select-all" onclick="window.nestedCheckboxes.selectAll('.nested-checkboxes-forms')"></div>
+        {% endif %}
+
+        <div class="instructions">
+            <p>Only send notifications for selected forms.</p>
+        </div>
+
+        <ul>
+
+            {# Get selected Forms #}
+            {% set forms = (notification.eventConfig.forms ?? []) %}
+
+            {# Loop over available forms #}
+            {% for formId,formName in formieForms %}
+                <li>
+                    <input type="checkbox"
+                        class="checkbox"
+                        id="form-{{ formId }}"
+                        name="eventConfig[forms][]"
+                        value="{{ formId }}"
+                        {{ formId in forms ? 'checked=""'|raw }}
+                        onclick="window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-forms')"
+                    >
+                    <label for="form-{{ formId }}">
+                        {{ formName }}
+                    </label>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+
+{% endif %}

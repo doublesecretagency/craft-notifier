@@ -15,6 +15,7 @@ Available based on **which event type triggered the notification**.
 | Event type | Variables                                                                   |
 |:-----------|:----------------------------------------------------------------------------|
 | [Element Events](/messages/variables/element-events) | `original`, `object`, `element`, element alias (`entry`, `asset`, `user`, etc.) |
+| [Formie Submissions](/messages/variables/formie-submissions) | `submission`, `form`, `success`                                             |
 | [RSS/JSON Feed](/messages/variables/rss-json-feed) | `feed`, `item`                                                              |
 | [System Snapshot](/messages/variables/system-snapshot) | `report`                                                                    |
 | [Dynamic Data](/messages/variables/dynamic-data) | `data`                                                                      |

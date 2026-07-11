@@ -1,0 +1,28 @@
+{% import '_includes/forms' as forms %}
+
+<div class="event-type-formie-submissions hidden">
+    {% include 'notifier/notifications/_edit/event/formie-submissions/forms' %}
+    {{ forms.selectField({
+        label: 'Submission Outcome'|t('notifier'),
+        instructions: 'Trigger based on the success or failure of a submission.'|t('notifier'),
+        id: 'eventConfig-submissionOutcome',
+        name: 'eventConfig[submissionOutcome]',
+        value: notification.eventConfig.submissionOutcome ?? 'success',
+        options: {
+            success: 'Successful submissions only'|t('notifier'),
+            failure: 'Failed submissions only'|t('notifier'),
+            all: 'All submissions'|t('notifier'),
+        },
+    }) }}
+    {% include 'notifier/notifications/_edit/event/formie-submissions/condition' %}
+    {# Hard-coded event since Formie only has one trigger (included last for CSS reasons) #}
+    <input type="hidden" name="event[formie-submissions]" value="after-submission">
+</div>
+
+{# Forms picker is the first field here (no divider above it), so pull it up to close the extra gap #}
+{# (nested-checkboxes.css assumes the picker follows a divider; move the whole picker so its heading + Select All stay aligned) #}
+{% css %}
+    .event-type-formie-submissions .nested-checkboxes-forms {
+        margin-top: -15px;
+    }
+{% endcss %}

@@ -28,6 +28,7 @@ use doublesecretagency\notifier\helpers\SystemSnapshot;
 use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\NotifierPlugin;
 use Solspace\Calendar\Elements\Event as CalendarEvent;
+use verbb\formie\elements\Submission;
 use yii\base\Event;
 use yii\db\Expression;
 
@@ -355,6 +356,10 @@ class Messages extends Component
         if (class_exists(CalendarEvent::class)) {
             $map['solspace-calendar-events'] = CalendarEvent::class;
         }
+        // If Formie is installed, map its submission type
+        if (class_exists(Submission::class)) {
+            $map['formie-submissions'] = Submission::class;
+        }
 
         // Return the matching element class, or null
         return ($map[$eventType] ?? null);
@@ -440,6 +445,12 @@ class Messages extends Component
                 // Restrict to configured Digital Product types
                 if (!empty($eventConfig['digitalProductTypes'])) {
                     $query->typeId($eventConfig['digitalProductTypes']);
+                }
+                break;
+            case 'formie-submissions':
+                // Restrict to configured Forms
+                if (!empty($eventConfig['forms'])) {
+                    $query->formId($eventConfig['forms']);
                 }
                 break;
         }

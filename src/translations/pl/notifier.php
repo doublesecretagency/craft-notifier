@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Zdarzenie użytkowników',
     'Ungrouped Users' => 'Użytkownicy bez grupy',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Wynik przesłania',
+    'Trigger based on the success or failure of a submission.' => 'Wyzwalaj na podstawie powodzenia lub niepowodzenia przesłania.',
+    'Successful submissions only' => 'Tylko udane przesłania',
+    'Failed submissions only' => 'Tylko nieudane przesłania',
+    'All submissions' => 'Wszystkie przesłania',
+
     // Event tab: Feed
     'Feed URL' => 'URL kanału',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'URL kanału RSS, Atom lub JSON do monitorowania.',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[BRAK KALENDARZA] Nie wybrano żadnych kalendarzy, to powiadomienie nigdy nie zostanie wyzwolone.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[BRAK TYPU PRODUKTU CYFROWEGO] Nie wybrano żadnych typów produktów cyfrowych, to powiadomienie nigdy nie zostanie wyzwolone.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[BRAK TYPU WPISU] Nie wybrano żadnych sekcji ani typów wpisów, to powiadomienie nigdy nie zostanie wyzwolone.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[BRAK FORMULARZA] Nie wybrano żadnych formularzy, to powiadomienie nigdy nie zostanie wyzwolone.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[BRAK TYPU PRODUKTU] Nie wybrano żadnych typów produktów, to powiadomienie nigdy nie zostanie wyzwolone.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[BRAK GRUPY UŻYTKOWNIKÓW] Nie wybrano żadnych grup użytkowników, to powiadomienie nigdy nie zostanie wyzwolone.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[BRAK WOLUMINU] Nie wybrano żadnych woluminów, to powiadomienie nigdy nie zostanie wyzwolone.',

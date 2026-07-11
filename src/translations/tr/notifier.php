@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Kullanıcı olayı',
     'Ungrouped Users' => 'Grupsuz kullanıcılar',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Gönderim sonucu',
+    'Trigger based on the success or failure of a submission.' => 'Bir gönderimin başarılı veya başarısız olmasına göre tetikle.',
+    'Successful submissions only' => 'Yalnızca başarılı gönderimler',
+    'Failed submissions only' => 'Yalnızca başarısız gönderimler',
+    'All submissions' => 'Tüm gönderimler',
+
     // Event tab: Feed
     'Feed URL' => "Besleme URL'si",
     'The URL of the RSS, Atom, or JSON feed to watch.' => "İzlenecek RSS, Atom veya JSON beslemesinin URL'si.",
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[TAKVİM YOK] Hiçbir takvim seçilmedi, bu bildirim asla tetiklenmez.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[DİJİTAL ÜRÜN TÜRÜ YOK] Hiçbir dijital ürün türü seçilmedi, bu bildirim asla tetiklenmez.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[GİRİŞ TÜRÜ YOK] Hiçbir bölüm veya giriş türü seçilmedi, bu bildirim asla tetiklenmez.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[FORM YOK] Hiçbir form seçilmedi, bu bildirim asla tetiklenmez.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[ÜRÜN TÜRÜ YOK] Hiçbir ürün türü seçilmedi, bu bildirim asla tetiklenmez.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[KULLANICI GRUBU YOK] Hiçbir kullanıcı grubu seçilmedi, bu bildirim asla tetiklenmez.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[BİRİM YOK] Hiçbir birim seçilmedi, bu bildirim asla tetiklenmez.',

@@ -691,6 +691,7 @@ class DispatchModelTest extends TestCase
             ['_filterDigitalProducts',         'digital-products-products'],
             ['_filterDigitalProductLicenses',  'digital-products-licenses'],
             ['_filterCalendarEvents',          'solspace-calendar-events'],
+            ['_filterFormieSubmissions',       'formie-submissions'],
         ];
     }
 
@@ -760,6 +761,38 @@ class DispatchModelTest extends TestCase
         // Mandatory calendars gate analogous to Sections for entries.
         $this->assertStringContainsString(
             "\$this->notification->eventConfig['calendars']",
+            $this->dispatchSource
+        );
+    }
+
+    public function testFormieSubmissionsFilterReadsFormsConfig(): void
+    {
+        // Mandatory forms gate analogous to Calendars for calendar events.
+        $this->assertStringContainsString(
+            "\$this->notification->eventConfig['forms']",
+            $this->dispatchSource
+        );
+    }
+
+    public function testFormieSubmissionsFilterWarnsWhenNoFormsSelected(): void
+    {
+        // With no forms selected the notification can never match, so the
+        // filter logs a [NO FORM] warning under the run-level parent and bails,
+        // mirroring the [NO CALENDAR] / [NO VOLUME] misconfiguration warnings.
+        $this->assertStringContainsString('[NO FORM]', $this->dispatchSource);
+    }
+
+    public function testFormieSubmissionsFilterGatesOnSubmissionOutcome(): void
+    {
+        // The outcome gate reads eventConfig['submissionOutcome'] (default
+        // 'success') and the bridged data['success'] flag, so a notification
+        // can opt into successful-only, failed-only, or all submissions.
+        $this->assertStringContainsString(
+            "\$this->notification->eventConfig['submissionOutcome']",
+            $this->dispatchSource
+        );
+        $this->assertMatchesRegularExpression(
+            "/'success' === \\\$outcome[\\s\\S]*?'failure' === \\\$outcome/",
             $this->dispatchSource
         );
     }

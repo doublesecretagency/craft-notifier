@@ -63,6 +63,13 @@ return [
     'Users Event' => 'ユーザーイベント',
     'Ungrouped Users' => 'グループ外のユーザー',
 
+    // Event tab: Formie
+    'Submission Outcome' => '送信結果',
+    'Trigger based on the success or failure of a submission.' => '送信の成功または失敗に基づいてトリガーします。',
+    'Successful submissions only' => '成功した送信のみ',
+    'Failed submissions only' => '失敗した送信のみ',
+    'All submissions' => 'すべての送信',
+
     // Event tab: Feed
     'Feed URL' => 'フィード URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '監視する RSS、Atom、または JSON フィードの URL。',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[カレンダーなし] カレンダーが選択されていないため、この通知はトリガーされません。',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[デジタル製品タイプなし] デジタル製品タイプが選択されていないため、この通知はトリガーされません。',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[エントリタイプなし] セクションまたはエントリタイプが選択されていないため、この通知はトリガーされません。',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[フォームなし] フォームが選択されていないため、この通知はトリガーされません。',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[製品タイプなし] 製品タイプが選択されていないため、この通知はトリガーされません。',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[ユーザーグループなし] ユーザーグループが選択されていないため、この通知はトリガーされません。',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[ボリュームなし] ボリュームが選択されていないため、この通知はトリガーされません。',

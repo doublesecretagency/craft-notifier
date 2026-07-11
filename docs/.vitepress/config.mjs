@@ -146,6 +146,7 @@ export default defineConfig({
               {text: 'Users',   link: '/events/types/users/'},
             ]},
             {text: 'Plugin Elements', items: [
+              {text: 'Formie',            link: '/events/types/formie/'},
               {text: 'Craft Commerce',    link: '/events/types/craft-commerce/'},
               {text: 'Digital Products',  link: '/events/types/digital-products/'},
               {text: 'Solspace Calendar', link: '/events/types/solspace-calendar/'},
@@ -405,6 +406,7 @@ export default defineConfig({
                     {text: 'User is restored',             link: '/events/types/users/user-restored'},
                   ]
                 },
+                {text: 'Formie',          link: '/events/types/formie/'},
                 {text: 'Craft Commerce', link: '/events/types/craft-commerce/', collapsed: true,
                   items: [
                     {text: 'Order is completed',  link: '/events/types/craft-commerce/order-completed'},
@@ -501,10 +503,11 @@ export default defineConfig({
             {text: 'Message Templating',     link: '/messages/templating'},
             {text: 'Special Variables',      link: '/messages/variables/', collapsed: true,
               items: [
-                {text: 'Element Events',  link: '/messages/variables/element-events'},
-                {text: 'RSS/JSON Feed',   link: '/messages/variables/rss-json-feed'},
-                {text: 'System Snapshot', link: '/messages/variables/system-snapshot'},
-                {text: 'Dynamic Data',    link: '/messages/variables/dynamic-data'},
+                {text: 'Element Events',     link: '/messages/variables/element-events'},
+                {text: 'Formie Submissions', link: '/messages/variables/formie-submissions'},
+                {text: 'RSS/JSON Feed',      link: '/messages/variables/rss-json-feed'},
+                {text: 'System Snapshot',    link: '/messages/variables/system-snapshot'},
+                {text: 'Dynamic Data',       link: '/messages/variables/dynamic-data'},
               ]
             },
             {text: 'Image Attachments',      link: '/messages/media'},

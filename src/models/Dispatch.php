@@ -169,7 +169,7 @@ class Dispatch extends Model
                 }
                 break;
             case 'craft-commerce-orders':
-                // No event-type-specific filters; condition gate runs below
+                // No event-type-specific filters; the condition check runs below
                 break;
             case 'craft-commerce-products':
                 // If the product filters don't pass, bail
@@ -195,8 +195,14 @@ class Dispatch extends Model
                     return false;
                 }
                 break;
+            case 'formie-submissions':
+                // If the Formie submission filters don't pass, bail
+                if (!$this->_filterFormieSubmissions()) {
+                    return false;
+                }
+                break;
             default:
-                // Invalid event type
+                // Invalid event type, bail
                 return false;
         }
 
@@ -258,14 +264,14 @@ class Dispatch extends Model
             // Get additional config details
             $sites = ($this->notification->eventConfig['sites'] ?? []);
 
-            // If not in a valid Site, return false
+            // If not in a valid Site, bail
             if (!in_array($element->siteId, $sites, false)) {
                 return false;
             }
 
         }
 
-        // If the entry's section and entry type pair is not selected, return false
+        // If the entry's section and entry type pair isn't selected, bail
         // (an entry must match BOTH a selected section and entry type to be valid)
         if (!in_array("{$element->sectionId}-{$element->typeId}", $sectionEntryTypes, false)) {
             return false;
@@ -273,7 +279,7 @@ class Dispatch extends Model
 
         // If not a save event, the save-context filters don't apply
         if (!in_array($this->notification->event, ['after-save', 'after-propagate'], true)) {
-            // Drop any stale filter config so it can't gate a poll-driven or lifecycle dispatch
+            // Drop any stale filter config so it doesn't apply to a poll-driven or lifecycle dispatch
             $filters = [];
         }
 
@@ -297,7 +303,7 @@ class Dispatch extends Model
             // Whether element matches filter configuration
             $match = $filterClass::check($this->event, $value);
 
-            // Filter condition is invalid
+            // If the filter doesn't match, bail
             if (!$match) {
                 return false;
             }
@@ -330,12 +336,12 @@ class Dispatch extends Model
             return false;
         }
 
-        // If not in a valid Volume, return false
+        // If not in a valid Volume, bail
         if (!in_array($element->volumeId, $volumes, false)) {
             return false;
         }
 
-        // Volume gate passed
+        // Volume is valid
         return true;
     }
 
@@ -361,7 +367,7 @@ class Dispatch extends Model
             return false;
         }
 
-        // If this is the assignment event, gate on the newly-assigned groups
+        // If this is the assignment event, check the newly-assigned groups
         if ('after-assign-to-groups' === $this->notification->event) {
             // Get the newly-assigned group IDs
             $newGroupIds = array_map('intval', ($this->data['newGroupIds'] ?? []));
@@ -380,7 +386,7 @@ class Dispatch extends Model
             return in_array(0, $userGroups, true);
         }
 
-        // If the user is not in any selected Group, return false
+        // If the user isn't in any selected Group, bail
         if (!array_intersect($userGroupIds, $userGroups)) {
             return false;
         }
@@ -411,17 +417,17 @@ class Dispatch extends Model
             return false;
         }
 
-        // If element has no typeId, return false
+        // If element has no typeId, bail
         if (empty($element->typeId)) {
             return false;
         }
 
-        // If not in a valid Product Type, return false
+        // If not in a valid Product Type, bail
         if (!in_array((int) $element->typeId, $productTypes, true)) {
             return false;
         }
 
-        // Product Type gate passed
+        // Product type is valid
         return true;
     }
 
@@ -447,23 +453,23 @@ class Dispatch extends Model
             return false;
         }
 
-        // If element has no typeId, return false
+        // If element has no typeId, bail
         if (empty($element->typeId)) {
             return false;
         }
 
-        // If not in a valid Digital Product Type, return false
+        // If not in a valid Digital Product Type, bail
         if (!in_array((int) $element->typeId, $productTypes, true)) {
             return false;
         }
 
-        // Digital Product Type gate passed
+        // Digital product type is valid
         return true;
     }
 
     /**
      * Additional filters for Digital Products license events.
-     * Gates on the parent product's type.
+     * Filters on the parent product's type.
      *
      * @return bool
      */
@@ -487,17 +493,17 @@ class Dispatch extends Model
         // Get the parent product
         $product = (method_exists($element, 'getProduct') ? $element->getProduct() : null);
 
-        // If parent product can't be resolved, return false
+        // If parent product can't be resolved, bail
         if (!$product) {
             return false;
         }
 
-        // If not in a valid Digital Product Type, return false
+        // If not in a valid Digital Product Type, bail
         if (!in_array((int) $product->typeId, $productTypes, true)) {
             return false;
         }
 
-        // Digital Product Type gate passed
+        // Digital product type is valid
         return true;
     }
 
@@ -523,17 +529,69 @@ class Dispatch extends Model
             return false;
         }
 
-        // If element has no calendarId, return false
+        // If element has no calendarId, bail
         if (empty($element->calendarId)) {
             return false;
         }
 
-        // If not in a valid Calendar, return false
+        // If not in a valid Calendar, bail
         if (!in_array((int) $element->calendarId, $calendars, true)) {
             return false;
         }
 
-        // Calendar gate passed
+        // Calendar is valid
+        return true;
+    }
+
+    /**
+     * Additional filters for Formie submission events.
+     *
+     * @return bool
+     */
+    private function _filterFormieSubmissions(): bool
+    {
+        // Get event element
+        $element = ($this->data['object'] ?? $this->event->sender);
+
+        // Get configured Forms
+        $forms = array_map('intval', ($this->notification->eventConfig['forms'] ?? []));
+
+        // If no forms are selected, warn and bail
+        if (empty($forms)) {
+            // Warn under the run-level parent so the misconfiguration is visible in the log
+            $this->notification->log->warning(Craft::t('notifier',
+                '[NO FORM] No forms are selected, this notification will never be triggered.'
+            ), $this->runEnvelope());
+            return false;
+        }
+
+        // If element has no formId, bail
+        if (empty($element->formId)) {
+            return false;
+        }
+
+        // If not from a valid Form, bail
+        if (!in_array((int) $element->formId, $forms, true)) {
+            return false;
+        }
+
+        // Get the desired submission outcome (default to successful only)
+        $outcome = ($this->notification->eventConfig['submissionOutcome'] ?? 'success');
+
+        // Whether this submission succeeded
+        $success = (bool) ($this->data['success'] ?? true);
+
+        // If only successful submissions should trigger, and this one failed, bail
+        if ('success' === $outcome && !$success) {
+            return false;
+        }
+
+        // If only failed submissions should trigger, and this one succeeded, bail
+        if ('failure' === $outcome && $success) {
+            return false;
+        }
+
+        // Form and outcome are valid
         return true;
     }
 

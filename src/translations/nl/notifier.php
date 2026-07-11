@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Gebruiker-gebeurtenis',
     'Ungrouped Users' => 'Gebruikers zonder groep',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Inzendingsresultaat',
+    'Trigger based on the success or failure of a submission.' => 'Activeren op basis van het slagen of mislukken van een inzending.',
+    'Successful submissions only' => 'Alleen geslaagde inzendingen',
+    'Failed submissions only' => 'Alleen mislukte inzendingen',
+    'All submissions' => 'Alle inzendingen',
+
     // Event tab: Feed
     'Feed URL' => 'Feed-URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'De URL van de te bewaken RSS-, Atom- of JSON-feed.',
@@ -739,6 +746,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[GEEN KALENDER] Er zijn geen kalenders geselecteerd, deze melding wordt nooit geactiveerd.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[GEEN DIGITAAL PRODUCTTYPE] Er zijn geen digitale producttypen geselecteerd, deze melding wordt nooit geactiveerd.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[GEEN ITEMTYPE] Er zijn geen secties of itemtypen geselecteerd, deze melding wordt nooit geactiveerd.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[GEEN FORMULIER] Er zijn geen formulieren geselecteerd, deze melding wordt nooit geactiveerd.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[GEEN PRODUCTTYPE] Er zijn geen producttypen geselecteerd, deze melding wordt nooit geactiveerd.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[GEEN GEBRUIKERSGROEP] Er zijn geen gebruikersgroepen geselecteerd, deze melding wordt nooit geactiveerd.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[GEEN VOLUME] Er zijn geen volumes geselecteerd, deze melding wordt nooit geactiveerd.',

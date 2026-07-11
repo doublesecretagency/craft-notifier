@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Событие пользователя',
     'Ungrouped Users' => 'Пользователи без группы',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Результат отправки',
+    'Trigger based on the success or failure of a submission.' => 'Срабатывать в зависимости от успеха или неудачи отправки.',
+    'Successful submissions only' => 'Только успешные отправки',
+    'Failed submissions only' => 'Только неудачные отправки',
+    'All submissions' => 'Все отправки',
+
     // Event tab: Feed
     'Feed URL' => 'URL канала',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'URL отслеживаемого RSS-, Atom- или JSON-канала.',
@@ -739,6 +746,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[НЕТ КАЛЕНДАРЯ] Не выбрано ни одного календаря, это уведомление никогда не сработает.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[НЕТ ТИПА ЦИФРОВОГО ПРОДУКТА] Не выбрано ни одного типа цифрового продукта, это уведомление никогда не сработает.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[НЕТ ТИПА ЗАПИСИ] Не выбрано ни одного раздела или типа записи, это уведомление никогда не сработает.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[НЕТ ФОРМЫ] Не выбрано ни одной формы, это уведомление никогда не сработает.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[НЕТ ТИПА ПРОДУКТА] Не выбрано ни одного типа продукта, это уведомление никогда не сработает.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[НЕТ ГРУППЫ ПОЛЬЗОВАТЕЛЕЙ] Не выбрано ни одной группы пользователей, это уведомление никогда не сработает.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[НЕТ ТОМА] Не выбрано ни одного тома, это уведомление никогда не сработает.',

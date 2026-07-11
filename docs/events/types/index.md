@@ -22,6 +22,10 @@ Sends a notification for certain **User** events.
 
 ## Plugin Elements
 
+### [Formie](/events/types/formie/)
+
+Sends a notification when a **Formie form** is submitted. _(requires [Formie](https://plugins.craftcms.com/formie))_
+
 ### [Craft Commerce](/events/types/craft-commerce/)
 
 Sends a notification for certain **Commerce Order** and **Commerce Product** events. _(requires [Craft Commerce](https://plugins.craftcms.com/commerce))_

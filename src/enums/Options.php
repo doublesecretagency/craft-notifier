@@ -26,6 +26,7 @@ abstract class Options
         'entries'                   => 'Entries',
         'assets'                    => 'Assets',
         'users'                     => 'Users',
+        'formie-submissions'        => 'Formie Submissions',
         'craft-commerce-orders'     => 'Commerce Orders',
         'craft-commerce-products'   => 'Commerce Products',
         'digital-products-products' => 'Digital Products',
@@ -44,6 +45,8 @@ abstract class Options
         'entries' => 'Entries',
         'assets'  => 'Assets',
         'users'   => 'Users',
+        ['optgroup' => 'Formie'],
+        'formie-submissions' => 'Submissions',
         ['optgroup' => 'Craft Commerce'],
         'craft-commerce-orders'   => 'Commerce Orders',
         'craft-commerce-products' => 'Commerce Products',
@@ -173,6 +176,13 @@ abstract class Options
             [
                 'label' => 'When manually triggered',
                 'value' => 'manually-triggered'
+            ],
+        ],
+        'formie-submissions' => [
+            [
+                'label' => 'When a form is submitted',
+                'value' => 'after-submission',
+                'class' => 'verbb\formie\services\Submissions::EVENT_AFTER_SUBMISSION'
             ],
         ],
         'craft-commerce-orders' => [

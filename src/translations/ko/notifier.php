@@ -63,6 +63,13 @@ return [
     'Users Event' => '사용자 이벤트',
     'Ungrouped Users' => '그룹 없는 사용자',
 
+    // Event tab: Formie
+    'Submission Outcome' => '제출 결과',
+    'Trigger based on the success or failure of a submission.' => '제출의 성공 또는 실패에 따라 트리거합니다.',
+    'Successful submissions only' => '성공한 제출만',
+    'Failed submissions only' => '실패한 제출만',
+    'All submissions' => '모든 제출',
+
     // Event tab: Feed
     'Feed URL' => '피드 URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => '모니터링할 RSS, Atom 또는 JSON 피드의 URL입니다.',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[캘린더 없음] 캘린더가 선택되지 않아 이 알림은 트리거되지 않습니다.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[디지털 제품 유형 없음] 디지털 제품 유형이 선택되지 않아 이 알림은 트리거되지 않습니다.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[항목 유형 없음] 섹션 또는 항목 유형이 선택되지 않아 이 알림은 트리거되지 않습니다.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[폼 없음] 폼이 선택되지 않아 이 알림은 트리거되지 않습니다.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[제품 유형 없음] 제품 유형이 선택되지 않아 이 알림은 트리거되지 않습니다.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[사용자 그룹 없음] 사용자 그룹이 선택되지 않아 이 알림은 트리거되지 않습니다.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[볼륨 없음] 볼륨이 선택되지 않아 이 알림은 트리거되지 않습니다.',

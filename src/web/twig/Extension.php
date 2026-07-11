@@ -97,6 +97,11 @@ class Extension extends AbstractExtension implements GlobalsInterface
             unset($eventTypes['solspace-calendar-events'], $eventTypeGrouped['solspace-calendar-events'], $allEvents['solspace-calendar-events']);
         }
 
+        // Hide Formie submission events if the plugin is not installed
+        if (!$this->_pluginInstalled('verbb\\formie\\elements\\Submission', 'formie')) {
+            unset($eventTypes['formie-submissions'], $eventTypeGrouped['formie-submissions'], $allEvents['formie-submissions']);
+        }
+
         // Drop optgroup dividers whose children all got removed above
         $eventTypeGrouped = $this->_pruneEmptyOptgroups($eventTypeGrouped);
 
@@ -272,6 +277,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
             new TwigFunction('availableProductTypes', [$this, 'availableProductTypes']),
             new TwigFunction('availableDigitalProductTypes', [$this, 'availableDigitalProductTypes']),
             new TwigFunction('availableCalendars', [$this, 'availableCalendars']),
+            new TwigFunction('availableForms', [$this, 'availableForms']),
             new TwigFunction('availableDateFields', [$this, 'availableDateFields']),
             new TwigFunction('notifierNextRun', [$this, 'notifierNextRun']),
         ];
@@ -506,6 +512,31 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
         // Return compiled options
         return $calendars;
+    }
+
+    /**
+     * Get all available Formie forms.
+     *
+     * @return array
+     */
+    public function availableForms(): array
+    {
+        // Initialize forms
+        $forms = [];
+
+        // If Formie is not installed, return empty
+        if (!$this->_pluginInstalled('verbb\\formie\\Formie', 'formie')) {
+            return $forms;
+        }
+
+        // Loop through all forms
+        foreach (\verbb\formie\Formie::getInstance()->getForms()->getAllForms() as $form) {
+            // Append each form
+            $forms[$form->id] = $form->title;
+        }
+
+        // Return compiled options
+        return $forms;
     }
 
     /**

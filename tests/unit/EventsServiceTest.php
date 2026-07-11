@@ -678,6 +678,53 @@ class EventsServiceTest extends TestCase
     }
 
     // ========================================================================= //
+    // Formie submissions (service-event registration)
+    // ========================================================================= //
+
+    public function testHasPrivateFormieSubmissionRegistrar(): void
+    {
+        // Formie gets its own private registrar so it can be guarded
+        // individually in registerNotificationEvents().
+        $this->assertTrue($this->reflection->hasMethod('_registerFormieSubmissionEvents'));
+        $this->assertTrue($this->reflection->getMethod('_registerFormieSubmissionEvents')->isPrivate());
+    }
+
+    public function testGuardsFormieSubmissionRegistrationOnClassExists(): void
+    {
+        // Formie is a separate plugin. Guard on its Submission element class
+        // so installs without the plugin do not fatal at boot.
+        $this->assertMatchesRegularExpression(
+            '/class_exists\(Submission::class\)[\s\S]*?_registerFormieSubmissionEvents/',
+            $this->eventsSource
+        );
+    }
+
+    public function testRegistersFormieSubmissionEvent(): void
+    {
+        // Formie fires its "after submission" event on the Submissions SERVICE,
+        // not the Submission element, so the listener target is Submissions::class.
+        // Mirrors the afterActivateUser / afterAssignToGroups service-event shape.
+        $this->assertMatchesRegularExpression(
+            '/Submissions::class[\s\S]*?Submissions::EVENT_AFTER_SUBMISSION[\s\S]*?FormieSubmissionEvents::class[\s\S]*?afterSubmission/',
+            $this->eventsSource
+        );
+    }
+
+    public function testImportsFormieClasses(): void
+    {
+        // The helper, the Submission element (guard + element map), the
+        // SubmissionCondition (condition map), and the Submissions service
+        // (listener target) must all be imported.
+        $this->assertStringContainsString(
+            'use doublesecretagency\\notifier\\helpers\\events\\FormieSubmissionEvents',
+            $this->eventsSource
+        );
+        $this->assertStringContainsString('use verbb\\formie\\elements\\Submission;', $this->eventsSource);
+        $this->assertStringContainsString('use verbb\\formie\\elements\\conditions\\SubmissionCondition;', $this->eventsSource);
+        $this->assertStringContainsString('use verbb\\formie\\services\\Submissions;', $this->eventsSource);
+    }
+
+    // ========================================================================= //
     // Tier 2 event registrations (source-level)
     // ========================================================================= //
 
@@ -752,6 +799,7 @@ class EventsServiceTest extends TestCase
             ['digital-products-products', null],
             ['digital-products-licenses',  null],
             ['solspace-calendar-events',           'CalendarEventCondition'],
+            ['formie-submissions',                 'SubmissionCondition'],
         ];
     }
 
@@ -796,6 +844,7 @@ class EventsServiceTest extends TestCase
             ['digital-products-products', 'DigitalProduct'],
             ['digital-products-licenses',  'License'],
             ['solspace-calendar-events',           'CalendarEvent'],
+            ['formie-submissions',                 'Submission'],
         ];
     }
 
@@ -900,6 +949,7 @@ class EventsServiceTest extends TestCase
             ['DigitalProduct',  'digital-products-products'],
             ['License',         'digital-products-licenses'],
             ['CalendarEvent',   'solspace-calendar-events'],
+            ['Submission',      'formie-submissions'],
         ];
     }
 

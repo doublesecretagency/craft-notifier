@@ -41,9 +41,13 @@ use doublesecretagency\notifier\helpers\events\CommerceProductEvents;
 use doublesecretagency\notifier\helpers\events\DigitalProductEvents;
 use doublesecretagency\notifier\helpers\events\DigitalProductLicenseEvents;
 use doublesecretagency\notifier\helpers\events\EntryEvents;
+use doublesecretagency\notifier\helpers\events\FormieSubmissionEvents;
 use doublesecretagency\notifier\helpers\events\UserEvents;
 use Solspace\Calendar\Elements\Event as CalendarEvent;
 use Solspace\Calendar\Elements\conditions\EventCondition as CalendarEventCondition;
+use verbb\formie\elements\Submission;
+use verbb\formie\elements\conditions\SubmissionCondition;
+use verbb\formie\services\Submissions;
 use yii\base\Event;
 
 /**
@@ -91,6 +95,11 @@ class Events extends Component
         $this->_registerEntryEvents();
         $this->_registerAssetEvents();
         $this->_registerUserEvents();
+
+        // If Formie is installed, register its submission events
+        if (class_exists(Submission::class)) {
+            $this->_registerFormieSubmissionEvents();
+        }
 
         // If Craft Commerce is installed, register its order events
         if (class_exists(Order::class)) {
@@ -419,6 +428,21 @@ class Events extends Component
         );
     }
 
+    /**
+     * Register all events for Formie Submissions.
+     *
+     * @return void
+     */
+    private function _registerFormieSubmissionEvents(): void
+    {
+        // When a form is submitted
+        Event::on(
+            Submissions::class,
+            Submissions::EVENT_AFTER_SUBMISSION,
+            [FormieSubmissionEvents::class, 'afterSubmission']
+        );
+    }
+
     // ========================================================================= //
 
     /**
@@ -468,6 +492,7 @@ class Events extends Component
             'digital-products-products' => null,
             'digital-products-licenses' => null,
             'solspace-calendar-events' => class_exists(CalendarEventCondition::class) ? CalendarEventCondition::class : null,
+            'formie-submissions' => class_exists(SubmissionCondition::class) ? SubmissionCondition::class : null,
             default => null,
         };
     }
@@ -493,6 +518,7 @@ class Events extends Component
             'digital-products-products' => class_exists(DigitalProduct::class) ? DigitalProduct::class : null,
             'digital-products-licenses' => class_exists(License::class) ? License::class : null,
             'solspace-calendar-events' => class_exists(CalendarEvent::class) ? CalendarEvent::class : null,
+            'formie-submissions' => class_exists(Submission::class) ? Submission::class : null,
             default => null,
         };
     }
@@ -518,6 +544,7 @@ class Events extends Component
             $element instanceof DigitalProduct  => 'digital-products-products',
             $element instanceof License         => 'digital-products-licenses',
             $element instanceof CalendarEvent   => 'solspace-calendar-events',
+            $element instanceof Submission      => 'formie-submissions',
             default => null,
         };
     }

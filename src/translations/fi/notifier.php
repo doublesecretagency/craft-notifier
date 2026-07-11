@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Käyttäjätapahtuma',
     'Ungrouped Users' => 'Käyttäjät ilman ryhmää',
 
+    // Event tab: Formie
+    'Submission Outcome' => 'Lähetyksen tulos',
+    'Trigger based on the success or failure of a submission.' => 'Laukaise lähetyksen onnistumisen tai epäonnistumisen perusteella.',
+    'Successful submissions only' => 'Vain onnistuneet lähetykset',
+    'Failed submissions only' => 'Vain epäonnistuneet lähetykset',
+    'All submissions' => 'Kaikki lähetykset',
+
     // Event tab: Feed
     'Feed URL' => 'Syötteen URL',
     'The URL of the RSS, Atom, or JSON feed to watch.' => 'Seurattavan RSS-, Atom- tai JSON-syötteen URL.',
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[EI KALENTEREITA] Kalentereita ei ole valittu, tämä ilmoitus ei laukea koskaan.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[EI DIGITAALISIA TUOTETYYPPEJÄ] Digitaalisia tuotetyyppejä ei ole valittu, tämä ilmoitus ei laukea koskaan.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[EI MERKINTÄTYYPPEJÄ] Osioita tai merkintätyyppejä ei ole valittu, tämä ilmoitus ei laukea koskaan.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[EI LOMAKKEITA] Lomakkeita ei ole valittu, tämä ilmoitus ei laukea koskaan.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[EI TUOTETYYPPEJÄ] Tuotetyyppejä ei ole valittu, tämä ilmoitus ei laukea koskaan.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[EI KÄYTTÄJÄRYHMIÄ] Käyttäjäryhmiä ei ole valittu, tämä ilmoitus ei laukea koskaan.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[EI TALTIOITA] Taltioita ei ole valittu, tämä ilmoitus ei laukea koskaan.',

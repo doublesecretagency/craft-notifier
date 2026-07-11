@@ -63,6 +63,13 @@ return [
     'Users Event' => 'Evento utenti',
     'Ungrouped Users' => 'Utenti senza gruppo',
 
+    // Event tab: Formie
+    'Submission Outcome' => "Esito dell'invio",
+    'Trigger based on the success or failure of a submission.' => 'Attiva in base al successo o al fallimento di un invio.',
+    'Successful submissions only' => 'Solo invii riusciti',
+    'Failed submissions only' => 'Solo invii non riusciti',
+    'All submissions' => 'Tutti gli invii',
+
     // Event tab: Feed
     'Feed URL' => 'URL del feed',
     'The URL of the RSS, Atom, or JSON feed to watch.' => "L'URL del feed RSS, Atom o JSON da monitorare.",
@@ -738,6 +745,7 @@ return [
     '[NO CALENDAR] No calendars are selected, this notification will never be triggered.' => '[NESSUN CALENDARIO] Nessun calendario è selezionato, questa notifica non verrà mai attivata.',
     '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.' => '[NESSUN TIPO DI PRODOTTO DIGITALE] Nessun tipo di prodotto digitale è selezionato, questa notifica non verrà mai attivata.',
     '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.' => '[NESSUN TIPO DI VOCE] Nessuna sezione o tipo di voce è selezionato, questa notifica non verrà mai attivata.',
+    '[NO FORM] No forms are selected, this notification will never be triggered.' => '[NESSUN MODULO] Nessun modulo è selezionato, questa notifica non verrà mai attivata.',
     '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.' => '[NESSUN TIPO DI PRODOTTO] Nessun tipo di prodotto è selezionato, questa notifica non verrà mai attivata.',
     '[NO USER GROUP] No user groups are selected, this notification will never be triggered.' => '[NESSUN GRUPPO DI UTENTI] Nessun gruppo di utenti è selezionato, questa notifica non verrà mai attivata.',
     '[NO VOLUME] No volumes are selected, this notification will never be triggered.' => '[NESSUN VOLUME] Nessun volume è selezionato, questa notifica non verrà mai attivata.',

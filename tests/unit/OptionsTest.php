@@ -89,14 +89,17 @@ class OptionsTest extends TestCase
     public function testEventTypeOrderMatchesCanonicalSequence(): void
     {
         // The order is load-bearing - the CP dropdown renders options in
-        // source order. Native elements first, then the plugin event types,
-        // then the data-source event types (RSS/JSON Feed, System Snapshot,
-        // Dynamic Data) last.
+        // source order. Native elements first, then the plugin event types
+        // ordered by install count (Formie, then Craft Commerce carrying its
+        // Digital Products add-on, then Solspace Calendar), then the
+        // data-source event types (RSS/JSON Feed, System Snapshot, Dynamic
+        // Data) last.
         $this->assertSame(
             [
                 'entries',
                 'assets',
                 'users',
+                'formie-submissions',
                 'craft-commerce-orders',
                 'craft-commerce-products',
                 'digital-products-products',
@@ -140,9 +143,9 @@ class OptionsTest extends TestCase
     public function testEventTypeGroupedDeclaresEveryOptgroupInOrder(): void
     {
         // Pin the optgroup labels and their order: native elements first, then
-        // one optgroup per plugin (Craft Commerce, Digital Products, Solspace
-        // Calendar), then the data-source event types last. Drift here would
-        // re-shape the CP dropdown.
+        // one optgroup per plugin ordered by install count (Formie, Craft
+        // Commerce, Digital Products, Solspace Calendar), then the data-source
+        // event types last. Drift here would re-shape the CP dropdown.
         $optgroups = [];
         foreach (Options::EVENT_TYPE_GROUPED as $key => $value) {
             if (is_int($key) && is_array($value) && isset($value['optgroup'])) {
@@ -150,7 +153,7 @@ class OptionsTest extends TestCase
             }
         }
         $this->assertSame(
-            ['Native Elements', 'Craft Commerce', 'Digital Products', 'Solspace Calendar', 'Other Data Sources'],
+            ['Native Elements', 'Formie', 'Craft Commerce', 'Digital Products', 'Solspace Calendar', 'Other Data Sources'],
             $optgroups
         );
     }
@@ -583,7 +586,12 @@ class OptionsTest extends TestCase
     {
         // Manual triggers aren't backed by a Yii event, so the `class` key
         // is intentionally omitted from every manually-triggered entry.
+        // The single-event data-source types don't offer manual triggering,
+        // so their trailing entry is skipped.
         foreach (Options::ALL_EVENTS as $key => $events) {
+            if (in_array($key, ['feed', 'system-snapshot', 'dynamic-data', 'formie-submissions'], true)) {
+                continue;
+            }
             $last = $events[array_key_last($events)];
             $this->assertArrayNotHasKey('class', $last,
                 "manually-triggered entry under '{$key}' must not declare a class");
@@ -612,7 +620,7 @@ class OptionsTest extends TestCase
         // The data-source event types are exceptions: RSS Feed ships one event,
         // and System Snapshot / Dynamic Data use a recurring-schedule trigger.
         foreach (Options::ALL_EVENTS as $key => $events) {
-            if (in_array($key, ['feed', 'system-snapshot', 'dynamic-data'], true)) {
+            if (in_array($key, ['feed', 'system-snapshot', 'dynamic-data', 'formie-submissions'], true)) {
                 continue;
             }
             $secondToLast = $events[count($events) - 2];
@@ -694,6 +702,50 @@ class OptionsTest extends TestCase
         $this->assertSame('system-snapshot', $keys[$dividerIndex + 2]);
         $this->assertSame('dynamic-data',    $keys[$dividerIndex + 3]);
         $this->assertArrayNotHasKey($dividerIndex + 4, $keys, 'Data sources must be the final group');
+    }
+
+    // ========================================================================= //
+    // ALL_EVENTS coverage: Formie Submissions event type
+    // ========================================================================= //
+
+    public function testFormieSubmissionsAppearsInAllThreeEventTypeLookups(): void
+    {
+        // Formie is a third-party plugin event type, but its keys must still be
+        // present in every lookup (the Twig install-gate hides them at render
+        // time when Formie is absent, not by omitting them from Options).
+        $this->assertArrayHasKey('formie-submissions', Options::EVENT_TYPE);
+        $this->assertArrayHasKey('formie-submissions', Options::EVENT_TYPE_GROUPED);
+        $this->assertArrayHasKey('formie-submissions', Options::ALL_EVENTS);
+    }
+
+    public function testFormieSubmissionsLabelsAreExact(): void
+    {
+        // The flat label carries the brand ("Formie Submissions"); inside the
+        // "Formie" optgroup the label shortens to "Submissions".
+        $this->assertSame('Formie Submissions', Options::EVENT_TYPE['formie-submissions']);
+        $this->assertSame('Submissions', Options::EVENT_TYPE_GROUPED['formie-submissions']);
+    }
+
+    public function testFormieSubmissionsShipsExactlyOneEvent(): void
+    {
+        // Like RSS Feed, Formie ships a single trigger: "When a form is submitted".
+        // Adding a sibling event later means revisiting the CP template.
+        $events = Options::ALL_EVENTS['formie-submissions'];
+        $this->assertCount(1, $events);
+        $this->assertSame('after-submission', $events[0]['value']);
+        $this->assertSame('When a form is submitted', $events[0]['label']);
+    }
+
+    public function testFormieSubmissionsReferencesSubmissionsServiceConstant(): void
+    {
+        // The event rides the Submissions service event (not a Submission element
+        // event), stored as a fully-qualified literal string so installs without
+        // Formie don't blow up at parse time.
+        $events = Options::ALL_EVENTS['formie-submissions'];
+        $this->assertSame(
+            'verbb\formie\services\Submissions::EVENT_AFTER_SUBMISSION',
+            $events[0]['class']
+        );
     }
 
     public function testEntriesOffersPendingToLive(): void
