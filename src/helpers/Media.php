@@ -101,7 +101,7 @@ abstract class Media
             return 'setMedia evaluated to a null value.';
         }
 
-        // If a Craft element, name its class (a non-asset element is not an image)
+        // If a Craft element, name its class
         if ($item instanceof ElementInterface) {
             return 'setMedia evaluated to a '.$item::class.' element, which is not an image.';
         }
@@ -111,7 +111,7 @@ abstract class Media
             return "Asset ID {$item} could not be found.";
         }
 
-        // If a string, it was empty (a non-empty string resolves as a URL)
+        // If a string, it was empty
         if (is_string($item)) {
             return 'setMedia evaluated to an empty string.';
         }
@@ -199,7 +199,7 @@ abstract class Media
                 return null;
             }
 
-            // Get the MIME from the response header (drop any charset suffix)
+            // Get the MIME from the response header, dropping any charset suffix
             $mime = strtolower(trim(explode(';', $response->getHeaderLine('Content-Type'))[0]));
 
             // Return the fetched bytes
@@ -230,12 +230,12 @@ abstract class Media
         // Get the raster type, byte-sniffing when the MIME is unhelpful
         $type = static::_rasterType($mime, $bytes);
 
-        // If the type is unsupported, bail (SVG, unknown)
+        // If the type is unsupported, bail
         if (!$type) {
             return null;
         }
 
-        // If the GIF is animated, bail (an attachment is a single still)
+        // If the GIF is animated, bail, since an attachment must be a single still
         if ('gif' === $type && static::_isAnimatedGif($bytes)) {
             return null;
         }
@@ -332,7 +332,7 @@ abstract class Media
      */
     public static function mimeFromUrl(string $url): ?string
     {
-        // Get the lowercased path extension (ignore any query string)
+        // Get the lowercased path extension, ignoring any query string
         $path = (parse_url($url, PHP_URL_PATH) ?: $url);
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
@@ -409,7 +409,7 @@ abstract class Media
                 return null;
             }
 
-            // Return the bytes with the Asset's MIME (falling back to the descriptor's)
+            // Return the bytes with the Asset's MIME, falling back to the descriptor's
             return [
                 'bytes' => $bytes,
                 'mime'  => ($asset->getMimeType() ?: $fallbackMime),

@@ -16,7 +16,7 @@ Each individual Notification consists of four parts, separated into tabs...
 
 ### Meta
 
-Simple "Title" and "Description" fields.
+Contains the native **Title** field, plus any [custom fields](/custom-fields) you've attached.
 
 ### Event
 

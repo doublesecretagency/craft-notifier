@@ -22,6 +22,11 @@ abstract class Compat
 {
 
     /**
+     * @var bool|null Cached Craft 4 detection result.
+     */
+    private static ?bool $_isCraft4 = null;
+
+    /**
      * @var bool|null Cached Craft 5 detection result.
      */
     private static ?bool $_isCraft5 = null;
@@ -35,11 +40,28 @@ abstract class Compat
      */
     public static function isCraft5(): bool
     {
-        // Cache on first call (Craft version is fixed for the lifetime of the request)
+        // Cache on first call, since the Craft version is fixed for the request
         return static::$_isCraft5 ??= version_compare(
             Craft::$app->getVersion(),
             '5.0.0',
             '>='
+        );
+    }
+
+    /**
+     * Whether the host Craft install is Craft 4.
+     *
+     * @return bool
+     */
+    public static function isCraft4(): bool
+    {
+        // Get the host Craft version
+        $version = Craft::$app->getVersion();
+
+        // Cache on first call, since the Craft version is fixed for the request
+        return static::$_isCraft4 ??= (
+            version_compare($version, '4.0.0', '>=')
+            && version_compare($version, '5.0.0', '<')
         );
     }
 

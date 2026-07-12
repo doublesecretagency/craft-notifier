@@ -21,7 +21,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 /**
- * Controller for the notification log CP actions.
+ * Handles lookups and deletions for the notification log.
  *
  * @since 1.0.0
  */
@@ -46,7 +46,7 @@ class LogController extends Controller
         // Get specified ID
         $notificationId = $this->request->getRequiredBodyParam('notificationId');
 
-        // If no valid ID provided
+        // If no valid ID provided, bail
         if (!$notificationId || !is_numeric($notificationId)) {
             // Return JSON response with error message
             return $this->asJson([
@@ -59,7 +59,7 @@ class LogController extends Controller
         /** @var Notification $notification */
         $notification = Notifier::getNotification($notificationId);
 
-        // If no notification
+        // If no notification, bail
         if (!$notification) {
             // Return JSON response with error message
             return $this->asJson([
@@ -94,7 +94,7 @@ class LogController extends Controller
         // Get specified ID
         $envelopeId = $this->request->getRequiredBodyParam('envelopeId');
 
-        // If no valid ID provided
+        // If no valid ID provided, bail
         if (!$envelopeId || !is_numeric($envelopeId)) {
             // Return JSON response with error message
             return $this->asJson([
@@ -135,7 +135,7 @@ class LogController extends Controller
         // Get specified date
         $date = $this->request->getRequiredBodyParam('date');
 
-        // If no date specified
+        // If no date specified, bail
         if (!$date) {
             // Return JSON response with error message
             return $this->asJson([

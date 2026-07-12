@@ -15,6 +15,7 @@ use Craft;
 use craft\base\Element;
 use craft\db\Query;
 use craft\db\Table;
+use craft\elements\actions\Restore;
 use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\helpers\Db;
@@ -28,16 +29,15 @@ use doublesecretagency\notifier\elements\db\NotificationQuery;
 use doublesecretagency\notifier\enums\Options;
 use doublesecretagency\notifier\helpers\Compat;
 use doublesecretagency\notifier\helpers\NotificationStructure;
-use doublesecretagency\notifier\fieldlayoutelements\notifications\EventFieldLayoutTab;
-use doublesecretagency\notifier\fieldlayoutelements\notifications\MessageFieldLayoutTab;
-use doublesecretagency\notifier\fieldlayoutelements\notifications\MetaFieldLayoutTab;
-use doublesecretagency\notifier\fieldlayoutelements\notifications\RecipientsFieldLayoutTab;
 use doublesecretagency\notifier\filters\ExclusiveFilterInterface;
 use doublesecretagency\notifier\filters\FilterInterface;
+use doublesecretagency\notifier\models\NotificationFieldLayoutProvider;
 use doublesecretagency\notifier\models\NotificationLog;
 use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\NotifierPlugin;
 use doublesecretagency\notifier\records\Notification as NotificationRecord;
+use ReflectionClass;
+use ReflectionProperty;
 use Throwable;
 use yii\base\Event;
 use yii\base\Exception as BaseException;
@@ -56,11 +56,6 @@ class Notification extends Element
      * @var string[] Event types which compile a data report, not directly tied to elements.
      */
     private const REPORT_EVENT_TYPES = ['system-snapshot', 'dynamic-data'];
-
-    /**
-     * @var string|null Optional description of the notification.
-     */
-    public ?string $description = null;
 
     /**
      * @var string|null Type of event which will activate the notification.
@@ -191,7 +186,7 @@ class Notification extends Element
      */
     protected static function defineSources(string $context): array
     {
-        // Resolve the structure that backs the manual order
+        // Get the structure that backs the manual order
         $structureId = NotificationStructure::getStructureId();
 
         // If the structure can't be resolved, fall back to a plain (unordered) source
@@ -240,7 +235,7 @@ class Notification extends Element
             return true;
         }
 
-        // Otherwise require the save permission (reordering is an edit affordance)
+        // Otherwise require the save permission
         return $user->can('notifier-saveNotifications');
     }
 
@@ -249,8 +244,10 @@ class Notification extends Element
      */
     protected static function defineActions(string $source): array
     {
-        // List any bulk element actions here
-        return [];
+        // Bulk element actions
+        return [
+            Restore::class, // Allow trashed notifications to be restored
+        ];
     }
 
     /**
@@ -300,7 +297,6 @@ class Notification extends Element
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'uri'  => ['label' => Craft::t('app', 'URI')],
 
-            'description'    => ['label' => Craft::t('app', 'Description')],
             'eventType'      => ['label' => Craft::t('app', 'Event Type')],
             'event'          => ['label' => Craft::t('app', 'Event')],
             'messageType'    => ['label' => Craft::t('app', 'Message Type')],
@@ -319,7 +315,6 @@ class Notification extends Element
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
-            'description',
             'eventType',
             'event',
             'messageType',
@@ -392,7 +387,7 @@ class Notification extends Element
             return;
         }
 
-        // If this isn't a CP request, bail (console / queue / programmatic saves are trusted)
+        // If this isn't a CP request, bail, since console, queue, and programmatic saves are trusted
         if (!Craft::$app->getRequest()->getIsCpRequest()) {
             return;
         }
@@ -440,7 +435,7 @@ class Notification extends Element
      */
     public function canView(User $user): bool
     {
-        // Defer to parent (admins bypass permissions)
+        // Defer to parent
         if (parent::canView($user)) {
             return true;
         }
@@ -454,7 +449,7 @@ class Notification extends Element
      */
     public function canSave(User $user): bool
     {
-        // Defer to parent (admins bypass permissions)
+        // Defer to parent
         if (parent::canSave($user)) {
             return true;
         }
@@ -468,7 +463,7 @@ class Notification extends Element
      */
     public function canDuplicate(User $user): bool
     {
-        // Defer to parent (admins bypass permissions)
+        // Defer to parent
         if (parent::canDuplicate($user)) {
             return true;
         }
@@ -482,7 +477,7 @@ class Notification extends Element
      */
     public function canDelete(User $user): bool
     {
-        // Defer to parent (admins bypass permissions)
+        // Defer to parent
         if (parent::canDelete($user)) {
             return true;
         }
@@ -496,7 +491,7 @@ class Notification extends Element
      */
     public function canCreateDrafts(User $user): bool
     {
-        // Defer to parent (admins bypass permissions)
+        // Defer to parent
         if (parent::canCreateDrafts($user)) {
             return true;
         }
@@ -559,21 +554,63 @@ class Notification extends Element
      */
     public function getFieldLayout(): ?FieldLayout
     {
-        // Build the field layout for the Notification element
-        $fieldLayout = new FieldLayout();
+        // Return the admin-defined field layout for notifications
+        return NotifierPlugin::getInstance()->fieldLayouts->getLayout();
+    }
 
-        // Bind the layout to this element type so card-view rendering can resolve it
-        $fieldLayout->type = static::class;
+    /**
+     * @inheritdoc
+     */
+    protected static function defineFieldLayouts(?string $source): array
+    {
+        // Get the persisted layouts for this element type
+        $layouts = Craft::$app->getFields()->getLayoutsByType(static::class);
 
-        // Attach the four standard tabs
-        $fieldLayout->setTabs([
-            new MetaFieldLayoutTab(),
-            new EventFieldLayoutTab(),
-            new MessageFieldLayoutTab(),
-            new RecipientsFieldLayoutTab(),
-        ]);
+        // If Craft 4, skip the provider (Craft 4 lacks chip interfaces)
+        if (Compat::isCraft4()) {
+            return $layouts;
+        }
 
-        return $fieldLayout;
+        // Create the field layout provider
+        $provider = new NotificationFieldLayoutProvider();
+
+        // Attach the provider so a field's "Used by" chip
+        // links back to the field layout designer
+        foreach ($layouts as $layout) {
+            $layout->provider = $provider;
+        }
+
+        // Return the layouts
+        return $layouts;
+    }
+
+    /**
+     * Get the reserved field handles a custom field can't use.
+     *
+     * A custom field sharing one of these handles would be unreachable via
+     * `notification.<handle>`, so the field layout designer rejects it at save.
+     *
+     * @return string[]
+     */
+    public static function reservedFieldHandles(): array
+    {
+        // Initialize the reserved handles
+        $handles = [];
+
+        // Loop through the element's public properties
+        foreach ((new ReflectionClass(static::class))->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+
+            // If the property is static, skip
+            if ($property->isStatic()) {
+                continue;
+            }
+
+            // Reserve the property name
+            $handles[] = $property->getName();
+        }
+
+        // Return the distinct reserved handles
+        return array_values(array_unique($handles));
     }
 
     // ========================================================================= //
@@ -628,7 +665,7 @@ class Notification extends Element
         // Render as a <div>; the edit page is already a <form> and nested forms break htmx
         $condition->mainTag = 'div';
 
-        // Scope to selected entry types when present (Craft 5 only; Craft 4 falls back to all layouts)
+        // On Craft 5, scope to the selected entry types; Craft 4 falls back to all layouts
         if (Compat::isCraft5()) {
             // Get the condition field layouts
             $layouts = $this->_resolveConditionFieldLayouts($forEventType);
@@ -665,22 +702,29 @@ class Notification extends Element
             return [];
         }
 
-        // Collect the distinct entry type IDs from the pairs
+        // Initialize the distinct entry type IDs
         $entryTypeIds = [];
+
+        // Loop through the section and entry type pairs
         foreach ($sectionEntryTypes as $pair) {
+            // Get the entry type ID from the pair
             $typeId = (explode('-', (string) $pair, 2)[1] ?? null);
+
+            // If the pair has an entry type ID, collect it
             if (null !== $typeId) {
                 $entryTypeIds[(int) $typeId] = (int) $typeId;
             }
         }
 
-        // Load the entries service (Craft 5: getEntries(), Craft 4: getSections())
+        // Get the entries service
         $entriesService = Compat::isCraft5()
             ? Craft::$app->getEntries()
             : Craft::$app->getSections();
 
-        // Collect each selected entry type's field layout
+        // Initialize the field layouts
         $layouts = [];
+
+        // Loop through each selected entry type
         foreach ($entryTypeIds as $typeId) {
             // Get the entry type
             $entryType = $entriesService->getEntryTypeById((int) $typeId);
@@ -775,6 +819,7 @@ class Notification extends Element
             if (!$isNew) {
                 // Get the existing notification record
                 $record = NotificationRecord::findOne($this->id);
+
                 // If it can't be found, throw an exception
                 if (!$record) {
                     throw new BaseException(Craft::t('notifier', 'Invalid notification ID: {id}', ['id' => $this->id]));
@@ -782,6 +827,7 @@ class Notification extends Element
             } else {
                 // Create a new notification record
                 $record = new NotificationRecord();
+
                 // Set the notification ID
                 $record->id = $this->id;
             }
@@ -789,7 +835,7 @@ class Notification extends Element
             // Capture the previously-saved Event Type
             $oldEventType = $record->eventType;
 
-            // Decode the previously-saved eventConfig (raw JSON string when freshly loaded)
+            // Decode the previously-saved eventConfig, a raw JSON string when freshly loaded
             $oldEventConfig = is_string($record->eventConfig)
                 ? (json_decode($record->eventConfig, true) ?: [])
                 : (is_array($record->eventConfig) ? $record->eventConfig : []);
@@ -800,8 +846,8 @@ class Notification extends Element
             // Get request service
             $request = Craft::$app->getRequest();
 
-            // Initialize POST values (null falls back to the saved value)
-            $description = $eventType = $event = $eventConfig = null;
+            // Initialize the POST values
+            $eventType = $event = $eventConfig = null;
             $messageType = $messageConfig = $recipientsType = $recipientsConfig = null;
             $queue = null;
 
@@ -809,7 +855,6 @@ class Notification extends Element
             if (!$request->getIsConsoleRequest()) {
 
                 // Get POST values
-                $description      = $request->getBodyParam('description');
                 $eventType        = $request->getBodyParam('eventType');
                 $event            = $request->getBodyParam('event');
                 $eventConfig      = $request->getBodyParam('eventConfig');
@@ -886,15 +931,36 @@ class Notification extends Element
 
             }
 
-            // Configure the notification
-            $record->description      = $description      ?? $this->description;
-            $record->eventType        = $eventType        ?? $this->eventType;
-            $record->event            = $event            ?? $this->event;
-            $record->eventConfig      = $eventConfig      ?? $this->eventConfig;
-            $record->messageType      = $messageType      ?? $this->messageType;
-            $record->messageConfig    = $messageConfig    ?? $this->messageConfig;
-            $record->recipientsType   = $recipientsType   ?? $this->recipientsType;
-            $record->recipientsConfig = $recipientsConfig ?? $this->recipientsConfig;
+            // Whether this is a console request
+            $isConsole = $request->getIsConsoleRequest();
+
+            // Get the acting user
+            $user = ($isConsole ? null : Craft::$app->getUser());
+
+            // Whether the user may edit each wiring tab. Console saves have no
+            // forged-POST vector, so treat them as editable
+            $canEditEvent      = ($isConsole || $user->checkPermission('notifier-editEventTab'));
+            $canEditMessage    = ($isConsole || $user->checkPermission('notifier-editMessageTab'));
+            $canEditRecipients = ($isConsole || $user->checkPermission('notifier-editRecipientsTab'));
+
+            // If the user may edit the Event tab, apply its values
+            if ($canEditEvent) {
+                $record->eventType   = $eventType   ?? $this->eventType;
+                $record->event       = $event       ?? $this->event;
+                $record->eventConfig = $eventConfig ?? $this->eventConfig;
+            }
+
+            // If the user may edit the Message tab, apply its values
+            if ($canEditMessage) {
+                $record->messageType   = $messageType   ?? $this->messageType;
+                $record->messageConfig = $messageConfig ?? $this->messageConfig;
+            }
+
+            // If the user may edit the Recipients tab, apply its values
+            if ($canEditRecipients) {
+                $record->recipientsType   = $recipientsType   ?? $this->recipientsType;
+                $record->recipientsConfig = $recipientsConfig ?? $this->recipientsConfig;
+            }
 
             // Normalize the queue lightswitch ('1' / '') into a boolean
             $record->queue = (null !== $queue)
@@ -910,7 +976,7 @@ class Notification extends Element
             // Sync the Event from the just-saved record
             $this->event = $record->event;
 
-            // Sync the eventConfig (normalize to an array if the record holds the JSON string)
+            // Sync the eventConfig, normalizing to an array if the record holds a JSON string
             $this->eventConfig = is_array($record->eventConfig)
                 ? $record->eventConfig
                 : (json_decode((string) $record->eventConfig, true) ?: []);
@@ -997,6 +1063,7 @@ class Notification extends Element
             case 'selected-users':     return 'selected User';
             case 'dynamic-recipients': return 'dynamic recipients';
         }
+
         // Fallback to "unknown"
         return 'unknown recipient';
     }
@@ -1052,7 +1119,7 @@ class Notification extends Element
      */
     private function _ensureFeedSeeding(?string $oldEventType, string $oldFeedUrl): void
     {
-        // If this is a draft or revision, bail (only canonical saves run the seed flow)
+        // If this is a draft or revision, bail
         if ($this->getIsDraft() || $this->getIsRevision()) {
             return;
         }
@@ -1062,7 +1129,7 @@ class Notification extends Element
             return;
         }
 
-        // Read the current Feed URL
+        // Get the current Feed URL
         $newFeedUrl = trim((string) ($this->eventConfig['feedUrl'] ?? ''));
 
         // If no Feed URL is configured, bail
@@ -1077,11 +1144,12 @@ class Notification extends Element
                 NotifierPlugin::getInstance()->feedRunner->wipeHistory($this->id);
             }
 
-            // Attempt the initial seed (idempotent; no-ops if already seeded)
+            // Attempt the initial seed
             NotifierPlugin::getInstance()->feedRunner->seedNotification($this);
         } catch (Throwable $e) {
             // Get a feed scan parent for this failure
             $envelopeId = $this->log->feedScan($newFeedUrl);
+
             // Log the failure as a warning, but don't block the save
             $this->log->warning(Craft::t('notifier',
                 '[FEED ERROR] Initial feed scan failed: {message}',
@@ -1129,12 +1197,12 @@ class Notification extends Element
      */
     private function _ensureStructurePlacement(): void
     {
-        // If this is a draft or revision, bail (only canonical notifications are placed)
+        // If this is a draft or revision, bail
         if ($this->getIsDraft() || $this->getIsRevision()) {
             return;
         }
 
-        // Resolve the structure that backs the manual order
+        // Get the structure that backs the manual order
         $structureId = NotificationStructure::getStructureId();
 
         // If the structure can't be resolved, bail
@@ -1142,7 +1210,7 @@ class Notification extends Element
             return;
         }
 
-        // If already placed in the structure, bail (keep the existing position)
+        // If already placed in the structure, bail
         if ($this->_isInStructure($structureId)) {
             return;
         }
@@ -1154,13 +1222,13 @@ class Notification extends Element
         /** @var Settings $settings */
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        // If placing at the beginning, add before the others (top of the list)
+        // If placing at the beginning, add before the others
         if (Settings::DEFAULT_PLACEMENT_BEGINNING === $settings->defaultPlacement) {
             $structures->prependToRoot($structureId, $this, Structures::MODE_INSERT);
             return;
         }
 
-        // Otherwise add after the others (bottom of the list)
+        // Otherwise add after the others
         $structures->appendToRoot($structureId, $this, Structures::MODE_INSERT);
     }
 

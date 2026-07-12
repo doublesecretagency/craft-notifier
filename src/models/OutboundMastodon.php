@@ -92,7 +92,7 @@ class OutboundMastodon extends BaseEnvelope
             return false;
         }
 
-        // Upload any attached images (best-effort)
+        // Upload any attached images
         $mediaIds = $this->_uploadImages($instanceUrl, $accessToken, $notification);
 
         // If there is neither body text nor media, log error and bail
@@ -140,15 +140,17 @@ class OutboundMastodon extends BaseEnvelope
             if ($status < 200 || $status >= 300 || !is_array($decoded) || !isset($decoded['id'])) {
                 // Get the error message
                 $error = (is_array($decoded) ? ($decoded['error'] ?? "HTTP {$status}") : "HTTP {$status}");
+
                 // Log the error
                 $notification->log->error(Craft::t('notifier', '[REJECTED BY MASTODON] {error}', ['error' => $error]), $this->envelopeId);
+
                 // Bail
                 return false;
             }
 
         } catch (GuzzleException|Throwable $exception) {
 
-            // Get the error message (or fall back to a JSON encoded version)
+            // Get the error message
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
             // Log the error message
@@ -270,7 +272,7 @@ class OutboundMastodon extends BaseEnvelope
             // Get the response status code
             $status = $response->getStatusCode();
 
-            // If the response is non-2xx, bail (a 200 or 202 both carry a usable media ID)
+            // If the response is non-2xx, bail
             if ($status < 200 || $status >= 300) {
                 // A 403 means the token can post statuses but lacks the media scope
                 $error = (403 === $status)

@@ -33,7 +33,7 @@ class SetRecipientsTokenParser extends AbstractTokenParser
         $parser = $this->parser;
         $stream = $parser->getStream();
 
-        // Parse the required items expression (a User, string, or array of either)
+        // Parse the required items expression
         $items = $parser->getExpressionParser()->parseExpression();
 
         // Expect the end of the tag

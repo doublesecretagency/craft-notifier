@@ -171,7 +171,7 @@ abstract class SystemSnapshot
      */
     private static function _craftUpdate(array $update): array
     {
-        // Get the CMS update model (may be null if the refresh and cache both failed)
+        // Get the CMS update model
         $cms = ($update['model']->cms ?? null);
 
         // Return the Craft update sub-section
@@ -206,7 +206,7 @@ abstract class SystemSnapshot
             $info = $pluginsService->getPluginInfo($handle);
             $license = (string) ($info['licenseKeyStatus'] ?? 'unknown');
 
-            // Get this plugin's update model (if any)
+            // Get this plugin's update model
             $pluginUpdate = ($pluginUpdates[$handle] ?? null);
 
             // Append the plugin's snapshot, keyed by handle

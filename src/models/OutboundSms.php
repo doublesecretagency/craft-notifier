@@ -54,7 +54,7 @@ class OutboundSms extends BaseEnvelope
         /** @var Notification $notification */
         $notification = Notifier::getNotification($this->notificationId);
 
-        // If invalid notification, bail (unable to log)
+        // If invalid notification, bail
         if (!$notification) {
             return false;
         }
@@ -69,6 +69,7 @@ class OutboundSms extends BaseEnvelope
         if (!App::parseEnv($settings->twilioAccountSid)) {
             $missing[] = "Twilio Account SID";
         }
+
         // If the Auth Token is missing, record it
         if (!App::parseEnv($settings->twilioAuthToken)) {
             $missing[] = "Twilio Auth Token";

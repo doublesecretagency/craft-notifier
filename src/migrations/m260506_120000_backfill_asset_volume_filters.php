@@ -29,9 +29,13 @@ class m260506_120000_backfill_asset_volume_filters extends Migration
      */
     public function safeUp(): bool
     {
-        // Get every current volume ID
+        // Initialize the volume IDs
         $allVolumeIds = [];
+
+        // Loop through every volume
         foreach (Craft::$app->getVolumes()->getAllVolumes() as $volume) {
+
+            // Collect the volume ID
             $allVolumeIds[] = $volume->id;
         }
 

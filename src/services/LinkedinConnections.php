@@ -90,9 +90,8 @@ class LinkedinConnections extends Component
     /**
      * Exchange an authorization code and persist any resulting connections.
      *
-     * Always creates a member connection. When organization posting is enabled
-     * and the app has Community Management approval, also creates one connection
-     * per administered organization.
+     * Always creates a member connection, plus one per administered organization
+     * when organization posting is enabled and the app has Community Management approval.
      *
      * @param string $code The authorization code returned to the callback.
      * @param string|null $errorOut By-ref error message slot.
@@ -121,7 +120,7 @@ class LinkedinConnections extends Component
         // Get the access token
         $accessToken = $token['access_token'];
 
-        // Fetch the authenticated member's URN and name
+        // Get the authenticated member's URN and name
         $member = LinkedinClient::fetchMember($accessToken, $errorOut);
 
         // If the member couldn't be resolved, bail
@@ -205,7 +204,7 @@ class LinkedinConnections extends Component
      */
     public function getConnections(): array
     {
-        // Get every connection row (tolerating a not-yet-migrated table)
+        // Get every connection row, tolerating a not-yet-migrated table
         try {
             $rows = (new Query())
                 ->from(self::TABLE)
@@ -413,7 +412,7 @@ class LinkedinConnections extends Component
         // Get the current time
         $now = time();
 
-        // Compute the access token expiry
+        // Get the access token expiry
         $accessExpiresAt = (isset($token['expires_in'])
             ? Db::prepareDateForDb((new DateTime('now', new DateTimeZone('UTC')))->setTimestamp($now + (int) $token['expires_in']))
             : null);

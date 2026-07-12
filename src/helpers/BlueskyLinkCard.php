@@ -42,7 +42,7 @@ abstract class BlueskyLinkCard
      */
     public static function firstUrl(string $body): ?string
     {
-        // Reuse the facet builder's URL detection (and its trailing-punctuation trim)
+        // Reuse the facet builder's URL detection
         $links = BlueskyFacets::detectLinks($body);
 
         // Return the first detected URL, if any
@@ -208,7 +208,7 @@ abstract class BlueskyLinkCard
                 continue;
             }
 
-            // Store the decoded content (first occurrence wins)
+            // Store the decoded content, where the first occurrence wins
             if (!isset($map[$id])) {
                 $map[$id] = html_entity_decode($attrs['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
             }
@@ -268,7 +268,7 @@ abstract class BlueskyLinkCard
             return $url;
         }
 
-        // Build the base authority (host plus optional port)
+        // Build the base authority
         $scheme = (parse_url($base, PHP_URL_SCHEME) ?: 'https');
         $port = parse_url($base, PHP_URL_PORT);
         $authority = $host.($port ? ":{$port}" : '');

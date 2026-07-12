@@ -33,7 +33,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * Controller for the notification CP screens.
+ * Manages the notification CP screens and send actions.
  *
  * @since 1.0.0
  */
@@ -89,15 +89,8 @@ class NotificationsController extends Controller
     /**
      * Edit a Notification.
      *
-     * View-only users (those who hold `notifier-viewNotifications` but not
-     * `notifier-saveNotifications`) land on a read-only rendering of the
-     * edit screen rather than a 403. The submit button, all save-and-X alt
-     * actions, and the delete action are suppressed; the content template
-     * wraps its form in a disabled fieldset to neutralize every input.
-     *
-     * The element-level `canSave()` gate still enforces server-side write
-     * protection on the actual elements/save POST endpoint, so a read-only
-     * user who crafts a manual POST is still rejected.
+     * View-only users get a read-only screen rather than a 403. The element-level
+     * `canSave()` check still protects the save endpoint against a crafted POST.
      *
      * @param Notification|null $notification
      * @param int|null $notificationId
@@ -127,6 +120,15 @@ class NotificationsController extends Controller
 
         // If the user cannot save, render the screen in read-only mode
         $readOnly = !$canSave;
+
+        // Get the current user
+        $user = Craft::$app->getUser();
+
+        // Whether each tab is read-only
+        $metaReadOnly       = !$canSave;
+        $eventReadOnly      = (!$canSave || !$user->checkPermission('notifier-editEventTab'));
+        $messageReadOnly    = (!$canSave || !$user->checkPermission('notifier-editMessageTab'));
+        $recipientsReadOnly = (!$canSave || !$user->checkPermission('notifier-editRecipientsTab'));
 
         // Set page title
         $title = ($notification->title ?? Craft::t('notifier', 'Add a New Notification'));
@@ -191,6 +193,10 @@ class NotificationsController extends Controller
             ->contentTemplate('notifier/notifications/_edit', [
                 'notification' => $notification,
                 'readOnly' => $readOnly,
+                'metaReadOnly' => $metaReadOnly,
+                'eventReadOnly' => $eventReadOnly,
+                'messageReadOnly' => $messageReadOnly,
+                'recipientsReadOnly' => $recipientsReadOnly,
             ]);
 
         // Get sidebar method based on Craft major version
@@ -265,7 +271,7 @@ class NotificationsController extends Controller
         // Get Notification by ID
         $notification = Craft::$app->getElements()->getElementById($notificationId, Notification::class);
 
-        // If no matching Notification
+        // If no matching Notification, bail
         if (!$notification) {
             // Display error message
             $this->setFailFlash(Craft::t('app', '{type} could not be found.', [
@@ -282,7 +288,7 @@ class NotificationsController extends Controller
         // Attempt to delete the Notification
         $success = Craft::$app->getElements()->deleteElement($notification);
 
-        // If unable to delete the Notification
+        // If unable to delete the Notification, bail
         if (!$success) {
             // Display error message
             $this->setFailFlash(Craft::t('app', 'Couldn’t delete {type}.', [
@@ -303,10 +309,8 @@ class NotificationsController extends Controller
     /**
      * Send a test of a Notification.
      *
-     * Bypasses event-type filters so the operator can verify the configured
-     * message body and recipient strategy without waiting for a real Craft
-     * event to fire. The message body, recipients, queue setting, and channel
-     * all use the live Notification configuration.
+     * Bypasses the event-type filters, so a test can be sent without waiting for a
+     * real Craft event to fire. Everything else uses the live configuration.
      *
      * @return Response
      * @throws BadRequestHttpException

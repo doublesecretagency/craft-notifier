@@ -64,6 +64,33 @@ class NotificationElementTest extends TestCase
     }
 
     // ========================================================================= //
+    // Index actions
+    // ========================================================================= //
+    //
+    // The element must register the Restore action, or trashed notifications
+    // cannot be recovered from the CP on either Craft major. Craft only shows
+    // Restore in the "Trashed" view, so registering it unconditionally is correct.
+
+    public function testDefineActionsRegistersRestore(): void
+    {
+        // The action must be listed, so Craft can surface it in the trashed view.
+        $this->assertMatchesRegularExpression(
+            '/defineActions[\s\S]*?Restore::class/',
+            $this->notificationSource
+        );
+    }
+
+    public function testRestoreActionIsImported(): void
+    {
+        // Restore is the framework action class, so it must be use-imported rather
+        // than referenced by a fully-qualified name.
+        $this->assertStringContainsString(
+            'use craft\elements\actions\Restore;',
+            $this->notificationSource
+        );
+    }
+
+    // ========================================================================= //
     // Report event type predicate
     // ========================================================================= //
 
@@ -109,15 +136,37 @@ class NotificationElementTest extends TestCase
     // Field layout
     // ========================================================================= //
 
-    public function testGetFieldLayoutSetsType(): void
+    public function testGetFieldLayoutReturnsPersistedLayout(): void
     {
-        // Card View rendering calls $fieldLayout->type::cardAttributes(),
-        // which triggers "Class name must be a valid object or a string"
-        // when type is null. Regression test for issue #25.
+        // getFieldLayout() now returns the admin-defined, project-config-backed
+        // layout via the FieldLayouts service (which resolves it with
+        // getLayoutByType(), always returning a non-null, type-bound layout).
+        // The persisted layout carries type = Notification::class (set in
+        // FieldLayouts::saveLayout), so Card View still resolves it (issue #25).
         $this->assertMatchesRegularExpression(
-            '/getFieldLayout\(\)[\s\S]*?\$fieldLayout->type\s*=\s*(static|self|Notification)::class/',
+            '/getFieldLayout\(\)[\s\S]*?fieldLayouts->getLayout\(\)/',
             $this->notificationSource
         );
+    }
+
+    public function testReservedFieldHandlesIsPublicStatic(): void
+    {
+        // A custom field must not shadow the notification's own attributes. The
+        // designer save uses this list as the layout's reservedFieldHandles,
+        // derived purely by reflecting the element's public properties.
+        $this->assertTrue($this->reflection->hasMethod('reservedFieldHandles'));
+        $method = $this->reflection->getMethod('reservedFieldHandles');
+        $this->assertTrue($method->isPublic());
+        $this->assertTrue($method->isStatic());
+    }
+
+    public function testDescriptionBackCompatRemoved(): void
+    {
+        // The `description` back-compat accessor and its reserved handle were
+        // dropped in v3.2.0, so `notification.description` no longer resolves.
+        // The value lives in the `notifierDescription` custom field instead.
+        $this->assertFalse($this->reflection->hasMethod('getDescription'));
+        $this->assertStringNotContainsString("\$handles[] = 'description'", $this->notificationSource);
     }
 
     // ========================================================================= //
@@ -130,7 +179,6 @@ class NotificationElementTest extends TestCase
     public static function persistedAttributeProvider(): array
     {
         return [
-            ['description'],
             ['eventType'],
             ['event'],
             ['eventConfig'],
@@ -365,6 +413,45 @@ class NotificationElementTest extends TestCase
             '/getIsConsoleRequest\(\)[\s\S]*?getBodyParam\(/',
             $this->notificationSource,
             'afterSave must guard getBodyParam() behind a console-request check'
+        );
+    }
+
+    // ========================================================================= //
+    // Per-tab wiring permission guards (Phase C)
+    // ========================================================================= //
+
+    public function testAfterSaveGuardsEventWiringByPermission(): void
+    {
+        // Event-tab columns are only applied when the acting user may edit that
+        // tab; otherwise the DB-loaded value is preserved (forged-POST defense).
+        $this->assertMatchesRegularExpression(
+            "/if \(\\\$canEditEvent\)[\s\S]*?\\\$record->eventType\s*=[\s\S]*?\\\$record->eventConfig\s*=/",
+            $this->notificationSource
+        );
+    }
+
+    public function testAfterSaveGuardsMessageAndRecipientsWiringByPermission(): void
+    {
+        // Same permission-keyed guard for the Message and Recipients tabs.
+        $this->assertMatchesRegularExpression(
+            "/if \(\\\$canEditMessage\)[\s\S]*?\\\$record->messageConfig\s*=/",
+            $this->notificationSource
+        );
+        $this->assertMatchesRegularExpression(
+            "/if \(\\\$canEditRecipients\)[\s\S]*?\\\$record->recipientsConfig\s*=/",
+            $this->notificationSource
+        );
+    }
+
+    public function testWiringGuardShortCircuitsConsoleRequests(): void
+    {
+        // Console / programmatic saves (including the Phase B backfill) must be
+        // treated as "may edit" so wiring is preserved via the existing
+        // coalescing. The `getIsConsoleRequest() ||` short-circuit also means
+        // checkPermission() is never called in console (no `user` component).
+        $this->assertMatchesRegularExpression(
+            "/\\\$canEditEvent\s*=\s*\(\\\$isConsole\s*\|\|\s*\\\$user->checkPermission\('notifier-editEventTab'\)\)/",
+            $this->notificationSource
         );
     }
 

@@ -69,7 +69,7 @@ abstract class OAuth1Signer
         // Initialize the header parts
         $parts = [];
 
-        // Build each `key="value"` pair (only OAuth params go in the header)
+        // Build each `key="value"` pair, since only OAuth params go in the header
         foreach ($oauth as $key => $value) {
             $parts[] = rawurlencode($key).'="'.rawurlencode($value).'"';
         }
@@ -91,7 +91,7 @@ abstract class OAuth1Signer
         // Initialize the encoded params
         $encoded = [];
 
-        // Percent-encode every key and value (RFC 3986)
+        // Percent-encode every key and value per RFC 3986
         foreach ($params as $key => $value) {
             $encoded[rawurlencode((string) $key)] = rawurlencode((string) $value);
         }

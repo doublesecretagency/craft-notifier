@@ -119,7 +119,7 @@ class OutboundXTwitter extends BaseEnvelope
             );
         }
 
-        // Upload any attached images (best-effort)
+        // Upload any attached images
         $mediaIds = $this->_uploadImages($consumerKey, $consumerKeySecret, $accessToken, $accessTokenSecret, $notification);
 
         // If there is neither body text nor media, log error and bail
@@ -172,15 +172,17 @@ class OutboundXTwitter extends BaseEnvelope
             if ($status < 200 || $status >= 300 || !is_array($decoded) || !isset($decoded['data']['id'])) {
                 // Get the error message
                 $error = (is_array($decoded) ? ($decoded['detail'] ?? $decoded['title'] ?? "HTTP {$status}") : "HTTP {$status}");
+
                 // Log the error
                 $notification->log->error(Craft::t('notifier', '[REJECTED BY X (TWITTER)] {error}', ['error' => $error]), $this->envelopeId);
+
                 // Bail
                 return false;
             }
 
         } catch (GuzzleException|Throwable $exception) {
 
-            // Get the error message (or fall back to a JSON encoded version)
+            // Get the error message
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
             // Log the error message

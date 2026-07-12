@@ -123,12 +123,12 @@ class OutboundSlack extends BaseEnvelope
                 'mrkdwn'  => true,
             ];
 
-            // If an icon URL is set, include it (takes precedence over icon_emoji)
+            // If an icon URL is set, include it
             if ('' !== $this->iconUrl) {
                 $payload['icon_url'] = $this->iconUrl;
             }
 
-            // If an icon emoji is set, include it (used only when icon_url is absent)
+            // If an icon emoji is set, include it, though Slack ignores it when icon_url is present
             if ('' !== $this->iconEmoji) {
                 $payload['icon_emoji'] = $this->iconEmoji;
             }
@@ -169,7 +169,7 @@ class OutboundSlack extends BaseEnvelope
 
         } catch (GuzzleException|Throwable $exception) {
 
-            // Get the error message (or fall back to a JSON encoded version)
+            // Get the error message
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
             // Log the error message

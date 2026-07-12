@@ -97,6 +97,40 @@ class NotifierPluginRegistrationTest extends TestCase
         $this->assertStringContainsString('use ' . Recipients::class, $this->pluginSource);
     }
 
+    public function testRegistersFieldLayoutsComponent(): void
+    {
+        // The FieldLayouts service backs the notification field layout designer.
+        $this->assertMatchesRegularExpression(
+            "/'fieldLayouts'\s*=>\s*FieldLayouts::class/",
+            $this->pluginSource
+        );
+    }
+
+    public function testRegistersProjectConfigHandlersForFieldLayout(): void
+    {
+        // The layout lives in project config, so the add/update/remove handlers
+        // must be registered so console applies rebuild it across environments.
+        $this->assertMatchesRegularExpression(
+            '/onAdd\(FieldLayouts::PATH[\s\S]*?onUpdate\(FieldLayouts::PATH[\s\S]*?onRemove\(FieldLayouts::PATH/',
+            $this->pluginSource
+        );
+        // The handler registration must run unconditionally (not CP-gated) so
+        // console project-config applies rebuild the layout.
+        $this->assertMatchesRegularExpression(
+            '/_registerProjectConfigEventHandlers\(\)[\s\S]*?getIsCpRequest\(\)/',
+            $this->pluginSource
+        );
+    }
+
+    public function testRegistersFieldsSettingsRoute(): void
+    {
+        // The Notification Fields designer page has its own GET route.
+        $this->assertStringContainsString(
+            "'notifier/settings-fields/fields'",
+            $this->pluginSource
+        );
+    }
+
     // ========================================================================= //
     // Permission tree
     // ========================================================================= //
@@ -156,6 +190,98 @@ class NotifierPluginRegistrationTest extends TestCase
             "/notifier-saveNotifications.*?nested.*?notifier-editDynamicRecipients/s",
             $this->pluginSource
         );
+    }
+
+    public function testWiringTabPermissionsAreNestedUnderSave(): void
+    {
+        // The three wiring-tab permissions gate editing the Event / Message /
+        // Recipients tabs; they nest under saveNotifications so the Meta tab stays
+        // always-editable for anyone who can save.
+        foreach (['notifier-editEventTab', 'notifier-editMessageTab', 'notifier-editRecipientsTab'] as $perm) {
+            $this->assertMatchesRegularExpression(
+                "/notifier-saveNotifications.*?nested.*?{$perm}/s",
+                $this->pluginSource
+            );
+        }
+    }
+
+    public function testDynamicDataRehomedUnderEventTab(): void
+    {
+        // The Dynamic Data sub-permission re-homes under the Event tab permission.
+        $this->assertMatchesRegularExpression(
+            "/notifier-editEventTab.*?nested.*?notifier-editDynamicData/s",
+            $this->pluginSource
+        );
+    }
+
+    public function testDynamicRecipientsRehomedUnderRecipientsTab(): void
+    {
+        // The Dynamic Recipients sub-permission re-homes under the Recipients tab permission.
+        $this->assertMatchesRegularExpression(
+            "/notifier-editRecipientsTab.*?nested.*?notifier-editDynamicRecipients/s",
+            $this->pluginSource
+        );
+    }
+
+    /**
+     * @dataProvider dynamicPermissionProvider
+     */
+    public function testDynamicPermissionsCarryAWarning(string $permission): void
+    {
+        // Both Dynamic types run arbitrary Twig at send time, so each carries Craft's
+        // native 'warning' key. It renders an alert icon in the CP permissions tree
+        // (supported in both Craft 4 and Craft 5 via _includes/permissions.twig).
+        $this->assertMatchesRegularExpression(
+            "/{$permission}' => \[\s*'label' =>[^\n]*\n\s*'warning' => \\\$twigWarning,/",
+            $this->pluginSource
+        );
+    }
+
+    public function testDynamicPermissionWarningTextIsTranslated(): void
+    {
+        // Both Dynamic permissions share one translation key, hoisted to a local so a
+        // reword can't fork the two literals apart.
+        $this->assertStringContainsString(
+            "\$twigWarning = Craft::t('notifier', 'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!');",
+            $this->pluginSource
+        );
+    }
+
+    public static function dynamicPermissionProvider(): array
+    {
+        return [
+            'dynamic data' => ['notifier-editDynamicData'],
+            'dynamic recipients' => ['notifier-editDynamicRecipients'],
+        ];
+    }
+
+    /**
+     * @dataProvider viewPermissionInfoProvider
+     */
+    public function testViewPermissionsCarryAnInfo(string $permission, string $info): void
+    {
+        // Each root View permission explains which CP surface it unlocks, via Craft's
+        // native 'info' key (supported in both Craft 4 and Craft 5). The copy uses double
+        // quotes rather than markdown, because permissions.twig prints {{ props.info }}
+        // through Twig's autoescaping with no markdown filter.
+        $this->assertMatchesRegularExpression(
+            "/{$permission}' => \[\s*'label' =>[^\n]*\n\s*'info' => Craft::t\('notifier', '" . preg_quote($info, '/') . "'\),/",
+            $this->pluginSource
+        );
+    }
+
+    public static function viewPermissionInfoProvider(): array
+    {
+        return [
+            'view notifications' => [
+                'notifier-viewNotifications',
+                'Adds "Notifications" to the control panel navigation.',
+            ],
+            'view notification log' => [
+                'notifier-viewNotificationLog',
+                'Adds "Notification Log" to the control panel Utilities.',
+            ],
+        ];
     }
 
     public function testViewNotificationLogIsRootPermission(): void

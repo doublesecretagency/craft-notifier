@@ -248,6 +248,7 @@ export default defineConfig({
         text: 'More',
         items: [
           {text: 'Notification Elements', link: '/elements'},
+          {text: 'Custom Fields',         link: '/custom-fields'},
           {text: 'Testing Notifications', link: '/testing'},
           {text: 'Notification Log',      link: '/logging'},
           {text: 'Translations',          link: '/translations'}
@@ -577,6 +578,7 @@ export default defineConfig({
           text: 'More',
           items: [
             {text: 'Notification Elements', link: '/elements'},
+            {text: 'Custom Fields',         link: '/custom-fields'},
             {text: 'Testing Notifications', link: '/testing'},
             {text: 'Notification Log',      link: '/logging'},
             {text: 'Translations',          link: '/translations'}

@@ -41,7 +41,7 @@
             placeholder: '$LINKEDIN_CLIENT_SECRET',
         }
     } %}
-    {# Organization posting deferred; this toggle is gated off so it can't request an unauthorized scope and break the connect (scaffolding + strings kept, remove the wrapper to restore when company posting ships) #}
+    {# Gated off so it can't request an unauthorized scope and break the connect #}
     {% if false %}
     {{ forms.lightswitchField({
         label: "Enable organization posting"|t('notifier'),

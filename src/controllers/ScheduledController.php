@@ -21,7 +21,7 @@ use yii\web\Response;
 use yii\web\ServiceUnavailableHttpException;
 
 /**
- * Run time-based triggers via a web endpoint.
+ * Runs time-based triggers via a web endpoint.
  *
  * @since 3.0.0
  */
@@ -29,7 +29,7 @@ class ScheduledController extends Controller
 {
 
     /**
-     * @var array|int|bool Allow anonymous access to the run action (cron isn't logged in).
+     * @var array|int|bool Allow anonymous access to the run action, since cron isn't logged in.
      */
     protected array|int|bool $allowAnonymous = ['run'];
 
@@ -49,7 +49,7 @@ class ScheduledController extends Controller
      */
     public function beforeAction($action): bool
     {
-        // Run the standard pre-action checks
+        // If the parent rejects, bail
         if (!parent::beforeAction($action)) {
             return false;
         }

@@ -206,17 +206,8 @@ class NotificationLog extends Model
     /**
      * Prune expired envelope groups from the log table.
      *
-     * Runs once per dispatch (called from `envelope()`). Two retention rules
-     * may be configured independently and both are applied:
-     *
-     *  - `logRetentionDays`: deletes envelopes (and their child rows) whose
-     *    `dateCreated` is older than the cutoff.
-     *  - `logRetentionRecords`: deletes envelopes (and their child rows)
-     *    beyond the most recent N envelopes.
-     *
-     * Both modes operate on envelope IDs, then delete the envelope rows
-     * plus every child row whose `envelopeId` matches, so we never strand
-     * orphaned children.
+     * Both retention rules may be configured independently, and both are applied.
+     * Deleting an envelope always deletes its child rows, so none are stranded.
      *
      * @return void
      */
@@ -248,7 +239,7 @@ class NotificationLog extends Model
             $expiredEnvelopeIds = array_merge($expiredEnvelopeIds, $tooOld);
         }
 
-        // Limit by count (dispatches)
+        // Limit by count
         if ($settings->logRetentionRecords > 0) {
 
             // Find the most recent N envelope IDs to keep

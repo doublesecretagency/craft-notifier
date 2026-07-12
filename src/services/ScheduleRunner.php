@@ -61,6 +61,7 @@ class ScheduleRunner extends Component
             try {
                 // Get the dispatched and sent counts from this notification's run
                 [$dispatched, $sent] = $this->_runNotification($notification, $now);
+
                 // Merge the counts into the run summary
                 $summary['dispatched'] += $dispatched;
                 $summary['sent']       += $sent;
@@ -247,7 +248,7 @@ class ScheduleRunner extends Component
         $startParam = (clone $start)->setTimezone($tz)->format('Y-m-d H:i:s');
         $endParam = (clone $end)->setTimezone($tz)->format('Y-m-d H:i:s');
 
-        // Constrain to the target date range (open at start, closed at end)
+        // Constrain to the target date range, open at the start and closed at the end
         $query->{$field}([
             'and',
             "> {$startParam}",

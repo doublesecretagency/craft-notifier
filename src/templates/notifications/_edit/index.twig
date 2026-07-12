@@ -1,36 +1,40 @@
 {% import '_includes/forms' as forms %}
 
-{# Register the notification editor CP assets (read-only chrome + Monaco fixes) #}
 {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\NotificationEditorAsset') %}
 
-{# Keep this inline (not in the bundle) so it loads after the codeeditor asset and wins the cascade, clipping Monaco's right-edge bleed so the editor's right border shows #}
+{# Keep inline so it loads after the codeeditor asset and wins the cascade, hiding Monaco's right-edge bleed #}
 {% css %}
 .monaco-editor-background-frame {
     overflow: hidden;
 }
 {% endcss %}
 
-{# When the user lacks notifier-saveNotifications, the entire form renders inside
-   a disabled <fieldset>. The HTML5 disabled attribute cascades to every native
-   form control inside (inputs, selects, textareas, buttons), giving us a
-   read-only rendering without per-field disabled flags. #}
-{% set readOnly = (readOnly ?? false) %}
+{% set metaReadOnly       = (metaReadOnly       ?? readOnly ?? false) %}
+{% set eventReadOnly      = (eventReadOnly      ?? readOnly ?? false) %}
+{% set messageReadOnly    = (messageReadOnly    ?? readOnly ?? false) %}
+{% set recipientsReadOnly = (recipientsReadOnly ?? readOnly ?? false) %}
 
-{# Render hidden inputs #}
+{# Render the hidden inputs outside every fieldset so they always post #}
 {{ notification.id ? hiddenInput('elementId', notification.id) }}
 {{ notification.siteId ? hiddenInput('siteId', notification.siteId) }}
 
-<fieldset class="notifier-edit-fieldset{{ readOnly ? ' notifier-edit-fieldset--readonly' : '' }}"{{ readOnly ? ' disabled' : '' }}>
 <div id="meta" class="flex-fields">
-    {% include 'notifier/notifications/_edit/meta' %}
+    <fieldset class="notifier-edit-fieldset{{ metaReadOnly ? ' notifier-edit-fieldset--readonly' : '' }}"{{ metaReadOnly ? ' disabled' : '' }}>
+        {% include 'notifier/notifications/_edit/meta' with { readOnly: metaReadOnly } %}
+    </fieldset>
 </div>
 <div id="event" class="flex-fields hidden">
-    {% include 'notifier/notifications/_edit/event' %}
+    <fieldset class="notifier-edit-fieldset{{ eventReadOnly ? ' notifier-edit-fieldset--readonly' : '' }}"{{ eventReadOnly ? ' disabled' : '' }}>
+        {% include 'notifier/notifications/_edit/event' with { readOnly: eventReadOnly } %}
+    </fieldset>
 </div>
 <div id="message" class="flex-fields hidden">
-    {% include 'notifier/notifications/_edit/message' %}
+    <fieldset class="notifier-edit-fieldset{{ messageReadOnly ? ' notifier-edit-fieldset--readonly' : '' }}"{{ messageReadOnly ? ' disabled' : '' }}>
+        {% include 'notifier/notifications/_edit/message' with { readOnly: messageReadOnly } %}
+    </fieldset>
 </div>
 <div id="recipients" class="flex-fields hidden">
-    {% include 'notifier/notifications/_edit/recipients' %}
+    <fieldset class="notifier-edit-fieldset{{ recipientsReadOnly ? ' notifier-edit-fieldset--readonly' : '' }}"{{ recipientsReadOnly ? ' disabled' : '' }}>
+        {% include 'notifier/notifications/_edit/recipients' with { readOnly: recipientsReadOnly } %}
+    </fieldset>
 </div>
-</fieldset>

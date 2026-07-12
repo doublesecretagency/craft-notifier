@@ -135,17 +135,20 @@ class OutboundDiscord extends BaseEnvelope
             if ($status < 200 || $status >= 300) {
                 // Decode the response body
                 $decoded = json_decode((string) $response->getBody(), true);
+
                 // Get the error message
                 $error = (is_array($decoded) ? ($decoded['message'] ?? "HTTP {$status}") : "HTTP {$status}");
+
                 // Log the error
                 $notification->log->error(Craft::t('notifier', '[REJECTED BY DISCORD] {error}', ['error' => $error]), $this->envelopeId);
+
                 // Bail
                 return false;
             }
 
         } catch (GuzzleException|Throwable $exception) {
 
-            // Get the error message (or fall back to a JSON encoded version)
+            // Get the error message
             $message = ($exception->getMessage() ?: 'Unknown error: '.Json::encode($exception));
 
             // Log the error message

@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Wyświetlanie powiadomień',
+    'Adds "Notifications" to the control panel navigation.' => 'Dodaje "Powiadomienia" do nawigacji panelu sterowania.',
     'Save notifications' => 'Zapisywanie powiadomień',
+    'Edit the Event tab' => 'Edytuj kartę Zdarzenie',
+    'Edit the Message tab' => 'Edytuj kartę Wiadomość',
+    'Edit the Recipients tab' => 'Edytuj kartę Odbiorcy',
     'Use the Dynamic Recipients type' => 'Użyj typu Dynamiczni odbiorcy',
     'Use the Dynamic Data type' => 'Użyj typu Dane dynamiczne',
-    'Test notifications' => 'Testowanie powiadomień',
+    'Send test notifications' => 'Wysyłaj powiadomienia testowe',
     'Send manual notifications' => 'Wysyłaj powiadomienia ręczne',
     'Delete notifications' => 'Usuwanie powiadomień',
     'View notification log' => 'Wyświetlanie dziennika powiadomień',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Dodaje "Dziennik powiadomień" do Narzędzi panelu sterowania.',
     'Delete notification log' => 'Usuwanie dziennika powiadomień',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Uruchamia niestandardowy kod Twig podczas wysyłania wiadomości. Przyznaj to uprawnienie tylko w pełni zaufanym użytkownikom!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Ustawienia Notifier',
     'General' => 'Ogólne',
+    'Notification Fields' => 'Pola powiadomień',
+    'Fields saved.' => 'Pola zapisane.',
+    'Couldn’t save fields.' => 'Nie udało się zapisać pól.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Pól powiadomień nie można edytować, gdy zmiany administratora są wyłączone.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

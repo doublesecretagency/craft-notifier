@@ -76,7 +76,7 @@ abstract class RecurringSchedule
         $interval = (int) $config['interval'];
         $frequency = $config['frequency'];
 
-        // Build the anchor (the first on-pin slot at or after the start date)
+        // Build the anchor, the first on-pin slot at or after the start date
         $anchor = static::_anchor($frequency, $config, $hour, $minute, $tz);
 
         // If the anchor is still ahead of the reference, that's the next run
@@ -199,7 +199,7 @@ abstract class RecurringSchedule
      */
     private static function _startDateTime(string $startDate, int $hour, int $minute, DateTimeZone $tz): DateTime
     {
-        // Treat a missing start date as the Unix epoch (no effective floor)
+        // Treat a missing start date as the Unix epoch
         $date = ('' !== $startDate ? $startDate : '1970-01-01');
 
         // Return the start date at the configured time
@@ -217,18 +217,21 @@ abstract class RecurringSchedule
      */
     private static function _firstWeekly(DateTime $start, int $dayOfWeek, int $hour, int $minute): DateTime
     {
-        // Walk forward day by day until the weekday matches
+        // Clone the start date
         $c = clone $start;
+
+        // Walk forward day by day until the weekday matches
         for ($i = 0; $i <= 7; $i++) {
             // If this day lands on the target weekday, use it
             if ((int) $c->format('N') === $dayOfWeek) {
                 return $c;
             }
-            // Otherwise advance one day (re-applying the time to absorb any DST shift)
+
+            // Otherwise advance one day, re-applying the time to absorb any DST shift
             $c->modify('+1 day')->setTime($hour, $minute);
         }
 
-        // Return the final candidate as a safe fallback (unreachable in practice)
+        // Return the final candidate as a safe fallback
         return $c;
     }
 
@@ -301,7 +304,7 @@ abstract class RecurringSchedule
         // Estimate how many whole interval-periods fit between the anchor and reference
         $k = static::_periodsBetween($anchor, $reference, $frequency, $interval);
 
-        // Jump that many periods in one move (re-pinning and re-applying the time)
+        // Jump that many periods in one move, re-pinning and re-applying the time
         $cand = static::_advance($anchor, $frequency, $k * $interval, $hour, $minute);
 
         // Correct any estimate slack so the result is the first slot strictly after the reference
@@ -342,7 +345,7 @@ abstract class RecurringSchedule
                 break;
         }
 
-        // Return the whole-interval count (the correction loop absorbs any estimate slack)
+        // Return the whole-interval count
         return intdiv(max(0, $units), max(1, $interval));
     }
 
@@ -363,8 +366,10 @@ abstract class RecurringSchedule
             return (clone $date)->setTime($hour, $minute);
         }
 
-        // Advance by the frequency's unit
+        // Clone the date
         $c = clone $date;
+
+        // Advance by the frequency's unit
         switch ($frequency) {
             case 'daily':
                 // Add the days

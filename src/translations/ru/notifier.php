@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Просматривать уведомления',
+    'Adds "Notifications" to the control panel navigation.' => 'Добавляет "Уведомления" в навигацию панели управления.',
     'Save notifications' => 'Сохранять уведомления',
+    'Edit the Event tab' => 'Редактировать вкладку «Событие»',
+    'Edit the Message tab' => 'Редактировать вкладку «Сообщение»',
+    'Edit the Recipients tab' => 'Редактировать вкладку «Получатели»',
     'Use the Dynamic Recipients type' => 'Использовать тип «Динамические получатели»',
     'Use the Dynamic Data type' => 'Использовать тип «Динамические данные»',
-    'Test notifications' => 'Тестировать уведомления',
+    'Send test notifications' => 'Отправлять тестовые уведомления',
     'Send manual notifications' => 'Отправлять уведомления вручную',
     'Delete notifications' => 'Удалять уведомления',
     'View notification log' => 'Просматривать журнал уведомлений',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Добавляет "Журнал уведомлений" в Утилиты панели управления.',
     'Delete notification log' => 'Удалять журнал уведомлений',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Выполняет пользовательский код Twig при отправке сообщения. Предоставляйте это разрешение только доверенным пользователям!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Настройки Notifier',
     'General' => 'Общие',
+    'Notification Fields' => 'Поля уведомлений',
+    'Fields saved.' => 'Поля сохранены.',
+    'Couldn’t save fields.' => 'Не удалось сохранить поля.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Поля уведомлений нельзя редактировать, когда изменения администратора отключены.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

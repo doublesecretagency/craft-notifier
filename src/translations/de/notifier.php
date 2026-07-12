@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Benachrichtigungen anzeigen',
+    'Adds "Notifications" to the control panel navigation.' => 'Fügt "Benachrichtigungen" zur Navigation des Control Panels hinzu.',
     'Save notifications' => 'Benachrichtigungen speichern',
+    'Edit the Event tab' => 'Registerkarte „Ereignis“ bearbeiten',
+    'Edit the Message tab' => 'Registerkarte „Nachricht“ bearbeiten',
+    'Edit the Recipients tab' => 'Registerkarte „Empfänger“ bearbeiten',
     'Use the Dynamic Recipients type' => 'Den Typ Dynamische Empfänger verwenden',
     'Use the Dynamic Data type' => 'Den Typ Dynamische Daten verwenden',
-    'Test notifications' => 'Benachrichtigungen testen',
+    'Send test notifications' => 'Test-Benachrichtigungen senden',
     'Send manual notifications' => 'Manuelle Benachrichtigungen senden',
     'Delete notifications' => 'Benachrichtigungen löschen',
     'View notification log' => 'Benachrichtigungsprotokoll anzeigen',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Fügt "Benachrichtigungsprotokoll" zu den Werkzeugen des Control Panels hinzu.',
     'Delete notification log' => 'Benachrichtigungsprotokoll löschen',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Führt benutzerdefinierten Twig-Code aus, wenn eine Nachricht gesendet wird. Erteilen Sie diese Berechtigung nur hoch vertrauenswürdigen Benutzern!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier-Einstellungen',
     'General' => 'Allgemein',
+    'Notification Fields' => 'Benachrichtigungsfelder',
+    'Fields saved.' => 'Felder gespeichert.',
+    'Couldn’t save fields.' => 'Felder konnten nicht gespeichert werden.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Benachrichtigungsfelder können nicht bearbeitet werden, wenn Administratoränderungen deaktiviert sind.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

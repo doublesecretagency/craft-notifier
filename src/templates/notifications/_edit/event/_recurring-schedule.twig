@@ -9,7 +9,7 @@
 {# Set per-type field name to avoid collisions across multiple tabs #}
 {% set rsId = "recurringSchedule_#{eventType}" %}
 
-{# Days of the week (Craft translations, ISO-8601, 1=Monday) #}
+{# Days of the week, ISO-8601 where 1 is Monday #}
 {% set daysOfWeek = {
     1: 'Monday'|t('app'),
     2: 'Tuesday'|t('app'),
@@ -20,7 +20,7 @@
     7: 'Sunday'|t('app'),
 } %}
 
-{# Months of the year (Craft translations, 1=January) #}
+{# Months of the year, where 1 is January #}
 {% set monthsOfYear = {
     1: 'January'|t('app'),
     2: 'February'|t('app'),
@@ -36,7 +36,7 @@
     12: 'December'|t('app'),
 } %}
 
-{# Cadence summary words (singular, plural) per unit, mirrored by the JS #}
+{# Cadence summary words, mirrored by the JS #}
 {% set cadenceWords = {
     daily:   ['day'|t('notifier'),   'days'|t('notifier')],
     weekly:  ['week'|t('notifier'),  'weeks'|t('notifier')],

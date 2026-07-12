@@ -32,7 +32,6 @@ class NotificationQuery extends ElementQuery
         // Select the notification columns
         $this->query->select([
             'notifier_notifications.id',
-            'notifier_notifications.description',
             'notifier_notifications.eventType',
             'notifier_notifications.event',
             'notifier_notifications.eventConfig',

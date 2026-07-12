@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Bildirimleri görüntüle',
+    'Adds "Notifications" to the control panel navigation.' => 'Kontrol paneli gezinmesine "Bildirimler" ekler.',
     'Save notifications' => 'Bildirimleri kaydet',
+    'Edit the Event tab' => 'Olay sekmesini düzenle',
+    'Edit the Message tab' => 'Mesaj sekmesini düzenle',
+    'Edit the Recipients tab' => 'Alıcılar sekmesini düzenle',
     'Use the Dynamic Recipients type' => 'Dinamik Alıcılar türünü kullan',
     'Use the Dynamic Data type' => 'Dinamik Veri türünü kullan',
-    'Test notifications' => 'Bildirimleri test et',
+    'Send test notifications' => 'Test bildirimi gönder',
     'Send manual notifications' => 'Manuel bildirim gönder',
     'Delete notifications' => 'Bildirimleri sil',
     'View notification log' => 'Bildirim günlüğünü görüntüle',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Kontrol paneli Araçlarına "Bildirim Günlüğü" ekler.',
     'Delete notification log' => 'Bildirim günlüğünü sil',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Bir mesaj gönderildiğinde özel Twig kodu çalıştırır. Bu izni yalnızca tamamen güvendiğiniz kullanıcılara verin!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier ayarları',
     'General' => 'Genel',
+    'Notification Fields' => 'Bildirim Alanları',
+    'Fields saved.' => 'Alanlar kaydedildi.',
+    'Couldn’t save fields.' => 'Alanlar kaydedilemedi.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Yönetici değişiklikleri devre dışı bırakıldığında bildirim alanları düzenlenemez.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

@@ -223,6 +223,7 @@ class AssetEvents
                 // Serialize both sides so value objects compare by content
                 $a = $field->serializeValue($original->getFieldValue($field->handle), $original);
                 $b = $field->serializeValue($asset->getFieldValue($field->handle), $asset);
+
                 // If the serialized values differ, the asset changed
                 if (serialize($a) !== serialize($b)) {
                     return true;

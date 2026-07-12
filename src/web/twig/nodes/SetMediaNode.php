@@ -50,7 +50,7 @@ class SetMediaNode extends Node
                 ->subcompile($this->getNode('items'))
                 ->raw(";\n");
 
-            // Mark that the setMedia tag was invoked (after the argument evaluates cleanly)
+            // Mark that the setMedia tag was invoked, after the argument evaluates cleanly
             $compiler
                 ->write('$__notifierDispatch->setMediaInvoked = true;')
                 ->raw("\n");

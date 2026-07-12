@@ -162,7 +162,7 @@ abstract class LinkedinClient
                 return null;
             }
 
-            // Return the member URN and display name (the profile scope provides the name)
+            // Return the member URN and display name
             return [
                 'urn'  => 'urn:li:person:'.$decoded['sub'],
                 'name' => (string) ($decoded['name'] ?? ''),
@@ -177,9 +177,8 @@ abstract class LinkedinClient
     /**
      * Publish a post to the member feed or organization page.
      *
-     * When a link is set, it is sent as a structured article so LinkedIn renders
-     * a preview card. LinkedIn no longer scrapes URLs, so the card's title,
-     * description, and thumbnail are resolved from the page's Open Graph tags.
+     * A link is sent as a structured article so LinkedIn renders a preview card.
+     * LinkedIn no longer scrapes URLs, so the card is built from its Open Graph tags.
      *
      * @param string $accessToken
      * @param string $authorUrn The author URN (urn:li:person:... or urn:li:organization:...).
@@ -360,7 +359,7 @@ abstract class LinkedinClient
         // Get the page's Open Graph metadata
         $og = static::_fetchOpenGraph($url);
 
-        // Start the article with the source and a title (fall back to the host)
+        // Start the article with the source and a title, falling back to the host
         $article = [
             'source' => $url,
             'title'  => ($og['title'] ?: (parse_url($url, PHP_URL_HOST) ?: $url)),
@@ -373,7 +372,10 @@ abstract class LinkedinClient
 
         // If the page has an image, upload it and attach the thumbnail
         if ($og['image']) {
+            // Upload the image
             $thumbnail = static::uploadImage($accessToken, $authorUrn, $og['image']);
+
+            // If the upload succeeded, attach the thumbnail
             if ($thumbnail) {
                 $article['thumbnail'] = $thumbnail;
             }
@@ -452,7 +454,7 @@ abstract class LinkedinClient
         // Escape the key for the pattern
         $k = preg_quote($key, '/');
 
-        // Match both attribute orders (content after the key, and key after content)
+        // Match both attribute orders
         $patterns = [
             '/<meta[^>]+(?:property|name)\s*=\s*["\']'.$k.'["\'][^>]+content\s*=\s*["\']([^"\']*)["\']/i',
             '/<meta[^>]+content\s*=\s*["\']([^"\']*)["\'][^>]+(?:property|name)\s*=\s*["\']'.$k.'["\']/i',
@@ -489,9 +491,8 @@ abstract class LinkedinClient
     /**
      * Fetch the organizations the authenticated member administers.
      *
-     * Best-effort: requires the granted `w_organization_social` scope and an app
-     * with Community Management API approval. A 403 (no approval) returns an
-     * empty list rather than an error.
+     * Requires the `w_organization_social` scope and Community Management API approval.
+     * Without approval LinkedIn returns a 403, which yields an empty list, not an error.
      *
      * @param string $accessToken
      * @param string|null $errorOut By-ref error message slot.

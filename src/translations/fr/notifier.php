@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Voir les notifications',
+    'Adds "Notifications" to the control panel navigation.' => 'Ajoute "Notifications" à la navigation du panneau de contrôle.',
     'Save notifications' => 'Enregistrer les notifications',
+    'Edit the Event tab' => "Modifier l'onglet Événement",
+    'Edit the Message tab' => "Modifier l'onglet Message",
+    'Edit the Recipients tab' => "Modifier l'onglet Destinataires",
     'Use the Dynamic Recipients type' => 'Utiliser le type Destinataires dynamiques',
     'Use the Dynamic Data type' => 'Utiliser le type Données dynamiques',
-    'Test notifications' => 'Tester les notifications',
+    'Send test notifications' => 'Envoyer des notifications de test',
     'Send manual notifications' => 'Envoyer des notifications manuelles',
     'Delete notifications' => 'Supprimer les notifications',
     'View notification log' => 'Voir le journal des notifications',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Ajoute "Journal des notifications" aux Utilitaires du panneau de contrôle.',
     'Delete notification log' => 'Supprimer le journal des notifications',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => "Exécute du code Twig personnalisé lors de l'envoi d'un message. N'accordez cette permission qu'à des utilisateurs de confiance !",
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Paramètres Notifier',
     'General' => 'Général',
+    'Notification Fields' => 'Champs de notification',
+    'Fields saved.' => 'Champs enregistrés.',
+    'Couldn’t save fields.' => "Impossible d'enregistrer les champs.",
+    'Notification fields can’t be edited when admin changes are disabled.' => "Les champs de notification ne peuvent pas être modifiés lorsque les modifications d'administration sont désactivées.",
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

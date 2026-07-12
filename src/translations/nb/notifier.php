@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Vis varsler',
+    'Adds "Notifications" to the control panel navigation.' => 'Legger til "Varsler" i kontrollpanelets navigasjon.',
     'Save notifications' => 'Lagre varsler',
+    'Edit the Event tab' => 'Rediger Hendelse-fanen',
+    'Edit the Message tab' => 'Rediger Melding-fanen',
+    'Edit the Recipients tab' => 'Rediger Mottakere-fanen',
     'Use the Dynamic Recipients type' => 'Bruk typen Dynamiske mottakere',
     'Use the Dynamic Data type' => 'Bruk typen Dynamiske data',
-    'Test notifications' => 'Test varsler',
+    'Send test notifications' => 'Send testvarsler',
     'Send manual notifications' => 'Send manuelle varsler',
     'Delete notifications' => 'Slett varsler',
     'View notification log' => 'Vis varslingsloggen',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Legger til "Varsellogg" i kontrollpanelets Verktøy.',
     'Delete notification log' => 'Slett varslingsloggen',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Kjører egendefinert Twig-kode når en melding sendes. Gi kun denne tillatelsen til svært betrodde brukere!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier-innstillinger',
     'General' => 'Generelt',
+    'Notification Fields' => 'Varselfelter',
+    'Fields saved.' => 'Felter lagret.',
+    'Couldn’t save fields.' => 'Kunne ikke lagre feltene.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Varselfelter kan ikke redigeres når administratorendringer er deaktivert.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

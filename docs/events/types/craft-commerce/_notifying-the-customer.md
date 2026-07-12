@@ -8,7 +8,7 @@ To notify the customer of an Order, use [Dynamic Recipients](/recipients/types/d
 {% endif %}
 ```
 
-If the customer is a Craft user, you can instead pass the User object to get more data from the [`recipient` variable](/messages/variables/#people-variables):
+If the customer is a Craft user, you can instead pass the User object to get more data from the [`recipient` variable](/messages/variables/#event-and-people-variables):
 
 ```twig
 {% if order.customer %}

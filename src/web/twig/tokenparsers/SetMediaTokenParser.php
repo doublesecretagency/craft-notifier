@@ -33,7 +33,7 @@ class SetMediaTokenParser extends AbstractTokenParser
         $parser = $this->parser;
         $stream = $parser->getStream();
 
-        // If an expression follows, parse it (an Asset, URL string, or array of either)
+        // If an expression follows, parse it
         // A bare {% setMedia %} is allowed, it just collects nothing
         if ($stream->test(Token::BLOCK_END_TYPE)) {
             $nodes = [];

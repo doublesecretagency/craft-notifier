@@ -84,7 +84,7 @@ class m260610_120000_queue_column extends Migration
                 $config = [];
             }
 
-            // Get the per-type queue value (defaults to queued when absent)
+            // Get the per-type queue value
             $key = ((string) $row['messageType']).'Queue';
             $queue = (bool) ($config[$key] ?? true);
 

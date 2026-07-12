@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Vis notifikationer',
+    'Adds "Notifications" to the control panel navigation.' => 'Tilføjer "Notifikationer" til kontrolpanelets navigation.',
     'Save notifications' => 'Gem notifikationer',
+    'Edit the Event tab' => 'Rediger fanen Hændelse',
+    'Edit the Message tab' => 'Rediger fanen Besked',
+    'Edit the Recipients tab' => 'Rediger fanen Modtagere',
     'Use the Dynamic Recipients type' => 'Brug typen Dynamiske modtagere',
     'Use the Dynamic Data type' => 'Brug typen Dynamiske data',
-    'Test notifications' => 'Test notifikationer',
+    'Send test notifications' => 'Send testnotifikationer',
     'Send manual notifications' => 'Send manuelle notifikationer',
     'Delete notifications' => 'Slet notifikationer',
     'View notification log' => 'Vis notifikationslog',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Tilføjer "Notifikationslog" til kontrolpanelets Værktøjer.',
     'Delete notification log' => 'Slet notifikationslog',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Kører brugerdefineret Twig-kode, når en besked sendes. Giv kun denne tilladelse til meget betroede brugere!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier-indstillinger',
     'General' => 'Generelt',
+    'Notification Fields' => 'Notifikationsfelter',
+    'Fields saved.' => 'Felter gemt.',
+    'Couldn’t save fields.' => 'Felterne kunne ikke gemmes.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Notifikationsfelter kan ikke redigeres, når administratorændringer er deaktiveret.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

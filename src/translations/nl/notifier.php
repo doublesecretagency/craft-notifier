@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Meldingen bekijken',
+    'Adds "Notifications" to the control panel navigation.' => 'Voegt "Meldingen" toe aan de navigatie van het control panel.',
     'Save notifications' => 'Meldingen opslaan',
+    'Edit the Event tab' => 'Tabblad Gebeurtenis bewerken',
+    'Edit the Message tab' => 'Tabblad Bericht bewerken',
+    'Edit the Recipients tab' => 'Tabblad Ontvangers bewerken',
     'Use the Dynamic Recipients type' => 'Het type Dynamische ontvangers gebruiken',
     'Use the Dynamic Data type' => 'Het type Dynamische data gebruiken',
-    'Test notifications' => 'Meldingen testen',
+    'Send test notifications' => 'Testnotificaties verzenden',
     'Send manual notifications' => 'Handmatige notificaties verzenden',
     'Delete notifications' => 'Meldingen verwijderen',
     'View notification log' => 'Meldingenlogboek bekijken',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Voegt "Meldingenlogboek" toe aan de Hulpmiddelen van het control panel.',
     'Delete notification log' => 'Meldingenlogboek verwijderen',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Voert aangepaste Twig-code uit wanneer een bericht wordt verzonden. Geef deze rechten alleen aan zeer vertrouwde gebruikers!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier-instellingen',
     'General' => 'Algemeen',
+    'Notification Fields' => 'Meldingsvelden',
+    'Fields saved.' => 'Velden opgeslagen.',
+    'Couldn’t save fields.' => 'Kon de velden niet opslaan.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Meldingsvelden kunnen niet worden bewerkt wanneer beheerderswijzigingen zijn uitgeschakeld.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

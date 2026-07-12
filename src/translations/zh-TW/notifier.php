@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => '查看通知',
+    'Adds "Notifications" to the control panel navigation.' => '在控制台導覽中新增「通知」。',
     'Save notifications' => '儲存通知',
+    'Edit the Event tab' => '編輯「事件」分頁',
+    'Edit the Message tab' => '編輯「訊息」分頁',
+    'Edit the Recipients tab' => '編輯「收件者」分頁',
     'Use the Dynamic Recipients type' => '使用動態收件者類型',
     'Use the Dynamic Data type' => '使用動態資料類型',
-    'Test notifications' => '測試通知',
+    'Send test notifications' => '傳送測試通知',
     'Send manual notifications' => '傳送手動通知',
     'Delete notifications' => '刪除通知',
     'View notification log' => '查看通知日誌',
+    'Adds "Notification Log" to the control panel Utilities.' => '在控制台公用程式中新增「通知日誌」。',
     'Delete notification log' => '刪除通知日誌',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => '傳送訊息時執行自訂 Twig 程式碼。請僅將此權限授予高度信任的使用者！',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier 設定',
     'General' => '一般',
+    'Notification Fields' => '通知欄位',
+    'Fields saved.' => '欄位已儲存。',
+    'Couldn’t save fields.' => '無法儲存欄位。',
+    'Notification fields can’t be edited when admin changes are disabled.' => '停用管理員變更時，無法編輯通知欄位。',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

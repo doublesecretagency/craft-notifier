@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Ver notificaciones',
+    'Adds "Notifications" to the control panel navigation.' => 'Añade "Notificaciones" a la navegación del panel de control.',
     'Save notifications' => 'Guardar notificaciones',
+    'Edit the Event tab' => 'Editar la pestaña Evento',
+    'Edit the Message tab' => 'Editar la pestaña Mensaje',
+    'Edit the Recipients tab' => 'Editar la pestaña Destinatarios',
     'Use the Dynamic Recipients type' => 'Usar el tipo de destinatarios dinámicos',
     'Use the Dynamic Data type' => 'Usar el tipo de datos dinámicos',
-    'Test notifications' => 'Probar notificaciones',
+    'Send test notifications' => 'Enviar notificaciones de prueba',
     'Send manual notifications' => 'Enviar notificaciones manuales',
     'Delete notifications' => 'Eliminar notificaciones',
     'View notification log' => 'Ver registro de notificaciones',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Añade "Registro de notificaciones" a las Utilidades del panel de control.',
     'Delete notification log' => 'Eliminar registro de notificaciones',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Ejecuta código Twig personalizado cuando se envía un mensaje. Otorgue este permiso solo a usuarios de plena confianza!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Configuración de Notifier',
     'General' => 'General',
+    'Notification Fields' => 'Campos de notificación',
+    'Fields saved.' => 'Campos guardados.',
+    'Couldn’t save fields.' => 'No se pudieron guardar los campos.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Los campos de notificación no se pueden editar cuando los cambios de administrador están deshabilitados.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

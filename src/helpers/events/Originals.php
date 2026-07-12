@@ -38,6 +38,7 @@ abstract class Originals
         if (!$original->id) {
             return;
         }
+
         // Site-keyed so per-site propagation can fetch the right snapshot
         $siteId = ($original->siteId ?? 0);
         static::$_store[$original::class][$original->id][$siteId] = $original;
@@ -55,8 +56,10 @@ abstract class Originals
         if (empty($current->id)) {
             return null;
         }
+
         // Default to site 0 when the element has no site
         $siteId = ($current->siteId ?? 0);
+
         // Return the snapshot for this element and site, or null
         return (static::$_store[$current::class][$current->id][$siteId] ?? null);
     }
@@ -76,6 +79,7 @@ abstract class Originals
     {
         // Default to site 0 when no site is given
         $siteId ??= 0;
+
         // Return the snapshot for this class, ID, and site, or null
         return (static::$_store[$class][$id][$siteId] ?? null);
     }

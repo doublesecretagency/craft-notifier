@@ -26,6 +26,7 @@
                 {# Loop over available digital product types #}
                 {% for typeId,typeName in availableDigitalProductTypes() %}
                     <li>
+                        {# Renaming this key would break the Digital Product Licenses event type #}
                         <input type="checkbox"
                             class="checkbox"
                             id="digital-product-type-{{ typeId }}"

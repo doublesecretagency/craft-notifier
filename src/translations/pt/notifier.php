@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Ver notificações',
+    'Adds "Notifications" to the control panel navigation.' => 'Adiciona "Notificações" à navegação do painel de controlo.',
     'Save notifications' => 'Guardar notificações',
+    'Edit the Event tab' => 'Editar o separador Evento',
+    'Edit the Message tab' => 'Editar o separador Mensagem',
+    'Edit the Recipients tab' => 'Editar o separador Destinatários',
     'Use the Dynamic Recipients type' => 'Utilizar o tipo Destinatários dinâmicos',
     'Use the Dynamic Data type' => 'Usar o tipo Dados dinâmicos',
-    'Test notifications' => 'Testar notificações',
+    'Send test notifications' => 'Enviar notificações de teste',
     'Send manual notifications' => 'Enviar notificações manuais',
     'Delete notifications' => 'Eliminar notificações',
     'View notification log' => 'Ver registo de notificações',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Adiciona "Registo de notificações" aos Utilitários do painel de controlo.',
     'Delete notification log' => 'Eliminar registo de notificações',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Executa código Twig personalizado quando uma mensagem é enviada. Conceda esta permissão apenas a utilizadores de total confiança!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Definições Notifier',
     'General' => 'Geral',
+    'Notification Fields' => 'Campos de notificação',
+    'Fields saved.' => 'Campos guardados.',
+    'Couldn’t save fields.' => 'Não foi possível guardar os campos.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Os campos de notificação não podem ser editados quando as alterações de administrador estão desativadas.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

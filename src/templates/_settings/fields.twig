@@ -1,0 +1,13 @@
+{% import '_includes/forms' as forms %}
+
+{% if craft.app.config.general.allowAdminChanges %}
+    {# Locked to a single tab: the Meta tab renders every custom field flat #}
+    {{ forms.fieldLayoutDesignerField({
+        first: true,
+        fieldLayout: fieldLayout ?? craft.app.fields.getLayoutByType('doublesecretagency\\notifier\\elements\\Notification'),
+        customizableTabs: false,
+        pretendTabName: 'Meta'|t('notifier'),
+    }) }}
+{% else %}
+    <p class="light">{{ 'Notification fields can’t be edited when admin changes are disabled.'|t('notifier') }}</p>
+{% endif %}

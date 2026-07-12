@@ -101,10 +101,11 @@ class Messages extends Component
         // Build a synthetic event so the dispatch pipeline has something to thread
         $event = new Event(['sender' => null]);
 
-        // Resolve realistic Twig context, refusing to send if none can be found
+        // Get a realistic Twig context, refusing to send if none can be found
         if ('feed' === $notification->eventType) {
             // Pull a random item from the live feed
             $resolved = NotifierPlugin::getInstance()->feedRunner->getRandomItem($notification);
+
             // If nothing was returned, the feed is unreachable, unparseable, or empty
             if (null === $resolved) {
                 throw new TestPreflightException(Craft::t('notifier',
@@ -121,14 +122,17 @@ class Messages extends Component
         } else {
             // Pick a random element matching the configured filters
             $element = $this->getRandomMatchingElement($notification);
+
             // If no candidate element passed every gate, refuse to send
             if (null === $element) {
                 throw new TestPreflightException(Craft::t('notifier',
                     'Unable to send test: no element matches the configured filters.'
                 ));
             }
+
             // Mirror the real dispatch shape: stash the chosen element under 'object'
             $data = ['object' => $element];
+
             // Thread the element through the synthetic event too, so any
             // recipient strategy that reads the sender directly sees it
             $event->sender = $element;
@@ -176,7 +180,7 @@ class Messages extends Component
         // Build a query restricted to the notification's eventConfig filters
         $query = $this->_buildCandidateQuery($notification, $elementClass);
 
-        // Get the notification's element condition (if any)
+        // Get the notification's element condition
         $condition = $notification->getEventCondition();
 
         // If a condition is configured, narrow the query to matching elements
@@ -204,6 +208,7 @@ class Messages extends Component
                 'data'         => ['object' => $candidate],
                 'isTest'       => false,
             ]);
+
             // If this candidate passes every gate, use it
             if ($dispatch->filterByEventType()) {
                 return $candidate;
@@ -347,15 +352,18 @@ class Messages extends Component
             $map['craft-commerce-orders']   = Order::class;
             $map['craft-commerce-products'] = CommerceProduct::class;
         }
+
         // If Digital Products is installed, map its product and license types
         if (class_exists(DigitalProduct::class)) {
             $map['digital-products-products'] = DigitalProduct::class;
             $map['digital-products-licenses'] = License::class;
         }
+
         // If Solspace Calendar is installed, map its event type
         if (class_exists(CalendarEvent::class)) {
             $map['solspace-calendar-events'] = CalendarEvent::class;
         }
+
         // If Formie is installed, map its submission type
         if (class_exists(Submission::class)) {
             $map['formie-submissions'] = Submission::class;
@@ -393,10 +401,16 @@ class Messages extends Component
                 // If any pairs are configured, restrict to them
                 if (!empty($sectionEntryTypes)) {
 
-                    // Group the selected entry types by section
+                    // Initialize the types grouped by section
                     $typesBySection = [];
+
+                    // Loop through the section and entry type pairs
                     foreach ($sectionEntryTypes as $pair) {
+
+                        // Get the section and entry type IDs
                         [$sectionId, $typeId] = array_pad(explode('-', (string) $pair, 2), 2, null);
+
+                        // If both are present, group the type under its section
                         if (null !== $sectionId && null !== $typeId) {
                             $typesBySection[(int) $sectionId][] = (int) $typeId;
                         }
@@ -405,7 +419,11 @@ class Messages extends Component
                     // Build an OR of (section AND its selected entry types), so an entry
                     // must match BOTH a selected section and one of its selected entry types
                     $orConditions = ['or'];
+
+                    // Loop through each section's entry types
                     foreach ($typesBySection as $sectionId => $typeIds) {
+
+                        // Require the section AND one of its entry types
                         $orConditions[] = [
                             'and',
                             ['entries.sectionId' => $sectionId],

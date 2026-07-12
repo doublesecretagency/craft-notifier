@@ -168,12 +168,15 @@ abstract class Feed
             if (!is_array($item)) {
                 continue;
             }
+
             // Normalize the item
             $normalized = static::_normalizeJsonItem($item);
+
             // If no item ID could be derived, skip it
             if ('' === $normalized['guid']) {
                 continue;
             }
+
             // Add the item to the result
             $result['items'][] = $normalized;
         }
@@ -216,7 +219,7 @@ abstract class Feed
             'description' => trim((string) ($channel->description ?? '')),
         ];
 
-        // Merge any channel-level namespaced fields (iTunes, podcast, dc, etc.)
+        // Merge any channel-level namespaced fields
         $feed += static::_extractNamespacedFields($channel);
 
         // Initialize the items array
@@ -226,10 +229,12 @@ abstract class Feed
         foreach ($channel->item as $item) {
             // Normalize the item
             $normalized = static::_normalizeRssItem($item);
+
             // If no item ID could be derived, skip it
             if ('' === $normalized['guid']) {
                 continue;
             }
+
             // Add the item to the array
             $items[] = $normalized;
         }
@@ -293,6 +298,7 @@ abstract class Feed
         foreach ($item->category as $category) {
             // Get the category value
             $value = trim((string) $category);
+
             // If the category isn't empty, add it
             if ('' !== $value) {
                 $categories[] = $value;
@@ -331,7 +337,7 @@ abstract class Feed
             'description' => trim((string) ($root->subtitle ?? '')),
         ];
 
-        // Merge any feed-level namespaced fields (iTunes, podcast, dc, etc.)
+        // Merge any feed-level namespaced fields
         $feed += static::_extractNamespacedFields($root);
 
         // Initialize the items array
@@ -341,10 +347,12 @@ abstract class Feed
         foreach ($root->entry as $entry) {
             // Normalize the entry
             $normalized = static::_normalizeAtomEntry($entry);
+
             // If no item ID could be derived, skip it
             if ('' === $normalized['guid']) {
                 continue;
             }
+
             // Add the entry to the items array
             $items[] = $normalized;
         }
@@ -370,7 +378,7 @@ abstract class Feed
         // Get the link
         $link = static::_atomLink($entry);
 
-        // Get the <id> (Atom's main item identifier)
+        // Get the <id>, which is Atom's main item identifier
         $guid = trim((string) ($entry->id ?? ''));
 
         // If no <id> was set, fall back to the link
@@ -393,10 +401,12 @@ abstract class Feed
         foreach (['published', 'updated'] as $tag) {
             // Get the tag value
             $raw = trim((string) ($entry->{$tag} ?? ''));
+
             // If the tag is empty, try the next one
             if ('' === $raw) {
                 continue;
             }
+
             // Try to parse the value
             try {
                 $pubDate = new DateTime($raw);
@@ -421,8 +431,9 @@ abstract class Feed
 
         // Loop through every <category> element
         foreach ($entry->category as $category) {
-            // Get the term attribute (Atom uses `term`)
+            // Get the term attribute
             $term = trim((string) ($category['term'] ?? ''));
+
             // If the term isn't empty, add it
             if ('' !== $term) {
                 $categories[] = $term;
@@ -461,17 +472,19 @@ abstract class Feed
             // Get the href and rel attributes
             $href = trim((string) ($link['href'] ?? ''));
             $rel  = trim((string) ($link['rel']  ?? ''));
+
             // If this is the "alternate" link, return it immediately
             if ('alternate' === $rel) {
                 return $href;
             }
+
             // If no rel was set and no fallback exists yet, remember this href as the fallback
             if ('' === $rel && '' === $fallback) {
                 $fallback = $href;
             }
         }
 
-        // Return the fallback (or empty string if no link was found)
+        // Return the fallback
         return $fallback;
     }
 
@@ -487,11 +500,13 @@ abstract class Feed
         foreach ($item->enclosure as $enclosure) {
             // Get the URL
             $url = trim((string) ($enclosure['url'] ?? ''));
+
             // If no URL, skip this enclosure
             if ('' === $url) {
                 continue;
             }
-            // Return the normalized enclosure (first one wins)
+
+            // Return the normalized enclosure, where the first one wins
             return static::_normalizeEnclosure(
                 $url,
                 trim((string) ($enclosure['type'] ?? '')),
@@ -517,13 +532,16 @@ abstract class Feed
             if ('enclosure' !== trim((string) ($link['rel'] ?? ''))) {
                 continue;
             }
+
             // Get the href
             $href = trim((string) ($link['href'] ?? ''));
+
             // If no href, skip this link
             if ('' === $href) {
                 continue;
             }
-            // Return the normalized enclosure (first one wins)
+
+            // Return the normalized enclosure, where the first one wins
             return static::_normalizeEnclosure(
                 $href,
                 trim((string) ($link['type'] ?? '')),
@@ -549,13 +567,16 @@ abstract class Feed
             if (!is_array($attachment)) {
                 continue;
             }
+
             // Get the URL
             $url = trim((string) ($attachment['url'] ?? ''));
+
             // If no URL, skip this attachment
             if ('' === $url) {
                 continue;
             }
-            // Return the normalized enclosure (first one wins)
+
+            // Return the normalized enclosure, where the first one wins
             return static::_normalizeEnclosure(
                 $url,
                 trim((string) ($attachment['mime_type'] ?? '')),
@@ -608,12 +629,15 @@ abstract class Feed
             if ('' === $prefix) {
                 continue;
             }
+
             // Collect every child of this element in this namespace
             $bucket = static::_collectChildren($element->children($uri), $uri);
+
             // If the namespace had no children on this element, skip it
             if ([] === $bucket) {
                 continue;
             }
+
             // Add the bucket under its prefix
             $result[$prefix] = $bucket;
         }
@@ -642,18 +666,21 @@ abstract class Feed
         foreach ($children as $name => $child) {
             // Convert the child to a scalar or hash
             $value = static::_xmlNodeToValue($child, $ns);
+
             // If this tag name hasn't appeared yet, store the value directly
             if (!isset($counts[$name])) {
                 $bucket[$name] = $value;
                 $counts[$name] = 1;
                 continue;
             }
+
             // If this is the second occurrence, promote the existing value to a list
             if (1 === $counts[$name]) {
                 $bucket[$name] = [$bucket[$name], $value];
                 $counts[$name] = 2;
                 continue;
             }
+
             // Otherwise, append to the existing list
             $bucket[$name][] = $value;
             $counts[$name]++;
@@ -738,15 +765,15 @@ abstract class Feed
             $link = trim((string) ($item['external_url'] ?? ''));
         }
 
-        // If still no link, fall back to the id (when it looks like a URL)
+        // If still no link, fall back to the id when it looks like a URL
         if ('' === $link && (str_starts_with($id, 'http://') || str_starts_with($id, 'https://'))) {
             $link = $id;
         }
 
-        // Use the id as the GUID (or the link, if no id was set)
+        // Use the id as the GUID, or the link when no id was set
         $guid = ('' !== $id ? $id : $link);
 
-        // Get the description (content_html, content_text, or summary)
+        // Get the description
         $description = trim((string) ($item['content_html'] ?? ''));
 
         // If no content_html, fall back to content_text
@@ -783,6 +810,7 @@ abstract class Feed
         if (isset($item['authors'][0]['name'])) {
             $value = trim((string) $item['authors'][0]['name']);
             $author = ('' !== $value ? $value : null);
+
         // Otherwise fall back to the JSON Feed 1.0 singular author.name
         } elseif (isset($item['author']['name'])) {
             $value = trim((string) $item['author']['name']);
@@ -796,6 +824,7 @@ abstract class Feed
         foreach (($item['tags'] ?? []) as $tag) {
             // Get the tag value
             $value = trim((string) $tag);
+
             // If the tag isn't empty, add it
             if ('' !== $value) {
                 $categories[] = $value;

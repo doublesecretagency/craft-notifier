@@ -14,6 +14,7 @@ namespace doublesecretagency\notifier\models;
 use Craft;
 use craft\base\Model;
 use craft\helpers\StringHelper;
+use doublesecretagency\notifier\elements\Notification;
 use doublesecretagency\notifier\web\twig\Extension;
 use nystudio107\crafttwigsandbox\twig\BaseSecurityPolicy;
 use nystudio107\crafttwigsandbox\twig\BlacklistSecurityPolicy;
@@ -108,6 +109,15 @@ class Sandbox extends Model
         if (self::WHITELIST === ($this->config['list'] ?? null)) {
             // Create a new whitelist
             $this->securityPolicy = new WhitelistSecurityPolicy();
+
+            // Get the current whitelist
+            $baseline = $this->securityPolicy->getTwigProperties();
+
+            // Allow all properties on the notification
+            $baseline[Notification::class] = ['*'];
+
+            // Save the baseline back to the policy
+            $this->securityPolicy->setTwigProperties($baseline);
         } else {
             // Create a new blacklist
             $this->securityPolicy = new BlacklistSecurityPolicy();

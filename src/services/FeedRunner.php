@@ -71,6 +71,7 @@ class FeedRunner extends Component
             try {
                 // Get the dispatched and sent counts from this notification's run
                 [$dispatched, $sent] = $this->_runNotification($notification);
+
                 // Merge the counts into the run summary
                 $summary['dispatched'] += $dispatched;
                 $summary['sent']       += $sent;
@@ -90,9 +91,8 @@ class FeedRunner extends Component
     /**
      * Seed a feed notification's tracking history.
      *
-     * No-op when the notification isn't a feed notification, has no Feed URL,
-     * or has already been seeded. Otherwise, fetch the feed and record every
-     * currently-visible item as already-seen. Never dispatches.
+     * Records every currently-visible feed item as already-seen, so none of them
+     * dispatch later. No-ops when there is nothing to seed.
      *
      * @param Notification $notification
      * @return bool True if a fresh seed was recorded, false if no action was taken.
@@ -123,7 +123,7 @@ class FeedRunner extends Component
             return false;
         }
 
-        // Fetch and parse the feed
+        // Get and parse the feed
         $parsed = $this->_fetchAndParse($notification);
 
         // If the fetch or parse failed, bail
@@ -174,7 +174,7 @@ class FeedRunner extends Component
      */
     public function getRandomItem(Notification $notification): ?array
     {
-        // Fetch and parse the live feed
+        // Get and parse the live feed
         $parsed = $this->_fetchAndParse($notification);
 
         // If the fetch or parse failed, bail
@@ -207,7 +207,7 @@ class FeedRunner extends Component
      */
     private function _runNotification(Notification $notification): array
     {
-        // Fetch and parse the feed
+        // Get and parse the feed
         $parsed = $this->_fetchAndParse($notification);
 
         // If the fetch or parse failed, bail
@@ -238,8 +238,10 @@ class FeedRunner extends Component
             if (!$this->_trackItem($notification->id, $item['guid'])) {
                 continue;
             }
+
             // Send the notification for this item and capture the envelope count
             $sent += $this->_send($notification, $item, $parsed['feed']);
+
             // Count this dispatch
             $dispatched++;
         }
@@ -308,6 +310,7 @@ class FeedRunner extends Component
         } catch (Throwable $e) {
             // Get a feed scan parent for this failure
             $envelopeId = $notification->log->feedScan($feedUrl);
+
             // Log the fetch failure as a warning, then bail
             $notification->log->warning(Craft::t('notifier',
                 '[FEED ERROR] Could not fetch the feed: {message}',
@@ -324,6 +327,7 @@ class FeedRunner extends Component
         if (Feed::needsXmlExtensions($body, $contentType) && !extension_loaded('simplexml')) {
             // Get a feed scan parent for this failure
             $envelopeId = $notification->log->feedScan($feedUrl);
+
             // Log the missing-extensions failure as a warning, then bail
             $notification->log->warning(Craft::t('notifier',
                 '[FEED ERROR] Could not parse the feed. The PHP `simplexml` and `libxml` extensions are required.'
@@ -337,6 +341,7 @@ class FeedRunner extends Component
         } catch (FeedParseException) {
             // Get a feed scan parent for this failure
             $envelopeId = $notification->log->feedScan($feedUrl);
+
             // Log the parse failure as a warning, then bail
             $notification->log->warning(Craft::t('notifier', '[FEED ERROR] Could not parse the feed.'), $envelopeId);
             return null;

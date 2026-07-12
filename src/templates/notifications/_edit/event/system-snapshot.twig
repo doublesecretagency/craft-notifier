@@ -15,6 +15,6 @@
     <div id="recurring-schedule-system-snapshot" class="{% if not (notification.eventConfig.recurring ?? false) %}hidden{% endif %}">
         {% include 'notifier/notifications/_edit/event/_recurring-schedule' with { eventType: 'system-snapshot' } %}
     </div>
-    {# Hidden input goes last so the first visible field keeps :first-child (and Craft's margin reset) #}
+    {# Hidden input goes last so the first visible field keeps :first-child and Craft's margin reset #}
     <input type="hidden" name="event[system-snapshot]" value="compile">
 </div>

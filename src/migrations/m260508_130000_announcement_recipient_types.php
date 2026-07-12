@@ -38,7 +38,7 @@ class m260508_130000_announcement_recipient_types extends Migration
         // Loop through each Announcement notification
         foreach ($rows as $row) {
 
-            // If recipientsType is already set, skip (already migrated)
+            // If recipientsType is already set, skip
             if (!empty($row['recipientsType'])) {
                 continue;
             }

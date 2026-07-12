@@ -105,12 +105,12 @@ class OutboundNtfy extends BaseEnvelope
             $headers['Authorization'] = "Bearer {$accessToken}";
         }
 
-        // Add optional Title header (ntfy expects raw ASCII; encode if present)
+        // Add the optional Title header, encoding it because ntfy expects raw ASCII
         if ($this->title !== '') {
             $headers['Title'] = $this->_encodeHeaderValue($this->title);
         }
 
-        // Add Priority header (clamp to 1-5)
+        // Add the Priority header
         $headers['Priority'] = (string) max(1, min(5, $this->priority));
 
         // Add optional Tags header

@@ -224,7 +224,7 @@ class Dispatch extends Model
             return true;
         }
 
-        // Match Twig variable seeding precedence (object covers bridged events like User Activated)
+        // Match Twig variable seeding precedence
         $element = ($this->data['object'] ?? $this->event->sender);
 
         // If the subject is not an element, the condition can't evaluate
@@ -272,7 +272,6 @@ class Dispatch extends Model
         }
 
         // If the entry's section and entry type pair isn't selected, bail
-        // (an entry must match BOTH a selected section and entry type to be valid)
         if (!in_array("{$element->sectionId}-{$element->typeId}", $sectionEntryTypes, false)) {
             return false;
         }
@@ -355,7 +354,7 @@ class Dispatch extends Model
         // Get the user being saved or activated
         $element = ($this->data['object'] ?? $this->event->sender);
 
-        // Get configured User Groups (the value `0` means "Ungrouped Users")
+        // Get configured User Groups, where `0` means "Ungrouped Users"
         $userGroups = array_map('intval', ($this->notification->eventConfig['userGroups'] ?? []));
 
         // If no user groups are selected, warn and bail
@@ -371,6 +370,7 @@ class Dispatch extends Model
         if ('after-assign-to-groups' === $this->notification->event) {
             // Get the newly-assigned group IDs
             $newGroupIds = array_map('intval', ($this->data['newGroupIds'] ?? []));
+
             // Bail unless one of the new assignments matches a configured group
             return !empty(array_intersect($newGroupIds, $userGroups));
         }
@@ -478,7 +478,7 @@ class Dispatch extends Model
         // Get event element
         $element = ($this->data['object'] ?? $this->event->sender);
 
-        // Get configured Digital Product Types (shared filter with digital-products-products)
+        // Get configured Digital Product Types
         $productTypes = array_map('intval', ($this->notification->eventConfig['digitalProductTypes'] ?? []));
 
         // If no digital product types are selected, warn and bail
@@ -575,7 +575,7 @@ class Dispatch extends Model
             return false;
         }
 
-        // Get the desired submission outcome (default to successful only)
+        // Get the desired submission outcome
         $outcome = ($this->notification->eventConfig['submissionOutcome'] ?? 'success');
 
         // Whether this submission succeeded
@@ -611,8 +611,8 @@ class Dispatch extends Model
                 $this->envelopes = [];
                 return;
             }
+
             // Expose the collected data to the message body as {{ data.* }}
-            // (an empty array if the snippet never called setData)
             $this->data['data'] = $this->collectedDynamicData;
         }
 
@@ -731,12 +731,14 @@ class Dispatch extends Model
                 // Parse text
                 $subject = $this->_parseTwig($config, $this->notification->messageConfig['emailSubject'] ?? null);
                 $body    = $this->_parseTwig($config, $this->notification->messageConfig['emailMessage'] ?? null);
+
                 // No parse error by default
                 $parseError = null;
             } catch (Exception|Throwable $e) {
                 // Unable to parse text
                 $subject = ($this->notification->messageConfig['emailSubject'] ?? null);
                 $body    = ($this->notification->messageConfig['emailMessage'] ?? null);
+
                 // Get parse error
                 $parseError = $e;
             }
@@ -748,7 +750,7 @@ class Dispatch extends Model
                 'body' => $body,
             ];
 
-            // Initialize logging for envelope (with the test flag tagged on for the log row)
+            // Initialize logging for envelope
             $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
 
             // If a parsing error occurred, log and skip it
@@ -836,12 +838,14 @@ class Dispatch extends Model
                 // Parse text
                 $title   = $this->_parseTwig($config, $this->notification->messageConfig['announcementTitle'] ?? null);
                 $message = $this->_parseTwig($config, $this->notification->messageConfig['announcementMessage'] ?? null);
+
                 // No parse error by default
                 $parseError = null;
             } catch (Exception|Throwable $e) {
                 // Unable to parse text
                 $title   = ($this->notification->messageConfig['announcementTitle'] ?? null);
                 $message = ($this->notification->messageConfig['announcementMessage'] ?? null);
+
                 // Get parse error
                 $parseError = $e;
             }
@@ -897,12 +901,14 @@ class Dispatch extends Model
             // Parse text
             $title   = $this->_parseTwig($config, $this->notification->messageConfig['flashTitle'] ?? null);
             $message = $this->_parseTwig($config, $this->notification->messageConfig['flashDetails'] ?? null);
+
             // No parse error by default
             $parseError = null;
         } catch (Exception|Throwable $e) {
             // Unable to parse text
             $title   = ($this->notification->messageConfig['flashTitle'] ?? null);
             $message = ($this->notification->messageConfig['flashDetails'] ?? null);
+
             // Get parse error
             $parseError = $e;
         }
@@ -924,7 +930,7 @@ class Dispatch extends Model
             $currentUser = null;
         }
 
-        // Initialize logging for envelope (with the test flag tagged on for the log row)
+        // Initialize logging for envelope
         $envelopeId = $this->notification->log->envelope([
             'messageType' => 'a flash message',
             'recipient' => ($currentUser->name ?? 'the current user'),
@@ -994,13 +1000,16 @@ class Dispatch extends Model
             try {
                 // Body is required by Twilio's SMS API
                 $this->_requireFieldNotEmpty('smsMessage', 'Body');
+
                 // Parse text
                 $message = $this->_parseTwig($config, $this->notification->messageConfig['smsMessage'] ?? null);
+
                 // No parse error by default
                 $parseError = null;
             } catch (Exception|Throwable $e) {
                 // Unable to parse text
                 $message = ($this->notification->messageConfig['smsMessage'] ?? null);
+
                 // Get parse error
                 $parseError = $e;
             }
@@ -1011,7 +1020,7 @@ class Dispatch extends Model
                 'message' => $message,
             ];
 
-            // Initialize logging for envelope (with the test flag tagged on for the log row)
+            // Initialize logging for envelope
             $envelopeId = $this->notification->log->envelope($jobInfo, $details + ['isTest' => $this->isTest]);
 
             // If a parsing error occurred, log and skip it
@@ -1071,7 +1080,7 @@ class Dispatch extends Model
                 break;
             }
 
-            // If the recipient has no User, log and skip (Pushover requires a User profile)
+            // If the recipient has no User, log and skip, since Pushover requires a User profile
             if (!$recipient->user) {
                 $this->_skipRecipient('a Pushover message', ($recipient->name ?? $genericRecipient), Craft::t('notifier',
                     '[SKIPPED] Recipient "{name}" has no Craft user account.',
@@ -1209,7 +1218,7 @@ class Dispatch extends Model
                 $parseError = $e;
             }
 
-            // Get simple-config fields (priority, tags, markdown)
+            // Get the simple-config fields
             $priority = (int) ($this->notification->messageConfig['ntfyPriority'] ?? 3);
             $tags     = ($this->notification->messageConfig['ntfyTags']     ?? null);
             $markdown = (bool) ($this->notification->messageConfig['ntfyMarkdown'] ?? false);
@@ -1270,7 +1279,7 @@ class Dispatch extends Model
         // Get generic recipient name
         $genericRecipient = $this->notification->getTaskRecipient();
 
-        // Whether link previews are enabled (default to true)
+        // Whether link previews are enabled
         $unfurlLinks = (bool) ($this->notification->messageConfig['slackUnfurlLinks'] ?? true);
 
         // Loop through all recipients
@@ -1308,12 +1317,13 @@ class Dispatch extends Model
 
             // Attempt to parse the body, icon URL, icon emoji, and username
             try {
-                // Body is required by Slack's chat.postMessage API (when no blocks/attachments)
+                // Body is required by Slack's chat.postMessage API when there are no blocks or attachments
                 $this->_requireFieldNotEmpty('slackBody', 'Body');
                 $body      = $this->_parseTwig($config, $this->notification->messageConfig['slackBody']      ?? '');
                 $iconUrl   = trim($this->_parseTwig($config, $this->notification->messageConfig['slackIcon']     ?? ''));
                 $iconEmoji = trim($this->_parseTwig($config, $this->notification->messageConfig['slackEmoji']    ?? ''));
                 $username  = trim($this->_parseTwig($config, $this->notification->messageConfig['slackUsername'] ?? ''));
+
                 // If the author opted into HTML mode, convert to Slack mrkdwn before sending
                 if ('html' === ($this->notification->messageConfig['slackBodyFormat'] ?? 'markdown')) {
                     $body = SlackMrkdwn::fromHtml($body);
@@ -1393,7 +1403,7 @@ class Dispatch extends Model
         // Get generic recipient name
         $genericRecipient = $this->notification->getTaskRecipient();
 
-        // Whether link previews are enabled (default to true)
+        // Whether link previews are enabled
         $unfurlLinks = (bool) ($this->notification->messageConfig['discordUnfurlLinks'] ?? true);
 
         // Loop through all recipients
@@ -1422,11 +1432,12 @@ class Dispatch extends Model
 
             // Attempt to parse the body, username, and avatar URL
             try {
-                // Body is required by Discord's webhook API (when no embeds/files)
+                // Body is required by Discord's webhook API when there are no embeds or files
                 $this->_requireFieldNotEmpty('discordBody', 'Body');
                 $body      = $this->_parseTwig($config, $this->notification->messageConfig['discordBody']     ?? '');
                 $username  = trim($this->_parseTwig($config, $this->notification->messageConfig['discordUsername'] ?? ''));
                 $avatarUrl = trim($this->_parseTwig($config, $this->notification->messageConfig['discordAvatar']   ?? ''));
+
                 // If the author opted into HTML mode, convert to Discord markdown before sending
                 if ('html' === ($this->notification->messageConfig['discordBodyFormat'] ?? 'markdown')) {
                     $body = DiscordMarkdown::fromHtml($body);
@@ -1488,7 +1499,7 @@ class Dispatch extends Model
         // Get Facebook page recipients
         $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
 
-        // Resolve media once for this dispatch (shared across all recipients)
+        // Resolve media once for this dispatch, shared across all recipients
         $media = $this->_resolveMedia('facebookMedia');
         $mediaSummary = $this->_mediaSummary($media);
 
@@ -1587,7 +1598,7 @@ class Dispatch extends Model
         // Get Instagram account recipients
         $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
 
-        // Resolve media once for this dispatch (shared across all recipients)
+        // Resolve media once for this dispatch, shared across all recipients
         $media = $this->_resolveMedia('instagramMedia', true);
         $mediaSummary = $this->_mediaSummary($media);
 
@@ -1706,7 +1717,7 @@ class Dispatch extends Model
         // Get X (Twitter) account recipients
         $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
 
-        // Resolve media once for this dispatch (shared across all recipients)
+        // Resolve media once for this dispatch, shared across all recipients
         $media = $this->_resolveMedia('xTwitterMedia');
         $mediaSummary = $this->_mediaSummary($media);
 
@@ -1803,7 +1814,7 @@ class Dispatch extends Model
         // Get Bluesky account recipients
         $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
 
-        // Resolve media once for this dispatch (shared across all recipients)
+        // Resolve media once for this dispatch, shared across all recipients
         $media = $this->_resolveMedia('blueskyMedia');
         $mediaSummary = $this->_mediaSummary($media);
 
@@ -1855,7 +1866,7 @@ class Dispatch extends Model
             // Derive the post language from the primary site
             $language = explode('-', Craft::$app->getSites()->getPrimarySite()->language)[0];
 
-            // Whether to generate link-preview cards (default to true)
+            // Whether to generate link-preview cards
             $linkCard = (bool) ($this->notification->messageConfig['blueskyLinkCard'] ?? true);
 
             // Get message details
@@ -1910,7 +1921,7 @@ class Dispatch extends Model
         // Get Mastodon account recipients
         $recipients = NotifierPlugin::getInstance()->recipients->getRecipients($this->notification, $this);
 
-        // Resolve media once for this dispatch (shared across all recipients)
+        // Resolve media once for this dispatch, shared across all recipients
         $media = $this->_resolveMedia('mastodonMedia');
         $mediaSummary = $this->_mediaSummary($media);
 
@@ -1927,7 +1938,7 @@ class Dispatch extends Model
         // Get generic recipient name
         $genericRecipient = $this->notification->getTaskRecipient();
 
-        // Get the post visibility (default to public)
+        // Get the post visibility
         $visibility = ($this->notification->messageConfig['mastodonVisibility'] ?? 'public');
 
         // Loop through all recipients
@@ -2218,11 +2229,13 @@ class Dispatch extends Model
         try {
             // Point the plugin at this dispatch while the snippet runs
             NotifierPlugin::$plugin->activeDispatchForData = $this;
+
             // Run the snippet, ignoring the rendered output
             $this->_parseTwig($config, $snippet);
         } catch (Exception|Throwable $e) {
             // Clear any data left behind by the failed parse
             $this->collectedDynamicData = [];
+
             // Log the parse error and bail
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
             $notification->log->error($message, $this->runEnvelope());
@@ -2266,11 +2279,13 @@ class Dispatch extends Model
         try {
             // Point the plugin at this dispatch while the snippet runs
             NotifierPlugin::$plugin->activeDispatchForMedia = $this;
+
             // Run the snippet, ignoring the rendered output
             $this->_parseTwig($config, $snippet);
         } catch (Exception|Throwable $e) {
             // Clear any media left behind by the failed parse
             $this->collectedMedia = [];
+
             // Log the parse error and bail
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
             $notification->log->error($message, $this->runEnvelope());
@@ -2319,6 +2334,7 @@ class Dispatch extends Model
         } catch (Exception|Throwable $e) {
             // Clear any recipients left behind by the failed parse
             $this->collectedDynamicRecipients = [];
+
             // Log the parse error and bail
             $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
             $notification->log->error($message, $this->runEnvelope());
@@ -2361,7 +2377,7 @@ class Dispatch extends Model
             // setMedia ran
             $this->_mediaFieldState = 'set';
         } elseif (!$parsed) {
-            // The snippet errored (already logged by parseMediaSnippet)
+            // The snippet errored, and was already logged by parseMediaSnippet
             $this->_mediaFieldState = 'error';
         } elseif ('' === $snippet) {
             // The field was left blank
@@ -2371,7 +2387,7 @@ class Dispatch extends Model
             $this->_mediaFieldState = 'unset';
         }
 
-        // If an optional-media channel forgot setMedia, warn (the post still sends without media)
+        // If an optional-media channel forgot setMedia, warn but still send
         if (!$requiresMedia && 'unset' === $this->_mediaFieldState) {
             $this->_mediaFieldNotice = Craft::t('notifier',
                 '[NO MEDIA] No image was attached because the {tag} tag was never invoked in the Image Attachment field.',
@@ -2450,6 +2466,7 @@ class Dispatch extends Model
             if (!$envelope) {
                 continue;
             }
+
             // Log the no-data notice under this envelope
             $this->notification->log->warning($line, $envelope->envelopeId);
         }
@@ -2463,9 +2480,13 @@ class Dispatch extends Model
      */
     private function _mediaSummary(array $media): array
     {
-        // Summarize each descriptor by its identifying fields
+        // Initialize the summarized items
         $items = [];
+
+        // Loop through each media descriptor
         foreach ($media as $descriptor) {
+
+            // Summarize the descriptor by its identifying fields
             $items[] = [
                 'kind'    => $descriptor->kind,
                 'url'     => $descriptor->url,
@@ -2534,8 +2555,10 @@ class Dispatch extends Model
         if (is_a($vars['object'], Element::class)) {
             // Get the element
             $element = $vars['object'];
+
             // Get the element type in camelCase
             $type = StringHelper::camelCase($element::lowerDisplayName());
+
             // Set aliases for element
             $vars['element'] = $element;
             $vars[$type] = $element;
@@ -2600,18 +2623,22 @@ class Dispatch extends Model
             $this->notification->log->warning($message, $envelopeId);
             return;
         }
+
         // If a required field was empty, log an error and bail
         if (is_a($e, RequiredFieldEmptyException::class)) {
             $this->notification->log->error("[TWIG ERROR] {$e->getMessage()}", $envelopeId);
             return;
         }
+
         // Otherwise treat as a Twig parse error
         $message = $this->_cleanError("[TWIG ERROR] {$e->getMessage()}");
+
         // If message contains "is not allowed in"
         if (str_contains($message, 'is not allowed in')) {
             // Append link to sandbox documentation
             $message .= ' Learn how to [configure the Twig sandbox](https://plugins.doublesecretagency.com/notifier/messages/twig-sandbox).';
         }
+
         // Log the error
         $this->notification->log->error($message, $envelopeId);
     }
@@ -2732,12 +2759,14 @@ class Dispatch extends Model
             if (!$envelope) {
                 continue;
             }
+
             // If sending via the queue
             if ($this->useQueue) {
                 // Add message to the queue
                 $this->notification->log->info(Craft::t('notifier', 'Adding message to queue.'), $envelope->envelopeId);
                 try {
                     Queue::push(new SendMessage(['envelope' => $envelope]));
+
                     // Successfully queued, count it
                     $count++;
                 } catch (Throwable) {
@@ -2746,6 +2775,7 @@ class Dispatch extends Model
             } else {
                 // Send message immediately
                 $this->notification->log->info(Craft::t('notifier', 'Sending message immediately (bypassing queue).'), $envelope->envelopeId);
+
                 // Send returns true on success
                 if ($envelope->send()) {
                     $count++;

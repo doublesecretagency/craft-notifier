@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Visa aviseringar',
+    'Adds "Notifications" to the control panel navigation.' => 'Lägger till "Aviseringar" i kontrollpanelens navigering.',
     'Save notifications' => 'Spara aviseringar',
+    'Edit the Event tab' => 'Redigera fliken Händelse',
+    'Edit the Message tab' => 'Redigera fliken Meddelande',
+    'Edit the Recipients tab' => 'Redigera fliken Mottagare',
     'Use the Dynamic Recipients type' => 'Använd typen Dynamiska mottagare',
     'Use the Dynamic Data type' => 'Använd typen Dynamiska data',
-    'Test notifications' => 'Testa aviseringar',
+    'Send test notifications' => 'Skicka testaviseringar',
     'Send manual notifications' => 'Skicka manuella aviseringar',
     'Delete notifications' => 'Ta bort aviseringar',
     'View notification log' => 'Visa aviseringsloggen',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Lägger till "Aviseringslogg" i kontrollpanelens Verktyg.',
     'Delete notification log' => 'Ta bort aviseringsloggen',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Kör anpassad Twig-kod när ett meddelande skickas. Ge endast denna behörighet till mycket betrodda användare!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier-inställningar',
     'General' => 'Allmänt',
+    'Notification Fields' => 'Aviseringsfält',
+    'Fields saved.' => 'Fält sparade.',
+    'Couldn’t save fields.' => 'Det gick inte att spara fälten.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Aviseringsfält kan inte redigeras när administratörsändringar är inaktiverade.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

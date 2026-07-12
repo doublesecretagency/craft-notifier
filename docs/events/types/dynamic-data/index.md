@@ -10,6 +10,12 @@ Sends a compiled report with custom-crafted data, on demand and/or on a recurrin
 
 Dynamic Data lets you **construct a custom data set**. You write a Twig snippet which gathers whatever content you need, push the values into a `data` variable via the `{% setData %}` tag, then read them back within the message body.
 
+:::warning ⚠️ Security Warning - Permission Required
+Users without the "[Use the Dynamic Data type](/getting-started/permissions)" permission will not have the option to select the "Dynamic Data" type.
+
+Since authoring Dynamic Data snippets involves **executing custom Twig at send time**, it is first necessary to enable this permission for users who require it. Grant it only to highly-trusted users.
+:::
+
 ## Configuring Dynamic Data
 
 The snippet **must** call the `{% setData %}` tag at least once.
@@ -76,7 +82,3 @@ Dynamic data set with `{% setData %}` will be available in the message template 
 See the [Dynamic Data variables](/messages/variables/dynamic-data) for usage and examples.
 
 <!--@include: @/events/types/_sending-reports.md-->
-
-## Permissions
-
-Dynamic data is only editable by users with the [Use the Dynamic Data type](/getting-started/permissions) permission enabled.

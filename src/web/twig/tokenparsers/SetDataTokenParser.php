@@ -37,7 +37,7 @@ class SetDataTokenParser extends AbstractTokenParser
         // Default to an empty dataset when no argument is given
         $data = new ConstantExpression(null, $token->getLine());
 
-        // If an argument was provided, parse it (an associative array)
+        // If an argument was provided, parse it
         if (!$stream->test(Token::BLOCK_END_TYPE)) {
             $data = $parser->getExpressionParser()->parseExpression();
         }

@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => '알림 보기',
+    'Adds "Notifications" to the control panel navigation.' => '제어판 내비게이션에 "알림"을 추가합니다.',
     'Save notifications' => '알림 저장',
+    'Edit the Event tab' => '이벤트 탭 편집',
+    'Edit the Message tab' => '메시지 탭 편집',
+    'Edit the Recipients tab' => '수신자 탭 편집',
     'Use the Dynamic Recipients type' => '동적 수신자 유형 사용',
     'Use the Dynamic Data type' => '동적 데이터 유형 사용',
-    'Test notifications' => '알림 테스트',
+    'Send test notifications' => '테스트 알림 보내기',
     'Send manual notifications' => '수동 알림 보내기',
     'Delete notifications' => '알림 삭제',
     'View notification log' => '알림 로그 보기',
+    'Adds "Notification Log" to the control panel Utilities.' => '제어판 유틸리티에 "알림 로그"를 추가합니다.',
     'Delete notification log' => '알림 로그 삭제',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => '메시지를 보낼 때 사용자 지정 Twig 코드를 실행합니다. 신뢰할 수 있는 사용자에게만 이 권한을 부여하십시오!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier 설정',
     'General' => '일반',
+    'Notification Fields' => '알림 필드',
+    'Fields saved.' => '필드가 저장되었습니다.',
+    'Couldn’t save fields.' => '필드를 저장할 수 없습니다.',
+    'Notification fields can’t be edited when admin changes are disabled.' => '관리자 변경이 비활성화된 경우 알림 필드를 편집할 수 없습니다.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

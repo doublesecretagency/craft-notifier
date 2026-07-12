@@ -26,12 +26,12 @@ class LinkedinController extends Controller
 {
 
     /**
-     * @var array|int|bool Allow anonymous access to the callback (LinkedIn returns without a CSRF token).
+     * @var array|int|bool Allow anonymous access to the callback, since LinkedIn returns without a CSRF token.
      */
     protected array|int|bool $allowAnonymous = ['callback'];
 
     /**
-     * @var bool Disable CSRF validation; the OAuth callback carries no CSRF token (state is the guard).
+     * @var bool Disable CSRF validation; the OAuth callback carries no CSRF token, so the state token is the guard.
      */
     public $enableCsrfValidation = false;
 

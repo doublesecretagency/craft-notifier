@@ -80,9 +80,13 @@ JS, [static::class]);
                 . '</button>';
         }
 
-        // Otherwise, build one picker row per available Notification
+        // Initialize the picker rows
         $rows = '';
+
+        // Loop through each available Notification
         foreach ($notifications as $notification) {
+
+            // Build a picker row
             $rows .= '<li><a class="formsubmit"'
                 . ' data-param="notificationId"'
                 . ' data-value="' . (int) $notification->id . '"'

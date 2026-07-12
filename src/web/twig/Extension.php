@@ -154,14 +154,18 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     private function _pruneEmptyOptgroups(array $options): array
     {
+        // Initialize the result and the pending optgroup
         $result = [];
         $pendingOptgroup = null;
+
+        // Loop through each option
         foreach ($options as $key => $value) {
             // Optgroup divider - hold until we know a child follows
             if (is_int($key) && is_array($value) && isset($value['optgroup'])) {
                 $pendingOptgroup = $value;
                 continue;
             }
+
             // Real option - flush the pending optgroup first, then emit
             if ($pendingOptgroup !== null) {
                 $result[] = $pendingOptgroup;
@@ -345,7 +349,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
             }
 
-            // Add each site group (with its respective sites)
+            // Add each site group
             $siteGroups[$group->id] = [
                 'name' => $group->name,
                 'sites' => $sites,
@@ -387,7 +391,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
             }
 
-            // Add each section (with its respective entry types)
+            // Add each section
             $sections[$section->id] = [
                 'name' => $section->name,
                 'entryTypes' => $entryTypes,

@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => '通知を表示',
+    'Adds "Notifications" to the control panel navigation.' => 'コントロールパネルのナビゲーションに「通知」を追加します。',
     'Save notifications' => '通知を保存',
+    'Edit the Event tab' => 'イベントタブを編集',
+    'Edit the Message tab' => 'メッセージタブを編集',
+    'Edit the Recipients tab' => '受信者タブを編集',
     'Use the Dynamic Recipients type' => '動的受信者タイプを使用',
     'Use the Dynamic Data type' => '動的データタイプを使用',
-    'Test notifications' => '通知をテスト',
+    'Send test notifications' => 'テスト通知を送信',
     'Send manual notifications' => '手動通知を送信',
     'Delete notifications' => '通知を削除',
     'View notification log' => '通知ログを表示',
+    'Adds "Notification Log" to the control panel Utilities.' => 'コントロールパネルのユーティリティに「通知ログ」を追加します。',
     'Delete notification log' => '通知ログを削除',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'メッセージの送信時にカスタム Twig コードを実行します。この権限は信頼できるユーザーにのみ付与してください！',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier 設定',
     'General' => '一般',
+    'Notification Fields' => '通知フィールド',
+    'Fields saved.' => 'フィールドを保存しました。',
+    'Couldn’t save fields.' => 'フィールドを保存できませんでした。',
+    'Notification fields can’t be edited when admin changes are disabled.' => '管理者による変更が無効の場合、通知フィールドは編集できません。',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

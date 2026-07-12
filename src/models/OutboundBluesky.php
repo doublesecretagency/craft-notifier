@@ -130,7 +130,7 @@ class OutboundBluesky extends BaseEnvelope
             );
         }
 
-        // Get a session (cached or fresh)
+        // Get a session
         $session = $this->_resolveSession($pdsUrl, $handle, $appPassword, $notification);
 
         // If the session couldn't be resolved, bail
@@ -141,12 +141,12 @@ class OutboundBluesky extends BaseEnvelope
         // Build the post record
         $record = $this->_buildPostRecord($body, $pdsUrl);
 
-        // Attach explicit images when present (one embed type; images win over the link card)
+        // Attach explicit images when present, since only one embed type is allowed
         if ($this->media) {
             $this->_attachImages($record, $pdsUrl, $session, $notification);
         }
 
-        // Attach a link-preview card when enabled and no images were attached (best-effort)
+        // Attach a link-preview card when enabled and no images were attached
         if (!isset($record['embed']) && $this->linkCard) {
             $this->_attachLinkCard($record, $body, $pdsUrl, $session, $notification);
         }
@@ -154,7 +154,7 @@ class OutboundBluesky extends BaseEnvelope
         // Attempt to publish
         $success = $this->_publishRecord($pdsUrl, $session, $record, $notification);
 
-        // Retry-once on 401 (session may have expired between cache get and publish)
+        // Retry once on a 401, since the session may have expired since it was cached
         if (!$success && $this->_lastStatus === 401) {
             // Invalidate the cached session
             BlueskySession::invalidate($pdsUrl, $handle);
@@ -387,9 +387,8 @@ class OutboundBluesky extends BaseEnvelope
     /**
      * Upload attached images and attach them to the post record.
      *
-     * Best-effort: a failed image logs a warning and is skipped. Video items
-     * are not yet supported. Sets an `app.bsky.embed.images` embed when at
-     * least one image uploads successfully.
+     * A failed image logs a warning and is skipped, and video is not yet supported.
+     * Sets an `app.bsky.embed.images` embed when at least one image uploads.
      *
      * @param array $record The post record, modified in place.
      * @param string $pdsUrl
@@ -466,10 +465,8 @@ class OutboundBluesky extends BaseEnvelope
     /**
      * Build a link-preview card and attach it to the post record.
      *
-     * Best-effort and never throws. Any failure (no URL, an unreadable page, a
-     * thumbnail that cannot be fetched or uploaded) logs a warning and leaves
-     * the record without an embed, or with a text-only card. The post itself
-     * always proceeds.
+     * Never throws. Any failure logs a warning and leaves the record without an
+     * embed, or with a text-only card, so the post itself always proceeds.
      *
      * @param array $record The post record, modified in place.
      * @param string $body The rendered post body.
@@ -502,7 +499,7 @@ class OutboundBluesky extends BaseEnvelope
                 return;
             }
 
-            // Build the external embed (uri, title, description are required fields)
+            // Build the external embed
             $external = [
                 'uri'         => $meta['uri'],
                 'title'       => $meta['title'],

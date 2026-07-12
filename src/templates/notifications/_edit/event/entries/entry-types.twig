@@ -40,7 +40,7 @@ window.nestedCheckboxes.updateSelectAllLabel('.nested-checkboxes-entry-types');
                     <ul id="section-{{ sectionId }}-nested">
                         {# Loop over available entry types #}
                         {% for typeId,type in section.entryTypes %}
-                            {# Pair a section with one of its entry types (unique per row, even when the same entry type is shared across sections) #}
+                            {# Pair a section with one of its entry types, unique per row even when shared across sections #}
                             {% set pair = sectionId ~ '-' ~ typeId %}
                             <li>
                                 <input type="checkbox"

@@ -69,7 +69,7 @@ class NotificationCondition extends ElementCondition
             $base = parent::conditionRuleTypes();
         }
 
-        // Merge with any plugin-specific rules (none yet)
+        // Merge with any plugin-specific rules
         return array_merge($base, [
             // ...
         ]);

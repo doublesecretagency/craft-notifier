@@ -108,16 +108,19 @@ class EntryEvents
         if (!($event->element instanceof Entry)) {
             return;
         }
-        // If this is a per-site recursive firing, bail (only the top-level invocation should dispatch)
+
+        // If this is a per-site recursive firing, bail, since only the top-level invocation dispatches
         if ($event->element->propagating) {
             return;
         }
+
         // If this is the canonical clone mid-applyDraft, bail and let `afterApplyDraft` handle it
         // Craft's `duplicateElement()` defers `afterPropagate()` (and therefore `createRevision()`)
         // until *after* this event fires, so the new revision wouldn't yet be queryable here
         if ($event->element->duplicateOf instanceof Entry && $event->element->duplicateOf->getIsDraft()) {
             return;
         }
+
         // Bridge to the existing handler with a ModelEvent shape
         $modelEvent = new ModelEvent();
         $modelEvent->sender = $event->element;
@@ -139,6 +142,7 @@ class EntryEvents
         if (!($event->canonical instanceof Entry)) {
             return;
         }
+
         // Bridge to the existing handler with a ModelEvent shape
         $modelEvent = new ModelEvent();
         $modelEvent->sender = $event->canonical;

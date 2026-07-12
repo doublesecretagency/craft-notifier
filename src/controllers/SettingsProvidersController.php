@@ -31,7 +31,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 /**
- * Controller for the Notifier provider settings pages.
+ * Renders the provider settings pages and runs their connection tests.
  *
  * @since 3.0.0
  */
@@ -185,7 +185,7 @@ class SettingsProvidersController extends Controller
         // Get the plugin settings
         $settings = NotifierPlugin::$plugin->getSettings();
 
-        // Get the configured credentials (resolving any env references)
+        // Get the configured credentials, resolving any env references
         $clientId = App::parseEnv($settings->linkedinClientId);
         $clientSecret = App::parseEnv($settings->linkedinClientSecret);
 
@@ -240,34 +240,42 @@ class SettingsProvidersController extends Controller
         if ('ntfy' === $section && isset($posted['ntfyTopics'])) {
             $posted['ntfyTopics'] = $this->_assignUids($posted['ntfyTopics']);
         }
+
         // If saving the Slack section, assign UIDs to its channels
         if ('slack' === $section && isset($posted['slackChannels'])) {
             $posted['slackChannels'] = $this->_assignUids($posted['slackChannels']);
         }
+
         // If saving the Discord section, assign UIDs to its channels
         if ('discord' === $section && isset($posted['discordChannels'])) {
             $posted['discordChannels'] = $this->_assignUids($posted['discordChannels']);
         }
+
         // If saving the Facebook section, assign UIDs to its pages
         if ('facebook' === $section && isset($posted['facebookPages'])) {
             $posted['facebookPages'] = $this->_assignUids($posted['facebookPages']);
         }
+
         // If saving the Instagram section, assign UIDs and resolve IG account IDs
         if ('instagram' === $section && isset($posted['instagramAccounts'])) {
             $posted['instagramAccounts'] = $this->_resolveInstagramIgUserIds($this->_assignUids($posted['instagramAccounts']));
         }
+
         // If saving the X (Twitter) section, assign UIDs to its accounts
         if ('x-twitter' === $section && isset($posted['xTwitterAccounts'])) {
             $posted['xTwitterAccounts'] = $this->_assignUids($posted['xTwitterAccounts']);
         }
+
         // If saving the Bluesky section, assign UIDs to its accounts
         if ('bluesky' === $section && isset($posted['blueskyAccounts'])) {
             $posted['blueskyAccounts'] = $this->_assignUids($posted['blueskyAccounts']);
         }
+
         // If saving the Mastodon section, assign UIDs to its accounts
         if ('mastodon' === $section && isset($posted['mastodonAccounts'])) {
             $posted['mastodonAccounts'] = $this->_assignUids($posted['mastodonAccounts']);
         }
+
         // If saving the MQTT section, assign UIDs to its topics
         if ('mqtt' === $section && isset($posted['mqttTopics'])) {
             $posted['mqttTopics'] = $this->_assignUids($posted['mqttTopics']);
@@ -339,6 +347,7 @@ class SettingsProvidersController extends Controller
 
         // Build headers
         $headers = ['Title' => 'Notifier test'];
+
         // Get the optional access token
         $token = App::parseEnv($settings->ntfyAccessToken);
 
@@ -506,7 +515,7 @@ class SettingsProvidersController extends Controller
             // Get the response status code
             $status = $response->getStatusCode();
 
-            // If Discord rejected the message
+            // If Discord rejected the message, return the failure
             if ($status < 200 || $status >= 300) {
 
                 // Decode the response body
@@ -562,7 +571,7 @@ class SettingsProvidersController extends Controller
 
         try {
 
-            // Read the Page's name to verify the token
+            // Get the Page's name to verify the token
             $client = Craft::createGuzzleClient();
             $response = $client->get(MetaGraph::endpoint($pageId), [
                 'query'       => ['fields' => 'name', 'access_token' => $token],
@@ -624,7 +633,7 @@ class SettingsProvidersController extends Controller
             ]);
         }
 
-        // Resolve the linked Instagram business account
+        // Get the linked Instagram business account
         $account = MetaGraph::resolveIgUserId($pageId, $token);
 
         // If no account is linked, bail with an error
@@ -635,7 +644,7 @@ class SettingsProvidersController extends Controller
             ]);
         }
 
-        // Get the IG handle (falling back to the account ID)
+        // Get the IG handle, falling back to the account ID
         $handle = ($account['username'] ?? $account['id']);
 
         // Return success
@@ -675,7 +684,7 @@ class SettingsProvidersController extends Controller
             $url = 'https://api.x.com/2/users/me';
             $authHeader = OAuth1Signer::authorizationHeader('GET', $url, $consumerKey, $consumerKeySecret, $accessToken, $accessTokenSecret);
 
-            // Read the authenticated account to verify the credentials
+            // Get the authenticated account to verify the credentials
             $client = Craft::createGuzzleClient();
             $response = $client->get($url, [
                 'headers'     => ['Authorization' => $authHeader],
@@ -806,7 +815,7 @@ class SettingsProvidersController extends Controller
             // Decode the response body
             $decoded = json_decode((string) $response->getBody(), true);
 
-            // If the credentials didn't verify
+            // If the credentials didn't verify, return the failure
             if ($status < 200 || $status >= 300 || !is_array($decoded) || !isset($decoded['username'])) {
 
                 // Get the error message
@@ -908,6 +917,7 @@ class SettingsProvidersController extends Controller
             if ($useTls && ($clientCert = App::parseEnv($settings->mqttTlsClientCertFile))) {
                 $connectionSettings->setTlsClientCertificateFile($clientCert);
             }
+
             // If using Mutual TLS with a client key file, configure it
             if ($useTls && ($clientKey = App::parseEnv($settings->mqttTlsClientKeyFile))) {
                 $connectionSettings->setTlsClientCertificateKeyFile($clientKey);
@@ -976,7 +986,7 @@ class SettingsProvidersController extends Controller
                 continue;
             }
 
-            // Resolve the page ID and token
+            // Get the page ID and token
             $pageId = (string) App::parseEnv((string) ($row['pageId'] ?? ''));
             $token = (string) App::parseEnv((string) ($row['pageAccessToken'] ?? ''));
 
@@ -1021,6 +1031,7 @@ class SettingsProvidersController extends Controller
             if (!is_array($row)) {
                 continue;
             }
+
             // Add a UID if missing or blank
             if (empty($row['uid'])) {
                 $rows[$i]['uid'] = StringHelper::UUID();

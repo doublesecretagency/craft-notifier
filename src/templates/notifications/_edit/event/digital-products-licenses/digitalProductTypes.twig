@@ -20,12 +20,13 @@
 
             <ul>
 
-                {# Get selected Digital Product Types (shared filter source with digital-products-products) #}
+                {# Get the selected Digital Product Types #}
                 {% set productTypes = (notification.eventConfig.digitalProductTypes ?? []) %}
 
                 {# Loop over available digital product types #}
                 {% for typeId,typeName in availableDigitalProductTypes() %}
                     <li>
+                        {# Renaming this key would break the Digital Products event type #}
                         <input type="checkbox"
                             class="checkbox"
                             id="license-product-type-{{ typeId }}"

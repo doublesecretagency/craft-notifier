@@ -138,31 +138,36 @@ class Events extends Component
             Entry::EVENT_BEFORE_SAVE,
             [EntryEvents::class, 'beforeSave']
         );
-        // When an entry is saved (send one message per each site)
+
+        // When an entry is saved, sending one message per site
         Event::on(
             Entry::class,
             Entry::EVENT_AFTER_SAVE,
             [EntryEvents::class, 'afterSave']
         );
-        // When an entry is saved and propagated (send one message)
+
+        // When an entry is saved and propagated, sending one message
         Event::on(
             Elements::class,
             Elements::EVENT_AFTER_SAVE_ELEMENT,
             [EntryEvents::class, 'afterSaveElement']
         );
+
         // When a provisional draft is applied
-        // (the bridge above defers to here so the new revision is queryable)
+        // The bridge above defers to here, so the new revision is queryable
         Event::on(
             Drafts::class,
             Drafts::EVENT_AFTER_APPLY_DRAFT,
             [EntryEvents::class, 'afterApplyDraft']
         );
+
         // When an entry is deleted
         Event::on(
             Entry::class,
             Entry::EVENT_AFTER_DELETE,
             [EntryEvents::class, 'afterDelete']
         );
+
         // When an entry is restored
         Event::on(
             Entry::class,
@@ -184,30 +189,35 @@ class Events extends Component
             Asset::EVENT_BEFORE_SAVE,
             [AssetEvents::class, 'beforeSave']
         );
+
         // When a new file is uploaded and saved
         Event::on(
             Asset::class,
             Asset::EVENT_AFTER_PROPAGATE,
             [AssetEvents::class, 'afterPropagate']
         );
+
         // When an asset is moved between folders or volumes
         Event::on(
             Asset::class,
             Asset::EVENT_AFTER_PROPAGATE,
             [AssetEvents::class, 'afterMove']
         );
-        // When an existing asset is updated (anything other than a move)
+
+        // When an existing asset is updated, other than a move
         Event::on(
             Asset::class,
             Asset::EVENT_AFTER_PROPAGATE,
             [AssetEvents::class, 'afterUpdate']
         );
+
         // When an asset is deleted
         Event::on(
             Asset::class,
             Asset::EVENT_AFTER_DELETE,
             [AssetEvents::class, 'afterDelete']
         );
+
         // When an asset is restored
         Event::on(
             Asset::class,
@@ -229,36 +239,42 @@ class Events extends Component
             User::EVENT_BEFORE_SAVE,
             [UserEvents::class, 'beforeSave']
         );
+
         // When a new user is created
         Event::on(
             User::class,
             User::EVENT_AFTER_PROPAGATE,
             [UserEvents::class, 'afterPropagate']
         );
+
         // When a user is activated
         Event::on(
             Users::class,
             Users::EVENT_AFTER_ACTIVATE_USER,
             [UserEvents::class, 'afterActivateUser']
         );
+
         // When an existing user is updated
         Event::on(
             User::class,
             User::EVENT_AFTER_PROPAGATE,
             [UserEvents::class, 'afterUpdate']
         );
+
         // When a user is assigned to one or more groups
         Event::on(
             Users::class,
             Users::EVENT_AFTER_ASSIGN_USER_TO_GROUPS,
             [UserEvents::class, 'afterAssignToGroups']
         );
+
         // When a user is deleted
         Event::on(
             User::class,
             User::EVENT_AFTER_DELETE,
             [UserEvents::class, 'afterDelete']
         );
+
         // When a user is restored
         Event::on(
             User::class,
@@ -281,7 +297,7 @@ class Events extends Component
             [CommerceOrderEvents::class, 'beforeSave']
         );
 
-        // When an order is completed (placed)
+        // When an order is completed
         Event::on(
             Order::class,
             Order::EVENT_AFTER_COMPLETE_ORDER,
@@ -309,18 +325,21 @@ class Events extends Component
             CommerceProduct::EVENT_BEFORE_SAVE,
             [CommerceProductEvents::class, 'beforeSave']
         );
+
         // When a Commerce product is saved
         Event::on(
             CommerceProduct::class,
             CommerceProduct::EVENT_AFTER_PROPAGATE,
             [CommerceProductEvents::class, 'afterPropagate']
         );
+
         // When a Commerce product is deleted
         Event::on(
             CommerceProduct::class,
             CommerceProduct::EVENT_AFTER_DELETE,
             [CommerceProductEvents::class, 'afterDelete']
         );
+
         // When a Commerce product is restored
         Event::on(
             CommerceProduct::class,
@@ -342,18 +361,21 @@ class Events extends Component
             DigitalProduct::EVENT_BEFORE_SAVE,
             [DigitalProductEvents::class, 'beforeSave']
         );
+
         // When a digital product is saved
         Event::on(
             DigitalProduct::class,
             DigitalProduct::EVENT_AFTER_PROPAGATE,
             [DigitalProductEvents::class, 'afterPropagate']
         );
+
         // When a digital product is deleted
         Event::on(
             DigitalProduct::class,
             DigitalProduct::EVENT_AFTER_DELETE,
             [DigitalProductEvents::class, 'afterDelete']
         );
+
         // When a digital product is restored
         Event::on(
             DigitalProduct::class,
@@ -375,18 +397,21 @@ class Events extends Component
             License::EVENT_BEFORE_SAVE,
             [DigitalProductLicenseEvents::class, 'beforeSave']
         );
+
         // When a license is saved
         Event::on(
             License::class,
             License::EVENT_AFTER_PROPAGATE,
             [DigitalProductLicenseEvents::class, 'afterPropagate']
         );
+
         // When a license is deleted
         Event::on(
             License::class,
             License::EVENT_AFTER_DELETE,
             [DigitalProductLicenseEvents::class, 'afterDelete']
         );
+
         // When a license is restored
         Event::on(
             License::class,
@@ -408,18 +433,21 @@ class Events extends Component
             CalendarEvent::EVENT_BEFORE_SAVE,
             [CalendarEventEvents::class, 'beforeSave']
         );
+
         // When a calendar event is saved
         Event::on(
             CalendarEvent::class,
             CalendarEvent::EVENT_AFTER_PROPAGATE,
             [CalendarEventEvents::class, 'afterPropagate']
         );
+
         // When a calendar event is deleted
         Event::on(
             CalendarEvent::class,
             CalendarEvent::EVENT_AFTER_DELETE,
             [CalendarEventEvents::class, 'afterDelete']
         );
+
         // When a calendar event is restored
         Event::on(
             CalendarEvent::class,

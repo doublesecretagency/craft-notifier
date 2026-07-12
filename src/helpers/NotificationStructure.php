@@ -63,13 +63,14 @@ abstract class NotificationStructure
         // If a UID is configured, try to resolve it to an existing structure
         if ($uid) {
             $structure = $structures->getStructureByUid($uid);
+
             // If found, cache and return its ID
             if ($structure) {
                 return static::$_structureId = $structure->id;
             }
         }
 
-        // Don't generate a UID that can't be persisted (it would throw, or leak a structure per request)
+        // Don't generate a UID that can't be persisted, since it would throw or leak a structure per request
         // If no UID is configured on a read-only environment, bail
         if (!$uid && Craft::$app->getProjectConfig()->readOnly) {
             return null;
@@ -79,7 +80,7 @@ abstract class NotificationStructure
         $structureUid = ($uid ?: StringHelper::UUID());
 
         try {
-            // Build a flat structure (no nesting)
+            // Build a flat structure
             $structure = new Structure([
                 'maxLevels' => 1,
                 'uid' => $structureUid,
@@ -152,7 +153,7 @@ abstract class NotificationStructure
             }
 
         } catch (Throwable $e) {
-            // Never let a placement failure break the caller (index render or migration)
+            // Never let a placement failure break the caller
             Craft::warning("Notifier structure backfill skipped: {$e->getMessage()}", __METHOD__);
         } finally {
             // Always release the lock

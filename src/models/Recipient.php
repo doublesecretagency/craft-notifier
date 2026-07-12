@@ -186,10 +186,10 @@ class Recipient extends Model
     {
         parent::init();
 
-        // Extract relevant data from User (when a User is attached)
+        // Extract relevant data from User
         $this->_extractUserData();
 
-        // Derive name from raw contact info (when no User is attached)
+        // Derive name from raw contact info
         $this->_deriveNameFromContact();
     }
 

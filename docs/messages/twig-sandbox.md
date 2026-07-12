@@ -13,8 +13,8 @@ Under the hood, Notifier relies on the [nystudio107/craft-twig-sandbox](https://
 To get a good understanding of how the sandbox works, please consult the [default blacklist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/BlacklistSecurityPolicy.php) and
 [default whitelist](https://github.com/nystudio107/craft-twig-sandbox/blob/v5/src/twig/WhitelistSecurityPolicy.php).
 
-:::warning Shared with Dynamic Recipients
-This same sandbox configuration is used for [Dynamic Recipients](/recipients/types/dynamic-recipients) snippets. Widening the policy to allow something in one context will also allow it in the other.
+:::tip Sandbox shared with Dynamic Recipients & Dynamic Data
+This same sandbox configuration is used for [Dynamic Recipients](/recipients/types/dynamic-recipients) and [Dynamic Data](/events/types/dynamic-data/) snippets.
 :::
 
 ## Customizing the Twig Sandbox

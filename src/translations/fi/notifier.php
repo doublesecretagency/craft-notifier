@@ -28,14 +28,20 @@ return [
 
     // Permissions
     'View notifications' => 'Näytä ilmoitukset',
+    'Adds "Notifications" to the control panel navigation.' => 'Lisää "Ilmoitukset" ohjauspaneelin navigointiin.',
     'Save notifications' => 'Tallenna ilmoitukset',
+    'Edit the Event tab' => 'Muokkaa Tapahtuma-välilehteä',
+    'Edit the Message tab' => 'Muokkaa Viesti-välilehteä',
+    'Edit the Recipients tab' => 'Muokkaa Vastaanottajat-välilehteä',
     'Use the Dynamic Recipients type' => 'Käytä Dynaamiset vastaanottajat -tyyppiä',
     'Use the Dynamic Data type' => 'Käytä dynaamisen datan tyyppiä',
-    'Test notifications' => 'Testaa ilmoituksia',
+    'Send test notifications' => 'Lähetä testi-ilmoituksia',
     'Send manual notifications' => 'Lähetä manuaalisia ilmoituksia',
     'Delete notifications' => 'Poista ilmoituksia',
     'View notification log' => 'Näytä ilmoitusloki',
+    'Adds "Notification Log" to the control panel Utilities.' => 'Lisää "Ilmoitusloki" ohjauspaneelin Työkaluihin.',
     'Delete notification log' => 'Poista ilmoitusloki',
+    'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!' => 'Suorittaa mukautettua Twig-koodia, kun viesti lähetetään. Myönnä tämä oikeus vain erittäin luotetuille käyttäjille!',
 
     // ========================================================
     // NOTIFICATION EDITOR
@@ -394,6 +400,10 @@ return [
     // Settings: nav & page chrome
     'Notifier Settings' => 'Notifier-asetukset',
     'General' => 'Yleiset',
+    'Notification Fields' => 'Ilmoituskentät',
+    'Fields saved.' => 'Kentät tallennettu.',
+    'Couldn’t save fields.' => 'Kenttiä ei voitu tallentaa.',
+    'Notification fields can’t be edited when admin changes are disabled.' => 'Ilmoituskenttiä ei voi muokata, kun ylläpitäjän muutokset on poistettu käytöstä.',
     'Twilio' => 'Twilio',
     'Pushover' => 'Pushover',
     'ntfy' => 'ntfy',

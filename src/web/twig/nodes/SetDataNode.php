@@ -53,7 +53,7 @@ class SetDataNode extends Node
             ->raw("\n");
 
         // If the argument is an associative array (or Traversable), merge its keys
-        // into the collected data; otherwise ignore it (a non-keyed value is meaningless)
+        // into the collected data; otherwise ignore it
         $compiler
             ->write('if (is_iterable($__notifierData)) {')
             ->raw("\n")

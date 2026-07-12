@@ -72,7 +72,7 @@ abstract class BlueskyFacets
             // Strip trailing punctuation that shouldn't be part of the link
             $trimmed = rtrim($url, static::URL_TRAILING_TRIM);
 
-            // Get the UTF-8 byte offsets (preg_match offsets are byte offsets already in PHP)
+            // Get the UTF-8 byte offsets, which preg_match already returns
             $byteStart = $charOffset;
             $byteEnd   = $charOffset + strlen($trimmed);
 
@@ -115,11 +115,12 @@ abstract class BlueskyFacets
         // Loop through each match - $matches[0] is the full @handle.tld, $matches[1] is the handle
         foreach ($matches[0] as $i => [$fullMatch, $charOffset]) {
 
-            // Extract the bare handle (without leading @)
+            // Extract the bare handle
             $handle = $matches[1][$i][0];
 
             // Get the DID when a resolver was provided
             $did = ($resolveHandleToDid ? $resolveHandleToDid($handle) : null);
+
             // If unresolved, skip
             if (!$did) {
                 continue;
@@ -162,13 +163,14 @@ abstract class BlueskyFacets
         // Prefer grapheme_strlen from intl
         if (function_exists('grapheme_strlen')) {
             $count = grapheme_strlen($text);
+
             // If grapheme_strlen succeeded, return the count
             if (false !== $count) {
                 return $count;
             }
         }
 
-        // Fallback to mb_strlen (approximate)
+        // Fall back to an approximate count via mb_strlen
         return mb_strlen($text);
     }
 

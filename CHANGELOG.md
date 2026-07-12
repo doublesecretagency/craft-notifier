@@ -4,6 +4,11 @@
 
 ### Added
 - Added trigger event ["When a form is submitted"](https://plugins.doublesecretagency.com/notifier/events/types/formie/) for [Formie](https://plugins.craftcms.com/formie).
+- Added support for [custom fields](https://plugins.doublesecretagency.com/notifier/custom-fields) on Notifications.
+- Added [per-tab editing permissions](https://plugins.doublesecretagency.com/notifier/getting-started/permissions).
+
+### Changed
+- "Description" has been converted to a [custom field](https://plugins.doublesecretagency.com/notifier/custom-fields#the-deprecated-description-field).
 
 ## 3.1.4 - 2026-07-10
 

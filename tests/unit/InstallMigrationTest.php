@@ -76,7 +76,6 @@ class InstallMigrationTest extends TestCase
     {
         return [
             ['id'],
-            ['description'],
             ['eventType'],
             ['event'],
             ['eventConfig'],
@@ -104,6 +103,18 @@ class InstallMigrationTest extends TestCase
             "/'$column'\s*=>/",
             $this->migrationSource,
             "notifier_notifications should declare a `$column` column"
+        );
+    }
+
+    public function testNotificationsTableNoLongerDeclaresDescription(): void
+    {
+        // `description` became the `notifierDescription` custom field in 3.2.0, so
+        // fresh installs must not create the native column (the dated migration
+        // m260711_120000 drops it from upgraded installs).
+        $this->assertDoesNotMatchRegularExpression(
+            "/'description'\s*=>/",
+            $this->migrationSource,
+            'Install migration must not declare a `description` column'
         );
     }
 

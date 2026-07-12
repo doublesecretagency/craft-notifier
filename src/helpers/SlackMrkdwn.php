@@ -82,16 +82,16 @@ class SlackMrkdwn
         // Replace `-` and `*` list markers with a bullet character
         $markdown = preg_replace('/^([ \t]*)[-*] /m', '$1• ', $markdown);
 
-        // Drop trailing two-space hard breaks (Slack treats `\n` as a break)
+        // Drop trailing two-space hard breaks, since Slack treats `\n` as a break
         $markdown = preg_replace('/  +\n/', "\n", $markdown);
 
         // Collapse three or more blank lines down to two
         $markdown = preg_replace("/\n{3,}/", "\n\n", $markdown);
 
-        // Decode entities the converter left intact (`&amp;`, `&lt;`, etc.)
+        // Decode entities the converter left intact
         $markdown = html_entity_decode($markdown, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-        // Strip CommonMark backslash escapes (Slack shows `\#16147` literally)
+        // Strip CommonMark backslash escapes, which Slack would otherwise show literally
         $markdown = preg_replace('/\\\\([!"#$%&\'()*+,\-.\/:;<=>?@\[\]^_`{|}~])/', '$1', $markdown);
 
         // Trim trailing whitespace

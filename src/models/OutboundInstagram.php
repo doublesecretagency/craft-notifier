@@ -89,7 +89,7 @@ class OutboundInstagram extends BaseEnvelope
         // Find the first attachable image
         $image = $this->_firstImage($notification);
 
-        // If there is no image, log error and bail (Instagram cannot post text-only)
+        // If there is no image, log error and bail, since Instagram cannot post text-only
         if (!$image) {
 
             // HTML wrapping the setMedia tag
@@ -112,7 +112,7 @@ class OutboundInstagram extends BaseEnvelope
             return false;
         }
 
-        // If the image has no public URL, log error and bail (Instagram fetches the image by URL)
+        // If the image has no public URL, log error and bail, since Instagram fetches it by URL
         if (!$image->url) {
             $notification->log->error(Craft::t('notifier', '[MISSING IMAGE] Unable to send Instagram post, the image needs a public URL.'), $this->envelopeId);
             return false;

@@ -59,6 +59,20 @@ class CompatHelperTest extends TestCase
         );
     }
 
+    public function testCachesIsCraft4Detection(): void
+    {
+        // isCraft4() caches the same way, since it now runs its own version_compare
+        // rather than delegating to the cached isCraft5()
+        $this->assertMatchesRegularExpression(
+            '/private static \?bool \$_isCraft4/',
+            $this->compatSource
+        );
+        $this->assertMatchesRegularExpression(
+            '/static::\$_isCraft4 \?\?=/',
+            $this->compatSource
+        );
+    }
+
     // ========================================================================= //
     // Public method surface
     // ========================================================================= //
@@ -181,5 +195,65 @@ class CompatHelperTest extends TestCase
         $source = file_get_contents($path);
         $this->assertMatchesRegularExpression('/public static function iconPath\(\): \?string/', $source);
         $this->assertMatchesRegularExpression('/public static function icon\(\): \?string/', $source);
+    }
+
+    // ========================================================================= //
+    // Version checks are positive, never negated
+    // ========================================================================= //
+    //
+    // A negated version check (!Compat::isCraft5()) reads as "Craft 4" today, but
+    // silently widens to include a later major once isCraft5() is re-bounded to an
+    // upper limit. Match positively so the version bounds stay centralized in the
+    // Compat helper's own methods.
+
+    public function testIsCraft4IsAPositiveBoundedCheck(): void
+    {
+        // isCraft4() must stand on its own as a bounded range, not delegate to a
+        // negation of isCraft5(). It is lower-bounded at 4.0.0 and upper-bounded
+        // below 5.0.0, and must never negate the sibling check.
+        $this->assertMatchesRegularExpression(
+            '/function isCraft4[\s\S]*?version_compare\([^,]+,\s*[\'"]4\.0\.0[\'"],\s*[\'"]>=[\'"]\)/',
+            $this->compatSource
+        );
+        $this->assertMatchesRegularExpression(
+            '/function isCraft4[\s\S]*?version_compare\([^,]+,\s*[\'"]5\.0\.0[\'"],\s*[\'"]<[\'"]\)/',
+            $this->compatSource
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            '/function isCraft4[\s\S]*?!\s*static::isCraft5/',
+            $this->compatSource
+        );
+    }
+
+    public function testNoNegatedVersionChecksInSource(): void
+    {
+        $srcDir = dirname(__DIR__, 2) . '/src';
+
+        // Scan every PHP file in src/ for a negated Compat version check
+        $offenders = [];
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($srcDir, \FilesystemIterator::SKIP_DOTS)
+        );
+
+        // Loop through each file
+        foreach ($iterator as $file) {
+
+            // Skip anything that isn't PHP
+            if ('php' !== $file->getExtension()) {
+                continue;
+            }
+
+            // Record any file negating a version check (allowing whitespace after the `!`)
+            if (preg_match('/!\s*Compat::isCraft[45]\(\)/', file_get_contents($file->getPathname()))) {
+                $offenders[] = substr($file->getPathname(), strlen($srcDir) + 1);
+            }
+        }
+
+        $this->assertSame(
+            [],
+            $offenders,
+            'Version checks must be positive. Rewrite the negated check as its positive sibling (!Compat::isCraft5() -> Compat::isCraft4()) in: '.implode(', ', $offenders)
+        );
     }
 }

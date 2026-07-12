@@ -11,10 +11,9 @@
     required: true,
 }) }}
 
-{{ forms.textField({
-    label: "Description"|t('app'),
-    id: 'description',
-    name: 'description',
-    value: notification.description,
-    errors: notification.getErrors('description'),
-}) }}
+{# Render any admin-attached custom fields, self-namespaced under `fields` #}
+{% set fieldLayout = notification.getFieldLayout() %}
+{% if fieldLayout and fieldLayout.getCustomFields()|length %}
+    <hr>
+    {{ fieldLayout.createForm(notification, (readOnly ?? false)).render()|raw }}
+{% endif %}

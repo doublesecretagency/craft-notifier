@@ -35,6 +35,7 @@ The `recipient` variable will be unique for each recipient, per their copy of th
 | Variable                 | Description                                                                                      |
 |:-------------------------|--------------------------------------------------------------------------------------------------|
 | `event`                  | The underlying triggered [Event](https://docs.craftcms.com/api/v5/craft-events-modelevent.html). |
+| `notification`           | The notification being sent, including any [custom fields](/custom-fields). |
 | `currentUser`            | The logged-in User who triggered the notification.                                               |
 | `recipient`              | Individual recipient of each message.                                                            |
 | `recipient.user`         | User model of recipient.                                                                         |

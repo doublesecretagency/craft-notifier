@@ -87,7 +87,6 @@ class Install extends Migration
         if (!$this->db->tableExists(self::NOTIFICATIONS)) {
             $this->createTable(self::NOTIFICATIONS, [
                 'id'               => $this->integer()->notNull(),
-                'description'      => $this->string(),
                 'eventType'        => $this->string(),
                 'event'             => $this->string(),
                 'eventConfig'      => $this->text(),
@@ -177,7 +176,7 @@ class Install extends Migration
     protected function seedStructure(): void
     {
         try {
-            // Ensure the structure exists (also persists its UID to settings)
+            // Ensure the structure exists and persist its UID to settings
             NotificationStructure::getStructureId();
         } catch (Throwable) {
             // If it fails here, the index resolves it lazily on first use

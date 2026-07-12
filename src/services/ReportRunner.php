@@ -88,6 +88,7 @@ abstract class ReportRunner extends Component
             try {
                 // Get the dispatched and sent counts from this notification's run
                 [$dispatched, $sent] = $this->_runNotification($notification, $now);
+
                 // Merge the counts into the run summary
                 $summary['dispatched'] += $dispatched;
                 $summary['sent']       += $sent;

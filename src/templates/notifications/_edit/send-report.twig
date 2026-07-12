@@ -1,4 +1,4 @@
-{# Render the "Send" button for the report event types (always available once saved) #}
+{# Render the "Send" button for the report event types #}
 {% if notification.id and not notification.isUnpublishedDraft and currentUser.can('notifier-sendManualNotifications') %}
     {% do view.registerAssetBundle('doublesecretagency\\notifier\\web\\assets\\ReportNotificationAsset') %}
     {# Per-type button label #}

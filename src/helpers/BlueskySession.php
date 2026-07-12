@@ -43,7 +43,7 @@ abstract class BlueskySession
      */
     public static function cacheKey(string $pdsUrl, string $handle): string
     {
-        // Normalize the PDS URL (drop trailing slash)
+        // Normalize the PDS URL by dropping any trailing slash
         $normalized = rtrim($pdsUrl, '/');
 
         // Hash to keep the cache key short and predictable
@@ -160,10 +160,10 @@ abstract class BlueskySession
                 return null;
             }
 
-            // Get the expiry timestamp from the access JWT (ATProto JWTs encode exp in the payload)
+            // Get the expiry timestamp from the access JWT, which ATProto encodes in the payload
             $expiresAt = static::_decodeJwtExpiry($body['accessJwt']);
 
-            // Build the payload (strip any password echo)
+            // Build the payload, stripping any password echo
             return [
                 'accessJwt'  => $body['accessJwt'],
                 'refreshJwt' => $body['refreshJwt'] ?? null,
@@ -190,6 +190,7 @@ abstract class BlueskySession
     {
         // Split the JWT
         $parts = explode('.', $jwt);
+
         // If the JWT is malformed, return the default
         if (count($parts) < 2) {
             return time() + 3000;
@@ -198,6 +199,7 @@ abstract class BlueskySession
         // Base64URL-decode the payload
         $payload = strtr($parts[1], '-_', '+/');
         $payload = base64_decode($payload, true);
+
         // If decoding failed, return the default
         if (false === $payload) {
             return time() + 3000;
@@ -205,6 +207,7 @@ abstract class BlueskySession
 
         // Decode JSON
         $claims = Json::decodeIfJson($payload);
+
         // If exp is missing, return the default
         if (!is_array($claims) || !isset($claims['exp'])) {
             return time() + 3000;

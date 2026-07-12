@@ -11,6 +11,7 @@
 
 {% set navItems = {
     general: { label: 'General'|t('notifier'), url: url('settings/plugins/notifier/general') },
+    fields: { label: 'Notification Fields'|t('notifier'), url: url('settings/plugins/notifier/fields') },
     push: { heading: 'Push Notifications'|t('notifier'), nested: {
         twilio:   { label: 'Twilio'|t('notifier'),   url: url('settings/plugins/notifier/twilio')   },
         pushover: { label: 'Pushover'|t('notifier'), url: url('settings/plugins/notifier/pushover') },
@@ -58,9 +59,15 @@
 {% endblock %}
 
 {% block content %}
-    <input type="hidden" name="action" value="notifier/settings-providers/save">
-    <input type="hidden" name="section" value="{{ selectedNavItem }}">
-    <input type="hidden" name="redirect" value="{{ ('settings/plugins/notifier/'~selectedNavItem)|hash }}">
+    {% if selectedNavItem == 'fields' %}
+        {# The field layout designer posts to its own save action #}
+        <input type="hidden" name="action" value="notifier/settings-fields/save-field-layout">
+        <input type="hidden" name="redirect" value="{{ 'settings/plugins/notifier/fields'|hash }}">
+    {% else %}
+        <input type="hidden" name="action" value="notifier/settings-providers/save">
+        <input type="hidden" name="section" value="{{ selectedNavItem }}">
+        <input type="hidden" name="redirect" value="{{ ('settings/plugins/notifier/'~selectedNavItem)|hash }}">
+    {% endif %}
 
     {% include 'notifier/_settings/'~selectedNavItem %}
 {% endblock %}

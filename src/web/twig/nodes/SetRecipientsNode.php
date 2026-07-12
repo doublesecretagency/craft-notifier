@@ -53,6 +53,7 @@ class SetRecipientsNode extends Node
             ->raw("\n");
 
         // If the argument is an array or Traversable, iterate and push each item;
+
         // otherwise treat the argument as a single recipient and push it directly
         $compiler
             ->write('if (is_iterable($__notifierItems)) {')

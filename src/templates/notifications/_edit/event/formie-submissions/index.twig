@@ -15,12 +15,11 @@
         },
     }) }}
     {% include 'notifier/notifications/_edit/event/formie-submissions/condition' %}
-    {# Hard-coded event since Formie only has one trigger (included last for CSS reasons) #}
+    {# Hard-coded event since Formie only has one trigger, and included last for CSS reasons #}
     <input type="hidden" name="event[formie-submissions]" value="after-submission">
 </div>
 
-{# Forms picker is the first field here (no divider above it), so pull it up to close the extra gap #}
-{# (nested-checkboxes.css assumes the picker follows a divider; move the whole picker so its heading + Select All stay aligned) #}
+{# The forms picker has no divider above it, so pull it up to close the gap nested-checkboxes.css leaves #}
 {% css %}
     .event-type-formie-submissions .nested-checkboxes-forms {
         margin-top: -15px;

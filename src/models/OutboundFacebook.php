@@ -92,6 +92,7 @@ class OutboundFacebook extends BaseEnvelope
                 $notification->log->error(Craft::t('notifier', '[EMPTY BODY] The Facebook post body is empty.'), $this->envelopeId);
                 return false;
             }
+
             // Post the message to the Page feed
             $result = MetaGraph::postPageFeed($pageId, $this->body, ($this->link ?: null), $token);
         }
@@ -160,11 +161,13 @@ class OutboundFacebook extends BaseEnvelope
         // If the image has a URL, try posting it directly
         if ($image->url) {
             $urlResult = MetaGraph::postPagePhoto($pageId, $image->url, $this->body, $token);
+
             // If the URL post succeeded, return it
             if ($urlResult['ok']) {
                 return $urlResult;
             }
-            // Otherwise fall through to the byte upload (the URL may not be publicly reachable)
+
+            // Otherwise fall through to the byte upload, since the URL may not be publicly reachable
         }
 
         // Get the raw image bytes

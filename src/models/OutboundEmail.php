@@ -57,7 +57,7 @@ class OutboundEmail extends BaseEnvelope
         /** @var Notification $notification */
         $notification = Notifier::getNotification($this->notificationId);
 
-        // If invalid notification, bail (unable to log)
+        // If invalid notification, bail
         if (!$notification) {
             return false;
         }

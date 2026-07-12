@@ -230,8 +230,8 @@ class NotificationStructureTest extends TestCase
 
     public function testSchemaVersionMatchesInflightRelease(): void
     {
-        // The backfill migration ships under the current in-flight schema version,
-        // not a new minor bump (it shares the unreleased 3.1.0 schema).
-        $this->assertStringContainsString("\$schemaVersion = '3.1.0'", $this->pluginSource);
+        // v3.2.0 adds two dated migrations (the Description conversion and the
+        // wiring-tab permission grant), so the schema version bumps to match.
+        $this->assertStringContainsString("\$schemaVersion = '3.2.0'", $this->pluginSource);
     }
 }

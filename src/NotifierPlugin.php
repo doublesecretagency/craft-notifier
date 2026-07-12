@@ -88,6 +88,7 @@ use doublesecretagency\notifier\models\Dispatch;
 use doublesecretagency\notifier\models\Settings;
 use doublesecretagency\notifier\services\DynamicDataRunner;
 use doublesecretagency\notifier\services\Events;
+use doublesecretagency\notifier\services\FieldLayouts;
 use doublesecretagency\notifier\services\LinkedinConnections;
 use doublesecretagency\notifier\services\Messages;
 use doublesecretagency\notifier\services\Recipients;
@@ -107,6 +108,7 @@ use yii\base\Event;
  * @property Events $events
  * @property Messages $messages
  * @property Recipients $recipients
+ * @property FieldLayouts $fieldLayouts
  * @property ScheduleRunner $scheduleRunner
  * @property FeedRunner $feedRunner
  * @property SystemSnapshotRunner $systemSnapshotRunner
@@ -124,7 +126,7 @@ class NotifierPlugin extends Plugin
     /**
      * @var string Current schema version of the plugin.
      */
-    public string $schemaVersion = '3.1.0';
+    public string $schemaVersion = '3.2.0';
 
     /**
      * @var NotifierPlugin Self-referential plugin property.
@@ -180,6 +182,7 @@ class NotifierPlugin extends Plugin
             'systemSnapshotRunner' => SystemSnapshotRunner::class,
             'dynamicDataRunner' => DynamicDataRunner::class,
             'linkedinConnections' => LinkedinConnections::class,
+            'fieldLayouts' => FieldLayouts::class,
         ]);
 
         // Redirect after plugin is installed
@@ -196,12 +199,16 @@ class NotifierPlugin extends Plugin
         // Register user permissions
         $this->_registerUserPermissions();
 
+        // Register project config event handlers for web and console applies
+        $this->_registerProjectConfigEventHandlers();
+
         // Register enhancements for the control panel
         if (Craft::$app->getRequest()->getIsCpRequest()) {
             $this->_registerCpRoutes();
             $this->_registerUtilities();
             $this->_registerTableAttributes();
             $this->_registerElementActions();
+
             // If running Craft 5
             if (Compat::isCraft5()) {
                 // Craft 5: Add buttons to the disclosure action menu
@@ -272,11 +279,13 @@ class NotifierPlugin extends Plugin
                 if ('notifier' !== $event->plugin->handle) {
                     return;
                 }
+
                 // If installed via console, no need for a redirect
                 if (Craft::$app->getRequest()->getIsConsoleRequest()) {
                     return;
                 }
-                // Redirect to the Notifications page (with a welcome message)
+
+                // Redirect to the Notifications page
                 $url = UrlHelper::cpUrl('notifications', ['welcome' => 1]);
                 Craft::$app->getResponse()->redirect($url)->send();
             }
@@ -312,26 +321,46 @@ class NotifierPlugin extends Plugin
             UserPermissions::class,
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
             static function (RegisterUserPermissionsEvent $event) {
+
+                // Get the warning shared by both Dynamic types
+                $twigWarning = Craft::t('notifier', 'Runs custom Twig code when a message is sent. Only grant this to highly trusted users!');
+
                 // Register the plugin's permissions under a "Notifier" heading
                 $event->permissions[] = [
                     'heading' => Craft::t('notifier', 'Notifier'),
                     'permissions' => [
                         'notifier-viewNotifications' => [
                             'label' => Craft::t('notifier', 'View notifications'),
+                            'info' => Craft::t('notifier', 'Adds "Notifications" to the control panel navigation.'),
                             'nested' => [
                                 'notifier-saveNotifications' => [
                                     'label' => Craft::t('notifier', 'Save notifications'),
                                     'nested' => [
-                                        'notifier-editDynamicData' => [
-                                            'label' => Craft::t('notifier', 'Use the Dynamic Data type'),
+                                        'notifier-editEventTab' => [
+                                            'label' => Craft::t('notifier', 'Edit the Event tab'),
+                                            'nested' => [
+                                                'notifier-editDynamicData' => [
+                                                    'label' => Craft::t('notifier', 'Use the Dynamic Data type'),
+                                                    'warning' => $twigWarning,
+                                                ],
+                                            ],
                                         ],
-                                        'notifier-editDynamicRecipients' => [
-                                            'label' => Craft::t('notifier', 'Use the Dynamic Recipients type'),
+                                        'notifier-editMessageTab' => [
+                                            'label' => Craft::t('notifier', 'Edit the Message tab'),
+                                        ],
+                                        'notifier-editRecipientsTab' => [
+                                            'label' => Craft::t('notifier', 'Edit the Recipients tab'),
+                                            'nested' => [
+                                                'notifier-editDynamicRecipients' => [
+                                                    'label' => Craft::t('notifier', 'Use the Dynamic Recipients type'),
+                                                    'warning' => $twigWarning,
+                                                ],
+                                            ],
                                         ],
                                     ],
                                 ],
                                 'notifier-testNotifications' => [
-                                    'label' => Craft::t('notifier', 'Test notifications'),
+                                    'label' => Craft::t('notifier', 'Send test notifications'),
                                 ],
                                 'notifier-sendManualNotifications' => [
                                     'label' => Craft::t('notifier', 'Send manual notifications'),
@@ -343,6 +372,7 @@ class NotifierPlugin extends Plugin
                         ],
                         'notifier-viewNotificationLog' => [
                             'label' => Craft::t('notifier', 'View notification log'),
+                            'info' => Craft::t('notifier', 'Adds "Notification Log" to the control panel Utilities.'),
                             'nested' => [
                                 'notifier-deleteNotificationLog' => [
                                     'label' => Craft::t('notifier', 'Delete notification log'),
@@ -353,6 +383,23 @@ class NotifierPlugin extends Plugin
                 ];
             }
         );
+    }
+
+    /**
+     * Register project config event handlers.
+     *
+     * @return void
+     */
+    private function _registerProjectConfigEventHandlers(): void
+    {
+        // Get the field layouts service
+        $fieldLayouts = $this->fieldLayouts;
+
+        // Rebuild the notification field layout whenever its project config changes
+        Craft::$app->getProjectConfig()
+            ->onAdd(FieldLayouts::PATH, [$fieldLayouts, 'handleChangedLayout'])
+            ->onUpdate(FieldLayouts::PATH, [$fieldLayouts, 'handleChangedLayout'])
+            ->onRemove(FieldLayouts::PATH, [$fieldLayouts, 'handleChangedLayout']);
     }
 
     /**
@@ -368,13 +415,16 @@ class NotifierPlugin extends Plugin
             static function (RegisterUrlRulesEvent $event) {
                 // Index
                 $event->rules['notifications'] = ['template' => 'notifier/notifications/_index'];
+
                 // New Notification
                 $event->rules['notifications/new'] = 'notifier/notifications/create';
+
                 // Edit Notification
                 $event->rules['notifications/<notificationId:\d+>'] = 'notifier/notifications/edit';
 
-                // Settings sub-pages (vertical sidebar UX)
+                // Settings sub-pages
                 $event->rules['settings/plugins/notifier/general']  = 'notifier/settings-providers/general';
+                $event->rules['settings/plugins/notifier/fields']   = 'notifier/settings-fields/fields';
                 $event->rules['settings/plugins/notifier/twilio']   = 'notifier/settings-providers/twilio';
                 $event->rules['settings/plugins/notifier/pushover'] = 'notifier/settings-providers/pushover';
                 $event->rules['settings/plugins/notifier/ntfy']     = 'notifier/settings-providers/ntfy';
@@ -408,16 +458,20 @@ class NotifierPlugin extends Plugin
                 if (!NotifierPlugin::$plugin->getSettings()->loggingEnabled) {
                     return;
                 }
+
                 // Get the current user
                 $user = Craft::$app->getUser()->getIdentity();
+
                 // If no current user, bail
                 if (!$user) {
                     return;
                 }
+
                 // If the user can't view the log, bail
                 if (!$user->admin && !$user->can('notifier-viewNotificationLog')) {
                     return;
                 }
+
                 // Add logging utility
                 $event->types[] = NotificationLog::class;
             }
@@ -457,19 +511,24 @@ class NotifierPlugin extends Plugin
                                 : Craft::t('notifier', 'Generate report on demand');
                             break;
                         }
+
                         // Get all events within specified type
                         $events = Options::ALL_EVENTS[$notification->eventType] ?? [];
+
                         // Filter through all events
                         $filtered = array_filter($events,
                             static function ($e) use ($notification) {
                                 // Get the value of each potential event
                                 $value = ($e['value'] ?? false);
+
                                 // Return whether value matches selected event
                                 return $value === $notification->event;
                             }
                         );
+
                         // Get the first (and only) matching event
                         $mainEvent = reset($filtered);
+
                         // Attempt to display proper label of Event
                         $event->html = $mainEvent['label'] ?? $notification->event;
                         break;
@@ -514,15 +573,18 @@ class NotifierPlugin extends Plugin
         if (class_exists(Order::class)) {
             $elementTypes[Order::class] = 'craft-commerce-orders';
         }
+
         // If Craft Commerce is installed, map its product element
         if (class_exists(CommerceProduct::class)) {
             $elementTypes[CommerceProduct::class] = 'craft-commerce-products';
         }
+
         // If Digital Products is installed, map its product and license elements
         if (class_exists(DigitalProduct::class)) {
             $elementTypes[DigitalProduct::class] = 'digital-products-products';
             $elementTypes[License::class] = 'digital-products-licenses';
         }
+
         // If Solspace Calendar is installed, map its event element
         if (class_exists(CalendarEvent::class)) {
             $elementTypes[CalendarEvent::class] = 'solspace-calendar-events';
@@ -536,10 +598,12 @@ class NotifierPlugin extends Plugin
                 static function (RegisterElementActionsEvent $event) use ($eventType) {
                     // Get the current user
                     $user = Craft::$app->getUser()->getIdentity();
+
                     // If the user can't send manual notifications, bail
                     if (!$user || !$user->can('notifier-sendManualNotifications')) {
                         return;
                     }
+
                     // Whether any manually triggered notifications exist for this type
                     $exists = Notification::find()
                         ->where([
@@ -547,10 +611,12 @@ class NotifierPlugin extends Plugin
                             'event' => 'manually-triggered',
                         ])
                         ->exists();
+
                     // If none exist, bail
                     if (!$exists) {
                         return;
                     }
+
                     // Append the "Send Notification" bulk action
                     $event->actions[] = [
                         'type' => SendNotification::class,
@@ -576,42 +642,55 @@ class NotifierPlugin extends Plugin
             static function (DefineMenuItemsEvent $event) {
                 // Get the current user
                 $user = Craft::$app->getUser()->getIdentity();
+
                 // If the user can't send manual notifications, bail
                 if (!$user || !$user->can('notifier-sendManualNotifications')) {
                     return;
                 }
+
                 // Get the element whose action menu is being built
                 $element = $event->sender;
+
                 // If the element isn't a saved element, bail
                 if (!($element instanceof ElementInterface) || !$element->id) {
                     return;
                 }
+
                 // Get all manually triggered notifications which apply to this element
                 $notifications = NotifierPlugin::$plugin->messages->getManualNotifications($element);
+
                 // If none apply, append nothing
                 if (!$notifications) {
                     return;
                 }
+
                 // Always fire against the canonical element, never a provisional draft
                 $elementId = $element->getCanonicalId();
+
                 // Confirmation shown before any notification is dispatched
                 $confirm = Craft::t('notifier', 'Are you sure you want to send this notification?');
+
                 // Generic error shown if the request fails outright
                 $error = Craft::t('app', 'A server error occurred.');
+
                 // Get the view service
                 $view = Craft::$app->getView();
+
                 // Append one menu item per applicable notification
                 foreach ($notifications as $notification) {
                     // Unique DOM id for this menu item
                     $itemId = sprintf('notifier-send-%s', mt_rand());
+
                     // Label distinguishes multiple manual triggers on the same element
                     $label = $notification->getManualTriggerLabel();
+
                     // Append the menu item
                     $event->items[] = [
                         'id' => $itemId,
                         'icon' => $notification->getMessageTypeIcon(),
                         'label' => $label,
                     ];
+
                     // Wire the item to POST the manual-send action on activation
                     $view->registerJsWithVars(static fn($id, $notificationId, $eId, $confirmMsg, $errorMsg) => <<<JS
 (() => {
@@ -623,7 +702,11 @@ class NotifierPlugin extends Plugin
         Craft.sendActionRequest('POST', 'notifier/notifications/send-manual', {
             data: {notificationId: $notificationId, elementId: $eId},
         }).then((response) => {
+
+            // Get the response data
             const data = (response.data || {});
+
+            // If the send succeeded, display a notice
             if (data.success) {
                 Craft.cp.displayNotice(data.message);
             } else {
@@ -661,42 +744,55 @@ JS, [
             static function (DefineHtmlEvent $event) {
                 // Get the current user
                 $user = Craft::$app->getUser()->getIdentity();
+
                 // If the user can't send manual notifications, bail
                 if (!$user || !$user->can('notifier-sendManualNotifications')) {
                     return;
                 }
+
                 // Get the element whose edit screen is being built
                 $element = $event->sender;
+
                 // If the element isn't a saved element, bail
                 if (!($element instanceof ElementInterface) || !$element->id) {
                     return;
                 }
+
                 // Get all manually triggered notifications which apply to this element
                 $notifications = NotifierPlugin::$plugin->messages->getManualNotifications($element);
+
                 // If none apply, append nothing
                 if (!$notifications) {
                     return;
                 }
+
                 // Always fire against the canonical element, never a provisional draft
                 $elementId = $element->getCanonicalId();
+
                 // Confirmation shown before any notification is dispatched
                 $confirm = Craft::t('notifier', 'Are you sure you want to send this notification?');
+
                 // Generic error shown if the request fails outright
                 $error = Craft::t('app', 'A server error occurred.');
+
                 // Get the view service
                 $view = Craft::$app->getView();
-                // Append one button per applicable notification (the header HTML is not namespaced)
+
+                // Append one button per applicable notification, since the header HTML is not namespaced
                 foreach ($notifications as $notification) {
                     // Unique DOM id for this button
                     $buttonId = sprintf('notifier-send-%s', mt_rand());
+
                     // Label distinguishes multiple manual triggers on the same element
                     $label = $notification->getManualTriggerLabel();
+
                     // Render the button into the edit screen header
                     $event->html .= Html::tag('button', Html::encode($label), [
                         'id' => $buttonId,
                         'type' => 'button',
                         'class' => 'btn',
                     ]);
+
                     // Wire the button to POST the manual-send action on click
                     $view->registerJsWithVars(static fn($id, $notificationId, $eId, $confirmMsg, $errorMsg) => <<<JS
 (() => {
@@ -708,7 +804,11 @@ JS, [
         Craft.sendActionRequest('POST', 'notifier/notifications/send-manual', {
             data: {notificationId: $notificationId, elementId: $eId},
         }).then((response) => {
+
+            // Get the response data
             const data = (response.data || {});
+
+            // If the send succeeded, display a notice
             if (data.success) {
                 Craft.cp.displayNotice(data.message);
             } else {
@@ -791,6 +891,7 @@ JS, [
                     if (!$class || !isset($swaps[$class])) {
                         continue;
                     }
+
                     // If the rule is an array, swap its class key; otherwise swap the string
                     if (is_array($rule)) {
                         $event->{$rulesProp}[$i]['class'] = $swaps[$class];

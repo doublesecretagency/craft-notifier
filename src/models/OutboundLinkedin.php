@@ -79,7 +79,7 @@ class OutboundLinkedin extends BaseEnvelope
             return false;
         }
 
-        // Get a fresh, decrypted access token (refreshing if needed)
+        // Get a fresh, decrypted access token
         $tokenError = null;
         $accessToken = NotifierPlugin::getInstance()->linkedinConnections->getSendableToken($this->connectionUid, $tokenError);
 

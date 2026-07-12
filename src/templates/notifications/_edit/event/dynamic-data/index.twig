@@ -57,6 +57,6 @@
         {% include 'notifier/notifications/_edit/event/_recurring-schedule' with { eventType: 'dynamic-data' } %}
     </div>
 
-    {# Hidden input goes last so the first visible field keeps :first-child (and Craft's margin reset) #}
+    {# Hidden input goes last so the first visible field keeps :first-child and Craft's margin reset #}
     <input type="hidden" name="event[dynamic-data]" value="compile">
 </div>

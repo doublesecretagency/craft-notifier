@@ -161,6 +161,7 @@ class Recipients extends Component
         if ('*' === $groupIds) {
             // Get all User Groups
             $allGroups = Craft::$app->getUserGroups()->getAllGroups();
+
             // Get all User Group IDs
             $groupIds = ArrayHelper::getColumn($allGroups, 'id');
         }
@@ -264,6 +265,7 @@ class Recipients extends Component
                     ['messageType' => $this->_messageTypeLabel($notification), 'recipient' => Craft::t('notifier', '[invalid recipient]')],
                     []
                 );
+
                 // Log the skip under the envelope
                 $notification->log->warning(Craft::t('notifier',
                     '[SKIPPED] Unrecognized recipient of type "{type}".',
@@ -535,6 +537,7 @@ class Recipients extends Component
                     ['messageType' => $this->_messageTypeLabel($notification), 'recipient' => $uid],
                     []
                 );
+
                 // Log the skip under the envelope
                 $notification->log->warning(Craft::t('notifier',
                     '[SKIPPED] The configured LinkedIn connection no longer exists (uid: {uid}).',
@@ -620,6 +623,7 @@ class Recipients extends Component
                     ['messageType' => $this->_messageTypeLabel($notification), 'recipient' => $uid],
                     []
                 );
+
                 // Log the skip under the envelope
                 $notification->log->warning(Craft::t('notifier',
                     '[SKIPPED] The configured {kind} no longer exists in the plugin settings (uid: {uid}).',
