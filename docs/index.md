@@ -10,7 +10,7 @@ description: First-class Notifications for Craft CMS.
 # - property: og:description
 #   content: First-class Notifications for Craft CMS.
 # - property: og:image
-#   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.1.png
+#   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.2.png
 # - property: twitter:card
 #   content: summary_large_image
 # - property: twitter:url
@@ -20,7 +20,7 @@ description: First-class Notifications for Craft CMS.
 # - property: twitter:description
 #   content: First-class Notifications for Craft CMS.
 # - property: twitter:image
-#   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.1.png
+#   content: https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.2.png
 
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
@@ -30,7 +30,7 @@ hero:
   text: "plugin for Craft CMS"
   tagline: "First-class Notifications for Craft CMS."
   image:
-    src: /images/meta/notifier-v3.1.png
+    src: /images/meta/notifier-v3.2.png
     alt: Notifier plugin for Craft CMS
   actions:
     - theme: brand

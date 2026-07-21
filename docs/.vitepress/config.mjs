@@ -56,7 +56,7 @@ const trailingSlashRedirect = {
 const metaUrl = 'https://plugins.doublesecretagency.com/notifier/';
 const metaTitle = 'Notifier plugin for Craft CMS';
 const metaDescription = 'First-class Notifications for Craft CMS.';
-const metaImage = 'https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.1.png';
+const metaImage = 'https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.2.png';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
