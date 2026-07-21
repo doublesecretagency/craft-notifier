@@ -1,62 +1,173 @@
 import { defineConfig } from 'vitepress';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, statSync, readFileSync } from 'node:fs';
 
-// Docs source root (one level up from .vitepress/)
+// Get the docs source root
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+
+// The subpath these docs are published under
 const base = '/notifier/';
 
-// Dev-only plugin mirroring the production nginx canonicalization.
-// A no-trailing-slash directory URL gets a real 301 to its trailing-slash form.
-// Flat clean-URL pages (logging -> logging.md) are served as-is, never redirected.
+// Make the dev server handle URLs the same way the live site does
+// A directory URL missing its trailing slash gets a 301, a flat page is left alone
 const trailingSlashRedirect = {
   name: 'notifier-docs-trailing-slash',
   apply: 'serve',
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
+      // Get the requested path and query string
       const [path, query = ''] = (req.url || '/').split('?');
 
-      // If it has an extension or already ends in a slash, hand off
+      // If the path has an extension or already ends in a slash, hand off
       if (path.endsWith('/') || /\.[^/]+$/.test(path)) {
         return next();
       }
 
-      // If it's outside the docs base, hand off
+      // If the path is outside the docs, hand off
       if (!path.startsWith(base)) {
         return next();
       }
 
       // Get the path relative to the docs root
       const rel = path.slice(base.length);
+
+      // If nothing is left, hand off
       if (!rel) {
         return next();
       }
 
-      // If a flat page exists, serve it (no redirect)
+      // If a flat page exists, serve it without redirecting
       if (existsSync(resolve(docsRoot, `${rel}.md`))) {
         return next();
       }
 
-      // If a real directory page exists, 301 to the trailing-slash form
+      // Get the directory which matches the path
       const dir = resolve(docsRoot, rel);
+
+      // If that directory holds an index page
       if (existsSync(dir) && statSync(dir).isDirectory() && existsSync(resolve(dir, 'index.md'))) {
+        // Redirect to the trailing-slash form
         res.statusCode = 301;
         res.setHeader('Location', `${path}/${query ? `?${query}` : ''}`);
         res.end();
         return;
       }
 
-      // Otherwise hand off (VitePress renders its 404)
+      // Otherwise hand off and let VitePress render its 404
       return next();
     });
   },
 };
 
+// Fallback values for the social sharing tags
 const metaUrl = 'https://plugins.doublesecretagency.com/notifier/';
 const metaTitle = 'Notifier plugin for Craft CMS';
 const metaDescription = 'First-class Notifications for Craft CMS.';
-const metaImage = 'https://plugins.doublesecretagency.com/notifier/images/meta/notifier-v3.2.png';
+const metaImage = '/images/meta/notifier-v3.2.png';
+
+// Shared illustrations which appear on many pages, never specific to one of them
+const genericImages = [
+  '/images/events/field-conditions-generic.png',
+  '/images/events/field-conditions-has-changed.png',
+];
+
+// Image formats which social platforms will render on a share card
+const rasterFormats = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+
+// Reject a share image whose shape would be badly cropped by a social card
+// Set to 1.4 to fall back to the default on tall images, 0 skips the check
+const minImageRatio = 0;
+
+// Remember each image's dimensions after measuring it once
+const imageSizes = new Map();
+
+// Get the full URL of a docs path
+// Never build this with new URL(), a leading slash would drop the docs subpath
+const absoluteUrl = (path) => {
+  // If the path is already a full URL, use it as-is
+  if (/^https?:\/\//.test(path)) {
+    return path;
+  }
+
+  // Join the path to the docs root
+  return metaUrl + path.replace(/^\//, '');
+};
+
+// Get the pixel dimensions of a docs image
+const imageSize = (src) => {
+  // If the image was already measured, use the stored dimensions
+  if (imageSizes.has(src)) {
+    return imageSizes.get(src);
+  }
+
+  // Get the file which the image points to
+  const file = resolve(docsRoot, 'public', src.replace(/^\//, ''));
+
+  // Initialize the dimensions
+  let size = null;
+
+  // If the file is a PNG, read its width and height out of the header
+  if (src.toLowerCase().endsWith('.png') && existsSync(file)) {
+    const header = readFileSync(file).subarray(16, 24);
+    size = {width: header.readUInt32BE(0), height: header.readUInt32BE(4)};
+  }
+
+  // Store the dimensions
+  imageSizes.set(src, size);
+
+  // Return the dimensions
+  return size;
+};
+
+// Get the image which best represents a page
+// A page overrides the choice by naming an `image` in its frontmatter
+const primaryImage = (pageData) => {
+  // If the page names its own image, use it
+  if (pageData.frontmatter.image) {
+    return pageData.frontmatter.image;
+  }
+
+  // Get the page's source file
+  const file = resolve(docsRoot, pageData.filePath);
+
+  // If there is no source file, use the site default
+  if (!existsSync(file)) {
+    return metaImage;
+  }
+
+  // Get the page body, dropping the frontmatter so its values can't be read as images
+  const body = readFileSync(file, 'utf-8').replace(/^---\r?\n[\s\S]*?\r?\n---/, '');
+
+  // Loop through every image on the page
+  for (const match of body.matchAll(/<img[^>]+src="([^"]+)"|!\[[^\]]*\]\(([^)]+)\)/g)) {
+    const src = (match[1] || match[2]);
+
+    // If the image is a shared illustration, skip
+    if (genericImages.includes(src)) {
+      continue;
+    }
+
+    // If the format won't render on a card, skip
+    if (!rasterFormats.some((format) => src.toLowerCase().endsWith(format))) {
+      continue;
+    }
+
+    // Get the image dimensions
+    const size = imageSize(src);
+
+    // If the image is too tall for a card, skip
+    if (size && minImageRatio && ((size.width / size.height) < minImageRatio)) {
+      continue;
+    }
+
+    // Return the first image which qualifies
+    return src;
+  }
+
+  // Otherwise use the site default
+  return metaImage;
+};
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -64,18 +175,65 @@ export default defineConfig({
   title: "Notifier plugin",
   description: "First-class Notifications for Craft CMS.",
 
-  head: [
-    ['meta', {'name': 'og:type', 'content': 'website'}],
-    ['meta', {'name': 'og:url', 'content': metaUrl}],
-    ['meta', {'name': 'og:title', 'content': metaTitle}],
-    ['meta', {'name': 'og:description', 'content': metaDescription}],
-    ['meta', {'name': 'og:image', 'content': metaImage}],
-    ['meta', {'name': 'twitter:card', 'content': 'summary_large_image'}],
-    ['meta', {'name': 'twitter:url', 'content': metaUrl}],
-    ['meta', {'name': 'twitter:title', 'content': metaTitle}],
-    ['meta', {'name': 'twitter:description', 'content': metaDescription}],
-    ['meta', {'name': 'twitter:image', 'content': metaImage}],
-  ],
+  // Give each page its own social sharing tags
+  // Override the image on any page with an `image` frontmatter value
+  transformPageData(pageData) {
+    // Get the page's frontmatter
+    const frontmatter = pageData.frontmatter;
+
+    // Get the page's clean URL path
+    // An index page keeps its trailing slash, matching the live site
+    const path = pageData.relativePath
+      .replace(/index\.md$/, '')
+      .replace(/\.md$/, '');
+
+    // Get the page's full URL
+    const url = absoluteUrl(path);
+
+    // Get the page title, or the site title on the home page
+    const title = (pageData.title ? `${pageData.title} | ${metaTitle}` : metaTitle);
+
+    // Get the page description, or the site description
+    const description = (frontmatter.description || metaDescription);
+
+    // Get the page's own share image, or the site default
+    const image = primaryImage(pageData);
+
+    // Get the share image's full URL
+    const imageUrl = absoluteUrl(image);
+
+    // Get the share image's dimensions
+    const size = imageSize(image);
+
+    // Initialize the dimension tags
+    const sizeTags = [];
+
+    // If the dimensions are known, tag them so platforms can lay out the card early
+    if (size) {
+      sizeTags.push(
+        ['meta', {property: 'og:image:width', content: String(size.width)}],
+        ['meta', {property: 'og:image:height', content: String(size.height)}],
+      );
+    }
+
+    // Initialize the page's head tags
+    frontmatter.head ??= [];
+
+    // Append the Open Graph and Twitter tags
+    frontmatter.head.push(
+      ['meta', {property: 'og:type', content: 'website'}],
+      ['meta', {property: 'og:url', content: url}],
+      ['meta', {property: 'og:title', content: title}],
+      ['meta', {property: 'og:description', content: description}],
+      ['meta', {property: 'og:image', content: imageUrl}],
+      ...sizeTags,
+      ['meta', {name: 'twitter:card', content: 'summary_large_image'}],
+      ['meta', {name: 'twitter:url', content: url}],
+      ['meta', {name: 'twitter:title', content: title}],
+      ['meta', {name: 'twitter:description', content: description}],
+      ['meta', {name: 'twitter:image', content: imageUrl}],
+    );
+  },
 
   base: '/notifier/',
   cleanUrls: true,
@@ -588,7 +746,8 @@ export default defineConfig({
 
     },
 
-    aside: false, // Hide right-hand sidebar for page anchors
+    // Hide the on-page anchor sidebar
+    aside: false,
 
     socialLinks: [
       {
