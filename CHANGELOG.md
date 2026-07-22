@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.2.0 - 2026-07-22
 
 ### Added
 - Added trigger event ["When a form is submitted"](https://plugins.doublesecretagency.com/notifier/events/types/formie/) for [Formie](https://plugins.craftcms.com/formie).
