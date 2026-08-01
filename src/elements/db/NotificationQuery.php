@@ -12,6 +12,7 @@
 namespace doublesecretagency\notifier\elements\db;
 
 use craft\elements\db\ElementQuery;
+use doublesecretagency\notifier\helpers\ContentRecovery;
 
 /**
  * Element query for fetching notifications.
@@ -26,6 +27,9 @@ class NotificationQuery extends ElementQuery
      */
     protected function beforePrepare(): bool
     {
+        // Recover any content stranded by the Craft 4 to 5 upgrade
+        ContentRecovery::run();
+
         // Join the notifications table
         $this->joinElementTable('{{%notifier_notifications}}');
 

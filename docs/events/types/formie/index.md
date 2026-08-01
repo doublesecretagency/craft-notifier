@@ -11,7 +11,7 @@ Sends a notification when a **Formie form is submitted**.
 The notification will be triggered whenever a visitor submits a normal front-end form. Every submitted field is available in your message. You can post new submissions to a Slack channel, text your team, or use any other [message types](/messages/types/).
 
 :::warning Formie already has excellent email support
-If you only want emails from Formie submissions, you may not need another plugin. Reach for Notifier if you want Formie submissions to send via **different message types** (e.g. SMS or Slack notifications).
+If you only want emails from Formie submissions, you may not need another plugin. Reach for Notifier if you want Formie submissions to send via **different message types** which aren't covered by Formie's native integrations.
 :::
 
 <img class="dropshadow" src="/images/events/event-formie-submissions.png" alt="" style="width:646px; margin-top:10px; margin-bottom:22px">
