@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.2.1 - 2026-08-01
 
 ### Fixed
 - Restored data left behind when a site has been migrated from Craft 4 to Craft 5.
