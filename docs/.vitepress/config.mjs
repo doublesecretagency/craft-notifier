@@ -412,59 +412,9 @@ export default defineConfig({
           {text: 'Translations',          link: '/translations'}
         ]
       },
-      // {
-      //   text: 'Examples',
-      //   items: [
-      //     {
-      //       items: [
-      //         {text: 'When a User registers, send a "welcome" email', link: '/examples/users/when-user-registers-send-welcome-email'},
-      //       ]
-      //     },
-      //     {
-      //       items: [
-      //         {text: 'When an Entry is created, email all Admins',     link: '/examples/entries/when-entry-created-email-admins'},
-      //         {text: 'When an Entry is updated, post CP announcement', link: '/examples/entries/when-entry-updated-post-announcement'},
-      //       ]
-      //     },
-      //     {
-      //       items: [
-      //         {text: 'When an Asset is uploaded, send an SMS (text message)', link: '/examples/assets/when-asset-uploaded-send-sms-text'},
-      //       ]
-      //     },
-      //   ]
-      // },
     ],
 
     sidebar: {
-
-      // // Examples of User Events
-      // '/examples/users/': [
-      //   {
-      //     text: 'User Events',
-      //     items: [
-      //       {text: 'When a User registers, send a "welcome" email', link: '/examples/users/when-user-registers-send-welcome-email'},
-      //     ]
-      //   }
-      // ],
-      // // Examples of Entry Events
-      // '/examples/entries/': [
-      //   {
-      //     text: 'Entry Events',
-      //     items: [
-      //       {text: 'When an Entry is created, email all Admins',     link: '/examples/entries/when-entry-created-email-admins'},
-      //       {text: 'When an Entry is updated, post CP announcement', link: '/examples/entries/when-entry-updated-post-announcement'},
-      //     ]
-      //   }
-      // ],
-      // // Examples of Asset Events
-      // '/examples/assets/': [
-      //   {
-      //     text: 'Asset Events',
-      //     items: [
-      //       {text: 'When an Asset is uploaded, send an SMS (text message)', link: '/examples/assets/when-asset-uploaded-send-sms-text'},
-      //     ]
-      //   }
-      // ],
 
       // Getting Started
       '/getting-started/': [
