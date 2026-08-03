@@ -412,6 +412,19 @@ export default defineConfig({
           {text: 'Translations',          link: '/translations'}
         ]
       },
+      {
+        component: 'NestedNavMenu',
+        props: {
+          text: 'Guides',
+          activeMatch: '/guides/',
+          items: [
+            {text: 'Overview', link: '/guides/'},
+            {divider: true},
+            {text: 'Approve new User accounts', link: '/guides/approve-new-user-registration'},
+            {text: 'Welcome email for new Users',    link: '/guides/welcome-email-for-new-users'},
+          ],
+        },
+      },
     ],
 
     sidebar: {
@@ -676,6 +689,22 @@ export default defineConfig({
                 },
               ]
             }
+          ]
+        }
+      ],
+
+      // Guides
+      '/guides/': [
+        {
+          text: 'Guides',
+          items: [
+            {text: 'Overview', link: '/guides/'},
+          ]
+        },
+        {
+          items: [
+            {text: 'Approve new User accounts', link: '/guides/approve-new-user-registration'},
+            {text: 'Welcome email for new Users',    link: '/guides/welcome-email-for-new-users'},
           ]
         }
       ],

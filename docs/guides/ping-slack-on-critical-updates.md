@@ -4,7 +4,7 @@ description: Whenever a critical update is released, Craft will send a Slack mes
 
 # Post to a Slack channel when Critical Updates are released
 
-Stay up-to-date with security patches!
+Stay up-to-date with security patches for Craft and all plugins.
 
 This guide explains how to watch Craft's [Critical Releases](https://feeds.craftcms.com/critical.atom) feed, and post to a Slack channel any time a new critical update is released.
 
