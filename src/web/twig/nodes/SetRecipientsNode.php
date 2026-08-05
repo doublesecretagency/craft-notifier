@@ -52,11 +52,10 @@ class SetRecipientsNode extends Node
             ->write('$__notifierDispatch->setRecipientsInvoked = true;')
             ->raw("\n");
 
-        // If the argument is an array or Traversable, iterate and push each item;
-
-        // otherwise treat the argument as a single recipient and push it directly
+        // If the argument is a collection (array, query, or Collection), iterate and push each item
+        // A single Craft element is iterable too (it iterates its attributes), so exclude it and push as one item
         $compiler
-            ->write('if (is_iterable($__notifierItems)) {')
+            ->write('if (is_iterable($__notifierItems) && !($__notifierItems instanceof \\craft\\base\\ElementInterface)) {')
             ->raw("\n")
             ->indent()
             ->write('foreach ($__notifierItems as $__notifierItem) {')

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed bug where [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) couldn't accept a single element.
+
 ## 3.2.1 - 2026-08-01
 
 ### Fixed
