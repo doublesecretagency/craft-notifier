@@ -6,12 +6,17 @@ use PHPUnit\Framework\TestCase;
 /**
  * Structural tests for the empty-selector `[NO <THING>]` warnings in Dispatch.
  *
- * Every element-scoping gate (`_filter*()`) treats an empty selector as
+ * Every element-scoping filter (`_filter*()`) treats an empty selector as
  * match-nothing. When the selector is empty, the notification can never be
- * triggered, so the gate logs a `[NO <THING>]` warning and bails. Each of
+ * triggered, so the filter logs a `[NO <THING>]` warning and bails. Each of
  * those warnings must nest under the run-level parent envelope
  * (`$this->runEnvelope()`), per the standing rule that no bracketed log
  * message is ever a top-level, parent-less row.
+ *
+ * As of 2026-08-04 the warnings route through `_filterWarning()` rather than
+ * calling the log directly. The helper both nests the row and honors the
+ * `checkOnly` flag, so a manual-trigger visibility check can run the same
+ * filter without writing anything.
  *
  * These are source-level regex checks: the real per-element logging behavior
  * is exercised manually in the sandbox (misconfigure a notification with no
@@ -30,9 +35,9 @@ class DispatchEmptySelectorWarningTest extends TestCase
     }
 
     /**
-     * The six distinct empty-selector warnings, keyed by gate.
+     * The six distinct empty-selector warnings, keyed by filter.
      *
-     * The two digital-products gates (products + licenses) share the same
+     * The two digital-products filters (products + licenses) share the same
      * `digitalProductTypes` selector, so they share one message.
      *
      * @return array<string, array{0: string}>
@@ -61,29 +66,47 @@ class DispatchEmptySelectorWarningTest extends TestCase
     }
 
     /**
-     * Each warning is logged as a WARNING nested under the run-level parent
-     * envelope. The shape is:
+     * Each warning is routed through the `_filterWarning()` helper. The shape is:
      *
-     *     $this->notification->log->warning(Craft::t('notifier',
+     *     $this->_filterWarning(Craft::t('notifier',
      *         '[NO <THING>] ...'
-     *     ), $this->runEnvelope());
+     *     ));
      *
-     * so the message must be immediately followed by the runEnvelope() parent.
+     * The helper is what nests the row under the run-level parent envelope, and
+     * what honors the `checkOnly` flag so a visibility check writes nothing.
+     * A direct `log->warning(..., $this->runEnvelope())` call would still nest
+     * correctly but would bypass that suppression, so the indirection is the
+     * thing worth pinning. See `testHelperNestsUnderRunEnvelope()` below for the
+     * nesting guarantee itself.
      *
      * @dataProvider warningProvider
      */
-    public function testWarningNestsUnderRunEnvelope(string $message): void
+    public function testWarningRoutesThroughFilterWarningHelper(string $message): void
     {
         $quoted = preg_quote($message, '/');
         $this->assertMatchesRegularExpression(
-            "/'{$quoted}'\s*\),\s*\\\$this->runEnvelope\(\)\)/",
+            "/\\\$this->_filterWarning\(Craft::t\('notifier',\s*\n\s*'{$quoted}'\s*\n\s*\)\);/",
             $this->dispatchSource,
-            "The \"{$message}\" warning must nest under \$this->runEnvelope()."
+            "The \"{$message}\" warning must route through \$this->_filterWarning()."
         );
     }
 
     /**
-     * Every element-scoping gate guards on an empty selector, so an unconfigured
+     * The helper carries the nesting guarantee for every empty-selector warning:
+     * one place passes `$this->runEnvelope()`, so no bracketed log message can
+     * become a top-level, parent-less row.
+     */
+    public function testHelperNestsUnderRunEnvelope(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/private function _filterWarning\(string \$message\): void\s*\{[\s\S]*?'
+            . '\$this->notification->log->warning\(\$message, \$this->runEnvelope\(\)\);/',
+            $this->dispatchSource
+        );
+    }
+
+    /**
+     * Every element-scoping filter guards on an empty selector, so an unconfigured
      * notification bails (and now warns) rather than silently matching nothing.
      *
      * @return array<string, array{0: string}>
@@ -94,7 +117,7 @@ class DispatchEmptySelectorWarningTest extends TestCase
             'entries'  => ['sectionEntryTypes'],
             'assets'   => ['volumes'],
             'users'    => ['userGroups'],
-            'products' => ['productTypes'],   // shared by commerce + both digital gates
+            'products' => ['productTypes'],   // shared by commerce + both digital filters
             'calendar' => ['calendars'],
         ];
     }
@@ -102,12 +125,12 @@ class DispatchEmptySelectorWarningTest extends TestCase
     /**
      * @dataProvider selectorProvider
      */
-    public function testGateGuardsOnEmptySelector(string $selectorVar): void
+    public function testFilterGuardsOnEmptySelector(string $selectorVar): void
     {
         $this->assertMatchesRegularExpression(
             "/if \(empty\(\\\$$selectorVar\)\)/",
             $this->dispatchSource,
-            "The gate for \${$selectorVar} must guard on empty(\${$selectorVar})."
+            "The filter for \${$selectorVar} must guard on empty(\${$selectorVar})."
         );
     }
 }

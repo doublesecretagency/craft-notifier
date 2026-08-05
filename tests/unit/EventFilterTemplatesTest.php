@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  * The CP templates and the runtime in Dispatch.php form a contract: the
  * template emits hidden inputs under specific names, and the runtime reads
  * the same keys from `eventConfig`. Renaming one side without the other
- * silently breaks the gate (notifications stop firing, or fire when they
+ * silently breaks the filter (notifications stop firing, or fire when they
  * shouldn't), so each side of the contract is pinned here.
  *
  * @since 3.0.0
@@ -75,7 +75,7 @@ class EventFilterTemplatesTest extends TestCase
     public function testVolumesTemplateReadsExistingSelections(): void
     {
         // On edit, the saved volume IDs are checked back on. Reads from the
-        // same eventConfig key the runtime gate reads from.
+        // same eventConfig key the runtime filter reads from.
         $source = self::read('assets/volumes.twig');
         $this->assertMatchesRegularExpression(
             '/notification\.eventConfig\.volumes/',
@@ -119,7 +119,7 @@ class EventFilterTemplatesTest extends TestCase
     public function testUserGroupsTemplateGuardsOnHavingAtLeastOneGroup(): void
     {
         // If the install has zero User Groups defined, the section hides
-        // entirely. The Ungrouped row alone would gate every user out.
+        // entirely. The Ungrouped row alone would filter every user out.
         $source = self::read('users/groups.twig');
         $this->assertMatchesRegularExpression(
             '/\{%\s*if\s+availableUserGroups\(\)\|length\s*%\}/',
@@ -301,7 +301,7 @@ class EventFilterTemplatesTest extends TestCase
             "{% include 'notifier/notifications/_edit/event/formie-submissions/condition' %}",
             $formie
         );
-        // The outcome select drives the success / failure / all gate
+        // The outcome select drives the success / failure / all check
         $this->assertStringContainsString("name: 'eventConfig[submissionOutcome]'", $formie);
         // Single event, so the value is hard-coded rather than posted from a dropdown
         $this->assertStringContainsString(
@@ -356,7 +356,7 @@ class EventFilterTemplatesTest extends TestCase
      */
     public function testPartialCarriesManuallyTriggeredToggleClass(string $partial, string $eventType): void
     {
-        // Each element type's membership and condition partials must show for
+        // Each element type's selection and condition partials must show for
         // the manually-triggered sub-event, so the wrapper carries the
         // matching toggle class.
         $source = self::read($partial);
@@ -411,7 +411,7 @@ class EventFilterTemplatesTest extends TestCase
     public function testEventTabIncludesManualTriggerLabel(string $tab, string $eventType): void
     {
         // Every event-type tab includes the shared Trigger Label field,
-        // gated to the manually-triggered sub-event.
+        // limited to the manually-triggered sub-event.
         $source = self::read($tab);
         $this->assertStringContainsString(
             "{% include 'notifier/notifications/_edit/event/_manual-trigger-label' with { eventType: '{$eventType}' } %}",
@@ -449,7 +449,7 @@ class EventFilterTemplatesTest extends TestCase
         // The "When a scheduled date is reached" event must expose the element-type
         // filter, so a scheduled notification can be scoped the same way a normal
         // event is. Without the toggle class the filter stays hidden and the
-        // runtime type gate (empty config = no match) drops every dispatch.
+        // runtime type check (empty config = no match) drops every dispatch.
         $source = self::read($template);
         $this->assertStringContainsString($toggleClass, $source);
     }

@@ -410,7 +410,7 @@ class DispatchModelTest extends TestCase
 
     public function testHasFilterAssetsHelper(): void
     {
-        // Mandatory volume gate lives in its own private helper, mirroring
+        // Mandatory volume filter lives in its own private helper, mirroring
         // the structure of _filterEntries / _filterUsers.
         $this->assertTrue($this->reflection->hasMethod('_filterAssets'));
         $this->assertTrue($this->reflection->getMethod('_filterAssets')->isPrivate());
@@ -418,8 +418,8 @@ class DispatchModelTest extends TestCase
 
     public function testAssetFilterChecksVolume(): void
     {
-        // The volume gate is the single short-circuit for Asset notifications,
-        // mirroring how sectionId gates Entry notifications.
+        // The volume filter is the single short-circuit for Asset notifications,
+        // mirroring how sectionId filters Entry notifications.
         $this->assertStringContainsString('->volumeId', $this->dispatchSource);
     }
 
@@ -439,14 +439,14 @@ class DispatchModelTest extends TestCase
 
     public function testHasFilterUsersHelper(): void
     {
-        // Mandatory user-group gate lives in its own private helper.
+        // Mandatory user-group filter lives in its own private helper.
         $this->assertTrue($this->reflection->hasMethod('_filterUsers'));
         $this->assertTrue($this->reflection->getMethod('_filterUsers')->isPrivate());
     }
 
     public function testUserFilterChecksGroups(): void
     {
-        // The user-group gate compares the user's actual groups against
+        // The user-group filter compares the user's actual groups against
         // the configured list. Both calls must appear in the source.
         $this->assertStringContainsString('->getGroups()', $this->dispatchSource);
         $this->assertStringContainsString("'userGroups'", $this->dispatchSource);
@@ -462,10 +462,10 @@ class DispatchModelTest extends TestCase
         );
     }
 
-    public function testUserFilterMandatoryGateOnEmptyConfig(): void
+    public function testUserFilterMandatoryCheckOnEmptyConfig(): void
     {
         // Zero selected = no users match. Mirror of the entry filter's
-        // section gate; an unconfigured user-group list must short-circuit.
+        // section filter; an unconfigured user-group list must short-circuit.
         $this->assertMatchesRegularExpression(
             '/empty\(\$userGroups\)[\s\S]*?return\s+false/',
             $this->dispatchSource
@@ -482,7 +482,7 @@ class DispatchModelTest extends TestCase
     }
 
     // ========================================================================= //
-    // Element-condition gate (applies to all event types)
+    // Element-condition check (applies to all event types)
     // ========================================================================= //
 
     public function testHasMatchEventConditionHelper(): void
@@ -496,7 +496,7 @@ class DispatchModelTest extends TestCase
     public function testFilterByEventTypeRunsConditionMatchAfterEventTypeBranches(): void
     {
         // After each event-type branch (entries / users / assets / craft-commerce-orders)
-        // resolves, the shared condition gate runs once before returning.
+        // resolves, the shared condition check runs once before returning.
         $this->assertMatchesRegularExpression(
             '/case\s+\'craft-commerce-orders\'[\s\S]*?break;[\s\S]*?_matchEventCondition\(\)/',
             $this->dispatchSource
@@ -701,7 +701,7 @@ class DispatchModelTest extends TestCase
     public function testTier2FilterMethodExists(string $method): void
     {
         // Each new event-type category gets a private filter method that
-        // gates dispatch on the category-specific axis (product type,
+        // filters dispatch on the category-specific axis (product type,
         // digital product type, calendar). Mandatory presence; the
         // switch in filterByEventType references each by name.
         $this->assertTrue($this->reflection->hasMethod($method));
@@ -727,7 +727,7 @@ class DispatchModelTest extends TestCase
 
     public function testCommerceProductsFilterReadsProductTypesConfig(): void
     {
-        // Mandatory product-types gate analogous to Sections for entries
+        // Mandatory product-types filter analogous to Sections for entries
         // and Volumes for assets.
         $this->assertStringContainsString(
             "\$this->notification->eventConfig['productTypes']",
@@ -745,9 +745,9 @@ class DispatchModelTest extends TestCase
         );
     }
 
-    public function testDigitalProductLicensesFilterGatesOnParentProductType(): void
+    public function testDigitalProductLicensesFilterUsesParentProductType(): void
     {
-        // License filter must gate on the parent product's typeId, not
+        // License filter must filter on the parent product's typeId, not
         // a hypothetical license-level typeId. The body resolves the
         // product via getProduct() then reads its typeId.
         $this->assertMatchesRegularExpression(
@@ -758,7 +758,7 @@ class DispatchModelTest extends TestCase
 
     public function testCalendarEventsFilterReadsCalendarsConfig(): void
     {
-        // Mandatory calendars gate analogous to Sections for entries.
+        // Mandatory calendars filter analogous to Sections for entries.
         $this->assertStringContainsString(
             "\$this->notification->eventConfig['calendars']",
             $this->dispatchSource
@@ -767,7 +767,7 @@ class DispatchModelTest extends TestCase
 
     public function testFormieSubmissionsFilterReadsFormsConfig(): void
     {
-        // Mandatory forms gate analogous to Calendars for calendar events.
+        // Mandatory forms filter analogous to Calendars for calendar events.
         $this->assertStringContainsString(
             "\$this->notification->eventConfig['forms']",
             $this->dispatchSource
@@ -782,9 +782,9 @@ class DispatchModelTest extends TestCase
         $this->assertStringContainsString('[NO FORM]', $this->dispatchSource);
     }
 
-    public function testFormieSubmissionsFilterGatesOnSubmissionOutcome(): void
+    public function testFormieSubmissionsFilterUsesSubmissionOutcome(): void
     {
-        // The outcome gate reads eventConfig['submissionOutcome'] (default
+        // The outcome check reads eventConfig['submissionOutcome'] (default
         // 'success') and the bridged data['success'] flag, so a notification
         // can opt into successful-only, failed-only, or all submissions.
         $this->assertStringContainsString(
@@ -800,7 +800,7 @@ class DispatchModelTest extends TestCase
     public function testUserFilterHandlesAssignToGroupsSpecially(): void
     {
         // The assignment event needs newly-assigned-overlap semantics,
-        // not the standard "is in any configured group" gate. The branch
+        // not the standard "is in any configured group" check. The branch
         // reads data['newGroupIds'] populated by UserEvents::afterAssignToGroups.
         $this->assertMatchesRegularExpression(
             "/'after-assign-to-groups'[\s\S]*?newGroupIds/",
@@ -814,7 +814,7 @@ class DispatchModelTest extends TestCase
 
     public function testHasSkipRecipientHelper(): void
     {
-        // Per-recipient skips mint that recipient's envelope, then nest the skip
+        // Per-recipient skips create that recipient's envelope, then nest the skip
         // warning under it, so no skip floats as an independent top-level row.
         $this->assertTrue($this->reflection->hasMethod('_skipRecipient'));
         $this->assertMatchesRegularExpression(
@@ -832,7 +832,7 @@ class DispatchModelTest extends TestCase
 
     public function testHasRunEnvelopeHelper(): void
     {
-        // Dispatch-wide failures nest under a lazily-minted run-level parent,
+        // Dispatch-wide failures nest under a lazily-created run-level parent,
         // exposed publicly so the recipient resolver can reuse the same one.
         $this->assertTrue($this->reflection->hasMethod('runEnvelope'));
         $this->assertTrue($this->reflection->getMethod('runEnvelope')->isPublic());
@@ -858,6 +858,38 @@ class DispatchModelTest extends TestCase
         // one recipient) nests under the run-level parent.
         $this->assertMatchesRegularExpression(
             "/not configured on this notification\.'\s*\n\s*\), \\\$this->runEnvelope\(\)\)/",
+            $this->dispatchSource
+        );
+    }
+
+    public function testCheckOnlyDispatchesSuppressFilterWarnings(): void
+    {
+        // A check asks whether a notification applies to an element. It must not
+        // create a run envelope or write to the log the way a real dispatch does.
+        //
+        // Regression test for the 2026-08-04 bug: getManualNotifications() reused the
+        // live filter to decide, so merely rendering an element's action menu or edit
+        // screen logged an envelope plus a warning for every misconfigured manual
+        // notification, with nothing being sent.
+        $this->assertStringContainsString('public bool $checkOnly = false;', $this->dispatchSource);
+        $this->assertMatchesRegularExpression(
+            '/private function _filterWarning\(string \$message\): void\s*\{[\s\S]*?if \(\$this->checkOnly\) \{\s*return;/',
+            $this->dispatchSource
+        );
+    }
+
+    public function testEveryFilterMisconfigurationWarningIsSuppressible(): void
+    {
+        // Each event-type filter warns when nothing is selected. Every one of those must
+        // route through _filterWarning() so the checkOnly flag governs all of them;
+        // a direct log->warning(..., runEnvelope()) call would bypass the suppression.
+        $filterWarnings = preg_match_all(
+            "/\\\$this->_filterWarning\(Craft::t\('notifier',\s*\n\s*'\[NO /",
+            $this->dispatchSource
+        );
+        $this->assertSame(8, $filterWarnings);
+        $this->assertDoesNotMatchRegularExpression(
+            "/log->warning\(Craft::t\('notifier',\s*\n\s*'\[NO [^\n]*'\s*\n\s*\), \\\$this->runEnvelope\(\)\)/",
             $this->dispatchSource
         );
     }

@@ -169,7 +169,7 @@ class Craft5ContentRecoveryTest extends TestCase
      * dropTable() is overridden so the drop can be withheld in a front-end
      * request while the row deletion still goes ahead.
      */
-    public function testDropTableIsGatedByAllowDrop(): void
+    public function testDropTableRequiresAllowDrop(): void
     {
         $this->assertMatchesRegularExpression(
             '/public function dropTable\(\$table\)\s*\{\s*\/\/[^\n]*\n\s*if \(!\$this->_allowDrop\) \{\s*return;\s*\}/',

@@ -290,7 +290,7 @@ class Recipients extends Component
                 continue;
             }
 
-            // Otherwise, mint an envelope for the invalid recipient and log the skip under it
+            // Otherwise, create an envelope for the invalid recipient and log the skip under it
             $envelopeId = $notification->log->envelope(
                 ['messageType' => $this->_messageTypeLabel($notification), 'recipient' => Craft::t('notifier', '[invalid recipient]')],
                 []

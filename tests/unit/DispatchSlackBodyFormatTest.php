@@ -43,7 +43,7 @@ class DispatchSlackBodyFormatTest extends TestCase
         $this->assertStringContainsString('SlackMrkdwn::fromHtml(', $this->dispatchSource);
     }
 
-    public function testConversionIsGatedOnSlackBodyFormatHtml(): void
+    public function testConversionRequiresSlackBodyFormatHtml(): void
     {
         // The conversion call must sit behind a check that slackBodyFormat === 'html'
         $this->assertMatchesRegularExpression(

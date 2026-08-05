@@ -76,7 +76,7 @@ class ManualConsoleControllerTest extends TestCase
         $this->assertStringContainsString("'manually-triggered'", $this->controllerSource);
     }
 
-    public function testSendRevalidatesMembership(): void
+    public function testSendRechecksThatTheNotificationApplies(): void
     {
         // The CLI must re-check that the Notification applies to the
         // element before dispatching.

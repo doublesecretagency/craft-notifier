@@ -7,7 +7,7 @@ use ReflectionClass;
 /**
  * Reflection + source-level tests for the SettingsProvidersController.
  *
- * Confirms each render / save / test action exists and gates by admin.
+ * Confirms each render / save / test action exists and requires an admin.
  */
 class SettingsProvidersControllerTest extends TestCase
 {
@@ -91,7 +91,7 @@ class SettingsProvidersControllerTest extends TestCase
 
     public function testSaveActionRequiresPost(): void
     {
-        // The save action gates on POST
+        // The save action requires POST
         $this->assertMatchesRegularExpression(
             "/function\s+actionSave\s*\([^)]*\)[\s\S]*?\\\$this->requirePostRequest\\(\\);/",
             $this->controllerSource

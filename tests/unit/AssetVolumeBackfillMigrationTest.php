@@ -12,7 +12,7 @@ use ReflectionClass;
  * Pre-existing Asset notifications saved before the Volume Filter UI
  * shipped have no `volumes` key in their eventConfig JSON. Without
  * the backfill they would silently stop firing on upgrade, since
- * the new `volumes` gate is mandatory.
+ * the new `volumes` filter is mandatory.
  *
  * The migration must be idempotent (re-running is a no-op) and must
  * only touch rows whose eventType is 'assets'.

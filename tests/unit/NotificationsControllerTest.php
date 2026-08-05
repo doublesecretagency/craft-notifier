@@ -81,7 +81,7 @@ class NotificationsControllerTest extends TestCase
 
     public function testCreateActionEnforcesCanSave(): void
     {
-        // Same gate as the canSave permission on the element.
+        // Same check as the canSave permission on the element.
         $this->assertMatchesRegularExpression(
             '/actionCreate[\s\S]*?canSave\(\$notification\)/',
             $this->controllerSource
@@ -283,7 +283,7 @@ class NotificationsControllerTest extends TestCase
         );
     }
 
-    public function testSendManualActionRevalidatesMembership(): void
+    public function testSendManualActionRechecksThatTheNotificationApplies(): void
     {
         // A stale page or crafted POST must not dispatch a Notification the
         // element no longer matches.

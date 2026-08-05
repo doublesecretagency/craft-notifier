@@ -235,7 +235,7 @@ class UserEventsTest extends TestCase
     public function testAfterAssignToGroupsPassesNewGroupIdsInData(): void
     {
         // The Dispatch filter for this event reads `data['newGroupIds']` to
-        // gate on newly-assigned overlap with the configured groups. The
+        // check for newly-assigned overlap with the configured groups. The
         // handler must populate that data key.
         $this->assertMatchesRegularExpression(
             '/afterAssignToGroups[\s\S]*?\'newGroupIds\'\s*=>\s*\$event->newGroupIds/',

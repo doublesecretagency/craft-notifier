@@ -123,7 +123,7 @@ class Messages extends Component
             // Pick a random element matching the configured filters
             $element = $this->getRandomMatchingElement($notification);
 
-            // If no candidate element passed every gate, refuse to send
+            // If no candidate element passed every filter, refuse to send
             if (null === $element) {
                 throw new TestPreflightException(Craft::t('notifier',
                     'Unable to send test: no element matches the configured filters.'
@@ -188,7 +188,7 @@ class Messages extends Component
             $condition->modifyQuery($query);
         }
 
-        // Pull a small random batch; not every candidate will pass the gate
+        // Pull a small random batch; not every candidate will pass the filters
         $candidates = (clone $query)
             ->orderBy(new Expression('RAND()'))
             ->limit(20)
@@ -199,9 +199,9 @@ class Messages extends Component
             return null;
         }
 
-        // Loop through the candidates and return the first that passes the shared gate
+        // Loop through the candidates and return the first that passes the shared filter
         foreach ($candidates as $candidate) {
-            // Build a one-off dispatch to validate via the shared filter gate
+            // Build a one-off dispatch to validate via the shared filter
             $dispatch = new Dispatch([
                 'notification' => $notification,
                 'event'        => new Event(['sender' => $candidate]),
@@ -209,13 +209,13 @@ class Messages extends Component
                 'isTest'       => false,
             ]);
 
-            // If this candidate passes every gate, use it
+            // If this candidate passes every filter, use it
             if ($dispatch->filterByEventType()) {
                 return $candidate;
             }
         }
 
-        // No candidate passed every gate, bail
+        // No candidate passed every filter, bail
         return null;
     }
 
@@ -249,11 +249,13 @@ class Messages extends Component
         // Keep only the Notifications whose filters accept this element
         return array_values(array_filter($notifications,
             static function (Notification $notification) use ($element, $event): bool {
-                // Reuse the live dispatch filter as the membership gate
+                // Reuse the live dispatch filter to decide whether the notification applies
+                // Flagged as check-only, since a visibility check must not write to the log
                 $dispatch = new Dispatch([
                     'notification' => $notification,
                     'event' => $event,
                     'data' => ['object' => $element],
+                    'checkOnly' => true,
                 ]);
                 return $dispatch->filterByEventType();
             }
@@ -377,7 +379,7 @@ class Messages extends Component
      * Build a candidate element query for a notification's event type.
      *
      * Applies eventConfig restrictions where they map to query methods.
-     * The rest fall through to filterByEventType() for gating.
+     * The rest fall through to filterByEventType() for filtering.
      *
      * @param Notification $notification
      * @param string $elementClass

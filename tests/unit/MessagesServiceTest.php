@@ -295,9 +295,9 @@ class MessagesServiceTest extends TestCase
         );
     }
 
-    public function testGetRandomMatchingElementValidatesViaSharedDispatchGate(): void
+    public function testGetRandomMatchingElementValidatesViaSharedDispatchFilter(): void
     {
-        // The picker reuses Dispatch::filterByEventType as the truth gate
+        // The picker reuses Dispatch::filterByEventType as the source of truth
         // for "would this element have been notified about?" — same pattern
         // as getManualNotifications.
         $body = $this->_extractMethodBody('getRandomMatchingElement');
@@ -320,7 +320,7 @@ class MessagesServiceTest extends TestCase
      */
     public static function coreEventTypeProvider(): array
     {
-        // Core element types ship with Craft and never need class_exists gating.
+        // Core element types ship with Craft and never need a class_exists check.
         return [
             ['entries', 'Entry::class'],
             ['assets',  'Asset::class'],
@@ -459,7 +459,7 @@ class MessagesServiceTest extends TestCase
     }
 
     // ========================================================================= //
-    // getManualNotifications, manual-trigger membership resolution
+    // getManualNotifications, deciding which manual triggers apply
     // ========================================================================= //
 
     public function testHasGetManualNotificationsMethod(): void
@@ -487,11 +487,21 @@ class MessagesServiceTest extends TestCase
 
     public function testGetManualNotificationsReusesDispatchFilter(): void
     {
-        // Membership is gated by the live dispatch filter, not a duplicated
+        // Whether a notification applies is decided by the live dispatch filter, not a duplicated
         // copy of the section / volume / group logic.
         $body = $this->_extractMethodBody('getManualNotifications');
         $this->assertStringContainsString('new Dispatch(', $body);
         $this->assertStringContainsString('filterByEventType()', $body);
+    }
+
+    public function testGetManualNotificationsUsesACheckOnlyDispatch(): void
+    {
+        // Reusing the live filter means inheriting its logging, so the check must flag
+        // itself as check-only. Without it, every render of an element's action menu
+        // or edit screen writes an envelope plus a warning for each misconfigured
+        // manual notification, even though nothing is sent.
+        $body = $this->_extractMethodBody('getManualNotifications');
+        $this->assertStringContainsString("'checkOnly' => true,", $body);
     }
 
     // ========================================================================= //

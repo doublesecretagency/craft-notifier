@@ -224,7 +224,7 @@ class RecipientsServiceTest extends TestCase
         $this->assertSame(2, substr_count($this->recipientsSource, '$dispatch->runEnvelope()'));
     }
 
-    public function testInvalidRecipientMintsOwnEnvelope(): void
+    public function testInvalidRecipientCreatesOwnEnvelope(): void
     {
         // Garbage-input skips get their own single-recipient envelope, named
         // with a generic placeholder since the reason is in the nested line.
@@ -235,9 +235,9 @@ class RecipientsServiceTest extends TestCase
         );
     }
 
-    public function testGoneDestinationMintsEnvelopeNamedByUid(): void
+    public function testGoneDestinationCreatesEnvelopeNamedByUid(): void
     {
-        // Deleted connection/channel skips mint their own envelope, named by
+        // Deleted connection/channel skips create their own envelope, named by
         // the uid (the only identifier left once the destination is gone).
         $this->assertMatchesRegularExpression(
             "/log->envelope\(\s*\n\s*\['messageType' => \\\$this->_messageTypeLabel\(\\\$notification\), 'recipient' => \\\$uid\]/",

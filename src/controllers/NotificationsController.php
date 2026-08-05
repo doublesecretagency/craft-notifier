@@ -372,8 +372,8 @@ class NotificationsController extends Controller
     /**
      * Manually trigger a Notification for a specific element.
      *
-     * Fired from the element edit screen's action menu. Re-validates membership
-     * server-side, so a stale page or crafted POST can't fire a mismatched Notification.
+     * Fired from the element edit screen's action menu. Re-checks server-side that the
+     * Notification applies, so a stale page or crafted POST can't fire a mismatched one.
      *
      * @return Response
      * @throws BadRequestHttpException

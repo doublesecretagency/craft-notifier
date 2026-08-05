@@ -97,7 +97,7 @@ class NotificationStructureTest extends TestCase
         $this->assertStringContainsString("'structureEditable' =>", $this->elementSource);
     }
 
-    public function testReorderGatedBySavePermission(): void
+    public function testReorderRequiresSavePermission(): void
     {
         // Reordering is an edit affordance: admins, or holders of the save permission.
         $this->assertMatchesRegularExpression(
@@ -146,7 +146,7 @@ class NotificationStructureTest extends TestCase
 
     public function testPlacementSkipsNotificationsAlreadyInStructure(): void
     {
-        // Membership is what gates placement now: a notification already in the
+        // Being in the structure is what decides placement now: a notification already in the
         // structure keeps its position, so re-saves (and apply-draft on an
         // existing canonical) are a no-op rather than a reset.
         $this->assertStringContainsString('_isInStructure', $this->elementSource);
@@ -155,7 +155,7 @@ class NotificationStructureTest extends TestCase
             $this->elementSource
         );
 
-        // The membership check reads the structure elements table for this element.
+        // The check reads the structure elements table for this element.
         $this->assertMatchesRegularExpression(
             '/_isInStructure[\s\S]*?Table::STRUCTUREELEMENTS[\s\S]*?->exists\(\)/',
             $this->elementSource

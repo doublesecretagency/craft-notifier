@@ -6,12 +6,12 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 /**
- * Structural tests for the Dynamic Data permission gate.
+ * Structural tests for the Dynamic Data permission check.
  *
  * Editing a Dynamic Data notification's snippet requires the
  * `notifier-editDynamicData` permission. The validator is the server-side
- * gate; the CP template disables the field. Both halves plus the permission
- * registration are pinned here so a string mismatch can't silently open the gate.
+ * check; the CP template disables the field. Both halves plus the permission
+ * registration are pinned here so a string mismatch can't silently grant access.
  */
 class DynamicDataPermissionTest extends TestCase
 {
@@ -39,7 +39,7 @@ class DynamicDataPermissionTest extends TestCase
 
     public function testValidatorIsWiredIntoDefineRules(): void
     {
-        // The rule must be registered or the gate never runs.
+        // The rule must be registered or the check never runs.
         $this->assertMatchesRegularExpression(
             "/\['eventConfig', 'validateDynamicDataPermission'\]/",
             $this->notificationSource
@@ -48,7 +48,7 @@ class DynamicDataPermissionTest extends TestCase
 
     public function testValidatorChecksTheCorrectPermissionKey(): void
     {
-        // The exact permission key must match the registration, or the gate
+        // The exact permission key must match the registration, or the check
         // checks a permission that doesn't exist (and always fails or passes).
         $this->assertMatchesRegularExpression(
             "/validateDynamicDataPermission[\s\S]*?'notifier-editDynamicData'/",
@@ -56,9 +56,9 @@ class DynamicDataPermissionTest extends TestCase
         );
     }
 
-    public function testValidatorGatesOnDynamicDataEventType(): void
+    public function testValidatorAppliesOnlyToDynamicDataEventType(): void
     {
-        // The gate only applies to dynamic-data notifications.
+        // The check only applies to dynamic-data notifications.
         $this->assertMatchesRegularExpression(
             "/validateDynamicDataPermission[\s\S]*?'dynamic-data' !== \\\$this->eventType/",
             $this->notificationSource

@@ -262,7 +262,7 @@ class SettingsModelTest extends TestCase
 
     public function testLinkedinEnableOrganizationsDefaultsToFalse(): void
     {
-        // Organization posting is opt-in; it needs LinkedIn's gated Community
+        // Organization posting is opt-in; it needs LinkedIn's restricted Community
         // Management API approval, so it stays off until the admin turns it on.
         $defaults = $this->reflection->getDefaultProperties();
         $this->assertFalse($defaults['linkedinEnableOrganizations']);

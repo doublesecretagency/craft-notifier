@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  * Craft's lightswitch defaults its on-value to "1" when no `value` is set.
  * Everything downstream of these toggles compares against the string 'html':
  * the template's own reload check (`(... ?? 'markdown') == 'html'`) and the
- * dispatch gate (`'html' === (... ?? 'markdown')` in Dispatch.php). With the
+ * dispatch check (`'html' === (... ?? 'markdown')` in Dispatch.php). With the
  * default "1", toggling on stores "1", which never equals 'html', so the
  * switch silently reverts to off on every save and HTML rendering never fires.
  *

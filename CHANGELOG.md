@@ -5,6 +5,7 @@
 ### Fixed
 - Fixed bug where [custom field](https://plugins.doublesecretagency.com/notifier/custom-fields) values were empty in outbound messages.
 - Fixed bug where [Dynamic Recipients](https://plugins.doublesecretagency.com/notifier/recipients/types/dynamic-recipients) couldn't accept a single element.
+- Fixed bug where [manually triggered](https://plugins.doublesecretagency.com/notifier/events/manual-sending) notifications were logged without being sent.
 
 ## 3.2.1 - 2026-08-01
 

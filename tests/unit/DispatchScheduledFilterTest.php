@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
  *
  * Poll-driven trigger events (`date-reached`, `pending-to-live`) are selected
  * by the schedule runner, then run through the SAME event-type filters as
- * normal events: the type gate (Sections & Entry Types, Volumes, User Groups,
+ * normal events: the type filter (Sections & Entry Types, Volumes, User Groups,
  * Product Types, Calendars) and the optional field-level condition. An earlier
  * revision short-circuited the event-type switch for them with an early
  * return; that bypass is gone, so scheduled notifications honor their
@@ -36,9 +36,9 @@ class DispatchScheduledFilterTest extends TestCase
         );
     }
 
-    public function testConditionGateRunsAfterTheTypeSwitch(): void
+    public function testConditionCheckRunsAfterTheTypeSwitch(): void
     {
-        // The optional field-level condition is the final gate for every event
+        // The optional field-level condition is the final check for every event
         // that reaches the switch, scheduled events included.
         $this->assertMatchesRegularExpression(
             "/function filterByEventType\(\)[\s\S]*?switch\s*\([\s\S]*?return \\\$this->_matchEventCondition\(\);/",
@@ -46,13 +46,13 @@ class DispatchScheduledFilterTest extends TestCase
         );
     }
 
-    public function testSaveContextFiltersGatedToSaveEvents(): void
+    public function testSaveContextFiltersLimitedToSaveEvents(): void
     {
         // The save-context filter loop (first-save / draft / revision / new /
         // etc.) reads save-event shape; some filters even access $event->isNew,
         // which the scheduler's synthetic Event lacks. So _filterEntries() must
         // clear $filters for any non-save event before the loop, ensuring stale
-        // config can't mis-gate (or error on) a scheduled or lifecycle dispatch.
+        // config can't mis-filter (or error on) a scheduled or lifecycle dispatch.
         $this->assertMatchesRegularExpression(
             "/if \(!in_array\(\\\$this->notification->event, \['after-save', 'after-propagate'\], true\)\)[\s\S]*?\\\$filters = \[\];/",
             $this->dispatchSource

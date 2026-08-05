@@ -70,6 +70,11 @@ class Dispatch extends Model
     public bool $isTest = false;
 
     /**
+     * @var bool Whether this dispatch only checks whether a notification applies, rather than sending anything.
+     */
+    public bool $checkOnly = false;
+
+    /**
      * @var array Set of outbound envelopes.
      */
     public array $envelopes = [];
@@ -251,10 +256,10 @@ class Dispatch extends Model
 
         // If no sections or entry types are selected, warn and bail
         if (empty($sectionEntryTypes)) {
-            // Warn under the run-level parent so the misconfiguration is visible in the log
-            $this->notification->log->warning(Craft::t('notifier',
+            // Warn that the filters are misconfigured
+            $this->_filterWarning(Craft::t('notifier',
                 '[NO ENTRY TYPE] No sections or entry types are selected, this notification will never be triggered.'
-            ), $this->runEnvelope());
+            ));
             return false;
         }
 
@@ -328,10 +333,10 @@ class Dispatch extends Model
 
         // If no volumes are selected, warn and bail
         if (empty($volumes)) {
-            // Warn under the run-level parent so the misconfiguration is visible in the log
-            $this->notification->log->warning(Craft::t('notifier',
+            // Warn that the filters are misconfigured
+            $this->_filterWarning(Craft::t('notifier',
                 '[NO VOLUME] No volumes are selected, this notification will never be triggered.'
-            ), $this->runEnvelope());
+            ));
             return false;
         }
 
@@ -359,10 +364,10 @@ class Dispatch extends Model
 
         // If no user groups are selected, warn and bail
         if (empty($userGroups)) {
-            // Warn under the run-level parent so the misconfiguration is visible in the log
-            $this->notification->log->warning(Craft::t('notifier',
+            // Warn that the filters are misconfigured
+            $this->_filterWarning(Craft::t('notifier',
                 '[NO USER GROUP] No user groups are selected, this notification will never be triggered.'
-            ), $this->runEnvelope());
+            ));
             return false;
         }
 
@@ -410,10 +415,10 @@ class Dispatch extends Model
 
         // If no product types are selected, warn and bail
         if (empty($productTypes)) {
-            // Warn under the run-level parent so the misconfiguration is visible in the log
-            $this->notification->log->warning(Craft::t('notifier',
+            // Warn that the filters are misconfigured
+            $this->_filterWarning(Craft::t('notifier',
                 '[NO PRODUCT TYPE] No product types are selected, this notification will never be triggered.'
-            ), $this->runEnvelope());
+            ));
             return false;
         }
 
@@ -446,10 +451,10 @@ class Dispatch extends Model
 
         // If no digital product types are selected, warn and bail
         if (empty($productTypes)) {
-            // Warn under the run-level parent so the misconfiguration is visible in the log
-            $this->notification->log->warning(Craft::t('notifier',
+            // Warn that the filters are misconfigured
+            $this->_filterWarning(Craft::t('notifier',
                 '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.'
-            ), $this->runEnvelope());
+            ));
             return false;
         }
 
@@ -483,10 +488,10 @@ class Dispatch extends Model
 
         // If no digital product types are selected, warn and bail
         if (empty($productTypes)) {
-            // Warn under the run-level parent so the misconfiguration is visible in the log
-            $this->notification->log->warning(Craft::t('notifier',
+            // Warn that the filters are misconfigured
+            $this->_filterWarning(Craft::t('notifier',
                 '[NO DIGITAL PRODUCT TYPE] No digital product types are selected, this notification will never be triggered.'
-            ), $this->runEnvelope());
+            ));
             return false;
         }
 
@@ -522,10 +527,10 @@ class Dispatch extends Model
 
         // If no calendars are selected, warn and bail
         if (empty($calendars)) {
-            // Warn under the run-level parent so the misconfiguration is visible in the log
-            $this->notification->log->warning(Craft::t('notifier',
+            // Warn that the filters are misconfigured
+            $this->_filterWarning(Craft::t('notifier',
                 '[NO CALENDAR] No calendars are selected, this notification will never be triggered.'
-            ), $this->runEnvelope());
+            ));
             return false;
         }
 
@@ -558,10 +563,10 @@ class Dispatch extends Model
 
         // If no forms are selected, warn and bail
         if (empty($forms)) {
-            // Warn under the run-level parent so the misconfiguration is visible in the log
-            $this->notification->log->warning(Craft::t('notifier',
+            // Warn that the filters are misconfigured
+            $this->_filterWarning(Craft::t('notifier',
                 '[NO FORM] No forms are selected, this notification will never be triggered.'
-            ), $this->runEnvelope());
+            ));
             return false;
         }
 
@@ -2594,13 +2599,33 @@ class Dispatch extends Model
     }
 
     /**
-     * Get the run-level parent envelope for dispatch-wide failures, minting it once on first use.
+     * Warn that the event filters are misconfigured, unless this is only a check.
+     *
+     * A check asks whether a notification applies to an element, so it must not
+     * create an envelope or write to the log the way a real dispatch does.
+     *
+     * @param string $message
+     * @return void
+     */
+    private function _filterWarning(string $message): void
+    {
+        // If only checking, skip the log
+        if ($this->checkOnly) {
+            return;
+        }
+
+        // Warn under the run-level parent so the misconfiguration is visible in the log
+        $this->notification->log->warning($message, $this->runEnvelope());
+    }
+
+    /**
+     * Get the run-level parent envelope for dispatch-wide failures, creating it once on first use.
      *
      * @return int|null
      */
     public function runEnvelope(): ?int
     {
-        // If already minted, return the cached ID
+        // If already created, return the cached ID
         if (null !== $this->_runEnvelopeId) {
             return $this->_runEnvelopeId;
         }

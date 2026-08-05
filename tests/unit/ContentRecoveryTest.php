@@ -104,7 +104,7 @@ class ContentRecoveryTest extends TestCase
 
     /**
      * updateElements() echoes per-element progress with bare `echo` statements,
-     * which are NOT gated by Yii's $compact flag. Unbuffered, that output lands
+     * which are NOT controlled by Yii's $compact flag. Unbuffered, that output lands
      * in the HTTP response body and corrupts any JSON response.
      */
     public function testBuffersTheMigrationsProgressOutput(): void
@@ -209,7 +209,7 @@ class ContentRecoveryTest extends TestCase
                 '/if \(!\$request->getIsConsoleRequest\(\) && !\$request->getIsCpRequest\(\)\) \{\s*return;\s*\}/',
                 static::$source
             ),
-            'The drained-table sweep and the unrecoverable warning must both be admin-gated.'
+            'The drained-table sweep and the unrecoverable warning must both require an admin.'
         );
     }
 

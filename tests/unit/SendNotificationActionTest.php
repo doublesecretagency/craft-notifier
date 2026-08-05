@@ -96,7 +96,7 @@ class SendNotificationActionTest extends TestCase
 
     public function testOnlyFiresManuallyTriggeredNotifications(): void
     {
-        // performAction and the picker query both gate on the
+        // performAction and the picker query both require the
         // `manually-triggered` event value.
         $this->assertStringContainsString("'manually-triggered'", $this->actionSource);
     }
@@ -104,7 +104,7 @@ class SendNotificationActionTest extends TestCase
     public function testPerformActionRechecksPermission(): void
     {
         // Defense in depth: a crafted perform-action POST must still hit
-        // the notifier-sendManualNotifications permission gate.
+        // the notifier-sendManualNotifications permission check.
         $this->assertStringContainsString("'notifier-sendManualNotifications'", $this->actionSource);
     }
 

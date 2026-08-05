@@ -711,7 +711,7 @@ class OptionsTest extends TestCase
     public function testFormieSubmissionsAppearsInAllThreeEventTypeLookups(): void
     {
         // Formie is a third-party plugin event type, but its keys must still be
-        // present in every lookup (the Twig install-gate hides them at render
+        // present in every lookup (the Twig install check hides them at render
         // time when Formie is absent, not by omitting them from Options).
         $this->assertArrayHasKey('formie-submissions', Options::EVENT_TYPE);
         $this->assertArrayHasKey('formie-submissions', Options::EVENT_TYPE_GROUPED);

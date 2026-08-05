@@ -530,7 +530,7 @@ class OutboundBluesky extends BaseEnvelope
             ];
 
         } catch (Throwable $exception) {
-            // Card-building is an enhancement, never a gate - log and move on
+            // Card-building is an enhancement, never a requirement - log and move on
             $notification->log->warning(
                 Craft::t('notifier', '[LINK PREVIEW SKIPPED] {reason}', ['reason' => $exception->getMessage()]),
                 $this->envelopeId

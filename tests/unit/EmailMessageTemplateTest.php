@@ -222,7 +222,7 @@ class EmailMessageTemplateTest extends TestCase
 
     public function testModeIsPersistedAsMessageConfigEmailMessageMode(): void
     {
-        // The new sibling JSON key, gated by the server-side validator.
+        // The new sibling JSON key, enforced by the server-side validator.
         $this->assertMatchesRegularExpression(
             '/<input[^>]*name="messageConfig\[emailMessageMode\]"[^>]*value="\{\{\s*mode\s*\}\}"/',
             $this->templateSource

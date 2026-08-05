@@ -70,7 +70,7 @@ class SetMediaNodeTest extends TestCase
     public function testOnlyEvaluatesAnArgumentWhenOneWasGiven(): void
     {
         // A bare {% setMedia %} has no items node, so the argument evaluation and
-        // collection are gated on the node being present.
+        // collection depend on the node being present.
         $this->assertStringContainsString("if (\$this->hasNode('items')) {", $this->source);
     }
 

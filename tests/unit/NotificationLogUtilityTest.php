@@ -43,7 +43,7 @@ class NotificationLogUtilityTest extends TestCase
     public function testIdMatchesUtilityHandle(): void
     {
         // The id() return must stay 'notification-log', the permission
-        // gating in NotifierPlugin reads it to scope visibility.
+        // check in NotifierPlugin reads it to scope visibility.
         $this->assertSame('notification-log', NotificationLog::id());
     }
 

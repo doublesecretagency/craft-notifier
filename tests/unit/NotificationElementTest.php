@@ -17,7 +17,7 @@ use ReflectionNamedType;
  * extension table. Its public surface is large (every Element override)
  * but the parts that matter for the plugin's behavior are: the
  * persisted attributes, the query / condition wiring, the permission
- * gates, and the task-recipient / dynamic-recipients validation.
+ * checks, and the task-recipient / dynamic-recipients validation.
  */
 class NotificationElementTest extends TestCase
 {
@@ -247,7 +247,7 @@ class NotificationElementTest extends TestCase
     }
 
     // ========================================================================= //
-    // Permission gating
+    // Permission checks
     // ========================================================================= //
 
     public function testCanViewChecksViewPermission(): void
@@ -296,12 +296,12 @@ class NotificationElementTest extends TestCase
     }
 
     // ========================================================================= //
-    // Dynamic Recipients server-side gate
+    // Dynamic Recipients server-side check
     // ========================================================================= //
 
     public function testValidateDynamicRecipientsPermissionExists(): void
     {
-        // Server-side gate on the Dynamic Recipients dropdown, the CP
+        // Server-side check on the Dynamic Recipients dropdown, the CP
         // template hides the option, but a crafted POST could bypass that.
         $this->assertTrue(
             $this->reflection->hasMethod('validateDynamicRecipientsPermission')
@@ -346,7 +346,7 @@ class NotificationElementTest extends TestCase
 
     public function testValidateEmailMessageModeExists(): void
     {
-        // Validator backs the rule that gates messageConfig[emailMessageMode]
+        // Validator backs the rule that controls messageConfig[emailMessageMode]
         // to 'code' or 'rich' and normalizes missing values to 'code' for
         // backward compatibility with notifications saved before the toggle.
         $this->assertTrue(

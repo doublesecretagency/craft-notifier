@@ -4,7 +4,7 @@ description: Trigger a notification when a Digital Products License is created o
 
 # When a license is saved
 
-Sends a notification when **a Digital Product License is saved**. Covers both new licenses (usually minted the moment a customer's order is paid) and updates to existing ones.
+Sends a notification when **a Digital Product License is saved**. Covers both new licenses (usually created the moment a customer's order is paid) and updates to existing ones.
 
 This is the trigger to reach for when you want to email customers their license key. The License element shows up on `event.sender`, so the key, the buyer's email, the product, and the order are all available directly in your Twig body.
 
@@ -24,7 +24,7 @@ The `object` variable (and its `license` alias) is the saved [License](https://g
 
 - `licenseKey` (string) - the actual key the customer uses
 - `getProduct()` - the Digital Product the license is tied to
-- `getOrder()` - the Commerce Order that minted the license
+- `getOrder()` - the Commerce Order that created the license
 - `getUser()` - the Craft User (if the buyer was registered)
 - `ownerName`, `ownerEmail` - the buyer (guest checkout falls back to these)
 - `getLicensedTo()` - convenience: returns the user's email or the guest email

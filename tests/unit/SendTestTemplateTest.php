@@ -51,7 +51,7 @@ class SendTestTemplateTest extends TestCase
 
     public function testButtonStillRequiresTestPermission(): void
     {
-        // The dedicated test permission gate must remain intact
+        // The dedicated test permission check must remain intact
         $this->assertStringContainsString(
             "currentUser.can('notifier-testNotifications')",
             self::$source

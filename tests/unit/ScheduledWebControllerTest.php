@@ -72,7 +72,7 @@ class ScheduledWebControllerTest extends TestCase
 
     public function testValidatesSharedSecretFromSettings(): void
     {
-        // The endpoint is gated on a shared secret read from the plugin
+        // The endpoint requires a shared secret read from the plugin
         // settings. App::parseEnv() resolves $ENV_VAR references; getSettings()
         // applies any override from config/notifier.php.
         $this->assertStringContainsString('->scheduledToken', $this->controllerSource);

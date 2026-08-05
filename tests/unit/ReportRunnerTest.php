@@ -106,7 +106,7 @@ class ReportRunnerTest extends TestCase
         $this->assertStringContainsString('RecurringSchedule::nextRunAfter(', $this->source);
     }
 
-    public function testGatesOnTheRecurringFlag(): void
+    public function testRequiresTheRecurringFlag(): void
     {
         // Whether a notification fires on a schedule is driven by the
         // eventConfig.recurring lightswitch, not by the event value.

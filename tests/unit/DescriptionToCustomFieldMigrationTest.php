@@ -13,7 +13,7 @@ use ReflectionClass;
  * column into a project-config-backed custom field across two Craft majors and
  * the dev-vs-production deploy split. These tests pin the safety guards at the
  * source level (Element API, not raw content writes; config-presence
- * discriminator, not readOnly; field-existence gate; fault-isolated backfill).
+ * discriminator, not readOnly; field-existence check; fault-isolated backfill).
  */
 class DescriptionToCustomFieldMigrationTest extends TestCase
 {
@@ -115,7 +115,7 @@ class DescriptionToCustomFieldMigrationTest extends TestCase
     public function testEnsureFieldDoesNotBranchOnReadOnly(): void
     {
         // The readOnly flag is unreliable during migrations (Craft lifts it when config
-        // is pending), so it must not gate the create-vs-apply decision.
+        // is pending), so it must not drive the create-vs-apply decision.
         $this->assertDoesNotMatchRegularExpression(
             '/_ensureDescriptionField[\s\S]*?->readOnly/',
             $this->source
@@ -125,7 +125,7 @@ class DescriptionToCustomFieldMigrationTest extends TestCase
     public function testAppliesDeployedFieldInsteadOfCreatingDuplicate(): void
     {
         // When the field is already in config, apply it via processConfigChanges rather
-        // than saveField (which would mint a second field).
+        // than saveField (which would create a second field).
         $this->assertMatchesRegularExpression(
             '/null !== \$incomingUid[\s\S]*?processConfigChanges\(.fields\./',
             $this->source
@@ -152,7 +152,7 @@ class DescriptionToCustomFieldMigrationTest extends TestCase
         );
     }
 
-    public function testFieldExistenceGateBeforeDestructiveSteps(): void
+    public function testFieldExistenceCheckBeforeDestructiveSteps(): void
     {
         // If the field still isn't present, skip the backfill + column drop and
         // return (never throw), so no Description data is stranded.
@@ -165,7 +165,7 @@ class DescriptionToCustomFieldMigrationTest extends TestCase
     public function testColumnDropIsGuarded(): void
     {
         // The native column is only dropped when it still exists (and after the
-        // field-existence gate passed).
+        // field-existence check passed).
         $this->assertMatchesRegularExpression(
             "/columnExists\(self::TABLE,\s*'description'\)[\s\S]*?dropColumn\(self::TABLE,\s*'description'\)/",
             $this->source

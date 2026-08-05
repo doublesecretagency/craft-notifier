@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
  * Structural tests for the RSS bypass in Dispatch.
  *
  * The RSS Feed event type has no element subject, so the standard
- * `_filterEntries() / _filterAssets() / _filterUsers()` membership gates
+ * `_filterEntries() / _filterAssets() / _filterUsers()` element filters
  * cannot apply -- the runner has already selected the exact items to
  * dispatch. `filterByEventType()` must short-circuit to `true` for
  * `eventType === 'feed'` before the event-type switch is reached;

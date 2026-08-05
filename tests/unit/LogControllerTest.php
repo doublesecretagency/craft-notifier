@@ -109,7 +109,7 @@ class LogControllerTest extends TestCase
 
     public function testGetNotificationRequiresViewLogPermission(): void
     {
-        // Reading log details about a notification is gated behind the view
+        // Reading log details about a notification requires the view
         // permission so non-auditors can't enumerate event traffic via the
         // utility's lookup endpoint.
         $this->assertMatchesRegularExpression(
@@ -130,7 +130,7 @@ class LogControllerTest extends TestCase
 
     public function testDeleteDayRequiresDeleteLogPermission(): void
     {
-        // Day-wide delete is a bulk destructive op; same gate as single delete.
+        // Day-wide delete is a bulk destructive op; same permission as single delete.
         $this->assertMatchesRegularExpression(
             '/actionDeleteDay[\s\S]*?requirePermission\([\'"]notifier-deleteNotificationLog[\'"]\)/',
             $this->controllerSource

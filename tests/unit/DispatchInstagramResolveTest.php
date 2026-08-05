@@ -35,7 +35,7 @@ class DispatchInstagramResolveTest extends TestCase
 
     public function testResolvesIgUserIdOnDemandBeforeTheCredentialCheck(): void
     {
-        // Inside _compileInstagram, the fallback must: gate on an empty
+        // Inside _compileInstagram, the fallback must: check for an empty
         // instagramIgUserId, resolve via MetaGraph::resolveIgUserId(), assign
         // the resolved id back, and do all of it BEFORE the "has no Instagram
         // credentials" guard that would otherwise skip the recipient.

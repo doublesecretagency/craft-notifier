@@ -114,7 +114,7 @@ class NotifierPluginRegistrationTest extends TestCase
             '/onAdd\(FieldLayouts::PATH[\s\S]*?onUpdate\(FieldLayouts::PATH[\s\S]*?onRemove\(FieldLayouts::PATH/',
             $this->pluginSource
         );
-        // The handler registration must run unconditionally (not CP-gated) so
+        // The handler registration must run unconditionally (not limited to the CP) so
         // console project-config applies rebuild the layout.
         $this->assertMatchesRegularExpression(
             '/_registerProjectConfigEventHandlers\(\)[\s\S]*?getIsCpRequest\(\)/',
@@ -194,7 +194,7 @@ class NotifierPluginRegistrationTest extends TestCase
 
     public function testWiringTabPermissionsAreNestedUnderSave(): void
     {
-        // The three wiring-tab permissions gate editing the Event / Message /
+        // The three wiring-tab permissions control editing the Event / Message /
         // Recipients tabs; they nest under saveNotifications so the Meta tab stays
         // always-editable for anyone who can save.
         foreach (['notifier-editEventTab', 'notifier-editMessageTab', 'notifier-editRecipientsTab'] as $perm) {
@@ -386,7 +386,7 @@ class NotifierPluginRegistrationTest extends TestCase
         $this->assertStringContainsString('NotificationLog::class', $this->pluginSource);
     }
 
-    public function testNotificationLogUtilityIsGatedByViewLogPermission(): void
+    public function testNotificationLogUtilityRequiresViewLogPermission(): void
     {
         // Within _registerUtilities(), the registration must be guarded by a
         // notifier-viewNotificationLog permission check. Without this, any
@@ -441,7 +441,7 @@ class NotifierPluginRegistrationTest extends TestCase
     // CP-only guards
     // ========================================================================= //
 
-    public function testCpOnlyRegistrationsAreGated(): void
+    public function testCpOnlyRegistrationsAreLimitedToTheCp(): void
     {
         // Routes / utilities / table attributes are CP-only, they should be
         // wrapped in a getIsCpRequest() check so console / queue requests

@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  * manual trigger off, so they get their own on-demand Send button instead of the
  * test button. Like the test button, it stays hidden until the notification has
  * been saved at least once (the `not notification.isUnpublishedDraft` clause),
- * and it gates on the manual-send permission rather than the test permission.
+ * and it requires the manual-send permission rather than the test permission.
  *
  * The CP edit screen picks send-report vs send-test in PHP before loading either
  * template, so this test also pins that branch in both call sites.
@@ -55,7 +55,7 @@ class SendReportTemplateTest extends TestCase
 
     public function testButtonRequiresManualSendPermission(): void
     {
-        // The manual-send permission gate must remain intact (NOT the test permission)
+        // The manual-send permission check must remain intact (NOT the test permission)
         $this->assertStringContainsString(
             "currentUser.can('notifier-sendManualNotifications')",
             self::$source

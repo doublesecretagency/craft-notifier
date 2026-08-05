@@ -64,7 +64,7 @@ class NotificationElementSaveTimeFeedSeedingTest extends TestCase
     {
         // POST values land on $record (not $this) during afterSave. Without syncing back,
         // $this->eventConfig still reflects the load-time state and the feed-seeding compare
-        // would see OLD vs OLD on a URL change (gate falsely bails). Also affects
+        // would see OLD vs OLD on a URL change (the check falsely bails). Also affects
         // feedRunner->seedNotification($this) which reads the URL from $this->eventConfig.
         // The sync must happen after $record->save(false) and before _ensureFeedSeeding.
         $this->assertMatchesRegularExpression(
@@ -154,7 +154,7 @@ class NotificationElementSaveTimeFeedSeedingTest extends TestCase
         $this->assertStringNotContainsString('throw', $matches[1]);
     }
 
-    public function testEnsureFeedSeedingHasNoShortCircuitGate(): void
+    public function testEnsureFeedSeedingHasNoShortCircuitCheck(): void
     {
         // The earlier "if (!$eventTypeChanged && !$urlChanged) return" short-circuit was
         // removed deliberately. seedNotification is idempotent (it bails when the SEED_MARKER
@@ -170,7 +170,7 @@ class NotificationElementSaveTimeFeedSeedingTest extends TestCase
         $this->assertStringNotContainsString(
             $needle,
             $this->source,
-            "Source should no longer contain '$needle'. The short-circuit gate was removed in favor of seedNotification's internal idempotency."
+            "Source should no longer contain '$needle'. The short-circuit check was removed in favor of seedNotification's internal idempotency."
         );
     }
 }
