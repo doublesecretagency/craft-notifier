@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.2.2 - 2026-08-05
 
 ### Fixed
 - Fixed bug where [custom field](https://plugins.doublesecretagency.com/notifier/custom-fields) values were empty in outbound messages.
