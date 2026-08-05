@@ -12,6 +12,7 @@ const sections = [
   { text: 'Events', link: '/events/', note: 'Each notification is triggered by a specific event.' },
   { text: 'Messages', link: '/messages/', note: 'A wide variety of message types are supported.' },
   { text: 'Recipients', link: '/recipients/', note: 'Select which recipients will receive the message.' },
+  { text: 'Guides', link: '/guides/', note: 'See how to wire up some common solutions.' },
 ]
 
 // Open the existing local search modal by clicking the nav search button
