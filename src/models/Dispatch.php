@@ -2541,6 +2541,8 @@ class Dispatch extends Model
 
         // Configure special variables
         $vars = [
+            // Notification Variables
+            'notification' => $this->notification,
             // Event Variables
             'event' => $this->event,
             'object' => ($this->data['object'] ?? $this->event->sender),

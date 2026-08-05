@@ -861,4 +861,21 @@ class DispatchModelTest extends TestCase
             $this->dispatchSource
         );
     }
+
+    public function testParseTwigExposesTheNotificationVariable(): void
+    {
+        // Custom fields are documented as `notification.<handle>` in message
+        // templates, so `notification` must be one of the variables handed to
+        // Twig by _parseTwig().
+        //
+        // Regression test for the 2026-08-04 bug: `notification` was present in
+        // the $config array (which _parseTwig only extract()s into PHP scope),
+        // but never in the $vars array actually passed to the renderer. Twig
+        // resolved it to null, so `notification.<handle>` silently rendered
+        // empty in every outbound message, with no error logged.
+        $this->assertMatchesRegularExpression(
+            "/\\\$vars = \[[\s\S]*?'notification' => \\\$this->notification,[\s\S]*?\];/",
+            $this->dispatchSource
+        );
+    }
 }
