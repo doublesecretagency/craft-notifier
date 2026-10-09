@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.2.3 - 2026-10-08
 
 ### Added
 - Added support for clickable hashtags in [Bluesky](https://plugins.doublesecretagency.com/notifier/messages/types/bluesky) posts.
