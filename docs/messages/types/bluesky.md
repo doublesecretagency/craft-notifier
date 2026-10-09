@@ -18,7 +18,7 @@ Before posting messages to Bluesky, add at least one account via [Settings → B
 
 ### Post Body
 
-Plain text only. Max 300 characters. URLs and `@handle.tld` mentions will be automatically linked. Hashtags will not.
+Plain text only. Max 300 characters. URLs, `@handle.tld` mentions and `#hashtags` will be automatically linked.
 
 ### Image Attachment
 

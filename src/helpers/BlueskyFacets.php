@@ -12,7 +12,7 @@
 namespace doublesecretagency\notifier\helpers;
 
 /**
- * Builds Bluesky facets for the URLs and mentions in a post's text.
+ * Builds Bluesky facets for the URLs, mentions and hashtags in a post's text.
  *
  * @since 3.0.0
  */
@@ -30,6 +30,16 @@ abstract class BlueskyFacets
     private const MENTION_REGEX = '/@([a-zA-Z0-9](?:[a-zA-Z0-9\-_.]*[a-zA-Z0-9])?\.[a-zA-Z]{2,})/u';
 
     /**
+     * @var string Hashtag detection pattern. A # at the start or after whitespace, then anything up to the next space.
+     */
+    private const TAG_REGEX = '/(?<=^|\s)#([^\s#]+)/u';
+
+    /**
+     * @var int Longest tag Bluesky accepts, in graphemes, not counting the #.
+     */
+    private const TAG_MAX_LENGTH = 64;
+
+    /**
      * @var string Trailing punctuation we strip from URL captures (Markdown / sentence endings).
      */
     private const URL_TRAILING_TRIM = ".,;:!?)";
@@ -43,10 +53,11 @@ abstract class BlueskyFacets
      */
     public static function build(string $text, ?callable $resolveHandleToDid = null): array
     {
-        // Return the merged URL and mention facets
+        // Return the merged URL, mention and hashtag facets
         return array_merge(
             static::detectLinks($text),
             static::detectMentions($text, $resolveHandleToDid),
+            static::detectTags($text),
         );
     }
 
@@ -140,6 +151,59 @@ abstract class BlueskyFacets
                     [
                         '$type' => 'app.bsky.richtext.facet#mention',
                         'did'   => $did,
+                    ],
+                ],
+            ];
+
+        }
+
+        return $facets;
+    }
+
+    /**
+     * Detect hashtag facets in the text.
+     *
+     * Bluesky never parses hashtags out of the text itself, so a tag without a facet
+     * is posted as plain text.
+     *
+     * @param string $text
+     * @return array ATProto facet records for the hashtags in the text.
+     */
+    public static function detectTags(string $text): array
+    {
+        // Initialize facets array
+        $facets = [];
+
+        // Run hashtag regex over the text
+        if (!preg_match_all(static::TAG_REGEX, $text, $matches, PREG_OFFSET_CAPTURE)) {
+            return $facets;
+        }
+
+        // Loop through each match - $matches[1] is the tag without its #
+        foreach ($matches[1] as [$tag, $byteOffset]) {
+
+            // Strip trailing punctuation (sentence endings)
+            $tag = preg_replace('/\p{P}+$/u', '', $tag);
+
+            // If empty, all digits, or too long, it isn't a tag
+            if ('' === $tag || ctype_digit($tag) || static::graphemeCount($tag) > static::TAG_MAX_LENGTH) {
+                continue;
+            }
+
+            // Get the UTF-8 byte offsets including the leading #
+            $byteStart = $byteOffset - 1;
+            $byteEnd   = $byteOffset + strlen($tag);
+
+            // Emit facet
+            $facets[] = [
+                'index' => [
+                    'byteStart' => $byteStart,
+                    'byteEnd'   => $byteEnd,
+                ],
+                'features' => [
+                    [
+                        '$type' => 'app.bsky.richtext.facet#tag',
+                        'tag'   => $tag,
                     ],
                 ],
             ];
