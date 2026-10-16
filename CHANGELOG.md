@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.2.4 - 2026-10-15
 
 ### Fixed
 - Fixed a bug with [Formie](https://plugins.doublesecretagency.com/notifier/events/types/formie/) 4 support. ([#34](https://github.com/doublesecretagency/craft-notifier/issues/34))
