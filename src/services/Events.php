@@ -463,12 +463,27 @@ class Events extends Component
      */
     private function _registerFormieSubmissionEvents(): void
     {
-        // When a form is submitted
-        Event::on(
-            Submissions::class,
-            Submissions::EVENT_AFTER_SUBMISSION,
-            [FormieSubmissionEvents::class, 'afterSubmission']
-        );
+        // If Formie 3 or earlier
+        if (defined(Submissions::class.'::EVENT_AFTER_SUBMISSION')) {
+            // When a form is submitted
+            Event::on(
+                Submissions::class,
+                Submissions::EVENT_AFTER_SUBMISSION,
+                [FormieSubmissionEvents::class, 'afterSubmission']
+            );
+            // Bail
+            return;
+        }
+
+        // If Formie 4 or later
+        if (defined(Submission::class.'::EVENT_AFTER_COMPLETE')) {
+            // When a submission is completed
+            Event::on(
+                Submission::class,
+                Submission::EVENT_AFTER_COMPLETE,
+                [FormieSubmissionEvents::class, 'afterComplete']
+            );
+        }
     }
 
     // ========================================================================= //

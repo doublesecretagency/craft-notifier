@@ -701,13 +701,47 @@ class EventsServiceTest extends TestCase
 
     public function testRegistersFormieSubmissionEvent(): void
     {
-        // Formie fires its "after submission" event on the Submissions SERVICE,
+        // Formie 3 fires its "after submission" event on the Submissions SERVICE,
         // not the Submission element, so the listener target is Submissions::class.
         // Mirrors the afterActivateUser / afterAssignToGroups service-event shape.
         $this->assertMatchesRegularExpression(
             '/Submissions::class[\s\S]*?Submissions::EVENT_AFTER_SUBMISSION[\s\S]*?FormieSubmissionEvents::class[\s\S]*?afterSubmission/',
             $this->eventsSource
         );
+    }
+
+    public function testRegistersFormie4CompleteEvent(): void
+    {
+        // Formie 4 removed Submissions::EVENT_AFTER_SUBMISSION (no compatibility
+        // bridge) and fires Submission::EVENT_AFTER_COMPLETE on the element instead.
+        // Regression for issue #34: an unguarded reference fataled every request.
+        $this->assertMatchesRegularExpression(
+            '/Submission::class[\s\S]*?Submission::EVENT_AFTER_COMPLETE[\s\S]*?FormieSubmissionEvents::class[\s\S]*?afterComplete/',
+            $this->eventsSource
+        );
+    }
+
+    public function testFormieEventConstantsAreFeatureDetected(): void
+    {
+        // Each version's constant must be checked with defined() BEFORE it is
+        // referenced, otherwise the missing one throws "Undefined constant" at
+        // boot. Formie 3 is checked first and returns, so only one listener lands.
+        $method = $this->reflection->getMethod('_registerFormieSubmissionEvents');
+        $lines = array_slice(
+            explode("\n", $this->eventsSource),
+            $method->getStartLine() - 1,
+            $method->getEndLine() - $method->getStartLine() + 1
+        );
+        $body = implode("\n", $lines);
+
+        $this->assertMatchesRegularExpression(
+            "/defined\(Submissions::class\.'::EVENT_AFTER_SUBMISSION'\)[\s\S]*?Submissions::EVENT_AFTER_SUBMISSION,[\s\S]*?return;[\s\S]*?defined\(Submission::class\.'::EVENT_AFTER_COMPLETE'\)[\s\S]*?Submission::EVENT_AFTER_COMPLETE,/",
+            $body
+        );
+
+        // Each constant is referenced exactly once, inside its own guard
+        $this->assertSame(1, substr_count($body, 'Submissions::EVENT_AFTER_SUBMISSION,'));
+        $this->assertSame(1, substr_count($body, 'Submission::EVENT_AFTER_COMPLETE,'));
     }
 
     public function testImportsFormieClasses(): void

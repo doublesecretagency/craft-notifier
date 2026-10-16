@@ -84,7 +84,63 @@ class FormieSubmissionEventsTest extends TestCase
         // absent on Formie 2.0.x and would throw UnknownPropertyException).
         $this->assertStringContainsString("'object'  => \$submission", $this->helperSource);
         $this->assertStringContainsString("'form'    => \$submission->getForm()", $this->helperSource);
-        $this->assertStringContainsString("'success' => (bool) \$event->success", $this->helperSource);
+        $this->assertStringContainsString("'success' => \$success", $this->helperSource);
+    }
+
+    public function testFormie3HandlerPassesFormiesSuccessFlag(): void
+    {
+        // On Formie 3, success comes straight from the SubmissionEvent
+        $this->assertStringContainsString(
+            'static::_sendAll($event, $submission, (bool) $event->success);',
+            $this->helperSource
+        );
+    }
+
+    public function testImportsFormie4CompleteEvent(): void
+    {
+        // The Formie 4 handler is typed against SubmissionCompleteEvent. The class
+        // doesn't exist on Formie 3, which is safe because the handler is only
+        // registered when Submission::EVENT_AFTER_COMPLETE is defined.
+        $this->assertStringContainsString('use verbb\\formie\\events\\SubmissionCompleteEvent;', $this->helperSource);
+    }
+
+    public function testAfterCompleteIsPublicStaticVoid(): void
+    {
+        $this->assertTrue($this->reflection->hasMethod('afterComplete'));
+        $m = $this->reflection->getMethod('afterComplete');
+        $this->assertTrue($m->isPublic());
+        $this->assertTrue($m->isStatic());
+        $this->assertSame('void', (string) $m->getReturnType());
+        $params = $m->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertSame('event', $params[0]->getName());
+    }
+
+    public function testAfterCompleteSkipsNonVisitorCompletions(): void
+    {
+        // Formie 4 also fires afterComplete for CP saves and imports, which carry
+        // no workflow context. Formie 3 never fired for those, so skip them to
+        // keep "When a form is submitted" meaning a visitor submission.
+        $this->assertStringContainsString('if (!$event->context) {', $this->helperSource);
+    }
+
+    public function testAfterCompleteTreatsSpamAsFailure(): void
+    {
+        // Formie 4 only completes a submission once payment clears, so the only
+        // failed outcome that still reaches afterComplete is a saved spam submission.
+        $this->assertStringContainsString(
+            'static::_sendAll($event, $submission, !$submission->isSpam);',
+            $this->helperSource
+        );
+    }
+
+    public function testBothHandlersShareOneSender(): void
+    {
+        // A single private sender keeps the notification lookup and data payload
+        // identical across Formie versions.
+        $this->assertTrue($this->reflection->hasMethod('_sendAll'));
+        $this->assertTrue($this->reflection->getMethod('_sendAll')->isPrivate());
+        $this->assertSame(1, substr_count($this->helperSource, "'eventType' => 'formie-submissions'"));
     }
 
     public function testDelegatesToMessagesService(): void
