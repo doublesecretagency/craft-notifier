@@ -147,4 +147,36 @@ class OutboundEmailTest extends TestCase
         $this->assertStringContainsString('Successfully sent an email to {name}.', $source);
         $this->assertStringContainsString("'name' => \$this->recipientName", $source);
     }
+
+    // ========================================================================= //
+    // Plain-text part (#35)
+    // ========================================================================= //
+
+    public function testTextBodyIsNotTheRawHtml(): void
+    {
+        // Regression for #35: the text part used to receive the same HTML
+        // as the HTML part, so text-only clients saw raw markup.
+        $path = dirname(__DIR__, 2) . '/src/models/OutboundEmail.php';
+        $source = file_get_contents($path);
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/setTextBody\(\s*\$this->body\s*\)/',
+            $source
+        );
+    }
+
+    public function testTextBodyIsConvertedFromTheHtmlBody(): void
+    {
+        // The text part comes from EmailText, and is only attached when
+        // the conversion leaves something behind (an image-only email
+        // goes out as HTML only).
+        $path = dirname(__DIR__, 2) . '/src/models/OutboundEmail.php';
+        $source = file_get_contents($path);
+
+        $this->assertStringContainsString('EmailText::fromHtml($this->body)', $source);
+        $this->assertMatchesRegularExpression(
+            '/if\s*\(\s*\'\'\s*!==\s*\$textBody\s*\)\s*\{\s*\$email->setTextBody\(\$textBody\);/',
+            $source
+        );
+    }
 }

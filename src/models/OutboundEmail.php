@@ -14,6 +14,7 @@ namespace doublesecretagency\notifier\models;
 use Craft;
 use craft\mail\Message as Email;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\helpers\EmailText;
 use doublesecretagency\notifier\helpers\Notifier;
 use yii\base\InvalidConfigException;
 
@@ -79,7 +80,14 @@ class OutboundEmail extends BaseEnvelope
         $email->setTo($this->to);
         $email->setSubject($this->subject);
         $email->setHtmlBody($this->body);
-        $email->setTextBody($this->body);
+
+        // Get the plain-text version of the body
+        $textBody = EmailText::fromHtml($this->body);
+
+        // If any text remains, attach the plain-text version
+        if ('' !== $textBody) {
+            $email->setTextBody($textBody);
+        }
 
         // Send email
         $success = Craft::$app->getMailer()->send($email);

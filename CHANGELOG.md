@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed bug where the plain-text version of [emails](https://plugins.doublesecretagency.com/notifier/messages/types/email) contained raw HTML. ([#35](https://github.com/doublesecretagency/craft-notifier/issues/35))
+
 ## 3.2.4 - 2026-10-15
 
 ### Fixed
