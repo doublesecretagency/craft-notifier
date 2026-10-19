@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[NIEPRAWIDŁOWE DANE] Odbiorcy brakuje danych logowania Facebook.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[NIEPRAWIDŁOWE DANE] Odbiorcy brakuje danych logowania X (Twitter).',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[NIEPRAWIDŁOWE DANE] Nie można opublikować; odbiorcy brakuje danych logowania.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[ANULOWANO] Wiadomość e-mail została anulowana przez wtyczkę lub moduł.',
     '[EMPTY BODY] The Discord message body is empty.' => '[PUSTA TREŚĆ] Treść wiadomości Discord jest pusta.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[PUSTA TREŚĆ] Treść posta na Facebooku jest pusta.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[PUSTA TREŚĆ] Ładunek MQTT jest pusta.',

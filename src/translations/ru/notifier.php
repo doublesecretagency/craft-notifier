@@ -735,6 +735,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[НЕВЕРНЫЕ УЧЁТНЫЕ ДАННЫЕ] У получателя нет учётных данных Facebook.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[НЕВЕРНЫЕ УЧЁТНЫЕ ДАННЫЕ] У получателя нет учётных данных X (Twitter).',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[НЕВЕРНЫЕ УЧЁТНЫЕ ДАННЫЕ] Не удалось опубликовать: у получателя нет учётных данных.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[ОТМЕНЕНО] Письмо отменено плагином или модулем.',
     '[EMPTY BODY] The Discord message body is empty.' => '[ПУСТОЙ ТЕКСТ] Текст сообщения Discord пуст.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[ПУСТОЙ ТЕКСТ] Текст публикации Facebook пуст.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[ПУСТОЙ ТЕКСТ] Полезная нагрузка MQTT пуст.',

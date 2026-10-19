@@ -14,6 +14,7 @@ namespace doublesecretagency\notifier\models;
 use Craft;
 use craft\mail\Message as Email;
 use doublesecretagency\notifier\elements\Notification;
+use doublesecretagency\notifier\events\SendEmailEvent;
 use doublesecretagency\notifier\helpers\EmailText;
 use doublesecretagency\notifier\helpers\Notifier;
 use yii\base\InvalidConfigException;
@@ -25,6 +26,16 @@ use yii\base\InvalidConfigException;
  */
 class OutboundEmail extends BaseEnvelope
 {
+
+    /**
+     * @event SendEmailEvent The event that is triggered before an email is sent.
+     */
+    public const EVENT_BEFORE_SEND = 'beforeSend';
+
+    /**
+     * @event SendEmailEvent The event that is triggered after an email is sent.
+     */
+    public const EVENT_AFTER_SEND = 'afterSend';
 
     /**
      * @var string|null Recipient email address.
@@ -89,8 +100,32 @@ class OutboundEmail extends BaseEnvelope
             $email->setTextBody($textBody);
         }
 
+        // Get the before-send event
+        $event = new SendEmailEvent([
+            'message' => $email,
+            'notification' => $notification,
+            'envelope' => $this,
+        ]);
+
+        // Give plugins and modules a chance to modify or cancel the email
+        $this->trigger(static::EVENT_BEFORE_SEND, $event);
+
+        // If the email was canceled, log warning and bail
+        if (!$event->isValid) {
+            $notification->log->warning(Craft::t('notifier', '[CANCELED] The email was canceled by a plugin or module.'), $this->envelopeId);
+            return false;
+        }
+
         // Send email
         $success = Craft::$app->getMailer()->send($email);
+
+        // Let plugins and modules know how the send went
+        $this->trigger(static::EVENT_AFTER_SEND, new SendEmailEvent([
+            'message' => $email,
+            'notification' => $notification,
+            'envelope' => $this,
+            'isSuccessful' => $success,
+        ]));
 
         // If unsuccessful, log error and bail
         if (!$success) {

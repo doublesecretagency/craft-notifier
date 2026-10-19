@@ -179,4 +179,75 @@ class OutboundEmailTest extends TestCase
             $source
         );
     }
+
+    // ========================================================================= //
+    // Before/after send events (#35)
+    // ========================================================================= //
+
+    public function testEventConstantsHaveCraftStyleValues(): void
+    {
+        // Same values as Craft's own Mailer events, so listeners read naturally
+        $this->assertSame('beforeSend', OutboundEmail::EVENT_BEFORE_SEND);
+        $this->assertSame('afterSend', OutboundEmail::EVENT_AFTER_SEND);
+    }
+
+    public function testBeforeSendFiresAfterTheEmailIsFullyBuilt(): void
+    {
+        // Listeners must see (and be able to override) the final bodies,
+        // so the before-send trigger comes after both bodies are set and
+        // before the mailer is called.
+        $source = $this->_sendSource();
+
+        $lastBody = max(strrpos($source, 'setHtmlBody('), strrpos($source, 'setTextBody('));
+        $before = strpos($source, 'static::EVENT_BEFORE_SEND');
+        $mailer = strpos($source, 'getMailer()->send(');
+
+        $this->assertNotFalse($before);
+        $this->assertGreaterThan($lastBody, $before);
+        $this->assertLessThan($mailer, $before);
+    }
+
+    public function testCanceledEmailBailsBeforeTheMailer(): void
+    {
+        // A listener setting isValid = false logs a warning and returns
+        // false without ever reaching the mailer.
+        $source = $this->_sendSource();
+
+        $this->assertMatchesRegularExpression(
+            '/if\s*\(\s*!\$event->isValid\s*\)\s*\{[^}]*\[CANCELED\][^}]*return false;\s*\}/',
+            $source
+        );
+        $this->assertLessThan(
+            strpos($source, 'getMailer()->send('),
+            strpos($source, '!$event->isValid')
+        );
+    }
+
+    public function testAfterSendFiresBeforeTheFailureCheckWithTheResult(): void
+    {
+        // The after-send event fires on success AND failure, so it must sit
+        // between the mailer call and the `[SEND FAILED]` bail, and carry
+        // the mailer's result.
+        $source = $this->_sendSource();
+
+        $mailer = strpos($source, 'getMailer()->send(');
+        $after = strpos($source, 'static::EVENT_AFTER_SEND');
+        $failed = strpos($source, '[SEND FAILED]');
+
+        $this->assertNotFalse($after);
+        $this->assertGreaterThan($mailer, $after);
+        $this->assertLessThan($failed, $after);
+        $this->assertStringContainsString("'isSuccessful' => \$success", $source);
+    }
+
+    /**
+     * Get the source of OutboundEmail::send().
+     */
+    private function _sendSource(): string
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/models/OutboundEmail.php');
+        $start = strpos($source, 'public function send(): bool');
+        $this->assertNotFalse($start, 'send() should exist in OutboundEmail.php');
+        return substr($source, $start);
+    }
 }

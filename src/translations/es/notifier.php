@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[CREDENCIALES NO VÁLIDAS] Al destinatario le faltan las credenciales de Facebook.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[CREDENCIALES NO VÁLIDAS] Al destinatario le faltan las credenciales de X (Twitter).',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[CREDENCIALES NO VÁLIDAS] No se puede publicar; al destinatario le faltan credenciales.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[CANCELADO] Un plugin o módulo canceló el correo.',
     '[EMPTY BODY] The Discord message body is empty.' => '[CUERPO VACÍO] El cuerpo del mensaje de Discord está vacío.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[CUERPO VACÍO] El cuerpo de la publicación de Facebook está vacío.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[CUERPO VACÍO] La carga útil de MQTT está vacío.',

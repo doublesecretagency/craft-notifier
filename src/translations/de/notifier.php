@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[UNGÜLTIGE ANMELDEDATEN] Dem Empfänger fehlen die Facebook-Anmeldedaten.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[UNGÜLTIGE ANMELDEDATEN] Dem Empfänger fehlen die X (Twitter)-Anmeldedaten.',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[UNGÜLTIGE ANMELDEDATEN] Posten nicht möglich; dem Empfänger fehlen Anmeldedaten.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[ABGEBROCHEN] Die E-Mail wurde von einem Plugin oder Modul abgebrochen.',
     '[EMPTY BODY] The Discord message body is empty.' => '[LEERER INHALT] Der Discord-Nachrichtentext ist leer.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[LEERER INHALT] Der Facebook-Beitragstext ist leer.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[LEERER INHALT] Die MQTT-Nutzlast ist leer.',

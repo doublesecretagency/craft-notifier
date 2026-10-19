@@ -21,25 +21,34 @@ use ReflectionClass;
 class NotificationFieldLayoutProviderTest extends TestCase
 {
     private string $source;
-    private ReflectionClass $reflection;
 
     protected function setUp(): void
     {
+        // Read the source only. Reflecting the class here would autoload it, which
+        // fatals on Craft 4 (no Chippable) and took every test below down with it,
+        // including the Craft 4 guard test that exists for exactly that case.
         $path = dirname(__DIR__, 2) . '/src/models/NotificationFieldLayoutProvider.php';
         $this->assertTrue(file_exists($path), "Provider should exist at: $path");
         $this->source = file_get_contents($path);
-        $this->reflection = new ReflectionClass(NotificationFieldLayoutProvider::class);
     }
 
     public function testImplementsChippableProviderAndCpEditable(): void
     {
+        // The provider is Craft 5 only by design, so its interfaces can only be
+        // checked where they exist. The source-level tests below run on both majors.
+        if (!interface_exists(Chippable::class)) {
+            static::markTestSkipped('Chippable, CpEditable and Iconic are Craft 5 only.');
+        }
+
+        $reflection = new ReflectionClass(NotificationFieldLayoutProvider::class);
+
         // Chippable is what makes Craft render the linked chip instead of the
         // generic fallback text; CpEditable supplies the link target.
-        $this->assertTrue($this->reflection->implementsInterface(FieldLayoutProviderInterface::class));
-        $this->assertTrue($this->reflection->implementsInterface(Chippable::class));
-        $this->assertTrue($this->reflection->implementsInterface(CpEditable::class));
+        $this->assertTrue($reflection->implementsInterface(FieldLayoutProviderInterface::class));
+        $this->assertTrue($reflection->implementsInterface(Chippable::class));
+        $this->assertTrue($reflection->implementsInterface(CpEditable::class));
         // Iconic is what lets Craft render an icon alongside the chip label.
-        $this->assertTrue($this->reflection->implementsInterface(Iconic::class));
+        $this->assertTrue($reflection->implementsInterface(Iconic::class));
     }
 
     public function testIconResolvesToThePluginMask(): void

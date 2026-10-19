@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[잘못된 자격 증명] 수신자에게 Facebook 자격 증명이 없습니다.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[잘못된 자격 증명] 수신자에게 X (Twitter) 자격 증명이 없습니다.',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[잘못된 자격 증명] 게시할 수 없습니다. 수신자에게 자격 증명이 없습니다.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[취소됨] 플러그인 또는 모듈이 이메일을 취소했습니다.',
     '[EMPTY BODY] The Discord message body is empty.' => '[본문 없음] Discord 메시지 본문이(가) 비어 있습니다.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[본문 없음] Facebook 게시물 본문이(가) 비어 있습니다.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[본문 없음] MQTT 페이로드이(가) 비어 있습니다.',

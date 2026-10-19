@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[凭据无效] 收件人缺少 Facebook 凭据。',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[凭据无效] 收件人缺少 X (Twitter) 凭据。',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[凭据无效] 无法发布；收件人缺少凭据。',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[已取消] 邮件已被插件或模块取消。',
     '[EMPTY BODY] The Discord message body is empty.' => '[内容为空] Discord 消息正文为空。',
     '[EMPTY BODY] The Facebook post body is empty.' => '[内容为空] Facebook 帖子正文为空。',
     '[EMPTY BODY] The MQTT payload is empty.' => '[内容为空] MQTT 负载为空。',

@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[GEÇERSİZ KİMLİK BİLGİLERİ] Alıcının Facebook kimlik bilgileri eksik.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[GEÇERSİZ KİMLİK BİLGİLERİ] Alıcının X (Twitter) kimlik bilgileri eksik.',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[GEÇERSİZ KİMLİK BİLGİLERİ] Paylaşılamıyor; alıcının kimlik bilgileri eksik.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[İPTAL EDİLDİ] E-posta bir eklenti veya modül tarafından iptal edildi.',
     '[EMPTY BODY] The Discord message body is empty.' => '[BOŞ İÇERİK] Discord mesaj içeriği boş.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[BOŞ İÇERİK] Facebook gönderi içeriği boş.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[BOŞ İÇERİK] MQTT yükü boş.',

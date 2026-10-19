@@ -65,6 +65,8 @@ class NotifierFieldConditionRuleSubclassesTest extends TestCase
      */
     public function testExtendsExpectedCraftParent(string $notifierClass, string $craftParent): void
     {
+        $this->_skipIfParentMissing($craftParent);
+
         $reflection = new ReflectionClass($notifierClass);
         $this->assertTrue(
             $reflection->isSubclassOf($craftParent),
@@ -75,13 +77,30 @@ class NotifierFieldConditionRuleSubclassesTest extends TestCase
     /**
      * @dataProvider subclassProvider
      */
-    public function testUsesHasChangedOperatorTrait(string $notifierClass): void
+    public function testUsesHasChangedOperatorTrait(string $notifierClass, string $craftParent): void
     {
+        $this->_skipIfParentMissing($craftParent);
+
         $reflection = new ReflectionClass($notifierClass);
         $this->assertContains(
             HasChangedOperator::class,
             $reflection->getTraitNames(),
             sprintf('%s should use HasChangedOperator', $notifierClass)
         );
+    }
+
+    /**
+     * Skip a pair whose Craft parent does not exist in the running major.
+     *
+     * Money, Link and Generated field rules are Craft 5 only. Their Notifier
+     * subclasses are never registered on Craft 4 (the swap map is guarded), but
+     * reflecting one autoloads it, which fatals when the parent is missing.
+     * Check the parent first, without touching the subclass.
+     */
+    private function _skipIfParentMissing(string $craftParent): void
+    {
+        if (!class_exists($craftParent)) {
+            static::markTestSkipped("{$craftParent} does not exist in this Craft version.");
+        }
     }
 }

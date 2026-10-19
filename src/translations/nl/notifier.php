@@ -735,6 +735,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[ONGELDIGE GEGEVENS] De ontvanger mist Facebook-gegevens.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[ONGELDIGE GEGEVENS] De ontvanger mist X (Twitter)-gegevens.',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[ONGELDIGE GEGEVENS] Kan niet posten; de ontvanger mist gegevens.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[GEANNULEERD] De e-mail is geannuleerd door een plugin of module.',
     '[EMPTY BODY] The Discord message body is empty.' => '[LEGE INHOUD] De Discord-berichttekst is leeg.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[LEGE INHOUD] De Facebook-berichttekst is leeg.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[LEGE INHOUD] De MQTT-payload is leeg.',

@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[OGILTIGA UPPGIFTER] Mottagaren saknar Facebook-uppgifter.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[OGILTIGA UPPGIFTER] Mottagaren saknar X (Twitter)-uppgifter.',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[OGILTIGA UPPGIFTER] Det går inte att publicera; mottagaren saknar uppgifter.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[AVBRUTEN] E-posten avbröts av ett plugin eller en modul.',
     '[EMPTY BODY] The Discord message body is empty.' => '[TOMT INNEHÅLL] Discord-meddelandets innehåll är tomt.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[TOMT INNEHÅLL] Facebook-inläggets innehåll är tomt.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[TOMT INNEHÅLL] MQTT-nyttolasten är tomt.',

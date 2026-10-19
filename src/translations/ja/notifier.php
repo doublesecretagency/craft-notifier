@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[認証情報エラー] 宛先に Facebook の認証情報がありません。',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[認証情報エラー] 宛先に X (Twitter) の認証情報がありません。',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[認証情報エラー] 投稿できません。宛先に認証情報がありません。',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[キャンセル] プラグインまたはモジュールによってメールがキャンセルされました。',
     '[EMPTY BODY] The Discord message body is empty.' => '[本文が空] Discord メッセージの本文が空です。',
     '[EMPTY BODY] The Facebook post body is empty.' => '[本文が空] Facebook 投稿の本文が空です。',
     '[EMPTY BODY] The MQTT payload is empty.' => '[本文が空] MQTT ペイロードが空です。',

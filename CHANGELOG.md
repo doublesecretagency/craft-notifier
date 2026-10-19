@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+- Added the [`EVENT_BEFORE_SEND`](https://plugins.doublesecretagency.com/notifier/messages/types/email#event-before-send) event, to modify or cancel an email before it's sent. ([#35](https://github.com/doublesecretagency/craft-notifier/issues/35))
+- Added the [`EVENT_AFTER_SEND`](https://plugins.doublesecretagency.com/notifier/messages/types/email#event-after-send) event, triggered after an email has been sent.
+
 ### Fixed
 - Fixed bug where the plain-text version of [emails](https://plugins.doublesecretagency.com/notifier/messages/types/email) contained raw HTML. ([#35](https://github.com/doublesecretagency/craft-notifier/issues/35))
 

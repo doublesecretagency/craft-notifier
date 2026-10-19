@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[VIRHEELLISET TUNNUKSET] Vastaanottajalta puuttuvat Facebook-tunnukset.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[VIRHEELLISET TUNNUKSET] Vastaanottajalta puuttuvat X (Twitter)-tunnukset.',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[VIRHEELLISET TUNNUKSET] Julkaisu ei onnistu; vastaanottajalta puuttuvat tunnukset.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[PERUUTETTU] Laajennus tai moduuli peruutti sähköpostin.',
     '[EMPTY BODY] The Discord message body is empty.' => '[TYHJÄ SISÄLTÖ] Discord-viestin sisältö on tyhjä.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[TYHJÄ SISÄLTÖ] Facebook-julkaisun sisältö on tyhjä.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[TYHJÄ SISÄLTÖ] MQTT-hyötykuorma on tyhjä.',

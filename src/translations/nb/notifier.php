@@ -734,6 +734,7 @@ return [
     '[BAD CREDENTIALS] The recipient is missing Facebook credentials.' => '[UGYLDIG LEGITIMASJON] Mottakeren mangler Facebook-legitimasjon.',
     '[BAD CREDENTIALS] The recipient is missing X (Twitter) credentials.' => '[UGYLDIG LEGITIMASJON] Mottakeren mangler X (Twitter)-legitimasjon.',
     '[BAD CREDENTIALS] Unable to post, recipient is missing credentials.' => '[UGYLDIG LEGITIMASJON] Kan ikke publisere; mottakeren mangler legitimasjon.',
+    '[CANCELED] The email was canceled by a plugin or module.' => '[AVBRUTT] E-posten ble avbrutt av en plugin eller modul.',
     '[EMPTY BODY] The Discord message body is empty.' => '[TOMT INNHOLD] Discord-meldingens innhold er tomt.',
     '[EMPTY BODY] The Facebook post body is empty.' => '[TOMT INNHOLD] Facebook-innleggets innhold er tomt.',
     '[EMPTY BODY] The MQTT payload is empty.' => '[TOMT INNHOLD] MQTT-nyttelasten er tomt.',
