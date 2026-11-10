@@ -20,9 +20,8 @@
 
 {% block content %}
     {% if welcome %}
-        {% set iconUrl = view.getAssetManager().getPublishedUrl('@doublesecretagency/notifier/icon.svg', true) %}
         <div class="pane" style="">
-            <img src="{{ iconUrl }}" alt="" width="120" style="float:left; margin:12px;">
+            {{ svg('@doublesecretagency/notifier/icon.svg', namespace=true)|attr({width: 120, height: 120, style: 'float:left; margin:12px;', 'aria-hidden': 'true'}) }}
             <div style="padding-left:160px">
                 <h2>Welcome, and thanks for using Notifier! &nbsp;🎉</h2>
                 <p>To get started, click the "New Notification" button above.</p>
